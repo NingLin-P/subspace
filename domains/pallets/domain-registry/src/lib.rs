@@ -24,11 +24,11 @@ use codec::{Decode, Encode};
 use frame_support::traits::{Currency, Get, LockIdentifier, LockableCurrency, WithdrawReasons};
 use frame_support::weights::Weight;
 pub use pallet::*;
-use sp_domain_tracker::CoreDomainTracker;
 use sp_domains::bundle_election::{
     verify_bundle_solution_threshold, ReadBundleElectionParamsError,
 };
 use sp_domains::fraud_proof::{BundleEquivocationProof, FraudProof, InvalidTransactionProof};
+use sp_domains::state_root_tracker::CoreDomainTracker;
 use sp_domains::{
     BundleSolution, DomainId, ExecutionReceipt, ExecutorPublicKey, ProofOfElection,
     SignedOpaqueBundle, StakeWeight,
@@ -59,9 +59,9 @@ mod pallet {
     use frame_support::traits::LockableCurrency;
     use frame_system::pallet_prelude::*;
     use sp_core::H256;
-    use sp_domain_tracker::CoreDomainTracker;
     use sp_domains::bundle_election::ReadBundleElectionParamsError;
     use sp_domains::fraud_proof::{BundleEquivocationProof, FraudProof, InvalidTransactionProof};
+    use sp_domains::state_root_tracker::CoreDomainTracker;
     use sp_domains::transaction::InvalidTransactionCode;
     use sp_domains::{DomainId, ExecutionReceipt, SignedOpaqueBundle};
     use sp_executor_registry::ExecutorRegistry;

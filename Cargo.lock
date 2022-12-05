@@ -2232,7 +2232,6 @@ dependencies = [
  "sp-consensus-slots",
  "sp-core",
  "sp-domain-digests",
- "sp-domain-tracker",
  "sp-domains",
  "sp-keyring",
  "sp-keystore",
@@ -2288,7 +2287,6 @@ dependencies = [
  "sp-blockchain",
  "sp-consensus",
  "sp-core",
- "sp-domain-tracker",
  "sp-domains",
  "sp-messenger",
  "sp-runtime",
@@ -2365,7 +2363,6 @@ dependencies = [
  "sp-consensus",
  "sp-consensus-slots",
  "sp-core",
- "sp-domain-tracker",
  "sp-domains",
  "sp-inherents",
  "sp-keystore",
@@ -2406,7 +2403,6 @@ dependencies = [
  "sp-api",
  "sp-block-builder",
  "sp-core",
- "sp-domain-tracker",
  "sp-domains",
  "sp-inherents",
  "sp-io",
@@ -5803,7 +5799,6 @@ dependencies = [
  "scale-info",
  "serde",
  "sp-core",
- "sp-domain-tracker",
  "sp-domains",
  "sp-executor-registry",
  "sp-io",
@@ -5823,7 +5818,6 @@ dependencies = [
  "scale-info",
  "sp-core",
  "sp-domain-digests",
- "sp-domain-tracker",
  "sp-domains",
  "sp-io",
  "sp-messenger",
@@ -9022,18 +9016,8 @@ dependencies = [
  "parity-scale-codec",
  "sp-api",
  "sp-core",
- "sp-domain-tracker",
- "sp-runtime",
-]
-
-[[package]]
-name = "sp-domain-tracker"
-version = "0.1.0"
-dependencies = [
- "parity-scale-codec",
- "sp-api",
- "sp-core",
  "sp-domains",
+ "sp-runtime",
 ]
 
 [[package]]
@@ -10441,7 +10425,6 @@ dependencies = [
  "sp-api",
  "sp-block-builder",
  "sp-core",
- "sp-domain-tracker",
  "sp-domains",
  "sp-inherents",
  "sp-io",
