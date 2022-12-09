@@ -5833,6 +5833,7 @@ dependencies = [
  "frame-support",
  "frame-system",
  "log",
+ "pallet-receipts",
  "parity-scale-codec",
  "scale-info",
  "sp-core",
@@ -5955,6 +5956,21 @@ dependencies = [
  "sp-consensus-subspace",
  "sp-core",
  "sp-io",
+ "sp-runtime",
+ "sp-std",
+]
+
+[[package]]
+name = "pallet-receipts"
+version = "0.1.0"
+dependencies = [
+ "frame-support",
+ "frame-system",
+ "log",
+ "parity-scale-codec",
+ "scale-info",
+ "sp-core",
+ "sp-domains",
  "sp-runtime",
  "sp-std",
 ]
@@ -9900,6 +9916,7 @@ dependencies = [
  "pallet-grandpa-finality-verifier",
  "pallet-object-store",
  "pallet-offences-subspace",
+ "pallet-receipts",
  "pallet-rewards",
  "pallet-runtime-configs",
  "pallet-subspace",
@@ -10062,6 +10079,7 @@ dependencies = [
  "pallet-grandpa-finality-verifier",
  "pallet-object-store",
  "pallet-offences-subspace",
+ "pallet-receipts",
  "pallet-rewards",
  "pallet-subspace",
  "pallet-sudo",
