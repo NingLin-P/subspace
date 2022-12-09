@@ -281,6 +281,11 @@ impl pallet_domain_registry::Config for Runtime {
     type MinDomainDeposit = MinDomainDeposit;
     type MaxDomainDeposit = MaxDomainDeposit;
     type MinDomainOperatorStake = MinDomainOperatorStake;
+}
+
+impl pallet_receipts::Config for Runtime {
+    type RuntimeEvent = RuntimeEvent;
+    type DomainHash = domain_runtime_primitives::Hash;
     type MaximumReceiptDrift = MaximumReceiptDrift;
     type ReceiptsPruningDepth = ReceiptsPruningDepth;
     type CoreDomainTracker = DomainTracker;
@@ -374,6 +379,7 @@ construct_runtime!(
         DomainTracker: pallet_domain_tracker = 6,
         Messenger: pallet_messenger = 7,
         Transporter: pallet_transporter = 8,
+        Receipts: pallet_receipts = 9,
 
         // Sudo account
         Sudo: pallet_sudo = 100,
