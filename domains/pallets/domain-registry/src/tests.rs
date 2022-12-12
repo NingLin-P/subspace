@@ -29,8 +29,8 @@ frame_support::construct_runtime!(
         Balances: pallet_balances,
         ExecutorRegistry: pallet_executor_registry,
         DomainTracker: pallet_domain_tracker,
-        DomainRegistry: pallet_domain_registry,
         Receipts: pallet_receipts,
+        DomainRegistry: pallet_domain_registry,
     }
 );
 

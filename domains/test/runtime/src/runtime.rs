@@ -368,10 +368,10 @@ construct_runtime!(
         // Must be after Balances pallet so that its genesis is built after the Balances genesis is
         // built.
         ExecutorRegistry: pallet_executor_registry,
+        Receipts: pallet_receipts,
         DomainRegistry: pallet_domain_registry,
         DomainTracker: pallet_domain_tracker,
         Messenger: pallet_messenger,
-        Receipts: pallet_receipts,
     }
 );
 

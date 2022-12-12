@@ -71,6 +71,7 @@ std = [
 	"pallet-domain-registry/std",
 	"pallet-domain-tracker/std",
 	"pallet-executor-registry/std",
+	"pallet-receipts/std",
 	"pallet-messenger/std",
 	"pallet-sudo/std",
 	"pallet-transaction-payment/std",

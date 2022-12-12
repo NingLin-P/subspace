@@ -375,11 +375,11 @@ construct_runtime!(
         // Must be after Balances pallet so that its genesis is built after the Balances genesis is
         // built.
         ExecutorRegistry: pallet_executor_registry = 4,
+        Receipts: pallet_receipts = 9,
         DomainRegistry: pallet_domain_registry = 5,
         DomainTracker: pallet_domain_tracker = 6,
         Messenger: pallet_messenger = 7,
         Transporter: pallet_transporter = 8,
-        Receipts: pallet_receipts = 9,
 
         // Sudo account
         Sudo: pallet_sudo = 100,

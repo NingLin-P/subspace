@@ -26,8 +26,8 @@ frame_support::construct_runtime!(
         UncheckedExtrinsic = UncheckedExtrinsic,
     {
         System: frame_system,
-        Domains: pallet_domains,
         Receipts: pallet_receipts,
+        Domains: pallet_domains,
     }
 );
 

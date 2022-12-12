@@ -603,8 +603,8 @@ construct_runtime!(
         Feeds: pallet_feeds = 6,
         GrandpaFinalityVerifier: pallet_grandpa_finality_verifier = 13,
         ObjectStore: pallet_object_store = 10,
-        Domains: pallet_domains = 11,
         Receipts: pallet_receipts = 14,
+        Domains: pallet_domains = 11,
 
         Vesting: orml_vesting = 7,
 

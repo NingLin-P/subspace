@@ -69,6 +69,7 @@ std = [
 	"pallet-transaction-payment/std",
 	"pallet-domain-registry/std",
 	"pallet-domain-tracker/std",
+	"pallet-receipts/std",
 	"pallet-messenger/std",
 	"pallet-executor-registry/std",
 	"scale-info/std",

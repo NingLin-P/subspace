@@ -181,11 +181,7 @@ mod pallet {
                     domain_id,
                     signed_opaque_bundle.bundle.receipts.as_slice(),
                 )
-                // This error should never happen as the `pre_dispatch_submit_bundle` check ensures no
-                // missing system domain receipt.
-                .map_err(ExecutionReceiptError::from)
-                .map_err(BundleError::Receipt)
-                .map_err(Error::<T>::from)?;
+                .map_err(|err| Error::<T>::Bundle(BundleError::Receipt(err.into())))?;
             }
 
             Self::deposit_event(Event::BundleStored {
@@ -210,7 +206,7 @@ mod pallet {
 
             // FIXME: currently core domain fraud proof will also submit into primary chain and
             // handled by this extrinsic incorrectly
-            pallet_receipts::Pallet::<T>::submit_fraud_proof(DomainId::SYSTEM, fraud_proof);
+            pallet_receipts::Pallet::<T>::process_fraud_proof(DomainId::SYSTEM, fraud_proof);
 
             Self::deposit_event(Event::FraudProofProcessed);
 
@@ -412,11 +408,10 @@ impl<T: Config> Pallet<T> {
             for receipt in execution_receipts {
                 // Non-best receipt
                 if receipt.primary_number <= best_number {
-                    if pallet_receipts::Pallet::<T>::primary_hash(
+                    if !pallet_receipts::Pallet::<T>::point_to_valid_primary_block(
                         DomainId::SYSTEM,
-                        receipt.primary_number,
-                    ) != receipt.primary_hash
-                    {
+                        receipt,
+                    ) {
                         return Err(TransactionValidityError::Invalid(
                             InvalidTransactionCode::ExecutionReceipt.into(),
                         ));
@@ -424,11 +419,10 @@ impl<T: Config> Pallet<T> {
                     continue;
                 // New nest receipt.
                 } else if receipt.primary_number == best_number + One::one() {
-                    if pallet_receipts::Pallet::<T>::primary_hash(
+                    if !pallet_receipts::Pallet::<T>::point_to_valid_primary_block(
                         DomainId::SYSTEM,
-                        receipt.primary_number,
-                    ) != receipt.primary_hash
-                    {
+                        receipt,
+                    ) {
                         return Err(TransactionValidityError::Invalid(
                             InvalidTransactionCode::ExecutionReceipt.into(),
                         ));
@@ -443,11 +437,10 @@ impl<T: Config> Pallet<T> {
             }
         } else {
             for receipt in execution_receipts {
-                if pallet_receipts::Pallet::<T>::primary_hash(
+                if !pallet_receipts::Pallet::<T>::point_to_valid_primary_block(
                     DomainId::SYSTEM,
-                    receipt.primary_number,
-                ) != receipt.primary_hash
-                {
+                    receipt,
+                ) {
                     return Err(TransactionValidityError::Invalid(
                         InvalidTransactionCode::ExecutionReceipt.into(),
                     ));
@@ -545,10 +538,10 @@ impl<T: Config> Pallet<T> {
                 && execution_receipt.primary_hash == frame_system::Pallet::<T>::parent_hash();
 
             if !point_to_parent_block
-                && pallet_receipts::Pallet::<T>::primary_hash(
+                && !pallet_receipts::Pallet::<T>::point_to_valid_primary_block(
                     DomainId::SYSTEM,
-                    execution_receipt.primary_number,
-                ) != execution_receipt.primary_hash
+                    execution_receipt,
+                )
             {
                 return Err(ExecutionReceiptError::UnknownBlock);
             }

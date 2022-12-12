@@ -196,6 +196,13 @@ impl<T: Config> Pallet<T> {
         best_number.saturating_sub(T::ReceiptsPruningDepth::get())
     }
 
+    pub fn point_to_valid_primary_block(
+        domain_id: DomainId,
+        receipt: &ExecutionReceipt<T::BlockNumber, T::Hash, T::DomainHash>,
+    ) -> bool {
+        Self::primary_hash(domain_id, receipt.primary_number) == receipt.primary_hash
+    }
+
     /// Initialize the genesis execution receipt
     pub fn initialize_genesis_receipt(domain_id: DomainId, genesis_hash: T::Hash) {
         let genesis_receipt = ExecutionReceipt {
@@ -240,7 +247,7 @@ impl<T: Config> Pallet<T> {
     }
 
     /// Submit fraud proof that targetted a given domain
-    pub fn submit_fraud_proof(domain_id: DomainId, fraud_proof: FraudProof) {
+    pub fn process_fraud_proof(domain_id: DomainId, fraud_proof: FraudProof) {
         // Revert the execution chain.
         let (_, mut to_remove) = <ReceiptHead<T>>::get(domain_id);
 

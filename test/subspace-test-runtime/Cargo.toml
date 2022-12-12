@@ -81,6 +81,7 @@ std = [
 	"pallet-grandpa-finality-verifier/std",
 	"pallet-object-store/std",
 	"pallet-offences-subspace/std",
+	"pallet-receipts/std",
 	"pallet-rewards/std",
 	"pallet-subspace/std",
 	"pallet-sudo/std",
