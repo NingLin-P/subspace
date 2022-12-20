@@ -1,6 +1,4 @@
-use crate::utils::{
-    read_core_domain_runtime_blob, to_number_primitive, BlockInfo, DomainBundles, ExecutorSlotInfo,
-};
+use crate::utils::{to_number_primitive, BlockInfo, DomainBundles, ExecutorSlotInfo};
 use codec::{Decode, Encode};
 use futures::channel::mpsc;
 use futures::{SinkExt, Stream, StreamExt};
@@ -17,6 +15,7 @@ use std::collections::HashMap;
 use std::future::Future;
 use std::pin::Pin;
 use subspace_core_primitives::Randomness;
+use subspace_wasm_tools::read_core_domain_runtime_blob;
 
 pub(crate) async fn handle_slot_notifications<Block, PBlock, PClient, BundlerFn>(
     primary_chain_client: &PClient,
@@ -302,11 +301,12 @@ where
 
         let new_runtime = match domain_id {
             DomainId::SYSTEM => system_domain_runtime,
-            DomainId::CORE_PAYMENTS => {
-                read_core_domain_runtime_blob(system_domain_runtime.as_ref(), domain_id)
-                    .map_err(|err| sp_blockchain::Error::Application(Box::new(err)))?
-                    .into()
-            }
+            DomainId::CORE_PAYMENTS => read_core_domain_runtime_blob(
+                system_domain_runtime.as_ref(),
+                domain_id.link_section_name(),
+            )
+            .map_err(|err| sp_blockchain::Error::Application(Box::new(err)))?
+            .into(),
             _ => {
                 return Err(sp_blockchain::Error::Application(Box::from(format!(
                     "No new runtime code for {domain_id:?}"
