@@ -241,7 +241,6 @@ where
             ..
         } = proof;
 
-        let domain_id = *domain_id;
         let at = PBlock::Hash::decode(&mut parent_hash.encode().as_slice())
             .expect("Block Hash must be H256; qed");
         let system_wasm_bundle = self
@@ -250,7 +249,7 @@ where
             .system_domain_wasm_bundle(&BlockId::Hash(at))
             .map_err(VerificationError::RuntimeApi)?;
 
-        let wasm_bundle = match domain_id {
+        let wasm_bundle = match *domain_id {
             DomainId::SYSTEM => system_wasm_bundle,
             DomainId::CORE_PAYMENTS => read_core_domain_runtime_blob(
                 system_wasm_bundle.as_ref(),

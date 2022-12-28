@@ -86,7 +86,7 @@ pub fn create_runtime_bundle_inclusion_file(
     });
 }
 
-/// Read the core domain runtime blob file from the system domain runtime blob file.
+/// Read the core domain runtime blob from the system domain runtime blob.
 ///
 /// The `section_contents_name` should be driven from `DomainId::link_section_name`.
 pub fn read_core_domain_runtime_blob(
