@@ -10215,6 +10215,7 @@ dependencies = [
 name = "subspace-test-service"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
  "frame-system",
  "futures 0.3.26",
  "pallet-balances",
@@ -10223,6 +10224,7 @@ dependencies = [
  "sc-cli",
  "sc-client-api",
  "sc-consensus",
+ "sc-consensus-fraud-proof",
  "sc-consensus-slots",
  "sc-consensus-subspace",
  "sc-executor",
@@ -10230,6 +10232,7 @@ dependencies = [
  "sc-network-common",
  "sc-service",
  "sc-tracing",
+ "sp-api",
  "sp-arithmetic",
  "sp-blockchain",
  "sp-consensus",
