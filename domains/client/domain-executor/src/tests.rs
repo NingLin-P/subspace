@@ -1,8 +1,10 @@
 use codec::{Decode, Encode};
 use domain_runtime_primitives::{DomainCoreApi, Hash};
-use domain_test_service::run_primary_chain_validator_node;
 use domain_test_service::runtime::{Header, UncheckedExtrinsic};
 use domain_test_service::Keyring::{Alice, Bob, Ferdie};
+use domain_test_service::{
+    run_mock_primary_chain_validator_node, run_primary_chain_validator_node,
+};
 use sc_client_api::{Backend, BlockBackend, HeaderBackend};
 use sc_executor_common::runtime_blob::RuntimeBlob;
 use sc_service::{BasePath, Role};
@@ -35,14 +37,12 @@ async fn test_executor_full_node_catching_up() {
     let tokio_handle = tokio::runtime::Handle::current();
 
     // Start Ferdie
-    let (ferdie, ferdie_network_starter) = run_primary_chain_validator_node(
+    let mut ferdie = run_mock_primary_chain_validator_node(
         tokio_handle.clone(),
         Ferdie,
-        vec![],
         BasePath::new(directory.path().join("ferdie")),
     )
     .await;
-    ferdie_network_starter.start_network();
 
     // Run Alice (a system domain authority node)
     let alice = domain_test_service::SystemDomainNodeBuilder::new(
@@ -50,8 +50,7 @@ async fn test_executor_full_node_catching_up() {
         Alice,
         BasePath::new(directory.path().join("alice")),
     )
-    .connect_to_primary_chain_node(&ferdie)
-    .build(Role::Authority, false, false)
+    .build_with_mock_primary_node(Role::Authority, &ferdie)
     .await;
 
     // Run Bob (a system domain full node)
@@ -60,12 +59,17 @@ async fn test_executor_full_node_catching_up() {
         Bob,
         BasePath::new(directory.path().join("bob")),
     )
-    .connect_to_primary_chain_node(&ferdie)
-    .build(Role::Full, false, false)
+    .build_with_mock_primary_node(Role::Full, &ferdie)
     .await;
 
     // Bob is able to sync blocks.
-    futures::future::join(alice.wait_for_blocks(3), bob.wait_for_blocks(3)).await;
+    futures::join!(
+        alice.wait_for_blocks(3),
+        bob.wait_for_blocks(3),
+        ferdie.produce_n_blocks(3),
+    )
+    .2
+    .unwrap();
 
     let alice_block_hash = alice
         .client
