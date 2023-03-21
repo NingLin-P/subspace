@@ -147,9 +147,9 @@ pub(crate) async fn handle_block_import_notifications<
                     if let Err(error) = block_imported::<Block, PBlock, _>(
                         &processor,
                         &mut active_leaves,
-                        block_info,
+                        block_info.clone(),
                     ).await {
-                        tracing::error!(?error, "Failed to process primary block");
+                        tracing::error!(?block_info, ?error, "Failed to process primary block");
                         // Bring down the service as bundles processor is an essential task.
                         // TODO: more graceful shutdown.
                         break;

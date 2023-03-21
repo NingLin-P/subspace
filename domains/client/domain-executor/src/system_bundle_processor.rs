@@ -98,7 +98,7 @@ where
         self,
         primary_info: (PBlock::Hash, NumberFor<PBlock>),
     ) -> Result<(), sp_blockchain::Error> {
-        tracing::debug!(?primary_info, "Processing imported primary block");
+        tracing::info!(?primary_info, "Processing imported primary block");
 
         let (primary_hash, primary_number) = primary_info;
 

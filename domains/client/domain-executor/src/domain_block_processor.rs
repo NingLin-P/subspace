@@ -227,7 +227,7 @@ where
         >(&*self.client, best_hash)?
         .ok_or_else(|| {
             sp_blockchain::Error::Backend(format!(
-                "Receipt for #{best_number},{best_hash:?} not found"
+                "Receipt for #{best_number},{best_hash:?} not found, primary block {primary_number:?}#{primary_hash:?}"
             ))
         })?;
 

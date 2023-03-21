@@ -34,6 +34,8 @@ async fn test_executor_full_node_catching_up() {
     builder.with_colors(false);
     let _ = builder.init();
 
+    tracing::info!("test test_executor_full_node_catching_up start");
+
     let tokio_handle = tokio::runtime::Handle::current();
 
     // Start Ferdie
@@ -44,6 +46,8 @@ async fn test_executor_full_node_catching_up() {
     )
     .await;
 
+    tracing::info!("test test_executor_full_node_catching_up ferdie set up");
+
     // Run Alice (a system domain authority node)
     let alice = domain_test_service::SystemDomainNodeBuilder::new(
         tokio_handle.clone(),
@@ -53,6 +57,8 @@ async fn test_executor_full_node_catching_up() {
     .build_with_mock_primary_node(Role::Authority, &ferdie)
     .await;
 
+    tracing::info!("test test_executor_full_node_catching_up alice set up");
+
     // Run Bob (a system domain full node)
     let bob = domain_test_service::SystemDomainNodeBuilder::new(
         tokio_handle,
@@ -61,6 +67,8 @@ async fn test_executor_full_node_catching_up() {
     )
     .build_with_mock_primary_node(Role::Full, &ferdie)
     .await;
+
+    tracing::info!("test test_executor_full_node_catching_up bob set up");
 
     // Bob is able to sync blocks.
     futures::join!(
