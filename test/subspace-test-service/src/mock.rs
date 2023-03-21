@@ -79,6 +79,8 @@ impl MockPrimaryNode {
         key: Sr25519Keyring,
         base_path: BasePath,
     ) -> MockPrimaryNode {
+        tracing::info!(?base_path, "run_mock_primary_node");
+
         let config = node_config(tokio_handle, key, vec![], false, false, false, base_path);
 
         let executor = NativeElseWasmExecutor::<TestExecutorDispatch>::new(
@@ -366,6 +368,10 @@ where
         new_cache: HashMap<CacheKeyId, Vec<u8>>,
     ) -> Result<ImportResult, Self::Error> {
         let block_number = *block.header.number();
+        let block_hash = block.header.hash();
+
+        tracing::info!(?block_number, ?block_hash, "MockBlockImport import_block");
+
         let current_best_number = self.client.info().best_number;
         block.fork_choice = Some(ForkChoiceStrategy::Custom(
             block_number > current_best_number,

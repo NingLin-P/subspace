@@ -101,8 +101,13 @@ pub(crate) async fn handle_block_import_notifications<
 
     let mut client_block_import = primary_chain_client.every_import_notification_stream();
 
+    tracing::info!("handle_block_import_notifications start loop");
+
     loop {
         tokio::select! {
+            res = futures::future::ok::<u64, u64>(123u64) => {
+                tracing::info!(?res, "future ok resolved");
+            }
             maybe_client_block_import = client_block_import.next() => {
                 let notification = match maybe_client_block_import {
                     Some(block_import) => block_import,
@@ -127,6 +132,7 @@ pub(crate) async fn handle_block_import_notifications<
                     parent_hash: *header.parent_hash(),
                     number: *header.number(),
                 };
+                tracing::error!(?block_info, "client_block_import receive block");
                 let _ = block_info_sender.feed(Some(block_info)).await;
             }
             maybe_subspace_block_import = block_imports.next() => {
@@ -138,12 +144,14 @@ pub(crate) async fn handle_block_import_notifications<
                             break;
                         }
                     };
+                tracing::error!(?_block_number, "subspace_block_import receive block");
                 // Pause the primary block import when the sink is full.
                 let _ = block_info_sender.feed(None).await;
                 let _ = block_import_acknowledgement_sender.send(()).await;
             }
             Some(maybe_block_info) = block_info_receiver.next() => {
                 if let Some(block_info) = maybe_block_info {
+                    tracing::error!(?block_info, "block_info_receiver receive block");
                     if let Err(error) = block_imported::<Block, PBlock, _>(
                         &processor,
                         &mut active_leaves,
