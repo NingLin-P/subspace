@@ -105,9 +105,6 @@ pub(crate) async fn handle_block_import_notifications<
 
     loop {
         tokio::select! {
-            res = futures::future::ok::<u64, u64>(123u64) => {
-                tracing::info!(?res, "future ok resolved");
-            }
             maybe_client_block_import = client_block_import.next() => {
                 let notification = match maybe_client_block_import {
                     Some(block_import) => block_import,
