@@ -1,0 +1,3 @@
+(function() {var implementors = {
+"sp_consensus_subspace":[["impl InherentDataProvider for <a class=\"struct\" href=\"sp_consensus_subspace/inherents/struct.InherentDataProvider.html\" title=\"struct sp_consensus_subspace::inherents::InherentDataProvider\">InherentDataProvider</a>"]]
+};if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
