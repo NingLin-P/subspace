@@ -23,6 +23,7 @@ pub mod chain_spec;
 use domain_test_runtime::opaque::Block;
 use domain_test_runtime::Hash;
 use futures::StreamExt;
+use sc_client_api::client::BlockchainEvents;
 use sc_client_api::execution_extensions::ExecutionStrategies;
 use sc_consensus_slots::SlotProportion;
 use sc_network::{multiaddr, NetworkService, NetworkStateInfo};
@@ -180,6 +181,7 @@ async fn run_executor(
         _,
         _,
         _,
+        _,
         domain_test_runtime::RuntimeApi,
         RuntimeExecutor,
     >(
@@ -196,6 +198,9 @@ async fn run_executor(
                     imported_block_notification.block_import_acknowledgement_sender,
                 )
             }),
+        primary_chain_full_node
+            .client
+            .every_import_notification_stream(),
         primary_chain_full_node
             .new_slot_notification_stream
             .subscribe()
@@ -279,6 +284,7 @@ async fn run_executor_with_mock_primary_node(
         _,
         _,
         _,
+        _,
         domain_test_runtime::RuntimeApi,
         RuntimeExecutor,
     >(
@@ -295,6 +301,7 @@ async fn run_executor_with_mock_primary_node(
                     imported_block_notification.block_import_acknowledgement_sender,
                 )
             }),
+        mock_primary_node.client.every_import_notification_stream(),
         mock_primary_node.new_slot_notification_stream.subscribe(),
         block_import_throttling_buffer_size,
         gossip_msg_sink,
