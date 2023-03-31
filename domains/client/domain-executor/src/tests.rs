@@ -3,12 +3,11 @@ use domain_runtime_primitives::{DomainCoreApi, Hash};
 use domain_test_service::run_primary_chain_validator_node;
 use domain_test_service::runtime::{Header, UncheckedExtrinsic};
 use domain_test_service::Keyring::{Alice, Bob, Ferdie};
-use sc_client_api::{Backend, BlockBackend, HeaderBackend};
+use sc_client_api::{BlockBackend, HeaderBackend};
 use sc_executor_common::runtime_blob::RuntimeBlob;
 use sc_service::{BasePath, Role};
 use sc_transaction_pool_api::TransactionSource;
-use sp_api::{AsTrieBackend, ProvideRuntimeApi};
-use sp_core::traits::FetchRuntimeCode;
+use sp_api::ProvideRuntimeApi;
 use sp_core::Pair;
 use sp_domain_digests::AsPredigest;
 use sp_domains::fraud_proof::{ExecutionPhase, FraudProof, InvalidStateTransitionProof};
@@ -275,7 +274,6 @@ async fn fraud_proof_verification_in_tx_pool_should_work() {
 // when an invalid receipt is received.
 
 #[substrate_test_utils::test(flavor = "multi_thread")]
-#[ignore]
 async fn set_new_code_should_work() {
     let directory = TempDir::new().expect("Must be able to create temporary directory");
 
@@ -286,14 +284,11 @@ async fn set_new_code_should_work() {
     let tokio_handle = tokio::runtime::Handle::current();
 
     // Start Ferdie
-    let (ferdie, ferdie_network_starter) = run_primary_chain_validator_node(
+    let mut ferdie = MockPrimaryNode::run_mock_primary_node(
         tokio_handle.clone(),
         Ferdie,
-        vec![],
         BasePath::new(directory.path().join("ferdie")),
-    )
-    .await;
-    ferdie_network_starter.start_network();
+    );
 
     // Run Alice (a system domain authority node)
     let alice = domain_test_service::SystemDomainNodeBuilder::new(
@@ -301,40 +296,36 @@ async fn set_new_code_should_work() {
         Alice,
         BasePath::new(directory.path().join("alice")),
     )
-    .connect_to_primary_chain_node(&ferdie)
-    .build(Role::Authority, false, false)
+    .build_with_mock_primary_node(Role::Authority, &mut ferdie)
     .await;
 
-    ferdie.wait_for_blocks(1).await;
+    futures::join!(alice.wait_for_blocks(1), ferdie.produce_blocks(1))
+        .1
+        .unwrap();
 
-    let new_runtime_wasm_blob = b"new_runtime_wasm_blob".to_vec();
-
-    let best_number = alice.client.info().best_number;
-    let primary_number = best_number + 1;
-    // Although we're processing the bundle manually, the original bundle processor still works in
-    // the meanwhile, it's possible the executor alice already processed this primary block, expecting next
-    // primary block, in which case we use a dummy primary hash instead.
-    //
-    // Nice to disable the built-in bundle processor and have a full control of the executor block
-    // production manually.
-    let primary_hash = ferdie
-        .client
-        .hash(primary_number)
-        .unwrap()
-        .unwrap_or_else(Hash::random);
-    alice
-        .executor
-        .clone()
-        .process_bundles((primary_hash, primary_number))
-        .await;
+    // Trigger a `RuntimeEnvironmentUpdated` digest in the primary chain, use `set_code` will
+    // fail due to `InvalidTransaction::ExhaustsResources` error thus use `set_heap_pages` instead
+    let set_heap_pages_tx = subspace_test_service::construct_extrinsic(
+        ferdie.client.as_ref(),
+        pallet_sudo::Call::sudo {
+            call: Box::new(frame_system::Call::set_heap_pages { pages: 5 }.into()),
+        },
+        Alice,
+        0,
+    );
+    futures::join!(
+        alice.wait_for_blocks(1),
+        ferdie.produce_block_with_extrinsics(vec![set_heap_pages_tx.into()]),
+    )
+    .1
+    .unwrap();
 
     let best_hash = alice.client.info().best_hash;
-    let state = alice.backend.state_at(best_hash).expect("Get state");
-    let trie_backend = state.as_trie_backend();
-    let state_runtime_code = sp_state_machine::backend::BackendRuntimeCode::new(trie_backend);
-    let runtime_code = state_runtime_code.fetch_runtime_code().unwrap();
     let logs = alice.client.header(best_hash).unwrap().unwrap().digest.logs;
-    if logs != vec![DigestItem::RuntimeEnvironmentUpdated] {
+    if !logs
+        .iter()
+        .any(|i| *i == DigestItem::RuntimeEnvironmentUpdated)
+    {
         let extrinsics = alice
             .client
             .block_body(best_hash)
@@ -345,9 +336,8 @@ async fn set_new_code_should_work() {
                 UncheckedExtrinsic::decode(&mut encoded_extrinsic.encode().as_slice()).unwrap()
             })
             .collect::<Vec<_>>();
-        panic!("`set_code` not executed, extrinsics in the block: {extrinsics:?}")
+        panic!("`set_code` not executed, logs: {logs:?}, extrinsics in the block: {extrinsics:?}")
     }
-    assert_eq!(runtime_code, new_runtime_wasm_blob);
 }
 
 #[substrate_test_utils::test(flavor = "multi_thread")]
