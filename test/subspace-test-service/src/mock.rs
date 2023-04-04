@@ -14,7 +14,7 @@ use sc_utils::mpsc::{tracing_unbounded, TracingUnboundedReceiver, TracingUnbound
 use sp_api::{ApiExt, HashT, HeaderT, ProvideRuntimeApi, TransactionFor};
 use sp_application_crypto::UncheckedFrom;
 use sp_blockchain::HeaderBackend;
-use sp_consensus::{BlockOrigin, CacheKeyId, Error as ConsensusError, NoNetwork, SyncOracle};
+use sp_consensus::{BlockOrigin, Error as ConsensusError, NoNetwork, SyncOracle};
 use sp_consensus_slots::Slot;
 use sp_consensus_subspace::digests::{CompatibleDigestItem, PreDigest};
 use sp_consensus_subspace::FarmerPublicKey;
@@ -25,11 +25,13 @@ use sp_runtime::generic::Digest;
 use sp_runtime::traits::{BlakeTwo256, Block as BlockT, NumberFor};
 use sp_runtime::DigestItem;
 use sp_timestamp::Timestamp;
-use std::collections::HashMap;
 use std::error::Error;
 use std::sync::Arc;
 use std::time;
 use subspace_core_primitives::{Blake2b256Hash, Solution};
+use subspace_fraud_proof::invalid_state_transition_proof::{
+    InvalidStateTransitionProofVerifier, PrePostStateRootVerifier,
+};
 use subspace_runtime_primitives::opaque::Block;
 use subspace_runtime_primitives::{AccountId, Hash};
 use subspace_service::tx_pre_validator::PrimaryChainTxPreValidator;
@@ -98,12 +100,15 @@ impl MockPrimaryNode {
 
         let bundle_validator = BundleValidator::new(client.clone());
 
-        let proof_verifier = subspace_fraud_proof::ProofVerifier::new(
-            client.clone(),
-            executor.clone(),
-            task_manager.spawn_handle(),
-            subspace_fraud_proof::PrePostStateRootVerifier::new(client.clone()),
-        );
+        let proof_verifier = subspace_fraud_proof::ProofVerifier::new(Arc::new(
+            InvalidStateTransitionProofVerifier::new(
+                client.clone(),
+                executor.clone(),
+                task_manager.spawn_handle(),
+                PrePostStateRootVerifier::new(client.clone()),
+            ),
+        ));
+
         let tx_pre_validator = PrimaryChainTxPreValidator::new(
             client.clone(),
             Box::new(task_manager.spawn_handle()),
@@ -202,13 +207,13 @@ impl MockPrimaryNode {
         rx
     }
 
-    /// Subscribe the block import notification
-    pub fn imported_block_notification_stream(
+    /// Subscribe the block importing notification
+    pub fn block_importing_notification_stream(
         &mut self,
     ) -> TracingUnboundedReceiver<(NumberFor<Block>, mpsc::Sender<()>)> {
         let (tx, rx) = tracing_unbounded("subspace_new_slot_notification_stream", 100);
         self.block_import
-            .imported_block_notification_subscribers
+            .block_importing_notification_subscribers
             .push(tx);
         rx
     }
@@ -329,10 +334,7 @@ impl MockPrimaryNode {
             import_block
         };
 
-        let import_result = self
-            .block_import
-            .import_block(block_import_params, Default::default())
-            .await?;
+        let import_result = self.block_import.import_block(block_import_params).await?;
 
         match import_result {
             ImportResult::Imported(_) | ImportResult::AlreadyInChain => Ok(()),
@@ -409,7 +411,7 @@ fn log_new_block(block: &Block, used_time_ms: u128) {
 struct MockBlockImport<Inner, Client, Block: BlockT> {
     inner: Inner,
     client: Arc<Client>,
-    imported_block_notification_subscribers:
+    block_importing_notification_subscribers:
         Vec<TracingUnboundedSender<(NumberFor<Block>, mpsc::Sender<()>)>>,
 }
 
@@ -418,7 +420,7 @@ impl<Inner, Client, Block: BlockT> MockBlockImport<Inner, Client, Block> {
         MockBlockImport {
             inner,
             client,
-            imported_block_notification_subscribers: Vec::new(),
+            block_importing_notification_subscribers: Vec::new(),
         }
     }
 }
@@ -440,7 +442,6 @@ where
     async fn import_block(
         &mut self,
         mut block: BlockImportParams<Block, Self::Transaction>,
-        new_cache: HashMap<CacheKeyId, Vec<u8>>,
     ) -> Result<ImportResult, Self::Error> {
         let block_number = *block.header.number();
         let current_best_number = self.client.info().best_number;
@@ -448,19 +449,18 @@ where
             block_number > current_best_number,
         ));
 
-        let import_result = self.inner.import_block(block, new_cache).await?;
-        let (block_import_acknowledgement_sender, mut block_import_acknowledgement_receiver) =
-            mpsc::channel(0);
+        let import_result = self.inner.import_block(block).await?;
+        let (acknowledgement_sender, mut acknowledgement_receiver) = mpsc::channel(0);
 
         // Must drop `block_import_acknowledgement_sender` after the notification otherwise the receiver
         // will block forever as there is still a sender not closed.
         {
-            let value = (block_number, block_import_acknowledgement_sender);
-            self.imported_block_notification_subscribers
+            let value = (block_number, acknowledgement_sender);
+            self.block_importing_notification_subscribers
                 .retain(|subscriber| subscriber.unbounded_send(value.clone()).is_ok());
         }
 
-        while (block_import_acknowledgement_receiver.next().await).is_some() {
+        while (acknowledgement_receiver.next().await).is_some() {
             // Wait for all the acknowledgements to progress.
         }
 
