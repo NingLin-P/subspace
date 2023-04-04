@@ -270,6 +270,8 @@ async fn fraud_proof_verification_in_tx_pool_should_work() {
 // TODO: Add a new test which simulates a situation that an executor produces a fraud proof
 // when an invalid receipt is received.
 
+// TODO: construct a minimal primary runtime code and use the `set_code` extrinsic to actually
+// cover the case that the new domain runtime are updated accordingly upon the new primary runtime.
 #[substrate_test_utils::test(flavor = "multi_thread")]
 async fn set_new_code_should_work() {
     let directory = TempDir::new().expect("Must be able to create temporary directory");
