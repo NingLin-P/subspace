@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":[["CoreDomainXDMVerifier","A Verifier for XDM messages on Core domains."],["SystemDomainXDMVerifier","A verifier for XDM messages on System domain."]]};

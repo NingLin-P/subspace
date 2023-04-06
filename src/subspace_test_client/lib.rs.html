@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `test/subspace-test-client/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_test_client/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `test/subspace-test-client/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_test_client" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_test_client/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -263,12 +263,6 @@
 <a href="#263" id="263">263</a>
 <a href="#264" id="264">264</a>
 <a href="#265" id="265">265</a>
-<a href="#266" id="266">266</a>
-<a href="#267" id="267">267</a>
-<a href="#268" id="268">268</a>
-<a href="#269" id="269">269</a>
-<a href="#270" id="270">270</a>
-<a href="#271" id="271">271</a>
 </pre><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -293,7 +287,7 @@
 
 <span class="kw">use </span>async_trait::async_trait;
 <span class="kw">use </span>futures::executor::block_on;
-<span class="kw">use </span>futures::{SinkExt, StreamExt};
+<span class="kw">use </span>futures::StreamExt;
 <span class="kw">use </span>sc_client_api::{BlockBackend, HeaderBackend};
 <span class="kw">use </span>sc_consensus_subspace::notification::SubspaceNotificationStream;
 <span class="kw">use </span>sc_consensus_subspace::{NewSlotNotification, RewardSigningNotification};
@@ -302,21 +296,21 @@
 <span class="kw">use </span>sp_core::{Decode, Encode};
 <span class="kw">use </span>std::error::Error;
 <span class="kw">use </span>std::io::Cursor;
-<span class="kw">use </span>std::num::{NonZeroU32, NonZeroU64};
+<span class="kw">use </span>std::num::NonZeroU64;
 <span class="kw">use </span>std::sync::Arc;
-<span class="kw">use </span>subspace_archiving::archiver::ArchivedSegment;
+<span class="kw">use </span>subspace_archiving::archiver::NewArchivedSegment;
 <span class="kw">use </span>subspace_core_primitives::crypto::kzg;
 <span class="kw">use </span>subspace_core_primitives::crypto::kzg::Kzg;
 <span class="kw">use </span>subspace_core_primitives::objects::BlockObjectMapping;
 <span class="kw">use </span>subspace_core_primitives::sector_codec::SectorCodec;
 <span class="kw">use </span>subspace_core_primitives::{
-    Piece, PieceIndex, PublicKey, Solution, PLOT_SECTOR_SIZE, RECORDED_HISTORY_SEGMENT_SIZE,
-    RECORD_SIZE,
+    Piece, PieceIndex, PublicKey, SegmentIndex, Solution, PLOT_SECTOR_SIZE,
 };
 <span class="kw">use </span>subspace_farmer_components::farming::audit_sector;
 <span class="kw">use </span>subspace_farmer_components::plotting::{plot_sector, PieceGetter, PieceGetterRetryPolicy};
 <span class="kw">use </span>subspace_farmer_components::{FarmerProtocolInfo, SectorMetadata};
 <span class="kw">use </span>subspace_runtime_primitives::opaque::Block;
+<span class="kw">use </span>subspace_service::tx_pre_validator::PrimaryChainTxPreValidator;
 <span class="kw">use </span>subspace_service::{FullClient, NewFull};
 <span class="kw">use </span>subspace_solving::REWARD_SIGNING_CONTEXT;
 <span class="kw">use </span>subspace_transaction_pool::bundle_validator::BundleValidator;
@@ -327,7 +321,7 @@
 
 <span class="kw">impl </span>sc_executor::NativeExecutionDispatch <span class="kw">for </span>TestExecutorDispatch {
     <span class="doccomment">/// Otherwise we only use the default Substrate host functions.
-    </span><span class="kw">type </span>ExtendHostFunctions = ();
+    </span><span class="kw">type </span>ExtendHostFunctions = sp_consensus_subspace::consensus::HostFunctions;
 
     <span class="kw">fn </span>dispatch(method: <span class="kw-2">&amp;</span>str, data: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; {
         subspace_test_runtime::api::dispatch(method, data)
@@ -348,10 +342,11 @@
 </span><span class="kw">pub type </span>FraudProofVerifier =
     subspace_service::FraudProofVerifier&lt;subspace_test_runtime::RuntimeApi, TestExecutorDispatch&gt;;
 
+<span class="kw">type </span>TxPreValidator =
+    PrimaryChainTxPreValidator&lt;Block, Client, FraudProofVerifier, BundleValidator&lt;Block, Client&gt;&gt;;
+
 <span class="doccomment">/// Run a farmer.
-</span><span class="kw">pub fn </span>start_farmer(
-    new_full: <span class="kw-2">&amp;</span>NewFull&lt;Client, BundleValidator&lt;Block, Client&gt;, FraudProofVerifier&gt;,
-) {
+</span><span class="kw">pub fn </span>start_farmer(new_full: <span class="kw-2">&amp;</span>NewFull&lt;Client, TxPreValidator&gt;) {
     <span class="kw">let </span>client = new_full.client.clone();
     <span class="kw">let </span>new_slot_notification_stream = new_full.new_slot_notification_stream.clone();
     <span class="kw">let </span>reward_signing_notification_stream = new_full.reward_signing_notification_stream.clone();
@@ -375,7 +370,7 @@
 
             <span class="kw">while let </span><span class="prelude-val">Some</span>(RewardSigningNotification {
                 hash: header_hash,
-                <span class="kw-2">mut </span>signature_sender,
+                signature_sender,
                 ..
             }) = reward_signing_notification_stream.next().<span class="kw">await
             </span>{
@@ -385,12 +380,11 @@
                     .to_bytes()
                     .into();
                 signature_sender
-                    .send(
+                    .unbounded_send(
                         FarmerSignature::decode(<span class="kw-2">&amp;mut </span>signature.encode().as_ref())
                             .expect(<span class="string">&quot;Failed to decode schnorrkel block signature&quot;</span>),
                     )
-                    .<span class="kw">await
-                    </span>.unwrap();
+                    .unwrap();
             }
         });
 }
@@ -432,7 +426,7 @@
 
     <span class="kw">while let </span><span class="prelude-val">Some</span>(NewSlotNotification {
         new_slot_info,
-        <span class="kw-2">mut </span>solution_sender,
+        solution_sender,
     }) = new_slot_notification_stream.next().<span class="kw">await
     </span>{
         <span class="kw">if </span>u64::from(new_slot_info.slot) % <span class="number">2 </span>== <span class="number">0 </span>{
@@ -462,13 +456,13 @@
                 <span class="kw-2">&amp;mut </span>solution.encode().as_slice(),
             )
             .unwrap();
-            <span class="kw">let _ </span>= solution_sender.send(solution).<span class="kw">await</span>;
+            <span class="kw">let _ </span>= solution_sender.unbounded_send(solution);
         }
     }
 }
 
 <span class="kw">struct </span>TestPieceGetter {
-    archived_segment: ArchivedSegment,
+    archived_segment: NewArchivedSegment,
 }
 
 <span class="attr">#[async_trait]
@@ -481,8 +475,8 @@
         <span class="prelude-val">Ok</span>(<span class="self">self
             </span>.archived_segment
             .pieces
-            .as_pieces()
-            .nth(piece_index <span class="kw">as </span>usize)
+            .iter()
+            .nth(u64::from(piece_index) <span class="kw">as </span>usize)
             .map(Piece::from))
     }
 }
@@ -495,13 +489,9 @@
 <span class="kw">where
     </span>Client: BlockBackend&lt;Block&gt; + HeaderBackend&lt;Block&gt;,
 {
-    <span class="kw">let </span>kzg = Kzg::new(kzg::test_public_parameters());
-    <span class="kw">let </span><span class="kw-2">mut </span>archiver = subspace_archiving::archiver::Archiver::new(
-        RECORD_SIZE,
-        RECORDED_HISTORY_SEGMENT_SIZE,
-        kzg.clone(),
-    )
-    .expect(<span class="string">&quot;Incorrect parameters for archiver&quot;</span>);
+    <span class="kw">let </span>kzg = Kzg::new(kzg::embedded_kzg_settings());
+    <span class="kw">let </span><span class="kw-2">mut </span>archiver = subspace_archiving::archiver::Archiver::new(kzg.clone())
+        .expect(<span class="string">&quot;Incorrect parameters for archiver&quot;</span>);
 
     <span class="kw">let </span>genesis_block = client.block(client.info().genesis_hash).unwrap().unwrap();
     <span class="kw">let </span>archived_segment = archiver
@@ -509,18 +499,16 @@
         .into_iter()
         .next()
         .expect(<span class="string">&quot;First block is always producing one segment; qed&quot;</span>);
-    <span class="kw">let </span>total_pieces = NonZeroU64::new(archived_segment.pieces.count() <span class="kw">as </span>u64).unwrap();
+    <span class="kw">let </span>total_pieces = NonZeroU64::new(archived_segment.pieces.len() <span class="kw">as </span>u64).unwrap();
     <span class="kw">let </span><span class="kw-2">mut </span>sector = <span class="macro">vec!</span>[<span class="number">0u8</span>; PLOT_SECTOR_SIZE <span class="kw">as </span>usize];
     <span class="kw">let </span><span class="kw-2">mut </span>sector_metadata = <span class="macro">vec!</span>[<span class="number">0u8</span>; SectorMetadata::encoded_size()];
     <span class="kw">let </span>sector_index = <span class="number">0</span>;
     <span class="kw">let </span>piece_getter = TestPieceGetter { archived_segment };
     <span class="kw">let </span>public_key = PublicKey::from(keypair.public.to_bytes());
     <span class="kw">let </span>farmer_protocol_info = FarmerProtocolInfo {
-        record_size: NonZeroU32::new(RECORD_SIZE).unwrap(),
-        recorded_history_segment_size: RECORDED_HISTORY_SEGMENT_SIZE,
         total_pieces,
         <span class="comment">// TODO: This constant should come from the chain itself
-        </span>sector_expiration: <span class="number">100</span>,
+        </span>sector_expiration: SegmentIndex::from(<span class="number">100</span>),
     };
 
     plot_sector(
@@ -540,5 +528,4 @@
 
     (sector, sector_metadata)
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_test_client" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (afaf3e07a 2023-01-14)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

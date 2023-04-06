@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-networking/src/create.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>create.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_networking/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-networking/src/create.rs`."><title>create.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_networking" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_networking/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -439,6 +439,27 @@
 <a href="#439" id="439">439</a>
 <a href="#440" id="440">440</a>
 <a href="#441" id="441">441</a>
+<a href="#442" id="442">442</a>
+<a href="#443" id="443">443</a>
+<a href="#444" id="444">444</a>
+<a href="#445" id="445">445</a>
+<a href="#446" id="446">446</a>
+<a href="#447" id="447">447</a>
+<a href="#448" id="448">448</a>
+<a href="#449" id="449">449</a>
+<a href="#450" id="450">450</a>
+<a href="#451" id="451">451</a>
+<a href="#452" id="452">452</a>
+<a href="#453" id="453">453</a>
+<a href="#454" id="454">454</a>
+<a href="#455" id="455">455</a>
+<a href="#456" id="456">456</a>
+<a href="#457" id="457">457</a>
+<a href="#458" id="458">458</a>
+<a href="#459" id="459">459</a>
+<a href="#460" id="460">460</a>
+<a href="#461" id="461">461</a>
+<a href="#462" id="462">462</a>
 </pre><pre class="rust"><code><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>temporary_bans;
 <span class="kw">mod </span>transport;
 
@@ -478,19 +499,23 @@
 <span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>std::time::{Duration, Instant};
 <span class="kw">use </span>std::{fmt, io, iter};
-<span class="kw">use </span>subspace_core_primitives::{crypto, PIECE_SIZE};
+<span class="kw">use </span>subspace_core_primitives::{crypto, Piece};
 <span class="kw">use </span>thiserror::Error;
-<span class="kw">use </span>tracing::{error, info};
+<span class="kw">use </span>tracing::{debug, error, info};
 
 <span class="kw">const </span>KADEMLIA_PROTOCOL: <span class="kw-2">&amp;</span>[u8] = <span class="string">b&quot;/subspace/kad/0.1.0&quot;</span>;
 <span class="kw">const </span>GOSSIPSUB_PROTOCOL_PREFIX: <span class="kw-2">&amp;</span>str = <span class="string">&quot;subspace/gossipsub&quot;</span>;
 <span class="comment">// Defines max_negotiating_inbound_streams constant for the swarm.
 // It must be set for large plots.
 </span><span class="kw">const </span>SWARM_MAX_NEGOTIATING_INBOUND_STREAMS: usize = <span class="number">100000</span>;
-<span class="comment">// The default maximum incoming connection number for the swarm.
+<span class="doccomment">/// The default maximum established incoming connection number for the swarm.
 </span><span class="kw">const </span>SWARM_MAX_ESTABLISHED_INCOMING_CONNECTIONS: u32 = <span class="number">50</span>;
-<span class="comment">// The default maximum incoming connection number for the swarm.
+<span class="doccomment">/// The default maximum established incoming connection number for the swarm.
 </span><span class="kw">const </span>SWARM_MAX_ESTABLISHED_OUTGOING_CONNECTIONS: u32 = <span class="number">50</span>;
+<span class="doccomment">/// The default maximum pending incoming connection number for the swarm.
+</span><span class="kw">const </span>SWARM_MAX_PENDING_INCOMING_CONNECTIONS: u32 = <span class="number">50</span>;
+<span class="doccomment">/// The default maximum pending incoming connection number for the swarm.
+</span><span class="kw">const </span>SWARM_MAX_PENDING_OUTGOING_CONNECTIONS: u32 = <span class="number">50</span>;
 <span class="comment">// The default maximum connection number to be maintained for the swarm.
 </span><span class="kw">const </span>SWARM_TARGET_CONNECTION_NUMBER: u32 = <span class="number">50</span>;
 <span class="comment">// Defines an expiration interval for item providers in Kademlia network.
@@ -503,16 +528,19 @@
 </span><span class="kw">const </span>YAMUX_MAX_STREAMS: usize = <span class="number">256</span>;
 <span class="kw">const </span>KADEMLIA_QUERY_TIMEOUT: Duration = Duration::from_secs(<span class="number">40</span>);
 <span class="kw">const </span>SWARM_MAX_ESTABLISHED_CONNECTIONS_PER_PEER: <span class="prelude-ty">Option</span>&lt;u32&gt; = <span class="prelude-val">Some</span>(<span class="number">2</span>);
+<span class="comment">// TODO: Consider moving this constant to configuration or removing `Toggle` wrapper when we find a
+// use-case for gossipsub protocol.
+</span><span class="kw">const </span>ENABLE_GOSSIP_PROTOCOL: bool = <span class="bool-val">false</span>;
 
 <span class="doccomment">/// Base limit for number of concurrent tasks initiated towards Kademlia.
 ///
 /// We restrict this so we can manage outgoing requests a bit better by cancelling low-priority
 /// requests, but this value will be boosted depending on number of connected peers.
-</span><span class="kw">const </span>KADEMLIA_BASE_CONCURRENT_TASKS: NonZeroUsize = NonZeroUsize::new(<span class="number">25</span>).expect(<span class="string">&quot;Not zero; qed&quot;</span>);
+</span><span class="kw">const </span>KADEMLIA_BASE_CONCURRENT_TASKS: NonZeroUsize = NonZeroUsize::new(<span class="number">15</span>).expect(<span class="string">&quot;Not zero; qed&quot;</span>);
 <span class="doccomment">/// Above base limit will be boosted by specified number for every peer connected starting with
 /// second peer, such that it scaled with network connectivity, but the exact coefficient might need
 /// to be tweaked in the future.
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>KADEMLIA_CONCURRENT_TASKS_BOOST_PER_PEER: usize = <span class="number">25</span>;
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>KADEMLIA_CONCURRENT_TASKS_BOOST_PER_PEER: usize = <span class="number">15</span>;
 <span class="doccomment">/// Base limit for number of any concurrent tasks except Kademlia.
 ///
 /// We configure total number of streams per connection to 256. Here we assume half of them might be
@@ -521,11 +549,11 @@
 /// We restrict this so we don&#39;t exceed number of streams for single peer, but this value will be
 /// boosted depending on number of connected peers.
 </span><span class="kw">const </span>REGULAR_BASE_CONCURRENT_TASKS: NonZeroUsize =
-    NonZeroUsize::new(<span class="number">80 </span>- KADEMLIA_BASE_CONCURRENT_TASKS.get()).expect(<span class="string">&quot;Not zero; qed&quot;</span>);
+    NonZeroUsize::new(<span class="number">50 </span>- KADEMLIA_BASE_CONCURRENT_TASKS.get()).expect(<span class="string">&quot;Not zero; qed&quot;</span>);
 <span class="doccomment">/// Above base limit will be boosted by specified number for every peer connected starting with
 /// second peer, such that it scaled with network connectivity, but the exact coefficient might need
 /// to be tweaked in the future.
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>REGULAR_CONCURRENT_TASKS_BOOST_PER_PEER: usize = <span class="number">50</span>;
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>REGULAR_CONCURRENT_TASKS_BOOST_PER_PEER: usize = <span class="number">25</span>;
 
 <span class="kw">const </span>TEMPORARY_BANS_CACHE_SIZE: NonZeroUsize = NonZeroUsize::new(<span class="number">10_000</span>).expect(<span class="string">&quot;Not zero; qed&quot;</span>);
 <span class="kw">const </span>TEMPORARY_BANS_DEFAULT_BACKOFF_INITIAL_INTERVAL: Duration = Duration::from_secs(<span class="number">5</span>);
@@ -624,7 +652,7 @@
     <span class="doccomment">/// The configuration for the Kademlia behaviour.
     </span><span class="kw">pub </span>kademlia: KademliaConfig,
     <span class="doccomment">/// The configuration for the Gossip behaviour.
-    </span><span class="kw">pub </span>gossipsub: GossipsubConfig,
+    </span><span class="kw">pub </span>gossipsub: <span class="prelude-ty">Option</span>&lt;GossipsubConfig&gt;,
     <span class="doccomment">/// Externally provided implementation of the custom provider storage for Kademlia DHT,
     </span><span class="kw">pub </span>provider_storage: ProviderStorage,
     <span class="doccomment">/// Yamux multiplexing configuration.
@@ -639,10 +667,14 @@
     </span><span class="kw">pub </span>request_response_protocols: Vec&lt;Box&lt;<span class="kw">dyn </span>RequestHandler&gt;&gt;,
     <span class="doccomment">/// Defines set of peers with a permanent connection (and reconnection if necessary).
     </span><span class="kw">pub </span>reserved_peers: Vec&lt;Multiaddr&gt;,
-    <span class="doccomment">/// Incoming swarm connection limit.
+    <span class="doccomment">/// Established incoming swarm connection limit.
     </span><span class="kw">pub </span>max_established_incoming_connections: u32,
-    <span class="doccomment">/// Outgoing swarm connection limit.
+    <span class="doccomment">/// Established outgoing swarm connection limit.
     </span><span class="kw">pub </span>max_established_outgoing_connections: u32,
+    <span class="doccomment">/// Pending incoming swarm connection limit.
+    </span><span class="kw">pub </span>max_pending_incoming_connections: u32,
+    <span class="doccomment">/// Pending outgoing swarm connection limit.
+    </span><span class="kw">pub </span>max_pending_outgoing_connections: u32,
     <span class="doccomment">/// Defines target total (in and out) connection number that should be maintained.
     </span><span class="kw">pub </span>target_connections: u32,
     <span class="doccomment">/// How many temporarily banned unreachable peers to keep in memory.
@@ -679,7 +711,7 @@
         kademlia
             .set_query_timeout(KADEMLIA_QUERY_TIMEOUT)
             .set_protocol_names(<span class="macro">vec!</span>[KADEMLIA_PROTOCOL.into()])
-            .set_max_packet_size(<span class="number">2 </span>* PIECE_SIZE)
+            .set_max_packet_size(<span class="number">2 </span>* Piece::SIZE)
             .set_kbucket_inserts(KademliaBucketInserts::Manual)
             .set_record_filtering(KademliaStoreInserts::FilterBoth)
             <span class="comment">// Providers&#39; settings
@@ -692,17 +724,19 @@
         <span class="kw">let </span><span class="kw-2">mut </span>yamux_config = YamuxConfig::default();
         yamux_config.set_max_num_streams(YAMUX_MAX_STREAMS);
 
-        <span class="kw">let </span>gossipsub = GossipsubConfigBuilder::default()
-            .protocol_id_prefix(GOSSIPSUB_PROTOCOL_PREFIX)
-            <span class="comment">// TODO: Do we want message signing?
-            </span>.validation_mode(ValidationMode::None)
-            <span class="comment">// To content-address message, we can take the hash of message and use it as an ID.
-            </span>.message_id_fn(|message: <span class="kw-2">&amp;</span>GossipsubMessage| {
-                MessageId::from(crypto::blake2b_256_hash(<span class="kw-2">&amp;</span>message.data))
-            })
-            .max_transmit_size(<span class="number">2 </span>* <span class="number">1024 </span>* <span class="number">1024</span>) <span class="comment">// 2MB
-            </span>.build()
-            .expect(<span class="string">&quot;Default config for gossipsub is always correct; qed&quot;</span>);
+        <span class="kw">let </span>gossipsub = ENABLE_GOSSIP_PROTOCOL.then(|| {
+            GossipsubConfigBuilder::default()
+                .protocol_id_prefix(GOSSIPSUB_PROTOCOL_PREFIX)
+                <span class="comment">// TODO: Do we want message signing?
+                </span>.validation_mode(ValidationMode::None)
+                <span class="comment">// To content-address message, we can take the hash of message and use it as an ID.
+                </span>.message_id_fn(|message: <span class="kw-2">&amp;</span>GossipsubMessage| {
+                    MessageId::from(crypto::blake2b_256_hash(<span class="kw-2">&amp;</span>message.data))
+                })
+                .max_transmit_size(<span class="number">2 </span>* <span class="number">1024 </span>* <span class="number">1024</span>) <span class="comment">// 2MB
+                </span>.build()
+                .expect(<span class="string">&quot;Default config for gossipsub is always correct; qed&quot;</span>)
+        });
 
         <span class="kw">let </span>keypair = identity::Keypair::Ed25519(keypair);
         <span class="kw">let </span>identify = IdentifyConfig::new(<span class="string">&quot;ipfs/0.1.0&quot;</span>.to_string(), keypair.public());
@@ -735,6 +769,8 @@
             reserved_peers: Vec::new(),
             max_established_incoming_connections: SWARM_MAX_ESTABLISHED_INCOMING_CONNECTIONS,
             max_established_outgoing_connections: SWARM_MAX_ESTABLISHED_OUTGOING_CONNECTIONS,
+            max_pending_incoming_connections: SWARM_MAX_PENDING_INCOMING_CONNECTIONS,
+            max_pending_outgoing_connections: SWARM_MAX_PENDING_OUTGOING_CONNECTIONS,
             target_connections: SWARM_TARGET_CONNECTION_NUMBER,
             temporary_bans_cache_size: TEMPORARY_BANS_CACHE_SIZE,
             temporary_ban_backoff,
@@ -793,6 +829,8 @@
         reserved_peers,
         max_established_incoming_connections,
         max_established_outgoing_connections,
+        max_pending_incoming_connections,
+        max_pending_outgoing_connections,
         target_connections,
         temporary_bans_cache_size,
         temporary_ban_backoff,
@@ -823,12 +861,18 @@
         request_response_protocols,
     });
 
+    <span class="kw">let </span>connection_limits = ConnectionLimits::default()
+        .with_max_established_per_peer(SWARM_MAX_ESTABLISHED_CONNECTIONS_PER_PEER)
+        .with_max_pending_incoming(<span class="prelude-val">Some</span>(max_pending_incoming_connections))
+        .with_max_pending_outgoing(<span class="prelude-val">Some</span>(max_pending_outgoing_connections))
+        .with_max_established_incoming(<span class="prelude-val">Some</span>(max_established_incoming_connections))
+        .with_max_established_outgoing(<span class="prelude-val">Some</span>(max_established_outgoing_connections));
+
+    <span class="macro">debug!</span>(<span class="question-mark">?</span>connection_limits, <span class="string">&quot;DSN connection limits set.&quot;</span>);
+
     <span class="kw">let </span><span class="kw-2">mut </span>swarm = SwarmBuilder::with_tokio_executor(transport, behaviour, local_peer_id)
         .max_negotiating_inbound_streams(SWARM_MAX_NEGOTIATING_INBOUND_STREAMS)
-        .connection_limits(
-            ConnectionLimits::default()
-                .with_max_established_per_peer(SWARM_MAX_ESTABLISHED_CONNECTIONS_PER_PEER),
-        )
+        .connection_limits(connection_limits)
         .build();
 
     <span class="comment">// Setup listen_on addresses
@@ -871,8 +915,6 @@
         next_random_query_interval: initial_random_query_interval,
         networking_parameters_registry,
         reserved_peers: convert_multiaddresses(reserved_peers).into_iter().collect(),
-        max_established_incoming_connections,
-        max_established_outgoing_connections,
         target_connections,
         temporary_bans,
         metrics,
@@ -880,5 +922,4 @@
 
     <span class="prelude-val">Ok</span>((node, node_runner))
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_networking" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (afaf3e07a 2023-01-14)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

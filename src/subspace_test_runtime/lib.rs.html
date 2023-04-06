@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `test/subspace-test-runtime/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_test_runtime/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `test/subspace-test-runtime/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_test_runtime" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_test_runtime/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1254,6 +1254,24 @@
 <a href="#1254" id="1254">1254</a>
 <a href="#1255" id="1255">1255</a>
 <a href="#1256" id="1256">1256</a>
+<a href="#1257" id="1257">1257</a>
+<a href="#1258" id="1258">1258</a>
+<a href="#1259" id="1259">1259</a>
+<a href="#1260" id="1260">1260</a>
+<a href="#1261" id="1261">1261</a>
+<a href="#1262" id="1262">1262</a>
+<a href="#1263" id="1263">1263</a>
+<a href="#1264" id="1264">1264</a>
+<a href="#1265" id="1265">1265</a>
+<a href="#1266" id="1266">1266</a>
+<a href="#1267" id="1267">1267</a>
+<a href="#1268" id="1268">1268</a>
+<a href="#1269" id="1269">1269</a>
+<a href="#1270" id="1270">1270</a>
+<a href="#1271" id="1271">1271</a>
+<a href="#1272" id="1272">1272</a>
+<a href="#1273" id="1273">1273</a>
+<a href="#1274" id="1274">1274</a>
 </pre><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -1327,7 +1345,7 @@
 <span class="kw">use </span>sp_version::RuntimeVersion;
 <span class="kw">use </span>subspace_core_primitives::objects::{BlockObject, BlockObjectMapping};
 <span class="kw">use </span>subspace_core_primitives::{
-    PublicKey, Randomness, RecordsRoot, RootBlock, SegmentIndex, SolutionRange, PIECE_SIZE,
+    Piece, PublicKey, Randomness, SegmentCommitment, SegmentHeader, SegmentIndex, SolutionRange,
 };
 <span class="kw">use </span>subspace_runtime_primitives::{
     opaque, AccountId, Balance, BlockNumber, Hash, Index, Moment, Signature,
@@ -1395,7 +1413,7 @@
 
 <span class="comment">// NOTE: Currently it is not possible to change the slot duration after the chain has started.
 //       Attempting to do so will brick block production.
-</span><span class="kw">const </span>SLOT_DURATION: u64 = <span class="number">2000</span>;
+</span><span class="kw">pub const </span>SLOT_DURATION: u64 = <span class="number">2000</span>;
 
 <span class="doccomment">/// 1 in 6 slots (on average, not counting collisions) will have a block.
 /// Must match ratio between block and slot duration in constants above.
@@ -1535,6 +1553,10 @@
     </span><span class="kw">type </span>ExistentialDeposit = ConstU128&lt;{ <span class="number">500 </span>* SHANNON }&gt;;
     <span class="kw">type </span>AccountStore = System;
     <span class="kw">type </span>WeightInfo = pallet_balances::weights::SubstrateWeight&lt;Runtime&gt;;
+    <span class="kw">type </span>FreezeIdentifier = ();
+    <span class="kw">type </span>MaxFreezes = ();
+    <span class="kw">type </span>HoldIdentifier = ();
+    <span class="kw">type </span>MaxHolds = ();
 }
 
 <span class="macro">parameter_types! </span>{
@@ -1554,12 +1576,10 @@
 
 <span class="kw">impl </span>Get&lt;u128&gt; <span class="kw">for </span>TotalSpacePledged {
     <span class="kw">fn </span>get() -&gt; u128 {
-        <span class="kw">let </span>piece_size = u128::try_from(PIECE_SIZE)
-            .expect(<span class="string">&quot;Piece size is definitely small enough to fit into u128; qed&quot;</span>);
         <span class="comment">// Operations reordered to avoid data loss, but essentially are:
         // u64::MAX * SlotProbability / (solution_range / PIECE_SIZE)
         </span>u128::from(u64::MAX)
-            .saturating_mul(piece_size)
+            .saturating_mul(Piece::SIZE <span class="kw">as </span>u128)
             .saturating_mul(u128::from(SlotProbability::get().<span class="number">0</span>))
             / u128::from(Subspace::solution_ranges().current)
             / u128::from(SlotProbability::get().<span class="number">1</span>)
@@ -1901,10 +1921,10 @@
 <span class="doccomment">/// The payload being signed in transactions.
 </span><span class="kw">pub type </span>SignedPayload = generic::SignedPayload&lt;RuntimeCall, SignedExtra&gt;;
 
-<span class="kw">fn </span>extract_root_blocks(ext: <span class="kw-2">&amp;</span>UncheckedExtrinsic) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;RootBlock&gt;&gt; {
+<span class="kw">fn </span>extract_segment_headers(ext: <span class="kw-2">&amp;</span>UncheckedExtrinsic) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;SegmentHeader&gt;&gt; {
     <span class="kw">match </span><span class="kw-2">&amp;</span>ext.function {
-        RuntimeCall::Subspace(pallet_subspace::Call::store_root_blocks { root_blocks }) =&gt; {
-            <span class="prelude-val">Some</span>(root_blocks.clone())
+        RuntimeCall::Subspace(pallet_subspace::Call::store_segment_headers { segment_headers }) =&gt; {
+            <span class="prelude-val">Some</span>(segment_headers.clone())
         }
         <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
     }
@@ -2263,6 +2283,14 @@
         <span class="kw">fn </span>metadata() -&gt; OpaqueMetadata {
             OpaqueMetadata::new(Runtime::metadata().into())
         }
+
+        <span class="kw">fn </span>metadata_at_version(version: u32) -&gt; <span class="prelude-ty">Option</span>&lt;OpaqueMetadata&gt; {
+            Runtime::metadata_at_version(version)
+        }
+
+        <span class="kw">fn </span>metadata_versions() -&gt; sp_std::vec::Vec&lt;u32&gt; {
+            Runtime::metadata_versions()
+        }
     }
 
     <span class="kw">impl </span>sp_block_builder::BlockBuilder&lt;Block&gt; <span class="kw">for </span>Runtime {
@@ -2363,12 +2391,12 @@
             </span>Subspace::is_in_block_list(farmer_public_key)
         }
 
-        <span class="kw">fn </span>records_root(segment_index: SegmentIndex) -&gt; <span class="prelude-ty">Option</span>&lt;RecordsRoot&gt; {
-            Subspace::records_root(segment_index)
+        <span class="kw">fn </span>segment_commitment(segment_index: SegmentIndex) -&gt; <span class="prelude-ty">Option</span>&lt;SegmentCommitment&gt; {
+            Subspace::segment_commitment(segment_index)
         }
 
-        <span class="kw">fn </span>extract_root_blocks(ext: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;RootBlock&gt;&gt; {
-            extract_root_blocks(ext)
+        <span class="kw">fn </span>extract_segment_headers(ext: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;SegmentHeader &gt;&gt; {
+            extract_segment_headers(ext)
         }
 
         <span class="kw">fn </span>root_plot_public_key() -&gt; <span class="prelude-ty">Option</span>&lt;FarmerPublicKey&gt; {
@@ -2387,6 +2415,14 @@
     <span class="kw">impl </span>sp_receipts::ReceiptsApi&lt;Block, domain_runtime_primitives::Hash&gt; <span class="kw">for </span>Runtime {
         <span class="kw">fn </span>execution_trace(domain_id: DomainId, receipt_hash: H256) -&gt; Vec&lt;domain_runtime_primitives::Hash&gt; {
             Receipts::receipts(domain_id, receipt_hash).map(|receipt| receipt.trace).unwrap_or_default()
+        }
+
+        <span class="kw">fn </span>state_root(
+            domain_id: DomainId,
+            domain_block_number: NumberFor&lt;Block&gt;,
+            domain_block_hash: Hash,
+        ) -&gt; <span class="prelude-ty">Option</span>&lt;domain_runtime_primitives::Hash&gt; {
+            Receipts::state_root((domain_id, domain_block_number, domain_block_hash))
         }
     }
 
@@ -2510,5 +2546,4 @@
         }
     }
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_test_runtime" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (afaf3e07a 2023-01-14)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

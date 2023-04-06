@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sc-consensus-subspace/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../sc_consensus_subspace/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sc-consensus-subspace/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sc_consensus_subspace" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../sc_consensus_subspace/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1323,19 +1323,6 @@
 <a href="#1323" id="1323">1323</a>
 <a href="#1324" id="1324">1324</a>
 <a href="#1325" id="1325">1325</a>
-<a href="#1326" id="1326">1326</a>
-<a href="#1327" id="1327">1327</a>
-<a href="#1328" id="1328">1328</a>
-<a href="#1329" id="1329">1329</a>
-<a href="#1330" id="1330">1330</a>
-<a href="#1331" id="1331">1331</a>
-<a href="#1332" id="1332">1332</a>
-<a href="#1333" id="1333">1333</a>
-<a href="#1334" id="1334">1334</a>
-<a href="#1335" id="1335">1335</a>
-<a href="#1336" id="1336">1336</a>
-<a href="#1337" id="1337">1337</a>
-<a href="#1338" id="1338">1338</a>
 </pre><pre class="rust"><code><span class="comment">// Copyright (C) 2019-2021 Parity Technologies (UK) Ltd.
 // Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
@@ -1367,7 +1354,7 @@
 
 <span class="kw">use </span><span class="kw">crate</span>::notification::{SubspaceNotificationSender, SubspaceNotificationStream};
 <span class="kw">use </span><span class="kw">crate</span>::slot_worker::{SlotWorkerSyncOracle, SubspaceSlotWorker};
-<span class="kw">pub use </span>archiver::start_subspace_archiver;
+<span class="kw">pub use </span>archiver::create_subspace_archiver;
 <span class="kw">use </span>codec::Encode;
 <span class="kw">use </span>futures::channel::mpsc;
 <span class="kw">use </span>futures::StreamExt;
@@ -1394,8 +1381,7 @@
 <span class="kw">use </span>sp_block_builder::BlockBuilder <span class="kw">as </span>BlockBuilderApi;
 <span class="kw">use </span>sp_blockchain::{Error <span class="kw">as </span>ClientError, HeaderBackend, HeaderMetadata, <span class="prelude-ty">Result </span><span class="kw">as </span>ClientResult};
 <span class="kw">use </span>sp_consensus::{
-    BlockOrigin, CacheKeyId, Environment, Error <span class="kw">as </span>ConsensusError, Proposer, SelectChain,
-    SyncOracle,
+    BlockOrigin, Environment, Error <span class="kw">as </span>ConsensusError, Proposer, SelectChain, SyncOracle,
 };
 <span class="kw">use </span>sp_consensus_slots::{Slot, SlotDuration};
 <span class="kw">use </span>sp_consensus_subspace::digests::{
@@ -1409,19 +1395,18 @@
 <span class="kw">use </span>sp_inherents::{CreateInherentDataProviders, InherentDataProvider};
 <span class="kw">use </span>sp_runtime::traits::One;
 <span class="kw">use </span>std::cmp::Ordering;
-<span class="kw">use </span>std::collections::HashMap;
 <span class="kw">use </span>std::future::Future;
 <span class="kw">use </span>std::marker::PhantomData;
 <span class="kw">use </span>std::num::NonZeroUsize;
 <span class="kw">use </span>std::pin::Pin;
 <span class="kw">use </span>std::sync::Arc;
-<span class="kw">use </span>subspace_archiving::archiver::{ArchivedSegment, Archiver};
+<span class="kw">use </span>subspace_archiving::archiver::{Archiver, NewArchivedSegment};
 <span class="kw">use </span>subspace_core_primitives::crypto::kzg;
 <span class="kw">use </span>subspace_core_primitives::crypto::kzg::Kzg;
 <span class="kw">use </span>subspace_core_primitives::objects::BlockObjectMapping;
 <span class="kw">use </span>subspace_core_primitives::{
-    Blake2b256Hash, BlockWeight, RecordsRoot, RootBlock, SectorId, SegmentIndex, Solution,
-    SolutionRange, PIECES_IN_SEGMENT, RECORDED_HISTORY_SEGMENT_SIZE, RECORD_SIZE,
+    Blake2b256Hash, BlockWeight, SectorId, SegmentCommitment, SegmentHeader, SegmentIndex,
+    Solution, SolutionRange,
 };
 <span class="kw">use </span>subspace_solving::{derive_global_challenge, REWARD_SIGNING_CONTEXT};
 <span class="kw">use </span>subspace_verification::{
@@ -1465,17 +1450,19 @@
 </span><span class="attr">#[derive(Debug, Clone)]
 </span><span class="kw">pub struct </span>ArchivedSegmentNotification {
     <span class="doccomment">/// Archived segment.
-    </span><span class="kw">pub </span>archived_segment: Arc&lt;ArchivedSegment&gt;,
+    </span><span class="kw">pub </span>archived_segment: Arc&lt;NewArchivedSegment&gt;,
     <span class="doccomment">/// Sender that signified the fact of receiving archived segment by farmer.
     ///
     /// This must be used to send a message or else block import pipeline will get stuck.
     </span><span class="kw">pub </span>acknowledgement_sender: TracingUnboundedSender&lt;()&gt;,
 }
 
-<span class="doccomment">/// Notification with imported block header hash that needs to be archived and sender for
-/// root blocks.
+<span class="doccomment">/// Notification with number of the block that is about to be imported and acknowledgement sender
+/// that can be used to pause block production if desired.
+///
+/// NOTE: Block is not fully imported yet!
 </span><span class="attr">#[derive(Debug, Clone)]
-</span><span class="kw">pub struct </span>ImportedBlockNotification&lt;Block&gt;
+</span><span class="kw">pub struct </span>BlockImportingNotification&lt;Block&gt;
 <span class="kw">where
     </span>Block: BlockT,
 {
@@ -1483,7 +1470,7 @@
     </span><span class="kw">pub </span>block_number: NumberFor&lt;Block&gt;,
     <span class="doccomment">/// Sender for pausing the block import when executor is not fast enough to process
     /// the primary block.
-    </span><span class="kw">pub </span>block_import_acknowledgement_sender: mpsc::Sender&lt;()&gt;,
+    </span><span class="kw">pub </span>acknowledgement_sender: mpsc::Sender&lt;()&gt;,
 }
 
 <span class="doccomment">/// Errors encountered by the Subspace authorship task.
@@ -1534,24 +1521,24 @@
     <span class="doccomment">/// Block has invalid associated solution range
     </span><span class="attr">#[error(<span class="string">&quot;Invalid solution range for block {0}&quot;</span>)]
     </span>InvalidSolutionRange(Header::Hash),
-    <span class="doccomment">/// Invalid set of root blocks
-    </span><span class="attr">#[error(<span class="string">&quot;Invalid set of root blocks&quot;</span>)]
-    </span>InvalidSetOfRootBlocks,
-    <span class="doccomment">/// Stored root block extrinsic was not found
-    </span><span class="attr">#[error(<span class="string">&quot;Stored root block extrinsic was not found: {0:?}&quot;</span>)]
-    </span>RootBlocksExtrinsicNotFound(Vec&lt;RootBlock&gt;),
-    <span class="doccomment">/// Duplicated records root
+    <span class="doccomment">/// Invalid set of segment headers
+    </span><span class="attr">#[error(<span class="string">&quot;Invalid set of segment headers&quot;</span>)]
+    </span>InvalidSetOfSegmentHeaders,
+    <span class="doccomment">/// Stored segment header extrinsic was not found
+    </span><span class="attr">#[error(<span class="string">&quot;Stored segment header extrinsic was not found: {0:?}&quot;</span>)]
+    </span>SegmentHeadersExtrinsicNotFound(Vec&lt;SegmentHeader&gt;),
+    <span class="doccomment">/// Duplicated segment commitment
     </span><span class="attr">#[error(
-        <span class="string">&quot;Different records root for segment index {0} was found in storage, likely fork below \
-        archiving point&quot;
+        <span class="string">&quot;Different segment commitment for segment index {0} was found in storage, likely fork \
+        below archiving point&quot;
     </span>)]
-    </span>DifferentRecordsRoot(u64),
+    </span>DifferentSegmentCommitment(SegmentIndex),
     <span class="doccomment">/// Farmer in block list
     </span><span class="attr">#[error(<span class="string">&quot;Farmer {0} is in block list&quot;</span>)]
     </span>FarmerInBlockList(FarmerPublicKey),
     <span class="doccomment">/// Merkle Root not found
-    </span><span class="attr">#[error(<span class="string">&quot;Records Root for segment index {0} not found&quot;</span>)]
-    </span>RecordsRootNotFound(u64),
+    </span><span class="attr">#[error(<span class="string">&quot;Segment commitment for segment index {0} not found&quot;</span>)]
+    </span>SegmentCommitmentNotFound(SegmentIndex),
     <span class="doccomment">/// Only root plot public key is allowed
     </span><span class="attr">#[error(<span class="string">&quot;Only root plot public key is allowed&quot;</span>)]
     </span>OnlyRootPlotPublicKeyAllowed,
@@ -1784,11 +1771,13 @@
     reward_signing_notification_stream: SubspaceNotificationStream&lt;RewardSigningNotification&gt;,
     archived_segment_notification_sender: SubspaceNotificationSender&lt;ArchivedSegmentNotification&gt;,
     archived_segment_notification_stream: SubspaceNotificationStream&lt;ArchivedSegmentNotification&gt;,
-    imported_block_notification_stream:
-        SubspaceNotificationStream&lt;ImportedBlockNotification&lt;Block&gt;&gt;,
-    <span class="doccomment">/// Root blocks that are expected to appear in the corresponding blocks, used for block
-    /// validation
-    </span>root_blocks: Arc&lt;Mutex&lt;LruCache&lt;NumberFor&lt;Block&gt;, Vec&lt;RootBlock&gt;&gt;&gt;&gt;,
+    block_importing_notification_sender:
+        SubspaceNotificationSender&lt;BlockImportingNotification&lt;Block&gt;&gt;,
+    block_importing_notification_stream:
+        SubspaceNotificationStream&lt;BlockImportingNotification&lt;Block&gt;&gt;,
+    <span class="doccomment">/// Segment headers that are expected to appear in the corresponding blocks, used for block
+    /// production and validation
+    </span>segment_headers: Arc&lt;Mutex&lt;LruCache&lt;NumberFor&lt;Block&gt;, Vec&lt;SegmentHeader&gt;&gt;&gt;&gt;,
     kzg: Kzg,
 }
 
@@ -1819,33 +1808,33 @@
     }
 
     <span class="doccomment">/// Get stream with notifications about each imported block.
-    </span><span class="kw">pub fn </span>imported_block_notification_stream(
+    </span><span class="kw">pub fn </span>block_importing_notification_stream(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-    ) -&gt; SubspaceNotificationStream&lt;ImportedBlockNotification&lt;Block&gt;&gt; {
-        <span class="self">self</span>.imported_block_notification_stream.clone()
+    ) -&gt; SubspaceNotificationStream&lt;BlockImportingNotification&lt;Block&gt;&gt; {
+        <span class="self">self</span>.block_importing_notification_stream.clone()
     }
 
     <span class="doccomment">/// Get blocks that are expected to be included at specified block number.
-    </span><span class="kw">pub fn </span>root_blocks_for_block(<span class="kw-2">&amp;</span><span class="self">self</span>, block_number: NumberFor&lt;Block&gt;) -&gt; Vec&lt;RootBlock&gt; {
-        <span class="self">self</span>.root_blocks
+    </span><span class="kw">pub fn </span>segment_headers_for_block(<span class="kw-2">&amp;</span><span class="self">self</span>, block_number: NumberFor&lt;Block&gt;) -&gt; Vec&lt;SegmentHeader&gt; {
+        <span class="self">self</span>.segment_headers
             .lock()
             .peek(<span class="kw-2">&amp;</span>block_number)
             .cloned()
             .unwrap_or_default()
     }
 
-    <span class="doccomment">/// Get the first found records root by segment index.
-    </span><span class="kw">pub fn </span>records_root_by_segment_index(
+    <span class="doccomment">/// Get the first found segment commitment by segment index.
+    </span><span class="kw">pub fn </span>segment_commitment_by_segment_index(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         segment_index: SegmentIndex,
-    ) -&gt; <span class="prelude-ty">Option</span>&lt;RecordsRoot&gt; {
-        <span class="self">self</span>.root_blocks
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;SegmentCommitment&gt; {
+        <span class="self">self</span>.segment_headers
             .lock()
             .iter()
-            .find_map(|(_block_number, root_blocks)| {
-                root_blocks.iter().find_map(|root_block| {
-                    <span class="kw">if </span>root_block.segment_index() == segment_index {
-                        <span class="prelude-val">Some</span>(root_block.records_root())
+            .find_map(|(_block_number, segment_headers)| {
+                segment_headers.iter().find_map(|segment_header| {
+                    <span class="kw">if </span>segment_header.segment_index() == segment_index {
+                        <span class="prelude-val">Some</span>(segment_header.segment_commitment())
                     } <span class="kw">else </span>{
                         <span class="prelude-val">None
                     </span>}
@@ -1943,13 +1932,7 @@
     <span class="kw">async fn </span>verify(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         <span class="kw-2">mut </span>block: BlockImportParams&lt;Block, ()&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;
-        (
-            BlockImportParams&lt;Block, ()&gt;,
-            <span class="prelude-ty">Option</span>&lt;Vec&lt;(CacheKeyId, Vec&lt;u8&gt;)&gt;&gt;,
-        ),
-        String,
-    &gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;BlockImportParams&lt;Block, ()&gt;, String&gt; {
         <span class="macro">trace!</span>(
             target: <span class="string">&quot;subspace&quot;</span>,
             <span class="string">&quot;Verifying origin: {:?} header: {:?} justification(s): {:?} body: {:?}&quot;</span>,
@@ -2015,8 +1998,8 @@
                 VerificationParams {
                     header: block.header.clone(),
                     slot_now: slot_now + <span class="number">1</span>,
-                    verify_solution_params: VerifySolutionParams {
-                        global_randomness: <span class="kw-2">&amp;</span>subspace_digest_items.global_randomness,
+                    verify_solution_params: <span class="kw-2">&amp;</span>VerifySolutionParams {
+                        global_randomness: subspace_digest_items.global_randomness,
                         solution_range: subspace_digest_items.solution_range,
                         piece_check_params: <span class="prelude-val">None</span>,
                     },
@@ -2064,7 +2047,7 @@
                 block.post_digests.push(verified_info.seal);
                 block.post_hash = <span class="prelude-val">Some</span>(hash);
 
-                <span class="prelude-val">Ok</span>((block, Default::default()))
+                <span class="prelude-val">Ok</span>(block)
             }
             CheckedHeader::Deferred(a, b) =&gt; {
                 <span class="macro">debug!</span>(target: <span class="string">&quot;subspace&quot;</span>, <span class="string">&quot;Checking {:?} failed; {:?}, {:?}.&quot;</span>, hash, a, b);
@@ -2091,8 +2074,8 @@
 </span><span class="kw">pub struct </span>SubspaceBlockImport&lt;Block: BlockT, Client, I, CIDP&gt; {
     inner: I,
     client: Arc&lt;Client&gt;,
-    imported_block_notification_sender:
-        SubspaceNotificationSender&lt;ImportedBlockNotification&lt;Block&gt;&gt;,
+    block_importing_notification_sender:
+        SubspaceNotificationSender&lt;BlockImportingNotification&lt;Block&gt;&gt;,
     subspace_link: SubspaceLink&lt;Block&gt;,
     create_inherent_data_providers: CIDP,
 }
@@ -2107,7 +2090,7 @@
         SubspaceBlockImport {
             inner: <span class="self">self</span>.inner.clone(),
             client: <span class="self">self</span>.client.clone(),
-            imported_block_notification_sender: <span class="self">self</span>.imported_block_notification_sender.clone(),
+            block_importing_notification_sender: <span class="self">self</span>.block_importing_notification_sender.clone(),
             subspace_link: <span class="self">self</span>.subspace_link.clone(),
             create_inherent_data_providers: <span class="self">self</span>.create_inherent_data_providers.clone(),
         }
@@ -2124,8 +2107,8 @@
     <span class="kw">fn </span>new(
         client: Arc&lt;Client&gt;,
         block_import: I,
-        imported_block_notification_sender: SubspaceNotificationSender&lt;
-            ImportedBlockNotification&lt;Block&gt;,
+        block_importing_notification_sender: SubspaceNotificationSender&lt;
+            BlockImportingNotification&lt;Block&gt;,
         &gt;,
         subspace_link: SubspaceLink&lt;Block&gt;,
         create_inherent_data_providers: CIDP,
@@ -2133,7 +2116,7 @@
         SubspaceBlockImport {
             client,
             inner: block_import,
-            imported_block_notification_sender,
+            block_importing_notification_sender,
             subspace_link,
             create_inherent_data_providers,
         }
@@ -2248,46 +2231,41 @@
             pre_digest.solution.piece_offset,
             pre_digest.solution.total_pieces,
         );
-        <span class="kw">let </span>position = u32::try_from(piece_index % u64::from(PIECES_IN_SEGMENT))
-            .expect(<span class="string">&quot;Position within segment always fits into u32; qed&quot;</span>);
-        <span class="kw">let </span>segment_index: SegmentIndex = piece_index / SegmentIndex::from(PIECES_IN_SEGMENT);
+        <span class="kw">let </span>position = piece_index.position();
+        <span class="kw">let </span>segment_index = piece_index.segment_index();
 
         <span class="comment">// This is not a very nice hack due to the fact that at the time first block is produced
-        // extrinsics with root blocks are not yet in runtime.
-        </span><span class="kw">let </span>maybe_records_root = <span class="kw">if </span>block_number.is_one() {
+        // extrinsics with segment headers are not yet in runtime.
+        </span><span class="kw">let </span>maybe_segment_commitment = <span class="kw">if </span>block_number.is_one() {
             <span class="kw">let </span>genesis_block_hash = <span class="self">self</span>.client.info().genesis_hash;
-            <span class="kw">let </span>archived_segments = Archiver::new(
-                RECORD_SIZE,
-                RECORDED_HISTORY_SEGMENT_SIZE,
-                <span class="self">self</span>.subspace_link.kzg.clone(),
-            )
-            .expect(<span class="string">&quot;Incorrect parameters for archiver&quot;</span>)
-            .add_block(
-                <span class="self">self</span>.client
-                    .block(genesis_block_hash)<span class="question-mark">?
-                    </span>.ok_or(Error::GenesisUnavailable)<span class="question-mark">?
-                    </span>.encode(),
-                BlockObjectMapping::default(),
-            );
+            <span class="kw">let </span>archived_segments = Archiver::new(<span class="self">self</span>.subspace_link.kzg.clone())
+                .expect(<span class="string">&quot;Incorrect parameters for archiver&quot;</span>)
+                .add_block(
+                    <span class="self">self</span>.client
+                        .block(genesis_block_hash)<span class="question-mark">?
+                        </span>.ok_or(Error::GenesisUnavailable)<span class="question-mark">?
+                        </span>.encode(),
+                    BlockObjectMapping::default(),
+                );
             archived_segments.into_iter().find_map(|archived_segment| {
-                <span class="kw">if </span>archived_segment.root_block.segment_index() == segment_index {
-                    <span class="prelude-val">Some</span>(archived_segment.root_block.records_root())
+                <span class="kw">if </span>archived_segment.segment_header.segment_index() == segment_index {
+                    <span class="prelude-val">Some</span>(archived_segment.segment_header.segment_commitment())
                 } <span class="kw">else </span>{
                     <span class="prelude-val">None
                 </span>}
             })
         } <span class="kw">else </span>{
-            aux_schema::load_records_root(<span class="self">self</span>.client.as_ref(), segment_index)<span class="question-mark">?
+            aux_schema::load_segment_commitment(<span class="self">self</span>.client.as_ref(), segment_index)<span class="question-mark">?
         </span>};
 
-        <span class="kw">let </span>records_root = maybe_records_root.ok_or(Error::RecordsRootNotFound(segment_index))<span class="question-mark">?</span>;
+        <span class="kw">let </span>segment_commitment =
+            maybe_segment_commitment.ok_or(Error::SegmentCommitmentNotFound(segment_index))<span class="question-mark">?</span>;
 
         <span class="comment">// Piece is not checked during initial block verification because it requires access to
-        // root block, check it now.
+        // segment header, check it now.
         </span>subspace_verification::check_piece(
             <span class="kw-2">&amp;</span><span class="self">self</span>.subspace_link.kzg,
-            PIECES_IN_SEGMENT,
-            <span class="kw-2">&amp;</span>records_root,
+            <span class="kw-2">&amp;</span>segment_commitment,
             position,
             <span class="kw-2">&amp;</span>pre_digest.solution,
         )
@@ -2303,7 +2281,7 @@
         <span class="kw">if </span>!skip_runtime_access {
             <span class="comment">// If the body is passed through, we need to use the runtime to check that the
             // internally-set timestamp in the inherents actually matches the slot set in the seal
-            // and root blocks in the inherents are set correctly.
+            // and segment headers in the inherents are set correctly.
             </span><span class="kw">if let </span><span class="prelude-val">Some</span>(extrinsics) = extrinsics {
                 <span class="kw">let </span>create_inherent_data_providers = <span class="self">self
                     </span>.create_inherent_data_providers
@@ -2365,7 +2343,6 @@
     <span class="kw">async fn </span>import_block(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         <span class="kw-2">mut </span>block: BlockImportParams&lt;Block, <span class="self">Self</span>::Transaction&gt;,
-        new_cache: HashMap&lt;CacheKeyId, Vec&lt;u8&gt;&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ImportResult, <span class="self">Self</span>::Error&gt; {
         <span class="kw">let </span>block_hash = block.post_hash();
         <span class="kw">let </span>block_number = <span class="kw-2">*</span>block.header.number();
@@ -2374,11 +2351,7 @@
         </span><span class="kw">match </span><span class="self">self</span>.client.status(block_hash) {
             <span class="prelude-val">Ok</span>(sp_blockchain::BlockStatus::InChain) =&gt; {
                 block.fork_choice = <span class="prelude-val">Some</span>(ForkChoiceStrategy::Custom(<span class="bool-val">false</span>));
-                <span class="kw">return </span><span class="self">self
-                    </span>.inner
-                    .import_block(block, new_cache)
-                    .<span class="kw">await
-                    </span>.map_err(Into::into);
+                <span class="kw">return </span><span class="self">self</span>.inner.import_block(block).<span class="kw">await</span>.map_err(Into::into);
             }
             <span class="prelude-val">Ok</span>(sp_blockchain::BlockStatus::Unknown) =&gt; {}
             <span class="prelude-val">Err</span>(error) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(ConsensusError::ClientImport(error.to_string())),
@@ -2455,19 +2428,20 @@
                 .extend(values.iter().map(|(k, v)| (k.to_vec(), <span class="prelude-val">Some</span>(v.to_vec()))))
         });
 
-        <span class="kw">for </span>(<span class="kw-2">&amp;</span>segment_index, records_root) <span class="kw">in </span><span class="kw-2">&amp;</span>subspace_digest_items.records_roots {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(found_records_root) =
-                aux_schema::load_records_root(<span class="self">self</span>.client.as_ref(), segment_index)
+        <span class="kw">for </span>(<span class="kw-2">&amp;</span>segment_index, segment_commitment) <span class="kw">in </span><span class="kw-2">&amp;</span>subspace_digest_items.segment_commitments {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(found_segment_commitment) =
+                aux_schema::load_segment_commitment(<span class="self">self</span>.client.as_ref(), segment_index)
                     .map_err(|e| ConsensusError::ClientImport(e.to_string()))<span class="question-mark">?
             </span>{
-                <span class="kw">if </span><span class="kw-2">&amp;</span>found_records_root != records_root {
+                <span class="kw">if </span><span class="kw-2">&amp;</span>found_segment_commitment != segment_commitment {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(ConsensusError::ClientImport(
-                        Error::&lt;Block::Header&gt;::DifferentRecordsRoot(segment_index).to_string(),
+                        Error::&lt;Block::Header&gt;::DifferentSegmentCommitment(segment_index)
+                            .to_string(),
                     ));
                 }
             }
 
-            aux_schema::write_records_root(segment_index, records_root, |values| {
+            aux_schema::write_segment_commitment(segment_index, segment_commitment, |values| {
                 block
                     .auxiliary
                     .extend(values.iter().map(|(k, v)| (k.to_vec(), <span class="prelude-val">Some</span>(v.to_vec()))))
@@ -2501,18 +2475,17 @@
         };
         block.fork_choice = <span class="prelude-val">Some</span>(fork_choice);
 
-        <span class="kw">let </span>import_result = <span class="self">self</span>.inner.import_block(block, new_cache).<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let </span>(block_import_acknowledgement_sender, <span class="kw-2">mut </span>block_import_acknowledgement_receiver) =
-            mpsc::channel(<span class="number">0</span>);
+        <span class="kw">let </span>import_result = <span class="self">self</span>.inner.import_block(block).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let </span>(acknowledgement_sender, <span class="kw-2">mut </span>acknowledgement_receiver) = mpsc::channel(<span class="number">0</span>);
 
-        <span class="self">self</span>.imported_block_notification_sender
-            .notify(<span class="kw">move </span>|| ImportedBlockNotification {
+        <span class="self">self</span>.block_importing_notification_sender
+            .notify(<span class="kw">move </span>|| BlockImportingNotification {
                 block_number,
-                block_import_acknowledgement_sender,
+                acknowledgement_sender,
             });
 
-        <span class="kw">while </span>(block_import_acknowledgement_receiver.next().<span class="kw">await</span>).is_some() {
-            <span class="comment">// Wait for all the acknowledgements to progress.
+        <span class="kw">while </span>(acknowledgement_receiver.next().<span class="kw">await</span>).is_some() {
+            <span class="comment">// Wait for all the acknowledgements to finish.
         </span>}
 
         <span class="prelude-val">Ok</span>(import_result)
@@ -2586,15 +2559,15 @@
         notification::channel(<span class="string">&quot;subspace_reward_signing_notification_stream&quot;</span>);
     <span class="kw">let </span>(archived_segment_notification_sender, archived_segment_notification_stream) =
         notification::channel(<span class="string">&quot;subspace_archived_segment_notification_stream&quot;</span>);
-    <span class="kw">let </span>(imported_block_notification_sender, imported_block_notification_stream) =
-        notification::channel(<span class="string">&quot;subspace_imported_block_notification_stream&quot;</span>);
+    <span class="kw">let </span>(block_importing_notification_sender, block_importing_notification_stream) =
+        notification::channel(<span class="string">&quot;subspace_block_importing_notification_stream&quot;</span>);
 
     <span class="kw">let </span>confirmation_depth_k = get_chain_constants(client.as_ref())
         .expect(<span class="string">&quot;Must always be able to get chain constants&quot;</span>)
         .confirmation_depth_k();
 
     <span class="comment">// TODO: Probably should have public parameters in chain constants instead
-    </span><span class="kw">let </span>kzg = Kzg::new(kzg::test_public_parameters());
+    </span><span class="kw">let </span>kzg = Kzg::new(kzg::embedded_kzg_settings());
 
     <span class="kw">let </span>link = SubspaceLink {
         slot_duration,
@@ -2604,9 +2577,10 @@
         reward_signing_notification_stream,
         archived_segment_notification_sender,
         archived_segment_notification_stream,
-        imported_block_notification_stream,
+        block_importing_notification_sender: block_importing_notification_sender.clone(),
+        block_importing_notification_stream,
         <span class="comment">// TODO: Consider making `confirmation_depth_k` non-zero
-        </span>root_blocks: Arc::new(Mutex::new(LruCache::new(
+        </span>segment_headers: Arc::new(Mutex::new(LruCache::new(
             NonZeroUsize::new(confirmation_depth_k <span class="kw">as </span>usize)
                 .expect(<span class="string">&quot;Confirmation depth of zero is not supported&quot;</span>),
         ))),
@@ -2616,7 +2590,7 @@
     <span class="kw">let </span>import = SubspaceBlockImport::new(
         client,
         wrapped_block_import,
-        imported_block_notification_sender,
+        block_importing_notification_sender,
         link.clone(),
         create_inherent_data_providers,
     );
@@ -2674,5 +2648,4 @@
         registry,
     ))
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sc_consensus_subspace" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (afaf3e07a 2023-01-14)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

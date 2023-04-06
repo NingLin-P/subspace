@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `domains/test/service/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../domain_test_service/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `domains/test/service/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="domain_test_service" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../domain_test_service/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -616,6 +616,184 @@
 <a href="#616" id="616">616</a>
 <a href="#617" id="617">617</a>
 <a href="#618" id="618">618</a>
+<a href="#619" id="619">619</a>
+<a href="#620" id="620">620</a>
+<a href="#621" id="621">621</a>
+<a href="#622" id="622">622</a>
+<a href="#623" id="623">623</a>
+<a href="#624" id="624">624</a>
+<a href="#625" id="625">625</a>
+<a href="#626" id="626">626</a>
+<a href="#627" id="627">627</a>
+<a href="#628" id="628">628</a>
+<a href="#629" id="629">629</a>
+<a href="#630" id="630">630</a>
+<a href="#631" id="631">631</a>
+<a href="#632" id="632">632</a>
+<a href="#633" id="633">633</a>
+<a href="#634" id="634">634</a>
+<a href="#635" id="635">635</a>
+<a href="#636" id="636">636</a>
+<a href="#637" id="637">637</a>
+<a href="#638" id="638">638</a>
+<a href="#639" id="639">639</a>
+<a href="#640" id="640">640</a>
+<a href="#641" id="641">641</a>
+<a href="#642" id="642">642</a>
+<a href="#643" id="643">643</a>
+<a href="#644" id="644">644</a>
+<a href="#645" id="645">645</a>
+<a href="#646" id="646">646</a>
+<a href="#647" id="647">647</a>
+<a href="#648" id="648">648</a>
+<a href="#649" id="649">649</a>
+<a href="#650" id="650">650</a>
+<a href="#651" id="651">651</a>
+<a href="#652" id="652">652</a>
+<a href="#653" id="653">653</a>
+<a href="#654" id="654">654</a>
+<a href="#655" id="655">655</a>
+<a href="#656" id="656">656</a>
+<a href="#657" id="657">657</a>
+<a href="#658" id="658">658</a>
+<a href="#659" id="659">659</a>
+<a href="#660" id="660">660</a>
+<a href="#661" id="661">661</a>
+<a href="#662" id="662">662</a>
+<a href="#663" id="663">663</a>
+<a href="#664" id="664">664</a>
+<a href="#665" id="665">665</a>
+<a href="#666" id="666">666</a>
+<a href="#667" id="667">667</a>
+<a href="#668" id="668">668</a>
+<a href="#669" id="669">669</a>
+<a href="#670" id="670">670</a>
+<a href="#671" id="671">671</a>
+<a href="#672" id="672">672</a>
+<a href="#673" id="673">673</a>
+<a href="#674" id="674">674</a>
+<a href="#675" id="675">675</a>
+<a href="#676" id="676">676</a>
+<a href="#677" id="677">677</a>
+<a href="#678" id="678">678</a>
+<a href="#679" id="679">679</a>
+<a href="#680" id="680">680</a>
+<a href="#681" id="681">681</a>
+<a href="#682" id="682">682</a>
+<a href="#683" id="683">683</a>
+<a href="#684" id="684">684</a>
+<a href="#685" id="685">685</a>
+<a href="#686" id="686">686</a>
+<a href="#687" id="687">687</a>
+<a href="#688" id="688">688</a>
+<a href="#689" id="689">689</a>
+<a href="#690" id="690">690</a>
+<a href="#691" id="691">691</a>
+<a href="#692" id="692">692</a>
+<a href="#693" id="693">693</a>
+<a href="#694" id="694">694</a>
+<a href="#695" id="695">695</a>
+<a href="#696" id="696">696</a>
+<a href="#697" id="697">697</a>
+<a href="#698" id="698">698</a>
+<a href="#699" id="699">699</a>
+<a href="#700" id="700">700</a>
+<a href="#701" id="701">701</a>
+<a href="#702" id="702">702</a>
+<a href="#703" id="703">703</a>
+<a href="#704" id="704">704</a>
+<a href="#705" id="705">705</a>
+<a href="#706" id="706">706</a>
+<a href="#707" id="707">707</a>
+<a href="#708" id="708">708</a>
+<a href="#709" id="709">709</a>
+<a href="#710" id="710">710</a>
+<a href="#711" id="711">711</a>
+<a href="#712" id="712">712</a>
+<a href="#713" id="713">713</a>
+<a href="#714" id="714">714</a>
+<a href="#715" id="715">715</a>
+<a href="#716" id="716">716</a>
+<a href="#717" id="717">717</a>
+<a href="#718" id="718">718</a>
+<a href="#719" id="719">719</a>
+<a href="#720" id="720">720</a>
+<a href="#721" id="721">721</a>
+<a href="#722" id="722">722</a>
+<a href="#723" id="723">723</a>
+<a href="#724" id="724">724</a>
+<a href="#725" id="725">725</a>
+<a href="#726" id="726">726</a>
+<a href="#727" id="727">727</a>
+<a href="#728" id="728">728</a>
+<a href="#729" id="729">729</a>
+<a href="#730" id="730">730</a>
+<a href="#731" id="731">731</a>
+<a href="#732" id="732">732</a>
+<a href="#733" id="733">733</a>
+<a href="#734" id="734">734</a>
+<a href="#735" id="735">735</a>
+<a href="#736" id="736">736</a>
+<a href="#737" id="737">737</a>
+<a href="#738" id="738">738</a>
+<a href="#739" id="739">739</a>
+<a href="#740" id="740">740</a>
+<a href="#741" id="741">741</a>
+<a href="#742" id="742">742</a>
+<a href="#743" id="743">743</a>
+<a href="#744" id="744">744</a>
+<a href="#745" id="745">745</a>
+<a href="#746" id="746">746</a>
+<a href="#747" id="747">747</a>
+<a href="#748" id="748">748</a>
+<a href="#749" id="749">749</a>
+<a href="#750" id="750">750</a>
+<a href="#751" id="751">751</a>
+<a href="#752" id="752">752</a>
+<a href="#753" id="753">753</a>
+<a href="#754" id="754">754</a>
+<a href="#755" id="755">755</a>
+<a href="#756" id="756">756</a>
+<a href="#757" id="757">757</a>
+<a href="#758" id="758">758</a>
+<a href="#759" id="759">759</a>
+<a href="#760" id="760">760</a>
+<a href="#761" id="761">761</a>
+<a href="#762" id="762">762</a>
+<a href="#763" id="763">763</a>
+<a href="#764" id="764">764</a>
+<a href="#765" id="765">765</a>
+<a href="#766" id="766">766</a>
+<a href="#767" id="767">767</a>
+<a href="#768" id="768">768</a>
+<a href="#769" id="769">769</a>
+<a href="#770" id="770">770</a>
+<a href="#771" id="771">771</a>
+<a href="#772" id="772">772</a>
+<a href="#773" id="773">773</a>
+<a href="#774" id="774">774</a>
+<a href="#775" id="775">775</a>
+<a href="#776" id="776">776</a>
+<a href="#777" id="777">777</a>
+<a href="#778" id="778">778</a>
+<a href="#779" id="779">779</a>
+<a href="#780" id="780">780</a>
+<a href="#781" id="781">781</a>
+<a href="#782" id="782">782</a>
+<a href="#783" id="783">783</a>
+<a href="#784" id="784">784</a>
+<a href="#785" id="785">785</a>
+<a href="#786" id="786">786</a>
+<a href="#787" id="787">787</a>
+<a href="#788" id="788">788</a>
+<a href="#789" id="789">789</a>
+<a href="#790" id="790">790</a>
+<a href="#791" id="791">791</a>
+<a href="#792" id="792">792</a>
+<a href="#793" id="793">793</a>
+<a href="#794" id="794">794</a>
+<a href="#795" id="795">795</a>
+<a href="#796" id="796">796</a>
 </pre><pre class="rust"><code><span class="comment">// Copyright 2019-2021 Parity Technologies (UK) Ltd.
 // This file is part of Cumulus.
 
@@ -638,13 +816,16 @@
 
 </span><span class="kw">pub mod </span>chain_spec;
 
+<span class="kw">use </span>domain_client_executor::ExecutorStreams;
 <span class="kw">use </span>domain_test_runtime::opaque::Block;
 <span class="kw">use </span>domain_test_runtime::Hash;
 <span class="kw">use </span>futures::StreamExt;
 <span class="kw">use </span>sc_client_api::execution_extensions::ExecutionStrategies;
+<span class="kw">use </span>sc_client_api::BlockchainEvents;
 <span class="kw">use </span>sc_consensus_slots::SlotProportion;
+<span class="kw">use </span>sc_network::config::{NonReservedPeerMode, TransportConfig};
 <span class="kw">use </span>sc_network::{multiaddr, NetworkService, NetworkStateInfo};
-<span class="kw">use </span>sc_network_common::config::{NonReservedPeerMode, TransportConfig};
+<span class="kw">use </span>sc_network_sync::SyncingService;
 <span class="kw">use </span>sc_service::config::{
     DatabaseSource, KeystoreConfig, MultiaddrWithPeerId, NetworkConfiguration,
     OffchainWorkerConfig, PruningMode, WasmExecutionMethod, WasmtimeInstantiationStrategy,
@@ -667,6 +848,7 @@
 <span class="kw">use </span>subspace_networking::libp2p::identity;
 <span class="kw">use </span>subspace_runtime_primitives::opaque::Block <span class="kw">as </span>PBlock;
 <span class="kw">use </span>subspace_service::{DsnConfig, SubspaceNetworking};
+<span class="kw">use </span>subspace_test_service::mock::MockPrimaryNode;
 <span class="kw">use </span>substrate_test_client::{
     BlockchainEventsExt, RpcHandlersExt, RpcTransactionError, RpcTransactionOutput,
 };
@@ -720,6 +902,7 @@
 ///
 /// A primary chain full node and system domain node will be started, similar to the behaviour in
 /// the production.
+/// TODO: remove once all the existing tests integrated with `MockPrimaryNode`
 </span><span class="attr">#[sc_tracing::logging::prefix_logs_with(system_domain_config.network.node_name.as_str())]
 </span><span class="kw">async fn </span>run_executor(
     system_domain_config: ServiceConfiguration,
@@ -730,6 +913,7 @@
     Arc&lt;Backend&gt;,
     Arc&lt;CodeExecutor&gt;,
     Arc&lt;NetworkService&lt;Block, H256&gt;&gt;,
+    Arc&lt;SyncingService&lt;Block&gt;&gt;,
     RpcHandlers,
     Executor,
 )&gt; {
@@ -756,6 +940,8 @@
                     allow_non_global_addresses_in_dht: <span class="bool-val">true</span>,
                     max_out_connections: <span class="number">50</span>,
                     max_in_connections: <span class="number">50</span>,
+                    max_pending_out_connections: <span class="number">150</span>,
+                    max_pending_in_connections: <span class="number">150</span>,
                     target_connections: <span class="number">50</span>,
                 },
                 piece_cache_size: <span class="number">1024 </span>* <span class="number">1024 </span>* <span class="number">1024</span>,
@@ -790,8 +976,34 @@
         service_config: system_domain_config,
         maybe_relayer_id: <span class="prelude-val">None</span>,
     };
-    <span class="kw">let </span>block_import_throttling_buffer_size = <span class="number">10</span>;
+    <span class="kw">let </span>executor_streams = ExecutorStreams {
+        primary_block_import_throttling_buffer_size: <span class="number">10</span>,
+        block_importing_notification_stream: primary_chain_full_node
+            .block_importing_notification_stream
+            .subscribe()
+            .then(|block_importing_notification| <span class="kw">async move </span>{
+                (
+                    block_importing_notification.block_number,
+                    block_importing_notification.acknowledgement_sender,
+                )
+            }),
+        imported_block_notification_stream: primary_chain_full_node
+            .client
+            .every_import_notification_stream(),
+        new_slot_notification_stream: primary_chain_full_node
+            .new_slot_notification_stream
+            .subscribe()
+            .then(|slot_notification| <span class="kw">async move </span>{
+                (
+                    slot_notification.new_slot_info.slot,
+                    slot_notification.new_slot_info.global_challenge,
+                    <span class="prelude-val">None</span>,
+                )
+            }),
+        _phantom: Default::default(),
+    };
     <span class="kw">let </span>system_domain_node = domain_service::new_full_system::&lt;
+        <span class="kw">_</span>,
         <span class="kw">_</span>,
         <span class="kw">_</span>,
         <span class="kw">_</span>,
@@ -802,27 +1014,9 @@
     &gt;(
         system_domain_config,
         primary_chain_full_node.client.clone(),
-        primary_chain_full_node.network.clone(),
+        primary_chain_full_node.sync_service.clone(),
         <span class="kw-2">&amp;</span>primary_chain_full_node.select_chain,
-        primary_chain_full_node
-            .imported_block_notification_stream
-            .subscribe()
-            .then(|imported_block_notification| <span class="kw">async move </span>{
-                (
-                    imported_block_notification.block_number,
-                    imported_block_notification.block_import_acknowledgement_sender,
-                )
-            }),
-        primary_chain_full_node
-            .new_slot_notification_stream
-            .subscribe()
-            .then(|slot_notification| <span class="kw">async move </span>{
-                (
-                    slot_notification.new_slot_info.slot,
-                    slot_notification.new_slot_info.global_challenge,
-                )
-            }),
-        block_import_throttling_buffer_size,
+        executor_streams,
         gossip_msg_sink,
     )
     .<span class="kw">await</span><span class="question-mark">?</span>;
@@ -832,7 +1026,8 @@
         client,
         backend,
         code_executor,
-        network,
+        network_service,
+        sync_service,
         network_starter,
         rpc_handlers,
         executor,
@@ -841,8 +1036,11 @@
 
     <span class="kw">let </span><span class="kw-2">mut </span>domain_tx_pool_sinks = BTreeMap::new();
     domain_tx_pool_sinks.insert(DomainId::SYSTEM, tx_pool_sink);
-    <span class="kw">let </span>cross_domain_message_gossip_worker =
-        GossipWorker::&lt;Block&gt;::new(network.clone(), domain_tx_pool_sinks);
+    <span class="kw">let </span>cross_domain_message_gossip_worker = GossipWorker::&lt;Block&gt;::new(
+        network_service.clone(),
+        sync_service.clone(),
+        domain_tx_pool_sinks,
+    );
 
     task_manager
         .spawn_essential_handle()
@@ -863,7 +1061,103 @@
         client,
         backend,
         code_executor,
-        network,
+        network_service,
+        sync_service,
+        rpc_handlers,
+        executor,
+    ))
+}
+
+<span class="doccomment">/// Start an executor with the given system domain `Configuration` and the mock primary node.
+</span><span class="attr">#[sc_tracing::logging::prefix_logs_with(system_domain_config.network.node_name.as_str())]
+</span><span class="kw">async fn </span>run_executor_with_mock_primary_node(
+    system_domain_config: ServiceConfiguration,
+    mock_primary_node: <span class="kw-2">&amp;mut </span>MockPrimaryNode,
+) -&gt; sc_service::error::Result&lt;(
+    TaskManager,
+    Arc&lt;Client&gt;,
+    Arc&lt;Backend&gt;,
+    Arc&lt;CodeExecutor&gt;,
+    Arc&lt;NetworkService&lt;Block, H256&gt;&gt;,
+    Arc&lt;SyncingService&lt;Block&gt;&gt;,
+    RpcHandlers,
+    Executor,
+)&gt; {
+    <span class="kw">let </span>(gossip_msg_sink, gossip_msg_stream) =
+        sc_utils::mpsc::tracing_unbounded(<span class="string">&quot;cross_domain_gossip_messages&quot;</span>, <span class="number">100</span>);
+    <span class="kw">let </span>system_domain_config = DomainConfiguration {
+        service_config: system_domain_config,
+        maybe_relayer_id: <span class="prelude-val">None</span>,
+    };
+    <span class="kw">let </span>executor_streams = ExecutorStreams {
+        <span class="comment">// Set `primary_block_import_throttling_buffer_size` to 0 to ensure the primary chain will not be
+        // ahead of the execution chain by more than one block, thus slot will not be skipped in test.
+        </span>primary_block_import_throttling_buffer_size: <span class="number">0</span>,
+        block_importing_notification_stream: mock_primary_node
+            .block_importing_notification_stream(),
+        imported_block_notification_stream: mock_primary_node
+            .client
+            .every_import_notification_stream(),
+        new_slot_notification_stream: mock_primary_node.new_slot_notification_stream(),
+        _phantom: Default::default(),
+    };
+    <span class="kw">let </span>system_domain_node = domain_service::new_full_system::&lt;
+        <span class="kw">_</span>,
+        <span class="kw">_</span>,
+        <span class="kw">_</span>,
+        <span class="kw">_</span>,
+        <span class="kw">_</span>,
+        <span class="kw">_</span>,
+        domain_test_runtime::RuntimeApi,
+        RuntimeExecutor,
+    &gt;(
+        system_domain_config,
+        mock_primary_node.client.clone(),
+        MockPrimaryNode::sync_oracle(),
+        <span class="kw-2">&amp;</span>mock_primary_node.select_chain,
+        executor_streams,
+        gossip_msg_sink,
+    )
+    .<span class="kw">await</span><span class="question-mark">?</span>;
+
+    <span class="kw">let </span>domain_service::NewFullSystem {
+        task_manager,
+        client,
+        backend,
+        code_executor,
+        network_service,
+        sync_service,
+        network_starter,
+        rpc_handlers,
+        executor,
+        tx_pool_sink,
+    } = system_domain_node;
+
+    <span class="kw">let </span><span class="kw-2">mut </span>domain_tx_pool_sinks = BTreeMap::new();
+    domain_tx_pool_sinks.insert(DomainId::SYSTEM, tx_pool_sink);
+    <span class="kw">let </span>cross_domain_message_gossip_worker = GossipWorker::&lt;Block&gt;::new(
+        network_service.clone(),
+        sync_service.clone(),
+        domain_tx_pool_sinks,
+    );
+
+    task_manager
+        .spawn_essential_handle()
+        .spawn_essential_blocking(
+            <span class="string">&quot;cross-domain-gossip-message-worker&quot;</span>,
+            <span class="prelude-val">None</span>,
+            Box::pin(cross_domain_message_gossip_worker.run(gossip_msg_stream)),
+        );
+
+    network_starter.start_network();
+
+    <span class="prelude-val">Ok</span>((
+        task_manager,
+        client,
+        backend,
+        code_executor,
+        network_service,
+        sync_service,
         rpc_handlers,
         executor,
     ))
@@ -871,6 +1165,8 @@
 
 <span class="doccomment">/// A Cumulus test node instance used for testing.
 </span><span class="kw">pub struct </span>SystemDomainNode {
+    <span class="doccomment">/// The node&#39;s key
+    </span><span class="kw">pub </span>key: Sr25519Keyring,
     <span class="doccomment">/// TaskManager&#39;s instance.
     </span><span class="kw">pub </span>task_manager: TaskManager,
     <span class="doccomment">/// Client&#39;s instance.
@@ -879,8 +1175,10 @@
     </span><span class="kw">pub </span>backend: Arc&lt;Backend&gt;,
     <span class="doccomment">/// Code executor.
     </span><span class="kw">pub </span>code_executor: Arc&lt;CodeExecutor&gt;,
-    <span class="doccomment">/// Node&#39;s network.
-    </span><span class="kw">pub </span>network: Arc&lt;NetworkService&lt;Block, H256&gt;&gt;,
+    <span class="doccomment">/// Network service.
+    </span><span class="kw">pub </span>network_service: Arc&lt;NetworkService&lt;Block, H256&gt;&gt;,
+    <span class="doccomment">/// Sync service.
+    </span><span class="kw">pub </span>sync_service: Arc&lt;SyncingService&lt;Block&gt;&gt;,
     <span class="doccomment">/// The `MultiaddrWithPeerId` to this node. This is useful if you want to pass it as &quot;boot node&quot;
     /// to other nodes.
     </span><span class="kw">pub </span>addr: MultiaddrWithPeerId,
@@ -978,6 +1276,7 @@
     </span>}
 
     <span class="doccomment">/// Build the [`SystemDomainNode`].
+    /// TODO: remove once all the existing tests integrated with `MockPrimaryNode`
     </span><span class="kw">pub async fn </span>build(
         <span class="self">self</span>,
         role: Role,
@@ -1008,20 +1307,77 @@
             <span class="macro">format!</span>(<span class="string">&quot;{} (PrimaryChain)&quot;</span>, primary_chain_config.network.node_name);
 
         <span class="kw">let </span>multiaddr = system_domain_config.network.listen_addresses[<span class="number">0</span>].clone();
-        <span class="kw">let </span>(task_manager, client, backend, code_executor, network, rpc_handlers, executor) =
-            run_executor(system_domain_config, primary_chain_config)
-                .<span class="kw">await
-                </span>.expect(<span class="string">&quot;could not start system domain node&quot;</span>);
-
-        <span class="kw">let </span>peer_id = network.local_peer_id();
-        <span class="kw">let </span>addr = MultiaddrWithPeerId { multiaddr, peer_id };
-
-        SystemDomainNode {
+        <span class="kw">let </span>(
             task_manager,
             client,
             backend,
             code_executor,
-            network,
+            network_service,
+            sync_service,
+            rpc_handlers,
+            executor,
+        ) = run_executor(system_domain_config, primary_chain_config)
+            .<span class="kw">await
+            </span>.expect(<span class="string">&quot;could not start system domain node&quot;</span>);
+
+        <span class="kw">let </span>peer_id = network_service.local_peer_id();
+        <span class="kw">let </span>addr = MultiaddrWithPeerId { multiaddr, peer_id };
+
+        SystemDomainNode {
+            key: <span class="self">self</span>.key,
+            task_manager,
+            client,
+            backend,
+            code_executor,
+            network_service,
+            sync_service,
+            addr,
+            rpc_handlers,
+            executor,
+        }
+    }
+
+    <span class="doccomment">/// Build the [`SystemDomainNode`] with `MockPrimaryNode` as the embedded primary node.
+    </span><span class="kw">pub async fn </span>build_with_mock_primary_node(
+        <span class="self">self</span>,
+        role: Role,
+        mock_primary_node: <span class="kw-2">&amp;mut </span>MockPrimaryNode,
+    ) -&gt; SystemDomainNode {
+        <span class="kw">let </span>system_domain_config = node_config(
+            <span class="self">self</span>.tokio_handle.clone(),
+            <span class="self">self</span>.key,
+            <span class="self">self</span>.system_domain_nodes,
+            <span class="self">self</span>.system_domain_nodes_exclusive,
+            role,
+            BasePath::new(<span class="self">self</span>.base_path.path().join(<span class="string">&quot;system&quot;</span>)),
+        )
+        .expect(<span class="string">&quot;could not generate system domain node Configuration&quot;</span>);
+
+        <span class="kw">let </span>multiaddr = system_domain_config.network.listen_addresses[<span class="number">0</span>].clone();
+        <span class="kw">let </span>(
+            task_manager,
+            client,
+            backend,
+            code_executor,
+            network_service,
+            sync_service,
+            rpc_handlers,
+            executor,
+        ) = run_executor_with_mock_primary_node(system_domain_config, mock_primary_node)
+            .<span class="kw">await
+            </span>.expect(<span class="string">&quot;could not start system domain node&quot;</span>);
+
+        <span class="kw">let </span>peer_id = network_service.local_peer_id();
+        <span class="kw">let </span>addr = MultiaddrWithPeerId { multiaddr, peer_id };
+
+        SystemDomainNode {
+            key: <span class="self">self</span>.key,
+            task_manager,
+            client,
+            backend,
+            code_executor,
+            network_service,
+            sync_service,
             addr,
             rpc_handlers,
             executor,
@@ -1077,7 +1433,6 @@
         transaction_pool: Default::default(),
         network: network_config,
         keystore: KeystoreConfig::InMemory,
-        keystore_remote: Default::default(),
         database: DatabaseSource::ParityDb {
             path: root.join(<span class="string">&quot;paritydb&quot;</span>),
         },
@@ -1217,6 +1572,7 @@
 ///
 /// This is essentially a wrapper around
 /// [`run_validator_node`](subspace_test_service::run_validator_node).
+/// TODO: remove once all the existing tests integrated with `MockPrimaryNode`
 </span><span class="kw">pub async fn </span>run_primary_chain_validator_node(
     tokio_handle: tokio::runtime::Handle,
     key: Sr25519Keyring,
@@ -1234,5 +1590,4 @@
     )
     .<span class="kw">await
 </span>}
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="domain_test_service" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (afaf3e07a 2023-01-14)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

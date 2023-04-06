@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"trait":["CoreBundleConstructor","SignerExtractor","StateRootExtractor"],"type":["ExtractSignerResult","ExtractedStateRoots"]};

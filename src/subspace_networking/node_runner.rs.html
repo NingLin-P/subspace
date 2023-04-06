@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-networking/src/node_runner.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>node_runner.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_networking/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-networking/src/node_runner.rs`."><title>node_runner.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_networking" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_networking/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1151,48 +1151,6 @@
 <a href="#1151" id="1151">1151</a>
 <a href="#1152" id="1152">1152</a>
 <a href="#1153" id="1153">1153</a>
-<a href="#1154" id="1154">1154</a>
-<a href="#1155" id="1155">1155</a>
-<a href="#1156" id="1156">1156</a>
-<a href="#1157" id="1157">1157</a>
-<a href="#1158" id="1158">1158</a>
-<a href="#1159" id="1159">1159</a>
-<a href="#1160" id="1160">1160</a>
-<a href="#1161" id="1161">1161</a>
-<a href="#1162" id="1162">1162</a>
-<a href="#1163" id="1163">1163</a>
-<a href="#1164" id="1164">1164</a>
-<a href="#1165" id="1165">1165</a>
-<a href="#1166" id="1166">1166</a>
-<a href="#1167" id="1167">1167</a>
-<a href="#1168" id="1168">1168</a>
-<a href="#1169" id="1169">1169</a>
-<a href="#1170" id="1170">1170</a>
-<a href="#1171" id="1171">1171</a>
-<a href="#1172" id="1172">1172</a>
-<a href="#1173" id="1173">1173</a>
-<a href="#1174" id="1174">1174</a>
-<a href="#1175" id="1175">1175</a>
-<a href="#1176" id="1176">1176</a>
-<a href="#1177" id="1177">1177</a>
-<a href="#1178" id="1178">1178</a>
-<a href="#1179" id="1179">1179</a>
-<a href="#1180" id="1180">1180</a>
-<a href="#1181" id="1181">1181</a>
-<a href="#1182" id="1182">1182</a>
-<a href="#1183" id="1183">1183</a>
-<a href="#1184" id="1184">1184</a>
-<a href="#1185" id="1185">1185</a>
-<a href="#1186" id="1186">1186</a>
-<a href="#1187" id="1187">1187</a>
-<a href="#1188" id="1188">1188</a>
-<a href="#1189" id="1189">1189</a>
-<a href="#1190" id="1190">1190</a>
-<a href="#1191" id="1191">1191</a>
-<a href="#1192" id="1192">1192</a>
-<a href="#1193" id="1193">1193</a>
-<a href="#1194" id="1194">1194</a>
-<a href="#1195" id="1195">1195</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::behavior::persistent_parameters::NetworkingParametersRegistry;
 <span class="kw">use </span><span class="kw">crate</span>::behavior::{provider_storage, Behavior, Event};
 <span class="kw">use </span><span class="kw">crate</span>::create::temporary_bans::TemporaryBans;
@@ -1294,10 +1252,6 @@
     </span>networking_parameters_registry: Box&lt;<span class="kw">dyn </span>NetworkingParametersRegistry&gt;,
     <span class="doccomment">/// Defines set of peers with a permanent connection (and reconnection if necessary).
     </span>reserved_peers: HashMap&lt;PeerId, Multiaddr&gt;,
-    <span class="doccomment">/// Incoming swarm connection limit.
-    </span>max_established_incoming_connections: u32,
-    <span class="doccomment">/// Outgoing swarm connection limit.
-    </span>max_established_outgoing_connections: u32,
     <span class="doccomment">/// Defines target total (in and out) connection number that should be maintained.
     </span>target_connections: u32,
     <span class="doccomment">/// Temporarily banned peers.
@@ -1320,8 +1274,6 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) next_random_query_interval: Duration,
     <span class="kw">pub</span>(<span class="kw">crate</span>) networking_parameters_registry: Box&lt;<span class="kw">dyn </span>NetworkingParametersRegistry&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) reserved_peers: HashMap&lt;PeerId, Multiaddr&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) max_established_incoming_connections: u32,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) max_established_outgoing_connections: u32,
     <span class="kw">pub</span>(<span class="kw">crate</span>) target_connections: u32,
     <span class="kw">pub</span>(<span class="kw">crate</span>) temporary_bans: Arc&lt;Mutex&lt;TemporaryBans&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) metrics: <span class="prelude-ty">Option</span>&lt;Metrics&gt;,
@@ -1340,8 +1292,6 @@
             next_random_query_interval,
             networking_parameters_registry,
             reserved_peers,
-            max_established_incoming_connections,
-            max_established_outgoing_connections,
             target_connections,
             temporary_bans,
             metrics,
@@ -1362,8 +1312,6 @@
             </span>peer_dialing_timeout: Box::pin(tokio::time::sleep(Duration::from_secs(<span class="number">0</span>)).fuse()),
             networking_parameters_registry,
             reserved_peers,
-            max_established_incoming_connections,
-            max_established_outgoing_connections,
             target_connections,
             temporary_bans,
             metrics,
@@ -1568,7 +1516,7 @@
 
                 <span class="comment">// TODO: Workaround for https://github.com/libp2p/rust-libp2p/discussions/3418
                 </span><span class="self">self</span>.established_connections
-                    .entry((peer_id, endpoint.clone()))
+                    .entry((peer_id, endpoint))
                     .and_modify(|entry| {
                         <span class="kw-2">*</span>entry += <span class="number">1</span>;
                     })
@@ -1588,51 +1536,6 @@
                         .expand(REGULAR_CONCURRENT_TASKS_BOOST_PER_PEER)
                     {
                         <span class="macro">warn!</span>(%error, <span class="string">&quot;Failed to expand regular concurrent tasks&quot;</span>);
-                    }
-                }
-
-                <span class="kw">let </span>(in_connections_number, out_connections_number) = {
-                    <span class="kw">let </span>network_info = <span class="self">self</span>.swarm.network_info();
-                    <span class="kw">let </span>connections = network_info.connection_counters();
-
-                    (
-                        connections.num_established_incoming(),
-                        connections.num_established_outgoing(),
-                    )
-                };
-
-                <span class="kw">match </span>endpoint {
-                    <span class="comment">// In connections
-                    </span>ConnectedPoint::Listener { .. } =&gt; {
-                        <span class="comment">// check connections limit for non-reserved peers
-                        </span><span class="kw">if </span>!is_reserved_peer
-                            &amp;&amp; in_connections_number &gt; <span class="self">self</span>.max_established_incoming_connections
-                        {
-                            <span class="macro">debug!</span>(
-                                %peer_id,
-                                <span class="string">&quot;Incoming connections limit exceeded. Disconnecting in-peer ...&quot;
-                            </span>);
-                            <span class="comment">// Error here means: &quot;peer was already disconnected&quot;
-                            </span><span class="kw">let _ </span>= <span class="self">self</span>.swarm.disconnect_peer_id(peer_id);
-                        }
-                    }
-                    <span class="comment">// Out connections
-                    </span>ConnectedPoint::Dialer { address, .. } =&gt; {
-                        <span class="self">self</span>.networking_parameters_registry
-                            .add_known_peer(peer_id, <span class="macro">vec!</span>[address])
-                            .<span class="kw">await</span>;
-
-                        <span class="comment">// check connections limit for non-reserved peers
-                        </span><span class="kw">if </span>!is_reserved_peer
-                            &amp;&amp; out_connections_number &gt; <span class="self">self</span>.max_established_outgoing_connections
-                        {
-                            <span class="macro">debug!</span>(
-                                %peer_id,
-                                <span class="string">&quot;Outgoing connections limit exceeded. Disconnecting out-peer ...&quot;
-                            </span>);
-                            <span class="comment">// Error here means: &quot;peer was already disconnected&quot;
-                            </span><span class="kw">let _ </span>= <span class="self">self</span>.swarm.disconnect_peer_id(peer_id);
-                        }
                     }
                 }
             }
@@ -2172,6 +2075,10 @@
                 topic,
                 result_sender,
             } =&gt; {
+                <span class="kw">if </span>!<span class="self">self</span>.swarm.behaviour().gossipsub.is_enabled() {
+                    <span class="macro">panic!</span>(<span class="string">&quot;Gossibsub protocol is disabled.&quot;</span>);
+                }
+
                 <span class="kw">let </span>topic_hash = topic.hash();
                 <span class="kw">let </span>(sender, receiver) = mpsc::unbounded();
 
@@ -2194,20 +2101,23 @@
                     Entry::Vacant(entry) =&gt; {
                         <span class="comment">// Otherwise subscription needs to be created.
 
-                        </span><span class="kw">match </span><span class="self">self</span>.swarm.behaviour_mut().gossipsub.subscribe(<span class="kw-2">&amp;</span>topic) {
-                            <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>) =&gt; {
-                                <span class="kw">if </span>result_sender.send(<span class="prelude-val">Ok</span>(created_subscription)).is_ok() {
-                                    entry.insert(IntMap::from_iter([(subscription_id, sender)]));
+                        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(gossipsub) = <span class="self">self</span>.swarm.behaviour_mut().gossipsub.as_mut() {
+                            <span class="kw">match </span>gossipsub.subscribe(<span class="kw-2">&amp;</span>topic) {
+                                <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>) =&gt; {
+                                    <span class="kw">if </span>result_sender.send(<span class="prelude-val">Ok</span>(created_subscription)).is_ok() {
+                                        entry
+                                            .insert(IntMap::from_iter([(subscription_id, sender)]));
+                                    }
                                 }
-                            }
-                            <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>) =&gt; {
-                                <span class="macro">panic!</span>(
-                                    <span class="string">&quot;Logic error, topic subscription wasn&#39;t created, this must never \
+                                <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>) =&gt; {
+                                    <span class="macro">panic!</span>(
+                                        <span class="string">&quot;Logic error, topic subscription wasn&#39;t created, this must never \
                             happen&quot;
-                                </span>);
-                            }
-                            <span class="prelude-val">Err</span>(error) =&gt; {
-                                <span class="kw">let _ </span>= result_sender.send(<span class="prelude-val">Err</span>(error));
+                                    </span>);
+                                }
+                                <span class="prelude-val">Err</span>(error) =&gt; {
+                                    <span class="kw">let _ </span>= result_sender.send(<span class="prelude-val">Err</span>(error));
+                                }
                             }
                         }
                     }
@@ -2217,6 +2127,10 @@
                 topic,
                 subscription_id,
             } =&gt; {
+                <span class="kw">if </span>!<span class="self">self</span>.swarm.behaviour().gossipsub.is_enabled() {
+                    <span class="macro">panic!</span>(<span class="string">&quot;Gossibsub protocol is disabled.&quot;</span>);
+                }
+
                 <span class="kw">if let </span>Entry::Occupied(<span class="kw-2">mut </span>entry) =
                     <span class="self">self</span>.topic_subscription_senders.entry(topic.hash())
                 {
@@ -2226,9 +2140,10 @@
                     </span><span class="kw">if </span>entry.get().is_empty() {
                         entry.remove_entry();
 
-                        <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = <span class="self">self</span>.swarm.behaviour_mut().gossipsub.unsubscribe(<span class="kw-2">&amp;</span>topic)
-                        {
-                            <span class="macro">warn!</span>(<span class="string">&quot;Failed to unsubscribe from topic {topic}: {error}&quot;</span>);
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(gossipsub) = <span class="self">self</span>.swarm.behaviour_mut().gossipsub.as_mut() {
+                            <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = gossipsub.unsubscribe(<span class="kw-2">&amp;</span>topic) {
+                                <span class="macro">warn!</span>(<span class="string">&quot;Failed to unsubscribe from topic {topic}: {error}&quot;</span>);
+                            }
                         }
                     }
                 } <span class="kw">else </span>{
@@ -2243,14 +2158,15 @@
                 message,
                 result_sender,
             } =&gt; {
-                <span class="comment">// Doesn&#39;t matter if receiver still waits for response.
-                </span><span class="kw">let _ </span>= result_sender.send(
-                    <span class="self">self</span>.swarm
-                        .behaviour_mut()
-                        .gossipsub
-                        .publish(topic, message)
-                        .map(|_message_id| ()),
-                );
+                <span class="kw">if </span>!<span class="self">self</span>.swarm.behaviour().gossipsub.is_enabled() {
+                    <span class="macro">panic!</span>(<span class="string">&quot;Gossibsub protocol is disabled.&quot;</span>);
+                }
+
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(gossipsub) = <span class="self">self</span>.swarm.behaviour_mut().gossipsub.as_mut() {
+                    <span class="comment">// Doesn&#39;t matter if receiver still waits for response.
+                    </span><span class="kw">let _ </span>=
+                        result_sender.send(gossipsub.publish(topic, message).map(|_message_id| ()));
+                }
             }
             Command::GetClosestPeers {
                 key,
@@ -2388,5 +2304,4 @@
         }
     }
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_networking" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (afaf3e07a 2023-01-14)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

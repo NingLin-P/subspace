@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-farmer-components/src/plotting.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>plotting.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_farmer_components/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-farmer-components/src/plotting.rs`."><title>plotting.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_farmer_components" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_farmer_components/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -265,8 +265,6 @@
 <a href="#265" id="265">265</a>
 <a href="#266" id="266">266</a>
 <a href="#267" id="267">267</a>
-<a href="#268" id="268">268</a>
-<a href="#269" id="269">269</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::piece_caching::PieceMemoryCache;
 <span class="kw">use </span><span class="kw">crate</span>::segment_reconstruction::recover_missing_piece;
 <span class="kw">use crate</span>::{FarmerProtocolInfo, SectorMetadata};
@@ -277,12 +275,11 @@
 <span class="kw">use </span>std::error::Error;
 <span class="kw">use </span>std::io;
 <span class="kw">use </span>std::sync::Arc;
-<span class="kw">use </span>subspace_core_primitives::crypto::kzg;
 <span class="kw">use </span>subspace_core_primitives::crypto::kzg::{Commitment, Kzg};
+<span class="kw">use </span>subspace_core_primitives::crypto::{Scalar, ScalarLegacy};
 <span class="kw">use </span>subspace_core_primitives::sector_codec::{SectorCodec, SectorCodecError};
 <span class="kw">use </span>subspace_core_primitives::{
-    Piece, PieceIndex, PieceIndexHash, PublicKey, Scalar, SectorId, SectorIndex, PIECE_SIZE,
-    PLOT_SECTOR_SIZE,
+    Piece, PieceIndex, PieceIndexHash, PublicKey, SectorId, SectorIndex, PLOT_SECTOR_SIZE,
 };
 <span class="kw">use </span>thiserror::Error;
 <span class="kw">use </span>tracing::info;
@@ -368,7 +365,7 @@
     </span>FailedToEncodeSector(<span class="attr">#[from] </span>SectorCodecError),
     <span class="doccomment">/// Failed to commit
     </span><span class="attr">#[error(<span class="string">&quot;Failed to commit: {0}&quot;</span>)]
-    </span>FailedToCommit(<span class="attr">#[from] </span>kzg::Error),
+    </span>FailedToCommit(String),
     <span class="doccomment">/// I/O error occurred
     </span><span class="attr">#[error(<span class="string">&quot;I/O error: {0}&quot;</span>)]
     </span>Io(<span class="attr">#[from] </span>io::Error),
@@ -398,22 +395,14 @@
     SM: io::Write,
 {
     <span class="kw">let </span>sector_id = SectorId::new(public_key, sector_index);
-    <span class="comment">// TODO: Consider adding number of pieces in a sector to protocol info
-    //  explicitly and, ideally, we need to remove 2x replication
-    //  expectation from other places too
-    </span><span class="kw">let </span>current_segment_index = farmer_protocol_info.total_pieces.get()
-        / u64::from(farmer_protocol_info.recorded_history_segment_size)
-        / u64::from(farmer_protocol_info.record_size.get())
-        * <span class="number">2</span>;
+    <span class="kw">let </span>current_segment_index =
+        PieceIndex::from(farmer_protocol_info.total_pieces.get()).segment_index();
     <span class="kw">let </span>expires_at = current_segment_index + farmer_protocol_info.sector_expiration;
 
-    <span class="kw">let </span>piece_indexes: Vec&lt;PieceIndex&gt; = (<span class="number">0u64</span>..)
-        .take(PLOT_SECTOR_SIZE <span class="kw">as </span>usize / (PIECE_SIZE / Scalar::SAFE_BYTES * Scalar::FULL_BYTES))
+    <span class="kw">let </span>piece_indexes: Vec&lt;PieceIndex&gt; = (PieceIndex::ZERO..)
+        .take(PLOT_SECTOR_SIZE <span class="kw">as </span>usize / (Piece::SIZE / Scalar::SAFE_BYTES * Scalar::FULL_BYTES))
         .map(|piece_offset| {
-            sector_id.derive_piece_index(
-                piece_offset <span class="kw">as </span>PieceIndex,
-                farmer_protocol_info.total_pieces,
-            )
+            sector_id.derive_piece_index(piece_offset, farmer_protocol_info.total_pieces)
         })
         .collect();
 
@@ -452,19 +441,26 @@
         .map_err(PlottingError::Io)<span class="question-mark">?</span>;
 
     <span class="kw">let </span>commitments = in_memory_sector
-        .chunks_exact(PIECE_SIZE)
+        .chunks_exact(Piece::SIZE)
         .map(|piece| {
             <span class="comment">// TODO: This is a workaround to the fact that `kzg.poly()` expects `data` to be a slice
             //  32-byte chunks that have up to 254 bits of data in them and in sector encoding we&#39;re
             //  dealing with 31-byte chunks instead. This workaround will not be necessary once we
             //  change `kzg.poly()` API to use 31-byte chunks as well.
-            </span><span class="kw">let </span><span class="kw-2">mut </span>expanded_piece = Vec::with_capacity(PIECE_SIZE / Scalar::SAFE_BYTES * <span class="number">32</span>);
-            piece.chunks_exact(Scalar::SAFE_BYTES).for_each(|chunk| {
-                expanded_piece.extend(chunk);
-                expanded_piece.extend([<span class="number">0</span>]);
-            });
-            <span class="kw">let </span>polynomial = kzg.poly(<span class="kw-2">&amp;</span>expanded_piece)<span class="question-mark">?</span>;
-            kzg.commit(<span class="kw-2">&amp;</span>polynomial).map_err(Into::into)
+            </span><span class="kw">let </span>expanded_piece = piece
+                .chunks_exact(Scalar::SAFE_BYTES)
+                .map(|bytes| {
+                    Scalar::from(
+                        &lt;<span class="kw-2">&amp;</span>[u8; Scalar::SAFE_BYTES]&gt;::try_from(bytes)
+                            .expect(<span class="string">&quot;Chunked into correctly sized bytes; qed&quot;</span>),
+                    )
+                })
+                .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+            <span class="kw">let </span>polynomial = kzg
+                .poly(<span class="kw-2">&amp;</span>expanded_piece)
+                .map_err(PlottingError::FailedToCommit)<span class="question-mark">?</span>;
+            kzg.commit(<span class="kw-2">&amp;</span>polynomial)
+                .map_err(PlottingError::FailedToCommit)
         })
         .collect::&lt;<span class="prelude-ty">Result</span>&lt;Vec&lt;Commitment&gt;, PlottingError&gt;&gt;()<span class="question-mark">?</span>;
 
@@ -485,7 +481,7 @@
 }
 
 <span class="kw">async fn </span>plot_pieces_in_batches_non_blocking&lt;PG: PieceGetter&gt;(
-    in_memory_sector_scalars: <span class="kw-2">&amp;mut </span>Vec&lt;Scalar&gt;,
+    in_memory_sector_scalars: <span class="kw-2">&amp;mut </span>Vec&lt;ScalarLegacy&gt;,
     sector_index: u64,
     piece_getter: <span class="kw-2">&amp;</span>PG,
     piece_getter_retry_policy: PieceGetterRetryPolicy,
@@ -523,7 +519,7 @@
             </span>.ok_or(PlottingError::PieceNotFound { piece_index })<span class="question-mark">?</span>;
 
         in_memory_sector_scalars.extend(piece.chunks_exact(Scalar::SAFE_BYTES).map(|bytes| {
-            Scalar::from(
+            ScalarLegacy::from(
                 &lt;<span class="kw-2">&amp;</span>[u8; Scalar::SAFE_BYTES]&gt;::try_from(bytes)
                     .expect(<span class="string">&quot;Chunked into scalar safe bytes above; qed&quot;</span>),
             )
@@ -536,5 +532,4 @@
 
     <span class="prelude-val">Ok</span>(())
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_farmer_components" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (afaf3e07a 2023-01-14)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>
+</code></pre></div></section></main></body></html>

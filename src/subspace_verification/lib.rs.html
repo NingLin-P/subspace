@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-verification/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-1f7d512b176f0f72.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-124a1ca42af929b6.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-52c5db6f6f352e54.css" id="mainThemeStyle"><link rel="stylesheet" id="themeStyle" href="../../static.files/light-4743e13df3dfe8c4.css"><link rel="stylesheet" disabled href="../../static.files/dark-0e1b889528bd466b.css"><link rel="stylesheet" disabled href="../../static.files/ayu-65289d5d067c7c66.css"><script id="default-settings" ></script><script src="../../static.files/storage-d43fa987303ecbbb.js"></script><script defer src="../../static.files/source-script-ea63cb6500f71309.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-d2686a620d99aad7.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_verification/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-5ec35bf9ca753509.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-verification/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_verification" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_verification/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -251,13 +251,6 @@
 <a href="#251" id="251">251</a>
 <a href="#252" id="252">252</a>
 <a href="#253" id="253">253</a>
-<a href="#254" id="254">254</a>
-<a href="#255" id="255">255</a>
-<a href="#256" id="256">256</a>
-<a href="#257" id="257">257</a>
-<a href="#258" id="258">258</a>
-<a href="#259" id="259">259</a>
-<a href="#260" id="260">260</a>
 </pre><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
@@ -279,16 +272,17 @@
 #![warn(rust_2018_idioms, missing_debug_implementations, missing_docs)]
 #![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 
-</span><span class="kw">use </span>schnorrkel::context::SigningContext;
+</span><span class="kw">use </span>codec::{Decode, Encode, MaxEncodedLen};
+<span class="kw">use </span>schnorrkel::context::SigningContext;
 <span class="kw">use </span>schnorrkel::vrf::VRFOutput;
 <span class="kw">use </span>schnorrkel::{SignatureError, SignatureResult};
 <span class="kw">use </span>sp_arithmetic::traits::SaturatedConversion;
 <span class="kw">use </span>subspace_archiving::archiver;
-<span class="kw">use </span>subspace_core_primitives::crypto::blake2b_256_hash;
 <span class="kw">use </span>subspace_core_primitives::crypto::kzg::Kzg;
+<span class="kw">use </span>subspace_core_primitives::crypto::{blake2b_256_hash, ScalarLegacy};
 <span class="kw">use </span>subspace_core_primitives::{
-    BlockNumber, ChunkSignature, PieceIndex, PublicKey, Randomness, RecordsRoot, RewardSignature,
-    Scalar, SectorId, SlotNumber, Solution, SolutionRange, PIECES_IN_SECTOR, RANDOMNESS_CONTEXT,
+    BlockNumber, ChunkSignature, PieceIndex, PublicKey, Randomness, RewardSignature, SectorId,
+    SegmentCommitment, SlotNumber, Solution, SolutionRange, PIECES_IN_SECTOR, RANDOMNESS_CONTEXT,
 };
 <span class="kw">use </span>subspace_solving::{
     create_chunk_signature_transcript, derive_global_challenge, verify_chunk_signature,
@@ -329,22 +323,20 @@
 
 <span class="doccomment">/// Check piece validity.
 ///
-/// If `records_root` is `None`, piece validity check will be skipped.
+/// If `segment_commitment` is `None`, piece validity check will be skipped.
 </span><span class="kw">pub fn </span>check_piece&lt;<span class="lifetime">&#39;a</span>, FarmerPublicKey, RewardAddress&gt;(
     kzg: <span class="kw-2">&amp;</span>Kzg,
-    pieces_in_segment: u32,
-    records_root: <span class="kw-2">&amp;</span>RecordsRoot,
+    segment_commitment: <span class="kw-2">&amp;</span>SegmentCommitment,
     position: u32,
     solution: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Solution&lt;FarmerPublicKey, RewardAddress&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt;
 <span class="kw">where
     </span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FarmerPublicKey: Into&lt;PublicKey&gt;,
 {
-    <span class="kw">if </span>!archiver::is_piece_record_hash_valid(
+    <span class="kw">if </span>!archiver::is_record_commitment_hash_valid(
         kzg,
-        pieces_in_segment,
-        <span class="kw-2">&amp;</span>solution.piece_record_hash,
-        records_root,
+        <span class="kw-2">&amp;</span>solution.record_commitment_hash,
+        segment_commitment,
         <span class="kw-2">&amp;</span>solution.piece_witness,
         position,
     ) {
@@ -355,7 +347,7 @@
 }
 
 <span class="doccomment">/// Derive audit chunk from scalar bytes contained within plotted piece
-</span><span class="kw">pub fn </span>derive_audit_chunk(chunk_bytes: <span class="kw-2">&amp;</span>[u8; Scalar::FULL_BYTES]) -&gt; SolutionRange {
+</span><span class="kw">pub fn </span>derive_audit_chunk(chunk_bytes: <span class="kw-2">&amp;</span>[u8; ScalarLegacy::FULL_BYTES]) -&gt; SolutionRange {
     <span class="kw">let </span>hash = blake2b_256_hash(chunk_bytes);
     SolutionRange::from_le_bytes([
         hash[<span class="number">0</span>], hash[<span class="number">1</span>], hash[<span class="number">2</span>], hash[<span class="number">3</span>], hash[<span class="number">4</span>], hash[<span class="number">5</span>], hash[<span class="number">6</span>], hash[<span class="number">7</span>],
@@ -373,25 +365,23 @@
 </span>}
 
 <span class="doccomment">/// Parameters for checking piece validity
-</span><span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>PieceCheckParams&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="doccomment">/// Records root of segment to which piece belongs
-    </span><span class="kw">pub </span>records_root: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>RecordsRoot,
-    <span class="doccomment">/// Number of pieces in a segment
-    </span><span class="kw">pub </span>pieces_in_segment: u32,
+</span><span class="attr">#[derive(Debug, Clone, Encode, Decode, MaxEncodedLen)]
+</span><span class="kw">pub struct </span>PieceCheckParams {
+    <span class="doccomment">/// Segment commitment of segment to which piece belongs
+    </span><span class="kw">pub </span>segment_commitment: SegmentCommitment,
 }
 
 <span class="doccomment">/// Parameters for solution verification
-</span><span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>VerifySolutionParams&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="attr">#[derive(Debug, Clone, Encode, Decode, MaxEncodedLen)]
+</span><span class="kw">pub struct </span>VerifySolutionParams {
     <span class="doccomment">/// Global randomness
-    </span><span class="kw">pub </span>global_randomness: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Randomness,
+    </span><span class="kw">pub </span>global_randomness: Randomness,
     <span class="doccomment">/// Solution range
     </span><span class="kw">pub </span>solution_range: SolutionRange,
     <span class="doccomment">/// Parameters for checking piece validity.
     ///
     /// If `None`, piece validity check will be skipped.
-    </span><span class="kw">pub </span>piece_check_params: <span class="prelude-ty">Option</span>&lt;PieceCheckParams&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
+    </span><span class="kw">pub </span>piece_check_params: <span class="prelude-ty">Option</span>&lt;PieceCheckParams&gt;,
 }
 
 <span class="doccomment">/// Solution verification.
@@ -400,8 +390,8 @@
 </span><span class="kw">pub fn </span>verify_solution&lt;<span class="lifetime">&#39;a</span>, FarmerPublicKey, RewardAddress&gt;(
     solution: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Solution&lt;FarmerPublicKey, RewardAddress&gt;,
     slot: u64,
-    params: VerifySolutionParams&lt;<span class="lifetime">&#39;_</span>&gt;,
-    kzg: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Kzg&gt;,
+    params: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>VerifySolutionParams,
+    kzg: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Kzg&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt;
 <span class="kw">where
     </span>PublicKey: From&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>FarmerPublicKey&gt;,
@@ -424,7 +414,7 @@
     <span class="kw">if </span>!is_within_solution_range(
         local_challenge,
         derive_audit_chunk(<span class="kw-2">&amp;</span>chunk_bytes),
-        solution_range,
+        <span class="kw-2">*</span>solution_range,
     ) {
         <span class="kw">return </span><span class="prelude-val">Err</span>(Error::OutsideSolutionRange);
     }
@@ -440,15 +430,11 @@
 
     <span class="comment">// TODO: Check if sector already expired once we have such notion
 
-    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(PieceCheckParams {
-        records_root,
-        pieces_in_segment,
-    }) = piece_check_params
-    {
-        <span class="kw">let </span>audit_piece_offset: PieceIndex = local_challenge % PIECES_IN_SECTOR;
-        <span class="kw">let </span>piece_index = sector_id.derive_piece_index(audit_piece_offset, solution.total_pieces);
-        <span class="kw">let </span>position = u32::try_from(piece_index % u64::from(pieces_in_segment))
-            .expect(<span class="string">&quot;Position within segment always fits into u32; qed&quot;</span>);
+    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(PieceCheckParams { segment_commitment }) = piece_check_params {
+        <span class="kw">let </span>audit_piece_offset = PieceIndex::from(local_challenge % PIECES_IN_SECTOR);
+        <span class="kw">let </span>position = sector_id
+            .derive_piece_index(audit_piece_offset, solution.total_pieces)
+            .position();
 
         <span class="comment">// TODO: Check that chunk belongs to the encoded piece
         </span><span class="kw">let </span>kzg = <span class="kw">match </span>kzg {
@@ -457,7 +443,7 @@
                 <span class="kw">return </span><span class="prelude-val">Err</span>(Error::MissingKzgInstance);
             }
         };
-        check_piece(kzg, pieces_in_segment, records_root, position, solution)<span class="question-mark">?</span>;
+        check_piece(kzg, segment_commitment, position, solution)<span class="question-mark">?</span>;
     }
 
     <span class="prelude-val">Ok</span>(())
@@ -469,7 +455,7 @@
 /// function.
 </span><span class="kw">pub fn </span>derive_randomness(
     public_key: <span class="kw-2">&amp;</span>PublicKey,
-    chunk_bytes: <span class="kw-2">&amp;</span>[u8; Scalar::FULL_BYTES],
+    chunk_bytes: <span class="kw-2">&amp;</span>[u8; ScalarLegacy::FULL_BYTES],
     chunk_signature: <span class="kw-2">&amp;</span>ChunkSignature,
 ) -&gt; SignatureResult&lt;Randomness&gt; {
     <span class="kw">let </span>in_out = VRFOutput(chunk_signature.output).attach_input_hash(
@@ -518,5 +504,4 @@
         current_solution_range.saturating_mul(<span class="number">4</span>),
     )
 }
-</code></pre></div>
-</section></main><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_verification" data-themes="" data-resource-suffix="" data-rustdoc-version="1.68.0-nightly (afaf3e07a 2023-01-14)" data-search-js="search-181581080540673f.js" data-settings-js="settings-a2afdefbb7c817f1.js" data-settings-css="settings-84508a86fe805444.css" ></div></body></html>
+</code></pre></div></section></main></body></html>
