@@ -49,7 +49,7 @@ pub(crate) async fn handle_slot_notifications<Block, PBlock, PClient, BundlerFn>
             break;
         }
         tracing::info!("domain worker after handle new slot {:?}", slot);
-        if let Some(mut sender) = slot_acknowledgement_sender {
+        if let Some(sender) = slot_acknowledgement_sender {
             tracing::info!("domain worker start send slot ack {:?}", slot);
             let _ = sender.sender.send(()).await;
             tracing::info!("domain worker after send slot ack {:?}", slot);

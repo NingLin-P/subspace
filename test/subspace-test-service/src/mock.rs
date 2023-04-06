@@ -447,6 +447,7 @@ impl MockPrimaryNode {
     }
 }
 
+/// Mock future and_then
 pub async fn mock_and_then<T>(
     wait_for_block_fut: impl Future<Output = T>,
     produce_block_fut: impl Future<Output = Result<(), Box<dyn Error>>>,
