@@ -103,7 +103,7 @@ pub(super) async fn start_worker<
     Backend: sc_client_api::Backend<Block> + 'static,
     IBNS: Stream<Item = (NumberFor<PBlock>, mpsc::Sender<()>)> + Send + 'static,
     CIBNS: Stream<Item = BlockImportNotification<PBlock>> + Send + 'static,
-    NSNS: Stream<Item = (Slot, Blake2b256Hash, Option<mpsc::Sender<()>>)> + Send + 'static,
+    NSNS: Stream<Item = (Slot, Blake2b256Hash, Option<crate::utils::SlotAck>)> + Send + 'static,
     TransactionFor<Backend, Block>: sp_trie::HashDBT<HashFor<Block>, sp_trie::DBValue>,
     E: CodeExecutor,
 {
@@ -179,6 +179,7 @@ pub(super) async fn start_worker<
             Box::pin(handle_slot_notifications_fut),
         )
         .await;
+        tracing::info!("executor shut downnnnnnnn");
     } else {
         drop(handle_slot_notifications_fut);
         handle_block_import_notifications_fut.await

@@ -16,7 +16,7 @@ use std::pin::Pin;
 pub(crate) async fn handle_slot_notifications<Block, PBlock, PClient, BundlerFn>(
     primary_chain_client: &PClient,
     bundler: BundlerFn,
-    mut slots: impl Stream<Item = (ExecutorSlotInfo, Option<mpsc::Sender<()>>)> + Unpin,
+    mut slots: impl Stream<Item = (ExecutorSlotInfo, Option<crate::utils::SlotAck>)> + Unpin,
 ) where
     Block: BlockT,
     PBlock: BlockT,
@@ -36,7 +36,11 @@ pub(crate) async fn handle_slot_notifications<Block, PBlock, PClient, BundlerFn>
         > + Send
         + Sync,
 {
+    let (tx, _rx) = async_channel::bounded(1);
+    let _ack = crate::utils::SlotAck::new("Drop handle_slot_notifications fut".to_owned(), tx);
     while let Some((executor_slot_info, slot_acknowledgement_sender)) = slots.next().await {
+        let slot = executor_slot_info.slot;
+        tracing::info!("domain worker handle new slot {:?}", slot);
         if let Err(error) =
             on_new_slot::<Block, PBlock, _, _>(primary_chain_client, &bundler, executor_slot_info)
                 .await
@@ -44,10 +48,14 @@ pub(crate) async fn handle_slot_notifications<Block, PBlock, PClient, BundlerFn>
             tracing::error!(?error, "Failed to submit bundle");
             break;
         }
+        tracing::info!("domain worker after handle new slot {:?}", slot);
         if let Some(mut sender) = slot_acknowledgement_sender {
-            let _ = sender.send(()).await;
+            tracing::info!("domain worker start send slot ack {:?}", slot);
+            let _ = sender.sender.send(()).await;
+            tracing::info!("domain worker after send slot ack {:?}", slot);
         }
     }
+    tracing::info!("executor handle_slot_notifications shut downnnnnnnn");
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -128,6 +136,7 @@ pub(crate) async fn handle_block_import_notifications<
                     }
                 }
             }
+            tracing::info!("executor primary-block-processor shut downnnnnnnn");
         }),
     );
 
@@ -174,6 +183,7 @@ pub(crate) async fn handle_block_import_notifications<
             }
         }
     }
+    tracing::info!("executor handle_block_import_notifications shut downnnnnnnn");
 }
 
 async fn on_new_slot<Block, PBlock, PClient, BundlerFn>(

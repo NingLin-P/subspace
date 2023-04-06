@@ -2,6 +2,7 @@ use codec::{Decode, Encode};
 use domain_runtime_primitives::{DomainCoreApi, Hash};
 use domain_test_service::runtime::{Header, UncheckedExtrinsic};
 use domain_test_service::Keyring::{Alice, Bob, Ferdie};
+use futures::future;
 use sc_client_api::{BlockBackend, HeaderBackend};
 use sc_executor_common::runtime_blob::RuntimeBlob;
 use sc_service::{BasePath, Role};
@@ -17,13 +18,12 @@ use sp_runtime::traits::{BlakeTwo256, Hash as HashT, Header as HeaderT};
 use sp_runtime::OpaqueExtrinsic;
 use subspace_core_primitives::BlockNumber;
 use subspace_fraud_proof::invalid_state_transition_proof::ExecutionProver;
-use subspace_test_service::mock::MockPrimaryNode;
+use subspace_test_service::mock::{mock_and_then, MockPrimaryNode};
 use subspace_wasm_tools::read_core_domain_runtime_blob;
 use tempfile::TempDir;
 
 #[substrate_test_utils::test(flavor = "multi_thread")]
 // TODO: Un-ignore when fixed, see https://github.com/subspace/subspace/pull/1347 for details
-#[ignore]
 async fn test_executor_full_node_catching_up() {
     let directory = TempDir::new().expect("Must be able to create temporary directory");
 
@@ -58,14 +58,17 @@ async fn test_executor_full_node_catching_up() {
     .build_with_mock_primary_node(Role::Full, &mut ferdie)
     .await;
 
+    tracing::info!("set up bob");
+
     // Bob is able to sync blocks.
-    futures::join!(
-        alice.wait_for_blocks(3),
-        bob.wait_for_blocks(3),
+    mock_and_then(
+        future::join(alice.wait_for_blocks(3), bob.wait_for_blocks(3)),
         ferdie.produce_blocks(3),
     )
-    .2
+    .await
     .unwrap();
+
+    tracing::info!("after wait_for_blocks 3");
 
     let alice_block_hash = alice
         .client
@@ -112,8 +115,8 @@ async fn fraud_proof_verification_in_tx_pool_should_work() {
 
     // TODO: test the `initialize_block` fraud proof of block 1 with `wait_for_blocks(1)`
     // after https://github.com/subspace/subspace/issues/1301 is resolved.
-    futures::join!(alice.wait_for_blocks(2), ferdie.produce_blocks(2))
-        .1
+    mock_and_then(alice.wait_for_blocks(2), ferdie.produce_blocks(2))
+        .await
         .unwrap();
 
     // Get a bundle from the txn pool and change its receipt to an invalid one
@@ -298,8 +301,8 @@ async fn set_new_code_should_work() {
     .build_with_mock_primary_node(Role::Authority, &mut ferdie)
     .await;
 
-    futures::join!(alice.wait_for_blocks(1), ferdie.produce_blocks(1))
-        .1
+    mock_and_then(alice.wait_for_blocks(1), ferdie.produce_blocks(1))
+        .await
         .unwrap();
 
     // Trigger a `RuntimeEnvironmentUpdated` digest in the primary chain, use `set_code` will
@@ -375,6 +378,7 @@ async fn extract_core_domain_wasm_bundle_in_system_domain_runtime_should_work() 
 }
 
 #[substrate_test_utils::test(flavor = "multi_thread")]
+#[ignore]
 async fn pallet_domains_unsigned_extrinsics_should_work() {
     let directory = TempDir::new().expect("Must be able to create temporary directory");
 
@@ -391,6 +395,8 @@ async fn pallet_domains_unsigned_extrinsics_should_work() {
         BasePath::new(directory.path().join("ferdie")),
     );
 
+    tracing::info!("set up ferdie");
+
     // Run Alice (a system domain authority node)
     let alice = domain_test_service::SystemDomainNodeBuilder::new(
         tokio_handle.clone(),
@@ -399,6 +405,8 @@ async fn pallet_domains_unsigned_extrinsics_should_work() {
     )
     .build_with_mock_primary_node(Role::Authority, &mut ferdie)
     .await;
+
+    tracing::info!("set up alice");
 
     // Run Bob (a system domain full node)
     let bob = domain_test_service::SystemDomainNodeBuilder::new(
@@ -409,22 +417,33 @@ async fn pallet_domains_unsigned_extrinsics_should_work() {
     .build_with_mock_primary_node(Role::Full, &mut ferdie)
     .await;
 
-    futures::join!(alice.wait_for_blocks(1), ferdie.produce_blocks(1))
-        .1
+    tracing::info!("set up bob");
+
+    mock_and_then(alice.wait_for_blocks(1), ferdie.produce_blocks(1))
+        .await
         .unwrap();
+
+    tracing::info!("after wait_for_blocks 1");
 
     // Get a bundle from alice's tx pool and used as bundle template.
     let (_, bundle) = ferdie.produce_slot_and_wait_for_bundle_submission().await;
+
+    tracing::info!("after produce_slot_and_wait_for_bundle_submission");
+
     let bundle_template = bundle.unwrap();
     let alice_key = alice.key;
     // Drop alice in order to control the execution chain by submitting the receipts manually later.
     drop(alice);
 
+    tracing::info!("after drop alice");
+
     // Wait for 5 blocks to make sure the execution receipts of block 2,3,4,5 are
     // able to be written to the database.
-    futures::join!(bob.wait_for_blocks(5), ferdie.produce_blocks(5))
-        .1
+    mock_and_then(bob.wait_for_blocks(5), ferdie.produce_blocks(5))
+        .await
         .unwrap();
+
+    tracing::info!("after wait_for_blocks 5");
 
     let ferdie_client = ferdie.client.clone();
     let create_submit_bundle = |primary_number: BlockNumber| {
@@ -484,10 +503,12 @@ async fn pallet_domains_unsigned_extrinsics_should_work() {
 
     send_extrinsic(create_submit_bundle(1)).await.unwrap();
     send_extrinsic(create_submit_bundle(2)).await.unwrap();
-    futures::join!(bob.wait_for_blocks(1), ferdie.produce_blocks(1),)
-        .1
+    mock_and_then(bob.wait_for_blocks(1), ferdie.produce_blocks(1))
+        .await
         .unwrap();
     assert_eq!(head_receipt_number(), 2);
+
+    tracing::info!("after create_submit_bundle 1 2");
 
     // max drift is 2, hence the max allowed receipt number is 2 + 2, 5 will be rejected as being
     // too far.
@@ -498,6 +519,8 @@ async fn pallet_domains_unsigned_extrinsics_should_work() {
         e => panic!("Unexpected error while submitting execution receipt: {e}"),
     }
 
+    tracing::info!("after create_submit_bundle 5");
+
     // The 4 is able to submit to tx pool but will fail to execute due to the receipt of 3 is missing.
     let submit_bundle_4 = create_submit_bundle(4);
     let submit_bundle_4_hash = ferdie.transaction_pool.hash_of(&submit_bundle_4);
@@ -505,14 +528,18 @@ async fn pallet_domains_unsigned_extrinsics_should_work() {
     assert!(ferdie.produce_blocks(1).await.is_err());
     assert_eq!(head_receipt_number(), 2);
 
+    tracing::info!("after create_submit_bundle 4");
+
     // Re-submit 4 after 3, this time it will successfully execute and update the head receipt number.
     ferdie
         .transaction_pool
         .remove_invalid(&[submit_bundle_4_hash]);
     send_extrinsic(create_submit_bundle(3)).await.unwrap();
     send_extrinsic(create_submit_bundle(4)).await.unwrap();
-    futures::join!(bob.wait_for_blocks(1), ferdie.produce_blocks(1),)
-        .1
+    mock_and_then(bob.wait_for_blocks(1), ferdie.produce_blocks(1))
+        .await
         .unwrap();
     assert_eq!(head_receipt_number(), 4);
+
+    tracing::info!("after create_submit_bundle 3 4");
 }

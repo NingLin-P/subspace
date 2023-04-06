@@ -2334,6 +2334,7 @@ dependencies = [
 name = "domain-client-executor"
 version = "0.1.0"
 dependencies = [
+ "async-channel",
  "core-payments-domain-runtime",
  "crossbeam",
  "domain-block-builder",
@@ -10720,7 +10721,9 @@ dependencies = [
 name = "subspace-test-service"
 version = "0.1.0"
 dependencies = [
+ "async-channel",
  "async-trait",
+ "domain-client-executor",
  "frame-system",
  "futures",
  "futures-timer",

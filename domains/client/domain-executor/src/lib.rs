@@ -99,7 +99,7 @@ mod system_executor;
 mod system_gossip_message_validator;
 #[cfg(test)]
 mod tests;
-mod utils;
+pub mod utils;
 
 pub use self::core_executor::Executor as CoreExecutor;
 pub use self::core_gossip_message_validator::CoreGossipMessageValidator;
@@ -176,7 +176,7 @@ pub struct EssentialExecutorParams<
     PBlock: BlockT,
     IBNS: Stream<Item = (NumberFor<PBlock>, mpsc::Sender<()>)> + Send + 'static,
     CIBNS: Stream<Item = BlockImportNotification<PBlock>> + Send + 'static,
-    NSNS: Stream<Item = (Slot, Blake2b256Hash, Option<mpsc::Sender<()>>)> + Send + 'static,
+    NSNS: Stream<Item = (Slot, Blake2b256Hash, Option<crate::utils::SlotAck>)> + Send + 'static,
 {
     pub primary_chain_client: Arc<PClient>,
     pub primary_network_sync_oracle: Arc<dyn SyncOracle + Send + Sync>,

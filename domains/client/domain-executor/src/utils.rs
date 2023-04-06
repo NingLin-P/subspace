@@ -61,3 +61,21 @@ where
 {
     B2::Hash::decode(&mut block_hash.encode().as_slice()).unwrap()
 }
+
+#[derive(Clone)]
+pub struct SlotAck {
+    tag: String,
+    pub sender: async_channel::Sender<()>,
+}
+
+impl SlotAck {
+    pub fn new(tag: String, sender: async_channel::Sender<()>) -> Self {
+        SlotAck { tag, sender }
+    }
+}
+
+impl Drop for SlotAck {
+    fn drop(&mut self) {
+        tracing::info!("Drop slot ack {}", self.tag);
+    }
+}

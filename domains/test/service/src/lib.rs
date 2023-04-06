@@ -392,6 +392,12 @@ pub struct SystemDomainNode {
     pub executor: Executor,
 }
 
+impl Drop for SystemDomainNode {
+    fn drop(&mut self) {
+        tracing::info!("Drop {:?}", self.key.to_seed());
+    }
+}
+
 /// A builder to create a [`SystemDomainNode`].
 pub struct SystemDomainNodeBuilder {
     tokio_handle: tokio::runtime::Handle,

@@ -9,6 +9,7 @@ use domain_runtime_primitives::{DomainCoreApi, Hash};
 use domain_test_service::run_primary_chain_validator_node;
 use domain_test_service::runtime::Header;
 use domain_test_service::Keyring::{Alice, Bob, Charlie, Dave, Ferdie};
+use futures::future;
 use sc_client_api::{proof_provider, HeaderBackend, StorageProof};
 use sc_service::{BasePath, Role};
 use sp_api::ProvideRuntimeApi;
@@ -19,7 +20,7 @@ use sp_runtime::generic::{Digest, DigestItem};
 use sp_runtime::traits::{BlakeTwo256, Header as HeaderT};
 use std::sync::Arc;
 use subspace_runtime_primitives::opaque::Block;
-use subspace_test_service::mock::MockPrimaryNode;
+use subspace_test_service::mock::{mock_and_then, MockPrimaryNode};
 use tempfile::TempDir;
 
 // Use the system domain id for testing
@@ -61,12 +62,11 @@ async fn execution_proof_creation_and_verification_should_work() {
     .await;
 
     // Bob is able to sync blocks.
-    futures::join!(
-        alice.wait_for_blocks(1),
-        bob.wait_for_blocks(1),
+    mock_and_then(
+        future::join(alice.wait_for_blocks(1), bob.wait_for_blocks(1)),
         ferdie.produce_blocks(1),
     )
-    .2
+    .await
     .unwrap();
 
     let transfer_to_charlie = domain_test_service::construct_extrinsic(
@@ -353,7 +353,6 @@ async fn execution_proof_creation_and_verification_should_work() {
 
 #[substrate_test_utils::test(flavor = "multi_thread")]
 // TODO: Un-ignore when fixed, see https://github.com/subspace/subspace/pull/1347 for details
-#[ignore]
 async fn invalid_execution_proof_should_not_work() {
     let directory = TempDir::new().expect("Must be able to create temporary directory");
 
@@ -389,12 +388,11 @@ async fn invalid_execution_proof_should_not_work() {
     .await;
 
     // Bob is able to sync blocks.
-    futures::join!(
-        alice.wait_for_blocks(1),
-        bob.wait_for_blocks(1),
+    mock_and_then(
+        future::join(alice.wait_for_blocks(1), bob.wait_for_blocks(1)),
         ferdie.produce_blocks(1),
     )
-    .2
+    .await
     .unwrap();
 
     let transfer_to_charlie = domain_test_service::construct_extrinsic(

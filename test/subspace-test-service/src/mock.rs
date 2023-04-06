@@ -26,6 +26,7 @@ use sp_runtime::traits::{BlakeTwo256, Block as BlockT, NumberFor};
 use sp_runtime::DigestItem;
 use sp_timestamp::Timestamp;
 use std::error::Error;
+use std::future::Future;
 use std::sync::Arc;
 use std::time;
 use subspace_core_primitives::{Blake2b256Hash, Solution};
@@ -65,8 +66,13 @@ pub struct MockPrimaryNode {
     next_slot: u64,
     /// The slot notification subscribers
     #[allow(clippy::type_complexity)]
-    new_slot_notification_subscribers:
-        Vec<TracingUnboundedSender<(Slot, Blake2b256Hash, Option<mpsc::Sender<()>>)>>,
+    new_slot_notification_subscribers: Vec<
+        TracingUnboundedSender<(
+            Slot,
+            Blake2b256Hash,
+            Option<domain_client_executor::utils::SlotAck>,
+        )>,
+    >,
     /// Block import pipeline
     block_import:
         MockBlockImport<BoxBlockImport<Block, TransactionFor<Client, Block>>, Client, Block>,
@@ -175,23 +181,63 @@ impl MockPrimaryNode {
         let slot = Slot::from(self.next_slot);
         self.next_slot += 1;
 
-        let (slot_acknowledgement_sender, mut slot_acknowledgement_receiver) = mpsc::channel(0);
+        // let (slot_acknowledgement_sender, mut slot_acknowledgement_receiver) = mpsc::channel(0);
+        let (slot_acknowledgement_sender, mut slot_acknowledgement_receiver) =
+            async_channel::bounded(1);
 
+        tracing::info!("produce_slot_and_wait_for_bundle_submission for slot {slot:?}");
         // Must drop `slot_acknowledgement_sender` after the notification otherwise the receiver
         // will block forever as there is still a sender not closed.
         {
-            let value = (
-                slot,
-                Hash::random().into(),
-                Some(slot_acknowledgement_sender),
-            );
-            self.new_slot_notification_subscribers
-                .retain(|subscriber| subscriber.unbounded_send(value.clone()).is_ok());
+            // let value = (
+            //     slot,
+            //     Hash::random().into(),
+            //     Some(domain_client_executor::utils::SlotAck::new(
+            //         format!("slot {slot:?}"),
+            //         slot_acknowledgement_sender,
+            //     )),
+            // );
+            let mut i = 1;
+            self.new_slot_notification_subscribers.retain(|subscriber| {
+                    tracing::info!("new_slot_notification_subscribers for slot {slot:?}, count {i}");
+                    let value = (slot, Hash::random().into(), Some(domain_client_executor::utils::SlotAck::new(format!("slot {slot:?} count {i}"), slot_acknowledgement_sender.clone())));
+                    let res = subscriber.unbounded_send(value);
+                    tracing::info!("after new_slot_notification_subscribers for slot {slot:?}, count {i}, res {res:?}");
+                    i += 1;
+                    tracing::info!(
+                        "slot_acknowledgement_receiver, is_closed {}, is_empty {}, is_full {}, len {}, receiver_count {}, sender_count {}",
+                        slot_acknowledgement_receiver.is_closed(),
+                        slot_acknowledgement_receiver.is_empty(),
+                        slot_acknowledgement_receiver.is_full(),
+                        slot_acknowledgement_receiver.len(),
+                        slot_acknowledgement_receiver.receiver_count(),
+                        slot_acknowledgement_receiver.sender_count(),
+                    );
+                    res.is_ok()
+                });
+            drop(slot_acknowledgement_sender);
         }
 
-        while (slot_acknowledgement_receiver.next().await).is_some() {
+        tracing::info!("produce_slot_and_wait_for_bundle_submission wait ack for slot {slot:?}");
+        tracing::info!(
+            "slot_acknowledgement_receiver, is_closed {}, is_empty {}, is_full {}, len {}, receiver_count {}, sender_count {}",
+            slot_acknowledgement_receiver.is_closed(),
+            slot_acknowledgement_receiver.is_empty(),
+            slot_acknowledgement_receiver.is_full(),
+            slot_acknowledgement_receiver.len(),
+            slot_acknowledgement_receiver.receiver_count(),
+            slot_acknowledgement_receiver.sender_count(),
+        );
+        let mut res = slot_acknowledgement_receiver.next().await;
+        tracing::info!("slot_acknowledgement_receiver res {res:?}");
+        while res.is_some() {
+            res = slot_acknowledgement_receiver.next().await;
+            tracing::info!("slot_acknowledgement_receiver res {res:?}");
             // Wait for all the acknowledgements to progress.
         }
+        tracing::info!(
+            "after produce_slot_and_wait_for_bundle_submission wait ack for slot {slot:?}"
+        );
 
         let bundle = self.get_bundle_from_tx_pool(slot.into());
 
@@ -201,7 +247,11 @@ impl MockPrimaryNode {
     /// Subscribe the new slot notification
     pub fn new_slot_notification_stream(
         &mut self,
-    ) -> TracingUnboundedReceiver<(Slot, Blake2b256Hash, Option<mpsc::Sender<()>>)> {
+    ) -> TracingUnboundedReceiver<(
+        Slot,
+        Blake2b256Hash,
+        Option<domain_client_executor::utils::SlotAck>,
+    )> {
         let (tx, rx) = tracing_unbounded("subspace_new_slot_notification_stream", 100);
         self.new_slot_notification_subscribers.push(tx);
         rx
@@ -382,11 +432,31 @@ impl MockPrimaryNode {
 
     /// Produce `n` number of blocks.
     pub async fn produce_blocks(&mut self, n: u64) -> Result<(), Box<dyn Error>> {
-        for _ in 0..n {
+        // for _ in 0..n {
+        //     let (slot, _) = self.produce_slot_and_wait_for_bundle_submission().await;
+        //     self.produce_block_with_slot(slot).await?;
+        // }
+        for i in 0..n {
+            tracing::info!("produce_block interation {i} start");
             let (slot, _) = self.produce_slot_and_wait_for_bundle_submission().await;
+            tracing::info!("produce_block interation {i} after produce_slot");
             self.produce_block_with_slot(slot).await?;
+            tracing::info!("produce_block interation {i} after produce_block_with_slot");
         }
         Ok(())
+    }
+}
+
+pub async fn mock_and_then<T>(
+    wait_for_block_fut: impl Future<Output = T>,
+    produce_block_fut: impl Future<Output = Result<(), Box<dyn Error>>>,
+) -> Result<(), Box<dyn Error>> {
+    match produce_block_fut.await {
+        Ok(_) => {
+            wait_for_block_fut.await;
+            Ok(())
+        }
+        err => err,
     }
 }
 
