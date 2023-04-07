@@ -410,6 +410,31 @@ impl MockPrimaryNode {
         Ok(())
     }
 
+    /// Produce block based on the given slot and parent hash
+    pub async fn produce_block_with_slot_and_parent_hash(
+        &mut self,
+        slot: Slot,
+        parent_hash: <Block as BlockT>::Hash,
+    ) -> Result<<Block as BlockT>::Hash, Box<dyn Error>> {
+        let block_timer = time::Instant::now();
+
+        let parent_number = self
+            .client
+            .number(parent_hash)?
+            .ok_or(format!("Failed to get block number for {parent_hash:?}"))?;
+
+        let extrinsics = self.collect_txn_from_pool(parent_number).await;
+
+        let (block, storage_changes) = self.build_block(slot, parent_hash, extrinsics).await?;
+        let block_hash = block.header().hash();
+
+        log_new_block(&block, block_timer.elapsed().as_millis());
+
+        self.import_block(block, Some(storage_changes)).await?;
+
+        Ok(block_hash)
+    }
+
     /// Produce `n` number of blocks.
     pub async fn produce_blocks(&mut self, n: u64) -> Result<(), Box<dyn Error>> {
         for _ in 0..n {
