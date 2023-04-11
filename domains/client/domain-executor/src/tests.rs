@@ -268,10 +268,7 @@ async fn test_invalid_state_transition_proof_creation_and_verification(
     ferdie.produce_blocks(1).await.unwrap();
 }
 
-// TODO: enable the test after we can fetch call_data from the original primary block, currently the test
-// will fail due to `panicked at 'Bad input data provided to initialize_block_with_post_state_root: Codec error'`
 #[substrate_test_utils::test(flavor = "multi_thread")]
-#[ignore]
 async fn fraud_proof_verification_in_tx_pool_should_work() {
     let directory = TempDir::new().expect("Must be able to create temporary directory");
 
