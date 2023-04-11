@@ -580,7 +580,7 @@ impl<T: Config> Pallet<T> {
                 };
 
                 if is_stale_bundle {
-                    log::debug!(
+                    log::info!(
                         target: "runtime::domains",
                         "Bundle created on an ancient consensus block, current_block_number: {current_block_number:?}, \
                         ConfirmationDepthK: {confirmation_depth_k:?}, `bundle.header.primary_number`: {:?}, `finalized`: {finalized:?}",
@@ -637,7 +637,7 @@ impl<T: Config> Pallet<T> {
                 };
 
             if !bundle_created_on_valid_primary_block {
-                log::debug!(
+                log::info!(
                     target: "runtime::domains",
                     "Bundle is probably created on a primary fork #{:?}, expected: {:?}, got: {:?}",
                     bundle.header.primary_number,
@@ -681,7 +681,7 @@ impl<T: Config> Pallet<T> {
                     );
 
                 if !point_to_parent_block && !point_to_valid_primary_block {
-                    log::debug!(
+                    log::info!(
                         target: "runtime::domains",
                         "Receipt of #{primary_number:?},{:?} points to an unknown primary block, \
                         expected: #{primary_number:?},{:?}",
@@ -693,7 +693,7 @@ impl<T: Config> Pallet<T> {
 
                 // Ensure the receipt is not too new.
                 if primary_number == current_block_number || primary_number > max_allowed {
-                    log::debug!(
+                    log::info!(
                         target: "runtime::domains",
                         "Receipt for #{primary_number:?} is too far in future, \
                         current_block_number: {current_block_number:?}, max_allowed: {max_allowed:?}",

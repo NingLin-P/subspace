@@ -144,6 +144,7 @@ impl MockPrimaryNode {
             Box::pin(async move {
                 loop {
                     tokio::select! {
+                        biased;
                         maybe_block_imported = imported_blocks_stream.next() => {
                             match maybe_block_imported {
                                 Some(block) => if block.is_new_best {
