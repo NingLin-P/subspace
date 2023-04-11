@@ -284,6 +284,7 @@ impl MockPrimaryNode {
         None
     }
 
+    /// Remove tx from tx pool 
     pub fn remove_tx_from_tx_pool(&self, tx: &OpaqueExtrinsic) -> Result<(), Box<dyn Error>> {
         self.transaction_pool
             .remove_invalid(&[self.transaction_pool.hash_of(tx)]);
