@@ -291,7 +291,7 @@ mod pallet {
                     signed_opaque_bundle,
                 } => {
                     if let Err(e) = Self::validate_bundle(signed_opaque_bundle) {
-                        log::debug!(
+                        log::info!(
                             target: "runtime::domains",
                             "Bad bundle {:?}, error: {e:?}", signed_opaque_bundle.domain_id(),
                         );
