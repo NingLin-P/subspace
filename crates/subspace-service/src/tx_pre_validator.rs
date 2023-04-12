@@ -91,7 +91,7 @@ where
                     .bundle_validator
                     .validate_bundle(&BlockId::Hash(at), &bundle)
                 {
-                    tracing::trace!(target: "txpool", error = ?err, "Dropped `submit_bundle` extrinsic");
+                    tracing::info!(target: "txpool", error = ?err, "Dropped `submit_bundle` extrinsic");
                     return Err(TxPoolError::ImmediatelyDropped.into());
                 }
             }
@@ -103,7 +103,7 @@ where
                 )
                 .await
                 .map_err(|err| {
-                    tracing::debug!(target: "txpool", error = ?err, "Invalid fraud proof");
+                    tracing::info!(target: "txpool", error = ?err, "Invalid fraud proof");
                     TxPoolError::InvalidTransaction(InvalidTransactionCode::FraudProof.into())
                 })?;
             }

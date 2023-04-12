@@ -113,7 +113,7 @@ where
                 )
                 .await
                 .map_err(|err| {
-                    tracing::debug!(target: "txpool", error = ?err, "Invalid fraud proof");
+                    tracing::info!(target: "txpool", error = ?err, "Invalid fraud proof");
                     TxPoolError::InvalidTransaction(InvalidTransactionCode::FraudProof.into())
                 })?;
             }
