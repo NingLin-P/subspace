@@ -223,13 +223,17 @@
 <a href="#223" id="223">223</a>
 <a href="#224" id="224">224</a>
 <a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::domain_block_processor::{DomainBlockProcessor, PendingPrimaryBlocks};
 <span class="kw">use </span><span class="kw">crate</span>::utils::translate_number_type;
 <span class="kw">use </span><span class="kw">crate</span>::TransactionFor;
 <span class="kw">use </span>domain_block_preprocessor::runtime_api_full::RuntimeApiFull;
 <span class="kw">use </span>domain_block_preprocessor::SystemDomainBlockPreprocessor;
-<span class="kw">use </span>domain_runtime_primitives::{AccountId, DomainCoreApi};
-<span class="kw">use </span>sc_client_api::{AuxStore, BlockBackend, StateBackendFor};
+<span class="kw">use </span>domain_runtime_primitives::DomainCoreApi;
+<span class="kw">use </span>sc_client_api::{AuxStore, BlockBackend, Finalizer, StateBackendFor};
 <span class="kw">use </span>sc_consensus::BlockImport;
 <span class="kw">use </span>sp_api::{NumberFor, ProvideRuntimeApi};
 <span class="kw">use </span>sp_blockchain::{HeaderBackend, HeaderMetadata};
@@ -245,7 +249,7 @@
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>SystemBundleProcessor&lt;Block, PBlock, Client, PClient, Backend, E&gt;
 <span class="kw">where
-    </span>PBlock: BlockT,
+    </span>Block: BlockT,
 {
     primary_chain_client: Arc&lt;PClient&gt;,
     client: Arc&lt;Client&gt;,
@@ -254,13 +258,12 @@
     system_domain_block_preprocessor:
         SystemDomainBlockPreprocessor&lt;Block, PBlock, PClient, RuntimeApiFull&lt;Client&gt;&gt;,
     domain_block_processor: DomainBlockProcessor&lt;Block, PBlock, Client, PClient, Backend, E&gt;,
-    state_root_extractor: RuntimeApiFull&lt;Client&gt;,
 }
 
 <span class="kw">impl</span>&lt;Block, PBlock, Client, PClient, Backend, E&gt; Clone
     <span class="kw">for </span>SystemBundleProcessor&lt;Block, PBlock, Client, PClient, Backend, E&gt;
 <span class="kw">where
-    </span>PBlock: BlockT,
+    </span>Block: BlockT,
 {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
@@ -270,7 +273,6 @@
             keystore: <span class="self">self</span>.keystore.clone(),
             system_domain_block_preprocessor: <span class="self">self</span>.system_domain_block_preprocessor.clone(),
             domain_block_processor: <span class="self">self</span>.domain_block_processor.clone(),
-            state_root_extractor: <span class="self">self</span>.state_root_extractor.clone(),
         }
     }
 }
@@ -282,9 +284,13 @@
     PBlock: BlockT,
     NumberFor&lt;PBlock&gt;: From&lt;NumberFor&lt;Block&gt;&gt;,
     PBlock::Hash: From&lt;Block::Hash&gt;,
-    Client:
-        HeaderBackend&lt;Block&gt; + BlockBackend&lt;Block&gt; + AuxStore + ProvideRuntimeApi&lt;Block&gt; + <span class="lifetime">&#39;static</span>,
-    Client::Api: DomainCoreApi&lt;Block, AccountId&gt;
+    Client: HeaderBackend&lt;Block&gt;
+        + BlockBackend&lt;Block&gt;
+        + AuxStore
+        + ProvideRuntimeApi&lt;Block&gt;
+        + Finalizer&lt;Block, Backend&gt;
+        + <span class="lifetime">&#39;static</span>,
+    Client::Api: DomainCoreApi&lt;Block&gt;
         + sp_block_builder::BlockBuilder&lt;Block&gt;
         + sp_api::ApiExt&lt;Block, StateBackend = StateBackendFor&lt;Backend, Block&gt;&gt;
         + SystemDomainApi&lt;Block, NumberFor&lt;PBlock&gt;, PBlock::Hash&gt;
@@ -317,12 +323,11 @@
         );
         <span class="self">Self </span>{
             primary_chain_client,
-            client: client.clone(),
+            client,
             backend,
             keystore,
             system_domain_block_preprocessor,
             domain_block_processor,
-            state_root_extractor: RuntimeApiFull::new(client),
         }
     }
 
@@ -330,10 +335,10 @@
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async fn </span>process_bundles(
         <span class="self">self</span>,
         primary_info: (PBlock::Hash, NumberFor&lt;PBlock&gt;),
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), sp_blockchain::Error&gt; {
-        <span class="macro">tracing::debug!</span>(<span class="question-mark">?</span>primary_info, <span class="string">&quot;Processing imported primary block&quot;</span>);
-
+    ) -&gt; sp_blockchain::Result&lt;()&gt; {
         <span class="kw">let </span>(primary_hash, primary_number) = primary_info;
+
+        <span class="macro">tracing::debug!</span>(<span class="string">&quot;Processing imported primary block #{primary_number},{primary_hash}&quot;</span>);
 
         <span class="kw">let </span>maybe_pending_primary_blocks = <span class="self">self
             </span>.domain_block_processor
@@ -366,11 +371,14 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         primary_info: (PBlock::Hash, NumberFor&lt;PBlock&gt;),
         parent_info: (Block::Hash, NumberFor&lt;Block&gt;),
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(Block::Hash, NumberFor&lt;Block&gt;), sp_blockchain::Error&gt; {
-        <span class="macro">tracing::debug!</span>(<span class="question-mark">?</span>primary_info, <span class="question-mark">?</span>parent_info, <span class="string">&quot;Building a new domain block&quot;</span>);
-
+    ) -&gt; sp_blockchain::Result&lt;(Block::Hash, NumberFor&lt;Block&gt;)&gt; {
         <span class="kw">let </span>(primary_hash, primary_number) = primary_info;
         <span class="kw">let </span>(parent_hash, parent_number) = parent_info;
+
+        <span class="macro">tracing::debug!</span>(
+            <span class="string">&quot;Building a new domain block from primary block #{primary_number},{primary_hash} \
+            on top of parent block #{parent_number},{parent_hash}&quot;
+        </span>);
 
         <span class="kw">let </span>extrinsics = <span class="self">self
             </span>.system_domain_block_preprocessor

@@ -518,6 +518,35 @@
 <a href="#518" id="518">518</a>
 <a href="#519" id="519">519</a>
 <a href="#520" id="520">520</a>
+<a href="#521" id="521">521</a>
+<a href="#522" id="522">522</a>
+<a href="#523" id="523">523</a>
+<a href="#524" id="524">524</a>
+<a href="#525" id="525">525</a>
+<a href="#526" id="526">526</a>
+<a href="#527" id="527">527</a>
+<a href="#528" id="528">528</a>
+<a href="#529" id="529">529</a>
+<a href="#530" id="530">530</a>
+<a href="#531" id="531">531</a>
+<a href="#532" id="532">532</a>
+<a href="#533" id="533">533</a>
+<a href="#534" id="534">534</a>
+<a href="#535" id="535">535</a>
+<a href="#536" id="536">536</a>
+<a href="#537" id="537">537</a>
+<a href="#538" id="538">538</a>
+<a href="#539" id="539">539</a>
+<a href="#540" id="540">540</a>
+<a href="#541" id="541">541</a>
+<a href="#542" id="542">542</a>
+<a href="#543" id="543">543</a>
+<a href="#544" id="544">544</a>
+<a href="#545" id="545">545</a>
+<a href="#546" id="546">546</a>
+<a href="#547" id="547">547</a>
+<a href="#548" id="548">548</a>
+<a href="#549" id="549">549</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::system_domain_tx_pre_validator::SystemDomainTxPreValidator;
 <span class="kw">use crate</span>::{DomainConfiguration, FullBackend, FullClient};
 <span class="kw">use </span>cross_domain_message_gossip::{DomainTxPoolSink, Message <span class="kw">as </span>GossipMessage};
@@ -529,13 +558,14 @@
 <span class="kw">use </span>domain_client_executor_gossip::ExecutorGossipParams;
 <span class="kw">use </span>domain_client_message_relayer::GossipMessageSink;
 <span class="kw">use </span>domain_runtime_primitives::opaque::Block;
-<span class="kw">use </span>domain_runtime_primitives::{AccountId, Balance, DomainCoreApi, Hash, RelayerId};
+<span class="kw">use </span>domain_runtime_primitives::{AccountId, Balance, DomainCoreApi, Hash};
 <span class="kw">use </span>futures::channel::mpsc;
 <span class="kw">use </span>futures::{Stream, StreamExt};
 <span class="kw">use </span>jsonrpsee::tracing;
 <span class="kw">use </span>pallet_transaction_payment_rpc::TransactionPaymentRuntimeApi;
 <span class="kw">use </span>sc_client_api::{BlockBackend, BlockImportNotification, BlockchainEvents, StateBackendFor};
 <span class="kw">use </span>sc_executor::{NativeElseWasmExecutor, NativeExecutionDispatch};
+<span class="kw">use </span>sc_rpc_api::DenyUnsafe;
 <span class="kw">use </span>sc_service::{
     BuildNetworkParams, Configuration <span class="kw">as </span>ServiceConfiguration, NetworkStarter, PartialComponents,
     SpawnTaskHandle, SpawnTasksParams, TFullBackend, TaskManager,
@@ -559,9 +589,8 @@
 <span class="kw">use </span>sp_transaction_pool::runtime_api::TaggedTransactionQueue;
 <span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>subspace_core_primitives::Blake2b256Hash;
-<span class="kw">use </span>subspace_fraud_proof::invalid_state_transition_proof::{
-    CoreDomainExtrinsicsBuilder, PrePostStateRootVerifier,
-};
+<span class="kw">use </span>subspace_fraud_proof::domain_extrinsics_builder::CoreDomainExtrinsicsBuilder;
+<span class="kw">use </span>subspace_fraud_proof::verifier_api::VerifierClient;
 <span class="kw">use </span>subspace_runtime_primitives::Index <span class="kw">as </span>Nonce;
 <span class="kw">use </span>substrate_frame_rpc_system::AccountNonceApi;
 <span class="kw">use </span>system_runtime_primitives::SystemDomainApi;
@@ -569,10 +598,10 @@
 <span class="kw">type </span>SystemDomainExecutor&lt;PBlock, PClient, RuntimeApi, ExecutorDispatch&gt; = SystemExecutor&lt;
     Block,
     PBlock,
-    FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
+    FullClient&lt;Block, RuntimeApi, ExecutorDispatch&gt;,
     PClient,
     FullPool&lt;PBlock, PClient, RuntimeApi, ExecutorDispatch&gt;,
-    FullBackend,
+    FullBackend&lt;Block&gt;,
     NativeElseWasmExecutor&lt;ExecutorDispatch&gt;,
 &gt;;
 
@@ -591,7 +620,7 @@
         + Sync
         + <span class="lifetime">&#39;static</span>,
     PClient::Api: ExecutorApi&lt;PBlock, Hash&gt;,
-    RuntimeApi: ConstructRuntimeApi&lt;Block, FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;
+    RuntimeApi: ConstructRuntimeApi&lt;Block, FullClient&lt;Block, RuntimeApi, ExecutorDispatch&gt;&gt;
         + Send
         + Sync
         + <span class="lifetime">&#39;static</span>,
@@ -600,13 +629,13 @@
         + BlockBuilder&lt;Block&gt;
         + OffchainWorkerApi&lt;Block&gt;
         + SessionKeys&lt;Block&gt;
-        + DomainCoreApi&lt;Block, AccountId&gt;
+        + DomainCoreApi&lt;Block&gt;
         + MessengerApi&lt;Block, NumberFor&lt;Block&gt;&gt;
         + SystemDomainApi&lt;Block, NumberFor&lt;PBlock&gt;, PBlock::Hash&gt;
         + TaggedTransactionQueue&lt;Block&gt;
         + AccountNonceApi&lt;Block, AccountId, Nonce&gt;
         + TransactionPaymentRuntimeApi&lt;Block, Balance&gt;
-        + RelayerApi&lt;Block, RelayerId, NumberFor&lt;Block&gt;&gt;
+        + RelayerApi&lt;Block, AccountId, NumberFor&lt;Block&gt;&gt;
         + ReceiptsApi&lt;Block, Hash&gt;
         + PreValidationObjectApi&lt;Block, Hash&gt;,
 {
@@ -615,7 +644,7 @@
     <span class="doccomment">/// Full client.
     </span><span class="kw">pub </span>client: C,
     <span class="doccomment">/// Backend.
-    </span><span class="kw">pub </span>backend: Arc&lt;FullBackend&gt;,
+    </span><span class="kw">pub </span>backend: Arc&lt;FullBackend&lt;Block&gt;&gt;,
     <span class="doccomment">/// Code executor.
     </span><span class="kw">pub </span>code_executor: Arc&lt;CodeExecutor&gt;,
     <span class="doccomment">/// Network service.
@@ -634,14 +663,14 @@
 
 <span class="kw">pub type </span>FullPool&lt;PBlock, PClient, RuntimeApi, Executor&gt; = subspace_transaction_pool::FullPool&lt;
     Block,
-    FullClient&lt;RuntimeApi, Executor&gt;,
+    FullClient&lt;Block, RuntimeApi, Executor&gt;,
     SystemDomainTxPreValidator&lt;
         Block,
         PBlock,
-        FullClient&lt;RuntimeApi, Executor&gt;,
+        FullClient&lt;Block, RuntimeApi, Executor&gt;,
         FraudProofVerifier&lt;PBlock, PClient, RuntimeApi, Executor&gt;,
         PClient,
-        RuntimeApiFull&lt;FullClient&lt;RuntimeApi, Executor&gt;&gt;,
+        RuntimeApiFull&lt;FullClient&lt;Block, RuntimeApi, Executor&gt;&gt;,
     &gt;,
 &gt;;
 
@@ -652,12 +681,12 @@
         NativeElseWasmExecutor&lt;Executor&gt;,
         SpawnTaskHandle,
         Hash,
-        PrePostStateRootVerifier&lt;FullClient&lt;RuntimeApi, Executor&gt;, Block&gt;,
+        VerifierClient&lt;FullClient&lt;Block, RuntimeApi, Executor&gt;, Block&gt;,
         CoreDomainExtrinsicsBuilder&lt;
             PBlock,
             Block,
             PClient,
-            FullClient&lt;RuntimeApi, Executor&gt;,
+            FullClient&lt;Block, RuntimeApi, Executor&gt;,
             NativeElseWasmExecutor&lt;Executor&gt;,
         &gt;,
     &gt;;
@@ -675,10 +704,10 @@
     primary_chain_client: Arc&lt;PClient&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;
     PartialComponents&lt;
-        FullClient&lt;RuntimeApi, ExecutionDispatch&gt;,
-        FullBackend,
+        FullClient&lt;Block, RuntimeApi, ExecutionDispatch&gt;,
+        FullBackend&lt;Block&gt;,
         (),
-        sc_consensus::DefaultImportQueue&lt;Block, FullClient&lt;RuntimeApi, ExecutionDispatch&gt;&gt;,
+        sc_consensus::DefaultImportQueue&lt;Block, FullClient&lt;Block, RuntimeApi, ExecutionDispatch&gt;&gt;,
         FullPool&lt;PBlock, PClient, RuntimeApi, ExecutionDispatch&gt;,
         (
             <span class="prelude-ty">Option</span>&lt;Telemetry&gt;,
@@ -699,7 +728,7 @@
         + Sync
         + <span class="lifetime">&#39;static</span>,
     PClient::Api: ExecutorApi&lt;PBlock, Hash&gt;,
-    RuntimeApi: ConstructRuntimeApi&lt;Block, FullClient&lt;RuntimeApi, ExecutionDispatch&gt;&gt;
+    RuntimeApi: ConstructRuntimeApi&lt;Block, FullClient&lt;Block, RuntimeApi, ExecutionDispatch&gt;&gt;
         + Send
         + Sync
         + <span class="lifetime">&#39;static</span>,
@@ -750,7 +779,7 @@
             primary_chain_client.clone(),
             executor.clone(),
             task_manager.spawn_handle(),
-            PrePostStateRootVerifier::new(client.clone()),
+            VerifierClient::new(client.clone()),
             CoreDomainExtrinsicsBuilder::new(
                 primary_chain_client.clone(),
                 client.clone(),
@@ -798,7 +827,7 @@
 ///
 /// This is the actual implementation that is abstract over the executor and the runtime api.
 </span><span class="kw">pub async fn </span>new_full_system&lt;PBlock, PClient, SC, IBNS, CIBNS, NSNS, RuntimeApi, ExecutorDispatch&gt;(
-    <span class="kw-2">mut </span>system_domain_config: DomainConfiguration,
+    <span class="kw-2">mut </span>system_domain_config: DomainConfiguration&lt;AccountId&gt;,
     primary_chain_client: Arc&lt;PClient&gt;,
     primary_network_sync_oracle: Arc&lt;<span class="kw">dyn </span>SyncOracle + Send + Sync&gt;,
     select_chain: <span class="kw-2">&amp;</span>SC,
@@ -806,7 +835,7 @@
     gossip_message_sink: GossipMessageSink,
 ) -&gt; sc_service::error::Result&lt;
     NewFullSystem&lt;
-        Arc&lt;FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;,
+        Arc&lt;FullClient&lt;Block, RuntimeApi, ExecutorDispatch&gt;&gt;,
         NativeElseWasmExecutor&lt;ExecutorDispatch&gt;,
         PBlock,
         PClient,
@@ -816,7 +845,7 @@
 &gt;
 <span class="kw">where
     </span>PBlock: BlockT,
-    NumberFor&lt;PBlock&gt;: From&lt;NumberFor&lt;Block&gt;&gt;,
+    NumberFor&lt;PBlock&gt;: From&lt;NumberFor&lt;Block&gt;&gt; + Into&lt;u32&gt;,
     PBlock::Hash: From&lt;Hash&gt;,
     PClient: HeaderBackend&lt;PBlock&gt;
         + HeaderMetadata&lt;PBlock, Error = sp_blockchain::Error&gt;
@@ -826,12 +855,12 @@
         + Send
         + Sync
         + <span class="lifetime">&#39;static</span>,
-    PClient::Api: ExecutorApi&lt;PBlock, Hash&gt;,
+    PClient::Api: ExecutorApi&lt;PBlock, Hash&gt; + ReceiptsApi&lt;PBlock, Hash&gt;,
     SC: SelectChain&lt;PBlock&gt;,
     IBNS: Stream&lt;Item = (NumberFor&lt;PBlock&gt;, mpsc::Sender&lt;()&gt;)&gt; + Send + <span class="lifetime">&#39;static</span>,
     CIBNS: Stream&lt;Item = BlockImportNotification&lt;PBlock&gt;&gt; + Send + <span class="lifetime">&#39;static</span>,
     NSNS: Stream&lt;Item = (Slot, Blake2b256Hash, <span class="prelude-ty">Option</span>&lt;mpsc::Sender&lt;()&gt;&gt;)&gt; + Send + <span class="lifetime">&#39;static</span>,
-    RuntimeApi: ConstructRuntimeApi&lt;Block, FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;
+    RuntimeApi: ConstructRuntimeApi&lt;Block, FullClient&lt;Block, RuntimeApi, ExecutorDispatch&gt;&gt;
         + Send
         + Sync
         + <span class="lifetime">&#39;static</span>,
@@ -840,13 +869,13 @@
         + BlockBuilder&lt;Block&gt;
         + OffchainWorkerApi&lt;Block&gt;
         + SessionKeys&lt;Block&gt;
-        + DomainCoreApi&lt;Block, AccountId&gt;
+        + DomainCoreApi&lt;Block&gt;
         + SystemDomainApi&lt;Block, NumberFor&lt;PBlock&gt;, PBlock::Hash&gt;
         + MessengerApi&lt;Block, NumberFor&lt;Block&gt;&gt;
         + TaggedTransactionQueue&lt;Block&gt;
         + AccountNonceApi&lt;Block, AccountId, Nonce&gt;
         + TransactionPaymentRuntimeApi&lt;Block, Balance&gt;
-        + RelayerApi&lt;Block, RelayerId, NumberFor&lt;Block&gt;&gt;
+        + RelayerApi&lt;Block, AccountId, NumberFor&lt;Block&gt;&gt;
         + ReceiptsApi&lt;Block, Hash&gt;
         + PreValidationObjectApi&lt;Block, Hash&gt;,
     ExecutorDispatch: NativeExecutionDispatch + <span class="lifetime">&#39;static</span>,
@@ -884,24 +913,28 @@
             warp_sync_params: <span class="prelude-val">None</span>,
         })<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>rpc_builder = {
-        <span class="kw">let </span>client = client.clone();
-        <span class="kw">let </span>transaction_pool = transaction_pool.clone();
-        <span class="kw">let </span>chain_spec = system_domain_config.service_config.chain_spec.cloned_box();
-
-        Box::new(<span class="kw">move </span>|deny_unsafe, <span class="kw">_</span>| {
-            <span class="kw">let </span>deps = <span class="kw">crate</span>::rpc::FullDeps {
-                client: client.clone(),
-                pool: transaction_pool.clone(),
-                chain_spec: chain_spec.cloned_box(),
-                deny_unsafe,
-            };
-
-            <span class="kw">crate</span>::rpc::create_full(deps).map_err(Into::into)
-        })
-    };
-
     <span class="kw">let </span>is_authority = system_domain_config.service_config.role.is_authority();
+    <span class="kw">let </span>rpc_builder = {
+        <span class="kw">let </span>deps = <span class="kw">crate</span>::rpc::FullDeps {
+            client: client.clone(),
+            pool: transaction_pool.clone(),
+            graph: transaction_pool.pool().clone(),
+            chain_spec: system_domain_config.service_config.chain_spec.cloned_box(),
+            deny_unsafe: DenyUnsafe::Yes,
+            network: network_service.clone(),
+            sync: sync_service.clone(),
+            is_authority,
+            prometheus_registry: system_domain_config
+                .service_config
+                .prometheus_registry()
+                .cloned(),
+            database_source: system_domain_config.service_config.database.clone(),
+            task_spawner: task_manager.spawn_handle(),
+            backend: backend.clone(),
+        };
+
+        Box::new(<span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| <span class="kw">crate</span>::rpc::create_full(deps.clone()).map_err(Into::into))
+    };
 
     <span class="kw">let </span>rpc_handlers = sc_service::spawn_tasks(SpawnTasksParams {
         rpc_builder,
@@ -923,6 +956,30 @@
     <span class="kw">let </span>spawn_essential = task_manager.spawn_essential_handle();
     <span class="kw">let </span>(bundle_sender, bundle_receiver) = tracing_unbounded(<span class="string">&quot;system_domain_bundle_stream&quot;</span>, <span class="number">100</span>);
 
+    <span class="kw">let </span>primary_chain_best_hash = primary_chain_client.info().best_hash;
+    <span class="kw">let </span>receipts_api_version = primary_chain_client
+        .runtime_api()
+        .api_version::&lt;<span class="kw">dyn </span>ReceiptsApi&lt;Block, Hash&gt;&gt;(primary_chain_best_hash)
+        .ok()
+        .flatten()
+        .ok_or_else(|| {
+            sp_blockchain::Error::RuntimeApiError(sp_api::ApiError::Application(
+                <span class="macro">format!</span>(<span class="string">&quot;Could not find `ReceiptsApi` api version at {primary_chain_best_hash}.&quot;</span>,)
+                    .into(),
+            ))
+        })<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>domain_confirmation_depth = <span class="kw">if </span>receipts_api_version &gt;= <span class="number">2 </span>{
+        primary_chain_client
+            .runtime_api()
+            .receipts_pruning_depth(primary_chain_best_hash)
+            .map_err(|err| sc_service::error::Error::Application(Box::new(err)))<span class="question-mark">?
+            </span>.into()
+    } <span class="kw">else </span>{
+        <span class="comment">// TODO: Remove the api version check once gemini-3d is retired.
+        </span><span class="number">256u32
+    </span>};
+
     <span class="kw">let </span>executor = SystemExecutor::new(
         Box::new(task_manager.spawn_essential_handle()),
         select_chain,
@@ -938,6 +995,7 @@
             spawner: Box::new(task_manager.spawn_handle()),
             bundle_sender: Arc::new(bundle_sender),
             executor_streams,
+            domain_confirmation_depth,
         },
     )
     .<span class="kw">await</span><span class="question-mark">?</span>;

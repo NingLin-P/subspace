@@ -562,13 +562,27 @@
 <a href="#562" id="562">562</a>
 <a href="#563" id="563">563</a>
 <a href="#564" id="564">564</a>
+<a href="#565" id="565">565</a>
+<a href="#566" id="566">566</a>
+<a href="#567" id="567">567</a>
+<a href="#568" id="568">568</a>
+<a href="#569" id="569">569</a>
+<a href="#570" id="570">570</a>
+<a href="#571" id="571">571</a>
+<a href="#572" id="572">572</a>
+<a href="#573" id="573">573</a>
+<a href="#574" id="574">574</a>
+<a href="#575" id="575">575</a>
+<a href="#576" id="576">576</a>
+<a href="#577" id="577">577</a>
+<a href="#578" id="578">578</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::fraud_proof::{find_trace_mismatch, FraudProofGenerator};
 <span class="kw">use </span><span class="kw">crate</span>::utils::{to_number_primitive, translate_number_type};
 <span class="kw">use crate</span>::{ExecutionReceiptFor, TransactionFor};
 <span class="kw">use </span>codec::{Decode, Encode};
 <span class="kw">use </span>domain_block_builder::{BlockBuilder, BuiltBlock, RecordProof};
-<span class="kw">use </span>domain_runtime_primitives::{AccountId, DomainCoreApi};
-<span class="kw">use </span>sc_client_api::{AuxStore, BlockBackend, StateBackendFor};
+<span class="kw">use </span>domain_runtime_primitives::DomainCoreApi;
+<span class="kw">use </span>sc_client_api::{AuxStore, BlockBackend, Finalizer, StateBackendFor};
 <span class="kw">use </span>sc_consensus::{
     BlockImport, BlockImportParams, ForkChoiceStrategy, ImportResult, StateAction, StorageChanges,
 };
@@ -579,7 +593,7 @@
 <span class="kw">use </span>sp_domains::fraud_proof::FraudProof;
 <span class="kw">use </span>sp_domains::merkle_tree::MerkleTree;
 <span class="kw">use </span>sp_domains::{DomainId, ExecutionReceipt, ExecutorApi};
-<span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, HashFor, Header <span class="kw">as </span>HeaderT, One, Zero};
+<span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, CheckedSub, HashFor, Header <span class="kw">as </span>HeaderT, One, Zero};
 <span class="kw">use </span>sp_runtime::Digest;
 <span class="kw">use </span>std::sync::Arc;
 
@@ -596,7 +610,7 @@
 <span class="doccomment">/// A common component shared between the system and core domain bundle processor.
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>DomainBlockProcessor&lt;Block, PBlock, Client, PClient, Backend, E&gt;
 <span class="kw">where
-    </span>PBlock: BlockT,
+    </span>Block: BlockT,
 {
     domain_id: DomainId,
     client: Arc&lt;Client&gt;,
@@ -604,12 +618,13 @@
     primary_network_sync_oracle: Arc&lt;<span class="kw">dyn </span>SyncOracle + Send + Sync&gt;,
     backend: Arc&lt;Backend&gt;,
     fraud_proof_generator: FraudProofGenerator&lt;Block, PBlock, Client, PClient, Backend, E&gt;,
+    domain_confirmation_depth: NumberFor&lt;Block&gt;,
 }
 
 <span class="kw">impl</span>&lt;Block, PBlock, Client, PClient, Backend, E&gt; Clone
     <span class="kw">for </span>DomainBlockProcessor&lt;Block, PBlock, Client, PClient, Backend, E&gt;
 <span class="kw">where
-    </span>PBlock: BlockT,
+    </span>Block: BlockT,
 {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
@@ -619,6 +634,7 @@
             primary_network_sync_oracle: <span class="self">self</span>.primary_network_sync_oracle.clone(),
             backend: <span class="self">self</span>.backend.clone(),
             fraud_proof_generator: <span class="self">self</span>.fraud_proof_generator.clone(),
+            domain_confirmation_depth: <span class="self">self</span>.domain_confirmation_depth,
         }
     }
 }
@@ -642,9 +658,13 @@
 <span class="kw">where
     </span>Block: BlockT,
     PBlock: BlockT,
-    Client:
-        HeaderBackend&lt;Block&gt; + BlockBackend&lt;Block&gt; + AuxStore + ProvideRuntimeApi&lt;Block&gt; + <span class="lifetime">&#39;static</span>,
-    Client::Api: DomainCoreApi&lt;Block, AccountId&gt;
+    Client: HeaderBackend&lt;Block&gt;
+        + BlockBackend&lt;Block&gt;
+        + AuxStore
+        + ProvideRuntimeApi&lt;Block&gt;
+        + Finalizer&lt;Block, Backend&gt;
+        + <span class="lifetime">&#39;static</span>,
+    Client::Api: DomainCoreApi&lt;Block&gt;
         + sp_block_builder::BlockBuilder&lt;Block&gt;
         + sp_api::ApiExt&lt;Block, StateBackend = StateBackendFor&lt;Backend, Block&gt;&gt;,
     <span class="kw">for</span>&lt;<span class="lifetime">&#39;b</span>&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>Client: BlockImport&lt;
@@ -669,6 +689,7 @@
         primary_network_sync_oracle: Arc&lt;<span class="kw">dyn </span>SyncOracle + Send + Sync&gt;,
         backend: Arc&lt;Backend&gt;,
         fraud_proof_generator: FraudProofGenerator&lt;Block, PBlock, Client, PClient, Backend, E&gt;,
+        domain_confirmation_depth: NumberFor&lt;Block&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
             domain_id,
@@ -677,6 +698,7 @@
             primary_network_sync_oracle,
             backend,
             fraud_proof_generator,
+            domain_confirmation_depth,
         }
     }
 
@@ -701,19 +723,15 @@
 
         <span class="kw">let </span>best_hash = <span class="self">self</span>.client.info().best_hash;
         <span class="kw">let </span>best_number = <span class="self">self</span>.client.info().best_number;
-        <span class="kw">let </span>best_receipt = <span class="kw">crate</span>::aux_schema::load_execution_receipt::&lt;
-            <span class="kw">_</span>,
-            Block::Hash,
-            NumberFor&lt;PBlock&gt;,
-            PBlock::Hash,
-        &gt;(<span class="kw-2">&amp;*</span><span class="self">self</span>.client, best_hash)<span class="question-mark">?
-        </span>.ok_or_else(|| {
-            sp_blockchain::Error::Backend(<span class="macro">format!</span>(
-                <span class="string">&quot;Receipt for #{best_number},{best_hash:?} not found&quot;
-            </span>))
-        })<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>primary_from = best_receipt.primary_hash;
+        <span class="kw">let </span>primary_hash_for_best_domain_hash =
+            <span class="kw">crate</span>::aux_schema::primary_hash_for(<span class="kw-2">&amp;*</span><span class="self">self</span>.backend, best_hash)<span class="question-mark">?</span>.ok_or_else(|| {
+                sp_blockchain::Error::Backend(<span class="macro">format!</span>(
+                    <span class="string">&quot;Primary hash for domain hash #{best_hash} not found&quot;
+                </span>))
+            })<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>primary_from = primary_hash_for_best_domain_hash;
         <span class="kw">let </span>primary_to = primary_hash;
 
         <span class="kw">if </span>primary_from == primary_to {
@@ -739,7 +757,7 @@
             (<span class="bool-val">true</span>, <span class="bool-val">false</span>) =&gt; {
                 <span class="comment">// New tip, A -&gt; B
                 </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(PendingPrimaryBlocks {
-                    initial_parent: (<span class="self">self</span>.client.info().best_hash, <span class="self">self</span>.client.info().best_number),
+                    initial_parent: (best_hash, best_number),
                     primary_imports: enacted.to_vec(),
                 }))
             }
@@ -787,8 +805,8 @@
 
         <span class="kw">if </span>to_number_primitive(parent_number) + <span class="number">1 </span>!= primary_number {
             <span class="kw">return </span><span class="prelude-val">Err</span>(sp_blockchain::Error::Application(Box::from(<span class="macro">format!</span>(
-                <span class="string">&quot;Wrong domain parent block #{parent_number},{parent_hash:?} for \
-                primary block #{primary_number},{primary_hash:?}, the number of new \
+                <span class="string">&quot;Wrong domain parent block #{parent_number},{parent_hash} for \
+                primary block #{primary_number},{primary_hash}, the number of new \
                 domain block must match the number of corresponding primary block.&quot;
             </span>))));
         }
@@ -804,9 +822,25 @@
             .<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="macro">tracing::debug!</span>(
-            <span class="string">&quot;Built new domain block #{header_number},{header_hash} \
-            from primary block #{primary_number},{primary_hash}&quot;</span>,
-        );
+            <span class="string">&quot;Built new domain block #{header_number},{header_hash} from primary block #{primary_number},{primary_hash} \
+            on top of parent block #{header_number},{header_hash}&quot;
+        </span>);
+
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(to_finalize_block_number) =
+            header_number.checked_sub(<span class="kw-2">&amp;</span><span class="self">self</span>.domain_confirmation_depth)
+        {
+            <span class="kw">let </span>to_finalize_block_hash =
+                <span class="self">self</span>.client.hash(to_finalize_block_number)<span class="question-mark">?</span>.ok_or_else(|| {
+                    sp_blockchain::Error::Backend(<span class="macro">format!</span>(
+                        <span class="string">&quot;Header for #{to_finalize_block_number} not found&quot;
+                    </span>))
+                })<span class="question-mark">?</span>;
+            <span class="self">self</span>.client
+                .finalize_block(to_finalize_block_hash, <span class="prelude-val">None</span>, <span class="bool-val">true</span>)<span class="question-mark">?</span>;
+            <span class="macro">tracing::debug!</span>(
+                <span class="string">&quot;Successfully finalized block: #{to_finalize_block_number},{to_finalize_block_hash}&quot;
+            </span>);
+        }
 
         <span class="kw">let </span><span class="kw-2">mut </span>roots = <span class="self">self</span>.client.runtime_api().intermediate_roots(header_hash)<span class="question-mark">?</span>;
 
@@ -911,7 +945,7 @@
                 <span class="kw">return </span><span class="prelude-val">Err</span>(sp_consensus::Error::ClientImport(<span class="macro">format!</span>(
                     <span class="string">&quot;Parent state of block #{header_number}({header_hash:?}) is missing, parent: {parent_hash:?}&quot;
                 </span>))
-                .into());
+                    .into());
             }
         }
 
@@ -938,18 +972,24 @@
 
         <span class="kw">crate</span>::aux_schema::write_execution_receipt::&lt;<span class="kw">_</span>, Block, PBlock&gt;(
             <span class="kw-2">&amp;*</span><span class="self">self</span>.client,
-            (header_hash, header_number),
             head_receipt_number,
             <span class="kw-2">&amp;</span>execution_receipt,
         )<span class="question-mark">?</span>;
 
+        <span class="kw">crate</span>::aux_schema::track_domain_hash_to_primary_hash(
+            <span class="kw-2">&amp;*</span><span class="self">self</span>.client,
+            header_hash,
+            primary_hash,
+        )<span class="question-mark">?</span>;
+
+        <span class="comment">// Disable the fraud proof except for the system domain.
+        </span><span class="kw">if </span>!<span class="self">self</span>.domain_id.is_system() {
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
+        }
+
         <span class="comment">// TODO: The applied txs can be fully removed from the transaction pool
 
-        // TODO: Skip fraud-proof processing until
-        // https://github.com/subspace/subspace/issues/1020 is resolved.
-        </span><span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
-
-        <span class="self">self</span>.check_receipts_in_primary_block(primary_hash)<span class="question-mark">?</span>;
+        </span><span class="self">self</span>.check_receipts_in_primary_block(primary_hash)<span class="question-mark">?</span>;
 
         <span class="kw">if </span><span class="self">self</span>.primary_network_sync_oracle.is_major_syncing() {
             <span class="macro">tracing::debug!</span>(
@@ -986,46 +1026,27 @@
         <span class="kw">let </span><span class="kw-2">mut </span>bad_receipts_to_write = <span class="macro">vec!</span>[];
 
         <span class="kw">for </span>execution_receipt <span class="kw">in </span>receipts.iter() {
-            <span class="kw">let </span>block_hash = execution_receipt.domain_hash;
-            <span class="kw">match </span><span class="kw">crate</span>::aux_schema::load_execution_receipt::&lt;
+            <span class="kw">let </span>primary_block_hash = execution_receipt.primary_hash;
+
+            <span class="kw">let </span>local_receipt = <span class="kw">crate</span>::aux_schema::load_execution_receipt::&lt;
                 <span class="kw">_</span>,
                 Block::Hash,
                 NumberFor&lt;PBlock&gt;,
                 PBlock::Hash,
-            &gt;(<span class="kw-2">&amp;*</span><span class="self">self</span>.client, block_hash)<span class="question-mark">?
-            </span>{
-                <span class="prelude-val">Some</span>(local_receipt) =&gt; {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(trace_mismatch_index) =
-                        find_trace_mismatch(<span class="kw-2">&amp;</span>local_receipt, execution_receipt)
-                    {
-                        bad_receipts_to_write.push((
-                            execution_receipt.primary_number,
-                            execution_receipt.hash(),
-                            (trace_mismatch_index, block_hash),
-                        ));
-                    }
-                }
-                <span class="prelude-val">None </span>=&gt; {
-                    <span class="kw">let </span>block_number = to_number_primitive(execution_receipt.primary_number);
+            &gt;(<span class="kw-2">&amp;*</span><span class="self">self</span>.client, primary_block_hash)<span class="question-mark">?
+            </span>.ok_or(sp_blockchain::Error::Backend(<span class="macro">format!</span>(
+                <span class="string">&quot;receipt for primary block #{},{primary_block_hash} not found&quot;</span>,
+                execution_receipt.primary_number
+            )))<span class="question-mark">?</span>;
 
-                    <span class="comment">// TODO: Ensure the `block_hash` aligns with the one returned in
-                    // `aux_schema::find_first_unconfirmed_bad_receipt_info`. Assuming there are
-                    // multiple forks at present, `block_hash` is on one of them, but another fork
-                    // becomes the canonical chain later.
-                    </span><span class="kw">let </span>block_hash = <span class="self">self</span>.client.hash(block_number.into())<span class="question-mark">?</span>.ok_or_else(|| {
-                        sp_blockchain::Error::Backend(<span class="macro">format!</span>(
-                            <span class="string">&quot;Header hash for #{block_number} not found&quot;
-                        </span>))
-                    })<span class="question-mark">?</span>;
-
-                    <span class="comment">// The receipt of a prior block must exist, otherwise it means the receipt included
-                    // on the primary chain points to an invalid domain block.
-                    </span>bad_receipts_to_write.push((
-                        execution_receipt.primary_number,
-                        execution_receipt.hash(),
-                        (<span class="number">0u32</span>, block_hash),
-                    ));
-                }
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(trace_mismatch_index) =
+                find_trace_mismatch(<span class="kw-2">&amp;</span>local_receipt, execution_receipt)
+            {
+                bad_receipts_to_write.push((
+                    execution_receipt.primary_number,
+                    execution_receipt.hash(),
+                    (trace_mismatch_index, primary_block_hash),
+                ));
             }
         }
 
@@ -1061,7 +1082,7 @@
             .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
         <span class="kw">for </span>(bad_receipt_number, bad_receipt_hash, mismatch_info) <span class="kw">in </span>bad_receipts_to_write {
-            <span class="kw">crate</span>::aux_schema::write_bad_receipt::&lt;<span class="kw">_</span>, PBlock, <span class="kw">_</span>&gt;(
+            <span class="kw">crate</span>::aux_schema::write_bad_receipt::&lt;<span class="kw">_</span>, PBlock&gt;(
                 <span class="kw-2">&amp;*</span><span class="self">self</span>.client,
                 bad_receipt_number,
                 bad_receipt_hash,
@@ -1093,22 +1114,29 @@
     <span class="kw">where
         </span>PCB: BlockT,
     {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>((bad_receipt_hash, trace_mismatch_index, block_hash)) =
-            <span class="kw">crate</span>::aux_schema::find_first_unconfirmed_bad_receipt_info::&lt;<span class="kw">_</span>, Block, NumberFor&lt;PBlock&gt;&gt;(
+        <span class="kw">if let </span><span class="prelude-val">Some</span>((bad_receipt_hash, trace_mismatch_index, primary_block_hash)) =
+            <span class="kw">crate</span>::aux_schema::find_first_unconfirmed_bad_receipt_info::&lt;<span class="kw">_</span>, Block, PBlock, <span class="kw">_</span>&gt;(
                 <span class="kw-2">&amp;*</span><span class="self">self</span>.client,
+                |height| {
+                    <span class="self">self</span>.primary_chain_client.hash(height)<span class="question-mark">?</span>.ok_or_else(|| {
+                        sp_blockchain::Error::Backend(<span class="macro">format!</span>(
+                            <span class="string">&quot;Primary block hash for {height} not found&quot;</span>,
+                        ))
+                    })
+                },
             )<span class="question-mark">?
         </span>{
-            <span class="kw">let </span>local_receipt = <span class="kw">crate</span>::aux_schema::load_execution_receipt(
-                <span class="kw-2">&amp;*</span><span class="self">self</span>.client,
-                block_hash,
-            )<span class="question-mark">?
-            </span>.ok_or_else(|| {
-                sp_blockchain::Error::Backend(<span class="macro">format!</span>(<span class="string">&quot;Receipt for {block_hash:?} not found&quot;</span>))
-            })<span class="question-mark">?</span>;
+            <span class="kw">let </span>local_receipt =
+                <span class="kw">crate</span>::aux_schema::load_execution_receipt(<span class="kw-2">&amp;*</span><span class="self">self</span>.client, primary_block_hash)<span class="question-mark">?
+                    </span>.ok_or_else(|| {
+                        sp_blockchain::Error::Backend(<span class="macro">format!</span>(
+                            <span class="string">&quot;Receipt for primary block {primary_block_hash} not found&quot;
+                        </span>))
+                    })<span class="question-mark">?</span>;
 
             <span class="kw">let </span>fraud_proof = <span class="self">self
                 </span>.fraud_proof_generator
-                .generate_proof::&lt;PCB&gt;(
+                .generate_invalid_state_transition_proof::&lt;PCB&gt;(
                     <span class="self">self</span>.domain_id,
                     trace_mismatch_index,
                     <span class="kw-2">&amp;</span>local_receipt,

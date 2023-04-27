@@ -234,16 +234,14 @@
 <a href="#234" id="234">234</a>
 <a href="#235" id="235">235</a>
 <a href="#236" id="236">236</a>
-<a href="#237" id="237">237</a>
-<a href="#238" id="238">238</a>
 </pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::domain_block_processor::{DomainBlockProcessor, PendingPrimaryBlocks};
 <span class="kw">use </span><span class="kw">crate</span>::parent_chain::{CoreDomainParentChain, ParentChainInterface};
 <span class="kw">use </span><span class="kw">crate</span>::utils::translate_number_type;
 <span class="kw">use </span><span class="kw">crate</span>::TransactionFor;
 <span class="kw">use </span>domain_block_preprocessor::runtime_api_full::RuntimeApiFull;
 <span class="kw">use </span>domain_block_preprocessor::CoreDomainBlockPreprocessor;
-<span class="kw">use </span>domain_runtime_primitives::{AccountId, DomainCoreApi};
-<span class="kw">use </span>sc_client_api::{AuxStore, BlockBackend, StateBackendFor};
+<span class="kw">use </span>domain_runtime_primitives::DomainCoreApi;
+<span class="kw">use </span>sc_client_api::{AuxStore, BlockBackend, Finalizer, StateBackendFor};
 <span class="kw">use </span>sc_consensus::BlockImport;
 <span class="kw">use </span>sp_api::{NumberFor, ProvideRuntimeApi};
 <span class="kw">use </span>sp_blockchain::{HeaderBackend, HeaderMetadata};
@@ -252,15 +250,12 @@
 <span class="kw">use </span>sp_keystore::KeystorePtr;
 <span class="kw">use </span>sp_messenger::MessengerApi;
 <span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, HashFor};
-<span class="kw">use </span>std::marker::PhantomData;
 <span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>system_runtime_primitives::SystemDomainApi;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>CoreBundleProcessor&lt;Block, SBlock, PBlock, Client, SClient, PClient, Backend, E&gt;
 <span class="kw">where
     </span>Block: BlockT,
-    SBlock: BlockT,
-    PBlock: BlockT,
 {
     domain_id: DomainId,
     primary_chain_client: Arc&lt;PClient&gt;,
@@ -278,15 +273,12 @@
         RuntimeApiFull&lt;Client&gt;,
     &gt;,
     domain_block_processor: DomainBlockProcessor&lt;Block, PBlock, Client, PClient, Backend, E&gt;,
-    _phantom_data: PhantomData&lt;(SBlock, PBlock)&gt;,
 }
 
 <span class="kw">impl</span>&lt;Block, SBlock, PBlock, Client, SClient, PClient, Backend, E&gt; Clone
     <span class="kw">for </span>CoreBundleProcessor&lt;Block, SBlock, PBlock, SClient, Client, PClient, Backend, E&gt;
 <span class="kw">where
     </span>Block: BlockT,
-    SBlock: BlockT,
-    PBlock: BlockT,
 {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
@@ -299,7 +291,6 @@
             keystore: <span class="self">self</span>.keystore.clone(),
             core_domain_block_preprocessor: <span class="self">self</span>.core_domain_block_preprocessor.clone(),
             domain_block_processor: <span class="self">self</span>.domain_block_processor.clone(),
-            _phantom_data: <span class="self">self</span>._phantom_data,
         }
     }
 }
@@ -309,11 +300,17 @@
 <span class="kw">where
     </span>Block: BlockT,
     SBlock: BlockT,
-    Block::Extrinsic: Into&lt;SBlock::Extrinsic&gt;,
+    NumberFor&lt;SBlock&gt;: From&lt;NumberFor&lt;Block&gt;&gt;,
+    SBlock::Hash: From&lt;Block::Hash&gt;,
     PBlock: BlockT,
-    Client:
-        HeaderBackend&lt;Block&gt; + BlockBackend&lt;Block&gt; + AuxStore + ProvideRuntimeApi&lt;Block&gt; + <span class="lifetime">&#39;static</span>,
-    Client::Api: DomainCoreApi&lt;Block, AccountId&gt;
+    Client: HeaderBackend&lt;Block&gt;
+        + BlockBackend&lt;Block&gt;
+        + AuxStore
+        + ProvideRuntimeApi&lt;Block&gt;
+        + Finalizer&lt;Block, Backend&gt;
+        + <span class="lifetime">&#39;static</span>,
+    Client::Api: DomainCoreApi&lt;Block&gt;
+        + MessengerApi&lt;Block, NumberFor&lt;Block&gt;&gt;
         + sp_block_builder::BlockBuilder&lt;Block&gt;
         + sp_api::ApiExt&lt;Block, StateBackend = StateBackendFor&lt;Backend, Block&gt;&gt;,
     <span class="kw">for</span>&lt;<span class="lifetime">&#39;b</span>&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>Client: BlockImport&lt;
@@ -322,7 +319,7 @@
         Error = sp_consensus::Error,
     &gt;,
     SClient: HeaderBackend&lt;SBlock&gt; + ProvideRuntimeApi&lt;SBlock&gt; + <span class="lifetime">&#39;static</span>,
-    SClient::Api: DomainCoreApi&lt;SBlock, AccountId&gt;
+    SClient::Api: DomainCoreApi&lt;SBlock&gt;
         + SystemDomainApi&lt;SBlock, NumberFor&lt;PBlock&gt;, PBlock::Hash&gt;
         + MessengerApi&lt;SBlock, NumberFor&lt;SBlock&gt;&gt;,
     PClient: HeaderBackend&lt;PBlock&gt;
@@ -364,7 +361,6 @@
             keystore,
             core_domain_block_preprocessor,
             domain_block_processor,
-            _phantom_data: PhantomData::default(),
         }
     }
 
@@ -372,10 +368,10 @@
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async fn </span>process_bundles(
         <span class="self">self</span>,
         primary_info: (PBlock::Hash, NumberFor&lt;PBlock&gt;),
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), sp_blockchain::Error&gt; {
-        <span class="macro">tracing::debug!</span>(<span class="question-mark">?</span>primary_info, <span class="string">&quot;Processing imported primary block&quot;</span>);
-
+    ) -&gt; sp_blockchain::Result&lt;()&gt; {
         <span class="kw">let </span>(primary_hash, primary_number) = primary_info;
+
+        <span class="macro">tracing::debug!</span>(<span class="string">&quot;Processing imported primary block #{primary_number},{primary_hash}&quot;</span>);
 
         <span class="kw">let </span>maybe_pending_primary_blocks = <span class="self">self
             </span>.domain_block_processor
@@ -408,13 +404,13 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         primary_info: (PBlock::Hash, NumberFor&lt;PBlock&gt;),
         parent_info: (Block::Hash, NumberFor&lt;Block&gt;),
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(Block::Hash, NumberFor&lt;Block&gt;), sp_blockchain::Error&gt; {
+    ) -&gt; sp_blockchain::Result&lt;(Block::Hash, NumberFor&lt;Block&gt;)&gt; {
         <span class="kw">let </span>(primary_hash, primary_number) = primary_info;
         <span class="kw">let </span>(parent_hash, parent_number) = parent_info;
 
         <span class="macro">tracing::debug!</span>(
-            <span class="string">&quot;Building a new domain block derived from primary block #{primary_number},{primary_hash} \
-            on top of #{parent_number},{parent_hash}&quot;
+            <span class="string">&quot;Building a new domain block from primary block #{primary_number},{primary_hash} \
+            on top of parent block #{parent_number},{parent_hash}&quot;
         </span>);
 
         <span class="kw">let </span>extrinsics = <span class="self">self
