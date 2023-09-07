@@ -81,6 +81,13 @@ jobs:
         uses: KyleMayes/install-llvm-action@c135b3937686fd69c2651507aabc9925a8f9eee8 # v1.8.3
         with:
           version: "16.0"
+        if: runner.os != 'macOS'
+
+      - name: Install LLVM and Clang for Mac
+        uses: KyleMayes/install-llvm-action@c135b3937686fd69c2651507aabc9925a8f9eee8 # v1.8.3
+        with:
+          version: "15.0"
+        if: runner.os == 'macOS'
 
       - name: Install Protoc
         uses: arduino/setup-protoc@64c0c85d18e984422218383b81c52f8b077404d3 # @v1.1.2
