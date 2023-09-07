@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sc-consensus-subspace/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sc_consensus_subspace" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../sc_consensus_subspace/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sc-consensus-subspace/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sc_consensus_subspace" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../sc_consensus_subspace/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1198,132 +1198,7 @@
 <a href="#1198" id="1198">1198</a>
 <a href="#1199" id="1199">1199</a>
 <a href="#1200" id="1200">1200</a>
-<a href="#1201" id="1201">1201</a>
-<a href="#1202" id="1202">1202</a>
-<a href="#1203" id="1203">1203</a>
-<a href="#1204" id="1204">1204</a>
-<a href="#1205" id="1205">1205</a>
-<a href="#1206" id="1206">1206</a>
-<a href="#1207" id="1207">1207</a>
-<a href="#1208" id="1208">1208</a>
-<a href="#1209" id="1209">1209</a>
-<a href="#1210" id="1210">1210</a>
-<a href="#1211" id="1211">1211</a>
-<a href="#1212" id="1212">1212</a>
-<a href="#1213" id="1213">1213</a>
-<a href="#1214" id="1214">1214</a>
-<a href="#1215" id="1215">1215</a>
-<a href="#1216" id="1216">1216</a>
-<a href="#1217" id="1217">1217</a>
-<a href="#1218" id="1218">1218</a>
-<a href="#1219" id="1219">1219</a>
-<a href="#1220" id="1220">1220</a>
-<a href="#1221" id="1221">1221</a>
-<a href="#1222" id="1222">1222</a>
-<a href="#1223" id="1223">1223</a>
-<a href="#1224" id="1224">1224</a>
-<a href="#1225" id="1225">1225</a>
-<a href="#1226" id="1226">1226</a>
-<a href="#1227" id="1227">1227</a>
-<a href="#1228" id="1228">1228</a>
-<a href="#1229" id="1229">1229</a>
-<a href="#1230" id="1230">1230</a>
-<a href="#1231" id="1231">1231</a>
-<a href="#1232" id="1232">1232</a>
-<a href="#1233" id="1233">1233</a>
-<a href="#1234" id="1234">1234</a>
-<a href="#1235" id="1235">1235</a>
-<a href="#1236" id="1236">1236</a>
-<a href="#1237" id="1237">1237</a>
-<a href="#1238" id="1238">1238</a>
-<a href="#1239" id="1239">1239</a>
-<a href="#1240" id="1240">1240</a>
-<a href="#1241" id="1241">1241</a>
-<a href="#1242" id="1242">1242</a>
-<a href="#1243" id="1243">1243</a>
-<a href="#1244" id="1244">1244</a>
-<a href="#1245" id="1245">1245</a>
-<a href="#1246" id="1246">1246</a>
-<a href="#1247" id="1247">1247</a>
-<a href="#1248" id="1248">1248</a>
-<a href="#1249" id="1249">1249</a>
-<a href="#1250" id="1250">1250</a>
-<a href="#1251" id="1251">1251</a>
-<a href="#1252" id="1252">1252</a>
-<a href="#1253" id="1253">1253</a>
-<a href="#1254" id="1254">1254</a>
-<a href="#1255" id="1255">1255</a>
-<a href="#1256" id="1256">1256</a>
-<a href="#1257" id="1257">1257</a>
-<a href="#1258" id="1258">1258</a>
-<a href="#1259" id="1259">1259</a>
-<a href="#1260" id="1260">1260</a>
-<a href="#1261" id="1261">1261</a>
-<a href="#1262" id="1262">1262</a>
-<a href="#1263" id="1263">1263</a>
-<a href="#1264" id="1264">1264</a>
-<a href="#1265" id="1265">1265</a>
-<a href="#1266" id="1266">1266</a>
-<a href="#1267" id="1267">1267</a>
-<a href="#1268" id="1268">1268</a>
-<a href="#1269" id="1269">1269</a>
-<a href="#1270" id="1270">1270</a>
-<a href="#1271" id="1271">1271</a>
-<a href="#1272" id="1272">1272</a>
-<a href="#1273" id="1273">1273</a>
-<a href="#1274" id="1274">1274</a>
-<a href="#1275" id="1275">1275</a>
-<a href="#1276" id="1276">1276</a>
-<a href="#1277" id="1277">1277</a>
-<a href="#1278" id="1278">1278</a>
-<a href="#1279" id="1279">1279</a>
-<a href="#1280" id="1280">1280</a>
-<a href="#1281" id="1281">1281</a>
-<a href="#1282" id="1282">1282</a>
-<a href="#1283" id="1283">1283</a>
-<a href="#1284" id="1284">1284</a>
-<a href="#1285" id="1285">1285</a>
-<a href="#1286" id="1286">1286</a>
-<a href="#1287" id="1287">1287</a>
-<a href="#1288" id="1288">1288</a>
-<a href="#1289" id="1289">1289</a>
-<a href="#1290" id="1290">1290</a>
-<a href="#1291" id="1291">1291</a>
-<a href="#1292" id="1292">1292</a>
-<a href="#1293" id="1293">1293</a>
-<a href="#1294" id="1294">1294</a>
-<a href="#1295" id="1295">1295</a>
-<a href="#1296" id="1296">1296</a>
-<a href="#1297" id="1297">1297</a>
-<a href="#1298" id="1298">1298</a>
-<a href="#1299" id="1299">1299</a>
-<a href="#1300" id="1300">1300</a>
-<a href="#1301" id="1301">1301</a>
-<a href="#1302" id="1302">1302</a>
-<a href="#1303" id="1303">1303</a>
-<a href="#1304" id="1304">1304</a>
-<a href="#1305" id="1305">1305</a>
-<a href="#1306" id="1306">1306</a>
-<a href="#1307" id="1307">1307</a>
-<a href="#1308" id="1308">1308</a>
-<a href="#1309" id="1309">1309</a>
-<a href="#1310" id="1310">1310</a>
-<a href="#1311" id="1311">1311</a>
-<a href="#1312" id="1312">1312</a>
-<a href="#1313" id="1313">1313</a>
-<a href="#1314" id="1314">1314</a>
-<a href="#1315" id="1315">1315</a>
-<a href="#1316" id="1316">1316</a>
-<a href="#1317" id="1317">1317</a>
-<a href="#1318" id="1318">1318</a>
-<a href="#1319" id="1319">1319</a>
-<a href="#1320" id="1320">1320</a>
-<a href="#1321" id="1321">1321</a>
-<a href="#1322" id="1322">1322</a>
-<a href="#1323" id="1323">1323</a>
-<a href="#1324" id="1324">1324</a>
-<a href="#1325" id="1325">1325</a>
-</pre><pre class="rust"><code><span class="comment">// Copyright (C) 2019-2021 Parity Technologies (UK) Ltd.
+</pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2019-2021 Parity Technologies (UK) Ltd.
 // Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
@@ -1341,42 +1216,41 @@
 // along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
 </span><span class="attr">#![doc = <span class="macro">include_str!</span>(<span class="string">&quot;../README.md&quot;</span>)]
-#![feature(drain_filter, try_blocks)]
+#![feature(try_blocks)]
 #![forbid(unsafe_code)]
 #![warn(missing_docs)]
 
-</span><span class="kw">mod </span>archiver;
+</span><span class="kw">pub mod </span>archiver;
 <span class="kw">pub mod </span>aux_schema;
+<span class="kw">pub mod </span>import_queue;
 <span class="kw">pub mod </span>notification;
 <span class="kw">mod </span>slot_worker;
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests;
 
+<span class="kw">use </span><span class="kw">crate</span>::archiver::{SegmentHeadersStore, FINALIZATION_DEPTH_IN_SEGMENTS};
+<span class="kw">use </span><span class="kw">crate</span>::import_queue::VerificationError;
 <span class="kw">use </span><span class="kw">crate</span>::notification::{SubspaceNotificationSender, SubspaceNotificationStream};
-<span class="kw">use </span><span class="kw">crate</span>::slot_worker::{SlotWorkerSyncOracle, SubspaceSlotWorker};
-<span class="kw">pub use </span>archiver::create_subspace_archiver;
-<span class="kw">use </span>codec::Encode;
+<span class="kw">use </span><span class="kw">crate</span>::slot_worker::SubspaceSlotWorker;
+<span class="kw">pub use </span><span class="kw">crate</span>::slot_worker::SubspaceSyncOracle;
 <span class="kw">use </span>futures::channel::mpsc;
 <span class="kw">use </span>futures::StreamExt;
-<span class="kw">use </span>log::{debug, info, trace, warn};
+<span class="kw">use </span>log::{debug, info, warn};
 <span class="kw">use </span>lru::LruCache;
 <span class="kw">use </span>parking_lot::Mutex;
-<span class="kw">use </span>prometheus_endpoint::Registry;
 <span class="kw">use </span>sc_client_api::backend::AuxStore;
 <span class="kw">use </span>sc_client_api::{BlockBackend, BlockchainEvents, ProvideUncles, UsageProvider};
 <span class="kw">use </span>sc_consensus::block_import::{
     BlockCheckParams, BlockImport, BlockImportParams, ForkChoiceStrategy, ImportResult,
 };
-<span class="kw">use </span>sc_consensus::import_queue::{
-    BasicQueue, BoxJustificationImport, DefaultImportQueue, Verifier,
-};
 <span class="kw">use </span>sc_consensus::JustificationSyncLink;
-<span class="kw">use </span>sc_consensus_slots::{
-    check_equivocation, BackoffAuthoringBlocksStrategy, InherentDataProviderExt, SlotProportion,
-};
-<span class="kw">use </span>sc_telemetry::{telemetry, TelemetryHandle, CONSENSUS_DEBUG, CONSENSUS_TRACE};
+<span class="kw">use </span>sc_consensus_slots::{BackoffAuthoringBlocksStrategy, InherentDataProviderExt, SlotProportion};
+<span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+</span><span class="kw">use </span>sc_proof_of_time::source::PotSlotInfoStream;
+<span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+</span><span class="kw">use </span>sc_proof_of_time::verifier::PotVerifier;
+<span class="kw">use </span>sc_telemetry::TelemetryHandle;
 <span class="kw">use </span>sc_utils::mpsc::TracingUnboundedSender;
-<span class="kw">use </span>schnorrkel::context::SigningContext;
 <span class="kw">use </span>sp_api::{ApiError, ApiExt, BlockT, HeaderT, NumberFor, ProvideRuntimeApi, TransactionFor};
 <span class="kw">use </span>sp_block_builder::BlockBuilder <span class="kw">as </span>BlockBuilderApi;
 <span class="kw">use </span>sp_blockchain::{Error <span class="kw">as </span>ClientError, HeaderBackend, HeaderMetadata, <span class="prelude-ty">Result </span><span class="kw">as </span>ClientResult};
@@ -1387,30 +1261,26 @@
 <span class="kw">use </span>sp_consensus_subspace::digests::{
     extract_pre_digest, extract_subspace_digest_items, Error <span class="kw">as </span>DigestError, SubspaceDigestItems,
 };
-<span class="kw">use </span>sp_consensus_subspace::{
-    check_header, ChainConstants, CheckedHeader, FarmerPublicKey, FarmerSignature, SubspaceApi,
-    VerificationError, VerificationParams,
-};
+<span class="kw">use </span>sp_consensus_subspace::{ChainConstants, FarmerPublicKey, FarmerSignature, SubspaceApi};
 <span class="kw">use </span>sp_core::H256;
 <span class="kw">use </span>sp_inherents::{CreateInherentDataProviders, InherentDataProvider};
 <span class="kw">use </span>sp_runtime::traits::One;
-<span class="kw">use </span>std::cmp::Ordering;
 <span class="kw">use </span>std::future::Future;
 <span class="kw">use </span>std::marker::PhantomData;
 <span class="kw">use </span>std::num::NonZeroUsize;
 <span class="kw">use </span>std::pin::Pin;
 <span class="kw">use </span>std::sync::Arc;
-<span class="kw">use </span>subspace_archiving::archiver::{Archiver, NewArchivedSegment};
-<span class="kw">use </span>subspace_core_primitives::crypto::kzg;
+<span class="kw">use </span>subspace_archiving::archiver::NewArchivedSegment;
 <span class="kw">use </span>subspace_core_primitives::crypto::kzg::Kzg;
-<span class="kw">use </span>subspace_core_primitives::objects::BlockObjectMapping;
 <span class="kw">use </span>subspace_core_primitives::{
-    Blake2b256Hash, BlockWeight, LegacySectorId, SegmentCommitment, SegmentHeader, SegmentIndex,
+    BlockNumber, HistorySize, PublicKey, Randomness, SectorId, SegmentHeader, SegmentIndex,
     Solution, SolutionRange,
 };
-<span class="kw">use </span>subspace_solving::{derive_global_challenge, REWARD_SIGNING_CONTEXT};
+<span class="kw">use </span>subspace_proof_of_space::Table;
+<span class="kw">use </span>subspace_solving::REWARD_SIGNING_CONTEXT;
 <span class="kw">use </span>subspace_verification::{
-    derive_audit_chunk, Error <span class="kw">as </span>VerificationPrimitiveError, VerifySolutionParams,
+    calculate_block_weight, Error <span class="kw">as </span>VerificationPrimitiveError, PieceCheckParams,
+    VerifySolutionParams,
 };
 
 <span class="doccomment">/// Information about new slot that just arrived
@@ -1418,8 +1288,8 @@
 </span><span class="kw">pub struct </span>NewSlotInfo {
     <span class="doccomment">/// Slot
     </span><span class="kw">pub </span>slot: Slot,
-    <span class="doccomment">/// Global slot challenge
-    </span><span class="kw">pub </span>global_challenge: Blake2b256Hash,
+    <span class="doccomment">/// Global randomness
+    </span><span class="kw">pub </span>global_randomness: Randomness,
     <span class="doccomment">/// Acceptable solution range for block authoring
     </span><span class="kw">pub </span>solution_range: SolutionRange,
     <span class="doccomment">/// Acceptable solution range for voting
@@ -1432,7 +1302,7 @@
     <span class="doccomment">/// New slot information.
     </span><span class="kw">pub </span>new_slot_info: NewSlotInfo,
     <span class="doccomment">/// Sender that can be used to send solutions for the slot.
-    </span><span class="kw">pub </span>solution_sender: TracingUnboundedSender&lt;Solution&lt;FarmerPublicKey, FarmerPublicKey&gt;&gt;,
+    </span><span class="kw">pub </span>solution_sender: mpsc::Sender&lt;Solution&lt;FarmerPublicKey, FarmerPublicKey&gt;&gt;,
 }
 
 <span class="doccomment">/// Notification with a hash that needs to be signed to receive reward and sender for signature.
@@ -1468,8 +1338,8 @@
 {
     <span class="doccomment">/// Block number
     </span><span class="kw">pub </span>block_number: NumberFor&lt;Block&gt;,
-    <span class="doccomment">/// Sender for pausing the block import when executor is not fast enough to process
-    /// the primary block.
+    <span class="doccomment">/// Sender for pausing the block import when operator is not fast enough to process
+    /// the consensus block.
     </span><span class="kw">pub </span>acknowledgement_sender: mpsc::Sender&lt;()&gt;,
 }
 
@@ -1479,11 +1349,9 @@
     <span class="doccomment">/// Error during digest item extraction
     </span><span class="attr">#[error(<span class="string">&quot;Digest item error: {0}&quot;</span>)]
     </span>DigestItemError(<span class="attr">#[from] </span>DigestError),
-    <span class="doccomment">/// No Subspace pre-runtime digest found
-    </span><span class="attr">#[error(<span class="string">&quot;No Subspace pre-runtime digest found&quot;</span>)]
-    </span>NoPreRuntimeDigest,
     <span class="doccomment">/// Header rejected: too far in the future
     </span><span class="attr">#[error(<span class="string">&quot;Header {0:?} rejected: too far in the future&quot;</span>)]
+    #[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
     </span>TooFarInFuture(Header::Hash),
     <span class="doccomment">/// Parent unavailable. Cannot import
     </span><span class="attr">#[error(<span class="string">&quot;Parent ({0}) of {1} unavailable. Cannot import&quot;</span>)]
@@ -1503,20 +1371,51 @@
     <span class="doccomment">/// Bad reward signature
     </span><span class="attr">#[error(<span class="string">&quot;Bad reward signature on {0:?}&quot;</span>)]
     </span>BadRewardSignature(Header::Hash),
-    <span class="doccomment">/// Bad solution signature
-    </span><span class="attr">#[error(<span class="string">&quot;Bad solution signature on slot {0:?}: {1:?}&quot;</span>)]
-    </span>BadSolutionSignature(Slot, schnorrkel::SignatureError),
+    <span class="doccomment">/// Invalid proof of time
+    </span><span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+    #[error(<span class="string">&quot;Invalid proof of time&quot;</span>)]
+    </span>InvalidProofOfTime,
     <span class="doccomment">/// Solution is outside of solution range
-    </span><span class="attr">#[error(<span class="string">&quot;Solution is outside of solution range for slot {0}&quot;</span>)]
-    </span>OutsideOfSolutionRange(Slot),
-    <span class="doccomment">/// Invalid encoding of a piece
-    </span><span class="attr">#[error(<span class="string">&quot;Invalid encoding for slot {0}&quot;</span>)]
-    </span>InvalidEncoding(Slot),
+    </span><span class="attr">#[error(
+        <span class="string">&quot;Solution distance {solution_distance} is outside of solution range \
+        {half_solution_range} (half of actual solution range) for slot {slot}&quot;
+    </span>)]
+    </span>OutsideOfSolutionRange {
+        <span class="doccomment">/// Time slot
+        </span>slot: Slot,
+        <span class="doccomment">/// Half of solution range
+        </span>half_solution_range: SolutionRange,
+        <span class="doccomment">/// Solution distance
+        </span>solution_distance: SolutionRange,
+    },
+    <span class="doccomment">/// Invalid proof of space
+    </span><span class="attr">#[error(<span class="string">&quot;Invalid proof of space&quot;</span>)]
+    </span>InvalidProofOfSpace,
+    <span class="doccomment">/// Invalid audit chunk offset
+    </span><span class="attr">#[error(<span class="string">&quot;Invalid audit chunk offset&quot;</span>)]
+    </span>InvalidAuditChunkOffset,
+    <span class="doccomment">/// Invalid chunk witness
+    </span><span class="attr">#[error(<span class="string">&quot;Invalid chunk witness&quot;</span>)]
+    </span>InvalidChunkWitness,
+    <span class="doccomment">/// Piece verification failed
+    </span><span class="attr">#[error(<span class="string">&quot;Piece verification failed&quot;</span>)]
+    </span>InvalidPieceOffset {
+        <span class="doccomment">/// Time slot
+        </span>slot: Slot,
+        <span class="doccomment">/// Index of the piece that failed verification
+        </span>piece_offset: u16,
+        <span class="doccomment">/// How many pieces one sector is supposed to contain (max)
+        </span>max_pieces_in_sector: u16,
+    },
+    <span class="doccomment">/// Piece verification failed
+    </span><span class="attr">#[error(<span class="string">&quot;Piece verification failed for slot {0}&quot;</span>)]
+    </span>InvalidPiece(Slot),
     <span class="doccomment">/// Parent block has no associated weight
     </span><span class="attr">#[error(<span class="string">&quot;Parent block of {0} has no associated weight&quot;</span>)]
     </span>ParentBlockNoAssociatedWeight(Header::Hash),
     <span class="doccomment">/// Block has invalid associated global randomness
-    </span><span class="attr">#[error(<span class="string">&quot;Invalid global randomness for block {0}&quot;</span>)]
+    </span><span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+    #[error(<span class="string">&quot;Invalid global randomness for block {0}&quot;</span>)]
     </span>InvalidGlobalRandomness(Header::Hash),
     <span class="doccomment">/// Block has invalid associated solution range
     </span><span class="attr">#[error(<span class="string">&quot;Invalid solution range for block {0}&quot;</span>)]
@@ -1527,7 +1426,7 @@
     <span class="doccomment">/// Stored segment header extrinsic was not found
     </span><span class="attr">#[error(<span class="string">&quot;Stored segment header extrinsic was not found: {0:?}&quot;</span>)]
     </span>SegmentHeadersExtrinsicNotFound(Vec&lt;SegmentHeader&gt;),
-    <span class="doccomment">/// Duplicated segment commitment
+    <span class="doccomment">/// Different segment commitment found
     </span><span class="attr">#[error(
         <span class="string">&quot;Different segment commitment for segment index {0} was found in storage, likely fork \
         below archiving point&quot;
@@ -1536,9 +1435,20 @@
     <span class="doccomment">/// Farmer in block list
     </span><span class="attr">#[error(<span class="string">&quot;Farmer {0} is in block list&quot;</span>)]
     </span>FarmerInBlockList(FarmerPublicKey),
-    <span class="doccomment">/// Merkle Root not found
+    <span class="doccomment">/// Segment commitment not found
     </span><span class="attr">#[error(<span class="string">&quot;Segment commitment for segment index {0} not found&quot;</span>)]
     </span>SegmentCommitmentNotFound(SegmentIndex),
+    <span class="doccomment">/// Sector expired
+    </span><span class="attr">#[error(<span class="string">&quot;Sector expired&quot;</span>)]
+    </span>SectorExpired {
+        <span class="doccomment">/// Expiration history size
+        </span>expiration_history_size: HistorySize,
+        <span class="doccomment">/// Current history size
+        </span>current_history_size: HistorySize,
+    },
+    <span class="doccomment">/// Invalid history size
+    </span><span class="attr">#[error(<span class="string">&quot;Invalid history size&quot;</span>)]
+    </span>InvalidHistorySize,
     <span class="doccomment">/// Only root plot public key is allowed
     </span><span class="attr">#[error(<span class="string">&quot;Only root plot public key is allowed&quot;</span>)]
     </span>OnlyRootPlotPublicKeyAllowed,
@@ -1563,25 +1473,47 @@
 <span class="kw">where
     </span>Header: HeaderT,
 {
-    <span class="kw">fn </span>from(error: VerificationError&lt;Header&gt;) -&gt; <span class="self">Self </span>{
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>from(error: VerificationError&lt;Header&gt;) -&gt; <span class="self">Self </span>{
         <span class="kw">match </span>error {
-            VerificationError::NoPreRuntimeDigest =&gt; Error::NoPreRuntimeDigest,
             VerificationError::HeaderBadSeal(block_hash) =&gt; Error::HeaderBadSeal(block_hash),
             VerificationError::HeaderUnsealed(block_hash) =&gt; Error::HeaderUnsealed(block_hash),
             VerificationError::BadRewardSignature(block_hash) =&gt; {
                 Error::BadRewardSignature(block_hash)
             }
+            <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+            </span>VerificationError::InvalidProofOfTime =&gt; Error::InvalidProofOfTime,
             VerificationError::VerificationError(slot, error) =&gt; <span class="kw">match </span>error {
-                VerificationPrimitiveError::InvalidPiece =&gt; Error::InvalidEncoding(slot),
-                VerificationPrimitiveError::OutsideSolutionRange =&gt; {
-                    Error::OutsideOfSolutionRange(slot)
+                VerificationPrimitiveError::InvalidPieceOffset {
+                    piece_offset,
+                    max_pieces_in_sector,
+                } =&gt; Error::InvalidPieceOffset {
+                    slot,
+                    piece_offset,
+                    max_pieces_in_sector,
+                },
+                VerificationPrimitiveError::InvalidPiece =&gt; Error::InvalidPiece(slot),
+                VerificationPrimitiveError::OutsideSolutionRange {
+                    half_solution_range,
+                    solution_distance,
+                } =&gt; Error::OutsideOfSolutionRange {
+                    slot,
+                    half_solution_range,
+                    solution_distance,
+                },
+                VerificationPrimitiveError::InvalidProofOfSpace =&gt; Error::InvalidProofOfSpace,
+                VerificationPrimitiveError::InvalidAuditChunkOffset =&gt; {
+                    Error::InvalidAuditChunkOffset
                 }
-                VerificationPrimitiveError::InvalidSolutionSignature(err) =&gt; {
-                    Error::BadSolutionSignature(slot, err)
-                }
-                VerificationPrimitiveError::MissingKzgInstance =&gt; {
-                    <span class="macro">unreachable!</span>(<span class="string">&quot;Implementation bug&quot;</span>);
-                }
+                VerificationPrimitiveError::InvalidChunkWitness =&gt; Error::InvalidChunkWitness,
+                VerificationPrimitiveError::SectorExpired {
+                    expiration_history_size,
+                    current_history_size,
+                } =&gt; Error::SectorExpired {
+                    expiration_history_size,
+                    current_history_size,
+                },
+                VerificationPrimitiveError::InvalidHistorySize =&gt; Error::InvalidHistorySize,
             },
         }
     }
@@ -1591,7 +1523,8 @@
 <span class="kw">where
     </span>Header: HeaderT,
 {
-    <span class="kw">fn </span>from(error: Error&lt;Header&gt;) -&gt; String {
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>from(error: Error&lt;Header&gt;) -&gt; String {
         error.to_string()
     }
 }
@@ -1610,20 +1543,17 @@
         client.usage_info().chain.genesis_hash
     };
 
-    <span class="prelude-val">Ok</span>(SlotDuration::from_millis(
-        client
-            .runtime_api()
-            .slot_duration(block_hash)<span class="question-mark">?
-            </span>.as_millis()
-            .try_into()
-            .expect(<span class="string">&quot;Slot duration in ms never exceeds u64; qed&quot;</span>),
-    ))
+    <span class="prelude-val">Ok</span>(client.runtime_api().slot_duration(block_hash)<span class="question-mark">?</span>)
 }
 
 <span class="doccomment">/// Parameters for Subspace.
-</span><span class="kw">pub struct </span>SubspaceParams&lt;B: BlockT, C, SC, E, I, SO, L, CIDP, BS&gt; {
+</span><span class="kw">pub struct </span>SubspaceParams&lt;Block, Client, SC, E, I, SO, L, CIDP, BS, AS&gt;
+<span class="kw">where
+    </span>Block: BlockT,
+    SO: SyncOracle + Send + Sync,
+{
     <span class="doccomment">/// The client to use
-    </span><span class="kw">pub </span>client: Arc&lt;C&gt;,
+    </span><span class="kw">pub </span>client: Arc&lt;Client&gt;,
 
     <span class="doccomment">/// The SelectChain Strategy
     </span><span class="kw">pub </span>select_chain: SC,
@@ -1637,7 +1567,7 @@
     </span><span class="kw">pub </span>block_import: I,
 
     <span class="doccomment">/// A sync oracle
-    </span><span class="kw">pub </span>sync_oracle: SO,
+    </span><span class="kw">pub </span>sync_oracle: SubspaceSyncOracle&lt;SO&gt;,
 
     <span class="doccomment">/// Hook into the sync module to control the justification sync process.
     </span><span class="kw">pub </span>justification_sync_link: L,
@@ -1652,7 +1582,10 @@
     </span><span class="kw">pub </span>backoff_authoring_blocks: <span class="prelude-ty">Option</span>&lt;BS&gt;,
 
     <span class="doccomment">/// The source of timestamps for relative slots
-    </span><span class="kw">pub </span>subspace_link: SubspaceLink&lt;B&gt;,
+    </span><span class="kw">pub </span>subspace_link: SubspaceLink&lt;Block&gt;,
+
+    <span class="doccomment">/// Persistent storage of segment headers
+    </span><span class="kw">pub </span>segment_headers_store: SegmentHeadersStore&lt;AS&gt;,
 
     <span class="doccomment">/// The proportion of the slot dedicated to proposing.
     ///
@@ -1667,10 +1600,14 @@
 
     <span class="doccomment">/// Handle use to report telemetries.
     </span><span class="kw">pub </span>telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
+
+    <span class="doccomment">/// Stream with proof of time slots.
+    </span><span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+    </span><span class="kw">pub </span>pot_slot_info_stream: PotSlotInfoStream,
 }
 
 <span class="doccomment">/// Start the Subspace worker.
-</span><span class="kw">pub fn </span>start_subspace&lt;Block, Client, SC, E, I, SO, CIDP, BS, L, Error&gt;(
+</span><span class="kw">pub fn </span>start_subspace&lt;PosTable, Block, Client, SC, E, I, SO, CIDP, BS, L, AS, Error&gt;(
     SubspaceParams {
         client,
         select_chain,
@@ -1682,18 +1619,23 @@
         force_authoring,
         backoff_authoring_blocks,
         subspace_link,
+        segment_headers_store,
         block_proposal_slot_portion,
         max_block_proposal_slot_portion,
         telemetry,
-    }: SubspaceParams&lt;Block, Client, SC, E, I, SO, L, CIDP, BS&gt;,
+        <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+        </span>pot_slot_info_stream,
+    }: SubspaceParams&lt;Block, Client, SC, E, I, SO, L, CIDP, BS, AS&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;SubspaceWorker, sp_consensus::Error&gt;
 <span class="kw">where
-    </span>Block: BlockT,
+    </span>PosTable: Table,
+    Block: BlockT,
     Client: ProvideRuntimeApi&lt;Block&gt;
         + ProvideUncles&lt;Block&gt;
         + BlockchainEvents&lt;Block&gt;
         + HeaderBackend&lt;Block&gt;
         + HeaderMetadata&lt;Block, Error = ClientError&gt;
+        + AuxStore
         + Send
         + Sync
         + <span class="lifetime">&#39;static</span>,
@@ -1710,10 +1652,12 @@
     CIDP: CreateInherentDataProviders&lt;Block, ()&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
     CIDP::InherentDataProviders: InherentDataProviderExt + Send,
     BS: BackoffAuthoringBlocksStrategy&lt;NumberFor&lt;Block&gt;&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
+    AS: AuxStore + Send + Sync + <span class="lifetime">&#39;static</span>,
     Error: std::error::Error + Send + From&lt;ConsensusError&gt; + From&lt;I::Error&gt; + <span class="lifetime">&#39;static</span>,
+    BlockNumber: From&lt;&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Header <span class="kw">as </span>HeaderT&gt;::Number&gt;,
 {
     <span class="kw">let </span>worker = SubspaceSlotWorker {
-        client,
+        client: client.clone(),
         block_import,
         env,
         sync_oracle: sync_oracle.clone(),
@@ -1725,18 +1669,34 @@
         block_proposal_slot_portion,
         max_block_proposal_slot_portion,
         telemetry,
+        chain_constants: get_chain_constants(client.as_ref())
+            .map_err(|error| sp_consensus::Error::Other(error.into()))<span class="question-mark">?</span>,
+        segment_headers_store,
+        <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+        </span>pending_solutions: Default::default(),
+        <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+        </span>pot_checkpoints: Default::default(),
+        _pos_table: PhantomData::&lt;PosTable&gt;,
     };
 
     <span class="macro">info!</span>(target: <span class="string">&quot;subspace&quot;</span>, <span class="string">&quot;🧑‍🌾 Starting Subspace Authorship worker&quot;</span>);
-    <span class="kw">let </span>inner = sc_consensus_slots::start_slot_worker(
+    <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+    </span><span class="kw">let </span>inner = sc_consensus_slots::start_slot_worker(
         subspace_link.slot_duration(),
         select_chain,
         sc_consensus_slots::SimpleSlotWorkerToSlotWorker(worker),
-        SlotWorkerSyncOracle {
-            force_authoring,
-            inner: sync_oracle,
-        },
+        sync_oracle,
         create_inherent_data_providers,
+    );
+    <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+    </span><span class="kw">let </span>inner = sc_proof_of_time::start_slot_worker(
+        subspace_link.slot_duration(),
+        client,
+        select_chain,
+        worker,
+        sync_oracle,
+        create_inherent_data_providers,
+        pot_slot_info_stream,
     );
 
     <span class="prelude-val">Ok</span>(SubspaceWorker {
@@ -1823,264 +1783,32 @@
             .unwrap_or_default()
     }
 
-    <span class="doccomment">/// Get the first found segment commitment by segment index.
-    </span><span class="kw">pub fn </span>segment_commitment_by_segment_index(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        segment_index: SegmentIndex,
-    ) -&gt; <span class="prelude-ty">Option</span>&lt;SegmentCommitment&gt; {
-        <span class="self">self</span>.segment_headers
-            .lock()
-            .iter()
-            .find_map(|(_block_number, segment_headers)| {
-                segment_headers.iter().find_map(|segment_header| {
-                    <span class="kw">if </span>segment_header.segment_index() == segment_index {
-                        <span class="prelude-val">Some</span>(segment_header.segment_commitment())
-                    } <span class="kw">else </span>{
-                        <span class="prelude-val">None
-                    </span>}
-                })
-            })
-    }
-}
-
-<span class="doccomment">/// A verifier for Subspace blocks.
-</span><span class="kw">pub struct </span>SubspaceVerifier&lt;Block: BlockT, Client, SelectChain, SN&gt; {
-    client: Arc&lt;Client&gt;,
-    select_chain: SelectChain,
-    slot_now: SN,
-    telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
-    reward_signing_context: SigningContext,
-    is_authoring_blocks: bool,
-    block: PhantomData&lt;Block&gt;,
-}
-
-<span class="kw">impl</span>&lt;Block, Client, SelectChain, SN&gt; SubspaceVerifier&lt;Block, Client, SelectChain, SN&gt;
-<span class="kw">where
-    </span>Block: BlockT,
-    Client: AuxStore + HeaderBackend&lt;Block&gt; + ProvideRuntimeApi&lt;Block&gt;,
-    Client::Api: BlockBuilderApi&lt;Block&gt; + SubspaceApi&lt;Block, FarmerPublicKey&gt;,
-    SelectChain: sp_consensus::SelectChain&lt;Block&gt;,
-{
-    <span class="kw">async fn </span>check_and_report_equivocation(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        slot_now: Slot,
-        slot: Slot,
-        header: <span class="kw-2">&amp;</span>Block::Header,
-        author: <span class="kw-2">&amp;</span>FarmerPublicKey,
-        origin: <span class="kw-2">&amp;</span>BlockOrigin,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&lt;Block::Header&gt;&gt; {
-        <span class="comment">// don&#39;t report any equivocations during initial sync
-        // as they are most likely stale.
-        </span><span class="kw">if </span><span class="kw-2">*</span>origin == BlockOrigin::NetworkInitialSync {
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(());
-        }
-
-        <span class="comment">// check if authorship of this header is an equivocation and return a proof if so.
-        </span><span class="kw">let </span>equivocation_proof =
-            <span class="kw">match </span>check_equivocation(<span class="kw-2">&amp;*</span><span class="self">self</span>.client, slot_now, slot, header, author)
-                .map_err(Error::Client)<span class="question-mark">?
-            </span>{
-                <span class="prelude-val">Some</span>(proof) =&gt; proof,
-                <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(()),
-            };
-
-        <span class="macro">info!</span>(
-            <span class="string">&quot;Slot author {:?} is equivocating at slot {} with headers {:?} and {:?}&quot;</span>,
-            author,
-            slot,
-            equivocation_proof.first_header.hash(),
-            equivocation_proof.second_header.hash(),
-        );
-
-        <span class="kw">if </span><span class="self">self</span>.is_authoring_blocks {
-            <span class="comment">// get the best block on which we will build and send the equivocation report.
-            </span><span class="kw">let </span>best_hash = <span class="self">self
-                </span>.select_chain
-                .best_chain()
-                .<span class="kw">await
-                </span>.map(|h| h.hash())
-                .map_err(|e| Error::Client(e.into()))<span class="question-mark">?</span>;
-
-            <span class="comment">// submit equivocation report at best block.
-            </span><span class="self">self</span>.client
-                .runtime_api()
-                .submit_report_equivocation_extrinsic(best_hash, equivocation_proof)
-                .map_err(Error::RuntimeApi)<span class="question-mark">?</span>;
-
-            <span class="macro">info!</span>(target: <span class="string">&quot;subspace&quot;</span>, <span class="string">&quot;Submitted equivocation report for author {:?}&quot;</span>, author);
-        } <span class="kw">else </span>{
-            <span class="macro">info!</span>(
-                target: <span class="string">&quot;subspace&quot;</span>,
-                <span class="string">&quot;Not submitting equivocation report because node is not authoring blocks&quot;
-            </span>);
-        }
-
-        <span class="prelude-val">Ok</span>(())
-    }
-}
-
-<span class="attr">#[async_trait::async_trait]
-</span><span class="kw">impl</span>&lt;Block, Client, SelectChain, SN&gt; Verifier&lt;Block&gt;
-    <span class="kw">for </span>SubspaceVerifier&lt;Block, Client, SelectChain, SN&gt;
-<span class="kw">where
-    </span>Block: BlockT,
-    Client: HeaderBackend&lt;Block&gt; + ProvideRuntimeApi&lt;Block&gt; + Send + Sync + AuxStore,
-    Client::Api: BlockBuilderApi&lt;Block&gt; + SubspaceApi&lt;Block, FarmerPublicKey&gt;,
-    SelectChain: sp_consensus::SelectChain&lt;Block&gt;,
-    SN: Fn() -&gt; Slot + Send + Sync + <span class="lifetime">&#39;static</span>,
-{
-    <span class="kw">async fn </span>verify(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        <span class="kw-2">mut </span>block: BlockImportParams&lt;Block, ()&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;BlockImportParams&lt;Block, ()&gt;, String&gt; {
-        <span class="macro">trace!</span>(
-            target: <span class="string">&quot;subspace&quot;</span>,
-            <span class="string">&quot;Verifying origin: {:?} header: {:?} justification(s): {:?} body: {:?}&quot;</span>,
-            block.origin,
-            block.header,
-            block.justifications,
-            block.body,
-        );
-
-        <span class="kw">let </span>hash = block.header.hash();
-
-        <span class="macro">debug!</span>(target: <span class="string">&quot;subspace&quot;</span>, <span class="string">&quot;We have {:?} logs in this header&quot;</span>, block.header.digest().logs().len());
-
-        <span class="kw">let </span>subspace_digest_items = extract_subspace_digest_items::&lt;
-            Block::Header,
-            FarmerPublicKey,
-            FarmerPublicKey,
-            FarmerSignature,
-        &gt;(<span class="kw-2">&amp;</span>block.header)
-        .map_err(Error::&lt;Block::Header&gt;::from)<span class="question-mark">?</span>;
-        <span class="kw">let </span>pre_digest = subspace_digest_items.pre_digest;
-
-        <span class="comment">// Check if farmer&#39;s plot is burned.
-        // TODO: Add to header and store in aux storage?
-        </span><span class="kw">if </span><span class="self">self
-            </span>.client
-            .runtime_api()
-            .is_in_block_list(<span class="kw-2">*</span>block.header.parent_hash(), <span class="kw-2">&amp;</span>pre_digest.solution.public_key)
-            .or_else(|error| {
-                <span class="kw">if </span>block.state_action.skip_execution_checks() {
-                    <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>)
-                } <span class="kw">else </span>{
-                    <span class="prelude-val">Err</span>(Error::&lt;Block::Header&gt;::RuntimeApi(error))
-                }
-            })<span class="question-mark">?
-        </span>{
-            <span class="macro">warn!</span>(
-                target: <span class="string">&quot;subspace&quot;</span>,
-                <span class="string">&quot;Verifying block with solution provided by farmer in block list: {}&quot;</span>,
-                pre_digest.solution.public_key
-            );
-
-            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::&lt;Block::Header&gt;::FarmerInBlockList(
-                pre_digest.solution.public_key.clone(),
-            )
-            .into());
-        }
-
-        <span class="kw">let </span>slot_now = (<span class="self">self</span>.slot_now)();
-
-        <span class="comment">// Stateless header verification only. This means only check that header contains required
-        // contents, correct signature and valid Proof-of-Space, but because previous block is not
-        // guaranteed to be imported at this point, it is not possible to verify
-        // Proof-of-Archival-Storage. In order to verify PoAS randomness and solution range
-        // from the header are checked against expected correct values during block import as well
-        // as whether piece in the header corresponds to the actual archival history of the
-        // blockchain.
-        </span><span class="kw">let </span>checked_header = {
-            <span class="comment">// We add one to the current slot to allow for some small drift.
-            // FIXME https://github.com/paritytech/substrate/issues/1019 in the future, alter this
-            //  queue to allow deferring of headers
-            </span>check_header::&lt;<span class="kw">_</span>, FarmerPublicKey&gt;(
-                VerificationParams {
-                    header: block.header.clone(),
-                    slot_now: slot_now + <span class="number">1</span>,
-                    verify_solution_params: <span class="kw-2">&amp;</span>VerifySolutionParams {
-                        global_randomness: subspace_digest_items.global_randomness,
-                        solution_range: subspace_digest_items.solution_range,
-                        piece_check_params: <span class="prelude-val">None</span>,
-                    },
-                    reward_signing_context: <span class="kw-2">&amp;</span><span class="self">self</span>.reward_signing_context,
-                },
-                <span class="prelude-val">Some</span>(pre_digest),
-                <span class="prelude-val">None</span>,
-            )
-            .map_err(Error::&lt;Block::Header&gt;::from)<span class="question-mark">?
-        </span>};
-
-        <span class="kw">match </span>checked_header {
-            CheckedHeader::Checked(pre_header, verified_info) =&gt; {
-                <span class="kw">let </span>slot = verified_info.pre_digest.slot;
-
-                <span class="comment">// the header is valid but let&#39;s check if there was something else already
-                // proposed at the same slot by the given author. if there was, we will
-                // report the equivocation to the runtime.
-                </span><span class="kw">if let </span><span class="prelude-val">Err</span>(err) = <span class="self">self
-                    </span>.check_and_report_equivocation(
-                        slot_now,
-                        slot,
-                        <span class="kw-2">&amp;</span>block.header,
-                        <span class="kw-2">&amp;</span>verified_info.pre_digest.solution.public_key,
-                        <span class="kw-2">&amp;</span>block.origin,
-                    )
-                    .<span class="kw">await
-                </span>{
-                    <span class="macro">warn!</span>(
-                        target: <span class="string">&quot;subspace&quot;</span>,
-                        <span class="string">&quot;Error checking/reporting Subspace equivocation: {}&quot;</span>,
-                        err
-                    );
-                }
-
-                <span class="macro">trace!</span>(target: <span class="string">&quot;subspace&quot;</span>, <span class="string">&quot;Checked {:?}; importing.&quot;</span>, pre_header);
-                <span class="macro">telemetry!</span>(
-                    <span class="self">self</span>.telemetry;
-                    CONSENSUS_TRACE;
-                    <span class="string">&quot;subspace.checked_and_importing&quot;</span>;
-                    <span class="string">&quot;pre_header&quot; </span>=&gt; <span class="question-mark">?</span>pre_header,
-                );
-
-                block.header = pre_header;
-                block.post_digests.push(verified_info.seal);
-                block.post_hash = <span class="prelude-val">Some</span>(hash);
-
-                <span class="prelude-val">Ok</span>(block)
-            }
-            CheckedHeader::Deferred(a, b) =&gt; {
-                <span class="macro">debug!</span>(target: <span class="string">&quot;subspace&quot;</span>, <span class="string">&quot;Checking {:?} failed; {:?}, {:?}.&quot;</span>, hash, a, b);
-                <span class="macro">telemetry!</span>(
-                    <span class="self">self</span>.telemetry;
-                    CONSENSUS_DEBUG;
-                    <span class="string">&quot;subspace.header_too_far_in_future&quot;</span>;
-                    <span class="string">&quot;hash&quot; </span>=&gt; <span class="question-mark">?</span>hash, <span class="string">&quot;a&quot; </span>=&gt; <span class="question-mark">?</span>a, <span class="string">&quot;b&quot; </span>=&gt; <span class="question-mark">?</span>b
-                );
-                <span class="prelude-val">Err</span>(Error::&lt;Block::Header&gt;::TooFarInFuture(hash).into())
-            }
-        }
+    <span class="doccomment">/// Access KZG instance
+    </span><span class="kw">pub fn </span>kzg(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Kzg {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.kzg
     }
 }
 
 <span class="doccomment">/// A block-import handler for Subspace.
-///
-/// This scans each imported block for epoch change signals. The signals are
-/// tracked in a tree (of all forks), and the import logic validates all epoch
-/// change transitions, i.e. whether a given epoch change is expected or whether
-/// it is missing.
-///
-/// The epoch change tree should be pruned as blocks are finalized.
-</span><span class="kw">pub struct </span>SubspaceBlockImport&lt;Block: BlockT, Client, I, CIDP&gt; {
+</span><span class="kw">pub struct </span>SubspaceBlockImport&lt;PosTable, Block, Client, I, CIDP, AS&gt;
+<span class="kw">where
+    </span>Block: BlockT,
+{
     inner: I,
     client: Arc&lt;Client&gt;,
     block_importing_notification_sender:
         SubspaceNotificationSender&lt;BlockImportingNotification&lt;Block&gt;&gt;,
     subspace_link: SubspaceLink&lt;Block&gt;,
     create_inherent_data_providers: CIDP,
+    chain_constants: ChainConstants,
+    segment_headers_store: SegmentHeadersStore&lt;AS&gt;,
+    <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+    </span>pot_verifier: PotVerifier,
+    _pos_table: PhantomData&lt;PosTable&gt;,
 }
 
-<span class="kw">impl</span>&lt;Block, I, Client, CIDP&gt; Clone <span class="kw">for </span>SubspaceBlockImport&lt;Block, Client, I, CIDP&gt;
+<span class="kw">impl</span>&lt;PosTable, Block, I, Client, CIDP, AS&gt; Clone
+    <span class="kw">for </span>SubspaceBlockImport&lt;PosTable, Block, Client, I, CIDP, AS&gt;
 <span class="kw">where
     </span>Block: BlockT,
     I: Clone,
@@ -2093,18 +1821,28 @@
             block_importing_notification_sender: <span class="self">self</span>.block_importing_notification_sender.clone(),
             subspace_link: <span class="self">self</span>.subspace_link.clone(),
             create_inherent_data_providers: <span class="self">self</span>.create_inherent_data_providers.clone(),
+            chain_constants: <span class="self">self</span>.chain_constants,
+            segment_headers_store: <span class="self">self</span>.segment_headers_store.clone(),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+            </span>pot_verifier: <span class="self">self</span>.pot_verifier.clone(),
+            _pos_table: PhantomData,
         }
     }
 }
 
-<span class="kw">impl</span>&lt;Block, Client, I, CIDP&gt; SubspaceBlockImport&lt;Block, Client, I, CIDP&gt;
+<span class="kw">impl</span>&lt;PosTable, Block, Client, I, CIDP, AS&gt; SubspaceBlockImport&lt;PosTable, Block, Client, I, CIDP, AS&gt;
 <span class="kw">where
-    </span>Block: BlockT,
+    </span>PosTable: Table,
+    Block: BlockT,
     Client: ProvideRuntimeApi&lt;Block&gt; + BlockBackend&lt;Block&gt; + HeaderBackend&lt;Block&gt; + AuxStore,
     Client::Api: BlockBuilderApi&lt;Block&gt; + SubspaceApi&lt;Block, FarmerPublicKey&gt; + ApiExt&lt;Block&gt;,
     CIDP: CreateInherentDataProviders&lt;Block, SubspaceLink&lt;Block&gt;&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
+    AS: AuxStore + Send + Sync + <span class="lifetime">&#39;static</span>,
+    BlockNumber: From&lt;&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Header <span class="kw">as </span>HeaderT&gt;::Number&gt;,
 {
-    <span class="kw">fn </span>new(
+    <span class="comment">// TODO: Create a struct for these parameters
+    </span><span class="attr">#[allow(clippy::too_many_arguments)]
+    </span><span class="kw">fn </span>new(
         client: Arc&lt;Client&gt;,
         block_import: I,
         block_importing_notification_sender: SubspaceNotificationSender&lt;
@@ -2112,13 +1850,21 @@
         &gt;,
         subspace_link: SubspaceLink&lt;Block&gt;,
         create_inherent_data_providers: CIDP,
+        chain_constants: ChainConstants,
+        segment_headers_store: SegmentHeadersStore&lt;AS&gt;,
+        <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)] </span>pot_verifier: PotVerifier,
     ) -&gt; <span class="self">Self </span>{
-        SubspaceBlockImport {
+        <span class="self">Self </span>{
             client,
             inner: block_import,
             block_importing_notification_sender,
             subspace_link,
             create_inherent_data_providers,
+            chain_constants,
+            segment_headers_store,
+            <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+            </span>pot_verifier,
+            _pos_table: PhantomData,
         }
     }
 
@@ -2141,9 +1887,8 @@
         <span class="kw">let </span>parent_hash = <span class="kw-2">*</span>header.parent_hash();
 
         <span class="kw">let </span>pre_digest = <span class="kw-2">&amp;</span>subspace_digest_items.pre_digest;
-
         <span class="kw">if let </span><span class="prelude-val">Some</span>(root_plot_public_key) = root_plot_public_key {
-            <span class="kw">if </span><span class="kw-2">&amp;</span>pre_digest.solution.public_key != root_plot_public_key {
+            <span class="kw">if </span><span class="kw-2">&amp;</span>pre_digest.solution().public_key != root_plot_public_key {
                 <span class="comment">// Only root plot public key is allowed.
                 </span><span class="kw">return </span><span class="prelude-val">Err</span>(Error::OnlyRootPlotPublicKeyAllowed);
             }
@@ -2154,7 +1899,7 @@
         </span><span class="kw">if </span><span class="self">self
             </span>.client
             .runtime_api()
-            .is_in_block_list(parent_hash, <span class="kw-2">&amp;</span>pre_digest.solution.public_key)
+            .is_in_block_list(parent_hash, <span class="kw-2">&amp;</span>pre_digest.solution().public_key)
             .or_else(|error| {
                 <span class="kw">if </span>skip_runtime_access {
                     <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>)
@@ -2166,11 +1911,11 @@
             <span class="macro">warn!</span>(
                 target: <span class="string">&quot;subspace&quot;</span>,
                 <span class="string">&quot;Ignoring block with solution provided by farmer in block list: {}&quot;</span>,
-                pre_digest.solution.public_key
+                pre_digest.solution().public_key
             );
 
             <span class="kw">return </span><span class="prelude-val">Err</span>(Error::FarmerInBlockList(
-                pre_digest.solution.public_key.clone(),
+                pre_digest.solution().public_key.clone(),
             ));
         }
 
@@ -2179,17 +1924,47 @@
             .header(parent_hash)<span class="question-mark">?
             </span>.ok_or(Error::ParentUnavailable(parent_hash, block_hash))<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>(correct_global_randomness, correct_solution_range) = <span class="kw">if </span>block_number.is_one() {
+        <span class="kw">let </span>parent_slot = extract_pre_digest(<span class="kw-2">&amp;</span>parent_header).map(|d| d.slot())<span class="question-mark">?</span>;
+
+        <span class="comment">// Make sure that slot number is strictly increasing
+        </span><span class="attr">#[cfg_attr(not(feature = <span class="string">&quot;pot&quot;</span>), allow(unused_variables))]
+        </span><span class="kw">let </span>slots_since_parent = <span class="kw">match </span>pre_digest.slot().checked_sub(<span class="kw-2">*</span>parent_slot) {
+            <span class="prelude-val">Some</span>(slots_since_parent) =&gt; {
+                <span class="kw">if </span>slots_since_parent &gt; <span class="number">0 </span>{
+                    Slot::from(slots_since_parent)
+                } <span class="kw">else </span>{
+                    <span class="kw">return </span><span class="prelude-val">Err</span>(Error::SlotMustIncrease(parent_slot, pre_digest.slot()));
+                }
+            }
+            <span class="prelude-val">None </span>=&gt; {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(Error::SlotMustIncrease(parent_slot, pre_digest.slot()));
+            }
+        };
+
+        <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+        </span><span class="kw">let </span>correct_global_randomness;
+        <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+        </span><span class="kw">let </span>pot_seed;
+        <span class="kw">let </span>correct_solution_range;
+
+        <span class="kw">if </span>block_number.is_one() {
             <span class="comment">// Genesis block doesn&#39;t contain usual digest items, we need to query runtime API
             // instead
-            </span><span class="kw">let </span>correct_global_randomness = slot_worker::extract_global_randomness_for_block(
-                <span class="self">self</span>.client.as_ref(),
-                parent_hash,
-            )<span class="question-mark">?</span>;
-            <span class="kw">let </span>(correct_solution_range, <span class="kw">_</span>) =
-                slot_worker::extract_solution_ranges_for_block(<span class="self">self</span>.client.as_ref(), parent_hash)<span class="question-mark">?</span>;
+            </span><span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+            </span>{
+                correct_global_randomness = slot_worker::extract_global_randomness_for_block(
+                    <span class="self">self</span>.client.as_ref(),
+                    parent_hash,
+                )<span class="question-mark">?</span>;
+            }
+            <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+            </span>{
+                pot_seed = <span class="self">self</span>.pot_verifier.genesis_seed();
+            }
 
-            (correct_global_randomness, correct_solution_range)
+            correct_solution_range =
+                slot_worker::extract_solution_ranges_for_block(<span class="self">self</span>.client.as_ref(), parent_hash)<span class="question-mark">?
+                    </span>.<span class="number">0</span>;
         } <span class="kw">else </span>{
             <span class="kw">let </span>parent_subspace_digest_items = extract_subspace_digest_items::&lt;
                 <span class="kw">_</span>,
@@ -2198,85 +1973,120 @@
                 FarmerSignature,
             &gt;(<span class="kw-2">&amp;</span>parent_header)<span class="question-mark">?</span>;
 
-            <span class="kw">let </span>correct_global_randomness =
-                <span class="kw">match </span>parent_subspace_digest_items.next_global_randomness {
-                    <span class="prelude-val">Some</span>(global_randomness) =&gt; global_randomness,
-                    <span class="prelude-val">None </span>=&gt; parent_subspace_digest_items.global_randomness,
-                };
+            <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+            </span>{
+                correct_global_randomness =
+                    <span class="kw">match </span>parent_subspace_digest_items.next_global_randomness {
+                        <span class="prelude-val">Some</span>(global_randomness) =&gt; global_randomness,
+                        <span class="prelude-val">None </span>=&gt; parent_subspace_digest_items.global_randomness,
+                    };
+            }
+            <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+            </span>{
+                pot_seed = parent_subspace_digest_items
+                    .pre_digest
+                    .pot_info()
+                    .proof_of_time()
+                    .seed();
+            }
 
-            <span class="kw">let </span>correct_solution_range = <span class="kw">match </span>parent_subspace_digest_items.next_solution_range {
+            correct_solution_range = <span class="kw">match </span>parent_subspace_digest_items.next_solution_range {
                 <span class="prelude-val">Some</span>(solution_range) =&gt; solution_range,
                 <span class="prelude-val">None </span>=&gt; parent_subspace_digest_items.solution_range,
             };
+        }
 
-            (correct_global_randomness, correct_solution_range)
-        };
-
-        <span class="kw">if </span>subspace_digest_items.global_randomness != correct_global_randomness {
+        <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+        </span><span class="kw">if </span>subspace_digest_items.global_randomness != correct_global_randomness {
             <span class="kw">return </span><span class="prelude-val">Err</span>(Error::InvalidGlobalRandomness(block_hash));
+        }
+        <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+        </span><span class="comment">// TODO: Extend/optimize this check once we have checkpoints in justifications
+        </span><span class="kw">if </span>!<span class="self">self
+            </span>.pot_verifier
+            .is_proof_valid(
+                pot_seed,
+                subspace_digest_items.pot_slot_iterations,
+                slots_since_parent,
+                subspace_digest_items.pre_digest.pot_info().proof_of_time(),
+            )
+            .<span class="kw">await
+        </span>{
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::InvalidProofOfTime);
         }
 
         <span class="kw">if </span>subspace_digest_items.solution_range != correct_solution_range {
             <span class="kw">return </span><span class="prelude-val">Err</span>(Error::InvalidSolutionRange(block_hash));
         }
 
-        <span class="kw">let </span>sector_id = LegacySectorId::new(
-            <span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span>pre_digest.solution.public_key).into(),
-            pre_digest.solution.sector_index,
+        <span class="kw">let </span>sector_id = SectorId::new(
+            PublicKey::from(<span class="kw-2">&amp;</span>pre_digest.solution().public_key).hash(),
+            pre_digest.solution().sector_index,
         );
 
-        <span class="comment">// TODO: Derive `pre_digest.solution.piece_offset` from local challenge instead
-
-        </span><span class="kw">let </span>piece_index = sector_id.derive_piece_index(
-            pre_digest.solution.piece_offset,
-            pre_digest.solution.total_pieces,
+        <span class="comment">// TODO: Below `skip_runtime_access` has no impact on this, but ideally it
+        //  should (though we don&#39;t support fast sync yet, so doesn&#39;t matter in
+        //  practice)
+        </span><span class="kw">let </span>max_pieces_in_sector = <span class="self">self
+            </span>.client
+            .runtime_api()
+            .max_pieces_in_sector(parent_hash)<span class="question-mark">?</span>;
+        <span class="kw">let </span>piece_index = sector_id.derive_piece_index(
+            pre_digest.solution().piece_offset,
+            pre_digest.solution().history_size,
+            max_pieces_in_sector,
+            <span class="self">self</span>.chain_constants.recent_segments(),
+            <span class="self">self</span>.chain_constants.recent_history_fraction(),
         );
-        <span class="kw">let </span>position = piece_index.position();
         <span class="kw">let </span>segment_index = piece_index.segment_index();
 
-        <span class="comment">// This is not a very nice hack due to the fact that at the time first block is produced
-        // extrinsics with segment headers are not yet in runtime.
-        </span><span class="kw">let </span>maybe_segment_commitment = <span class="kw">if </span>block_number.is_one() {
-            <span class="kw">let </span>genesis_block_hash = <span class="self">self</span>.client.info().genesis_hash;
-            <span class="kw">let </span>archived_segments = Archiver::new(<span class="self">self</span>.subspace_link.kzg.clone())
-                .expect(<span class="string">&quot;Incorrect parameters for archiver&quot;</span>)
-                .add_block(
-                    <span class="self">self</span>.client
-                        .block(genesis_block_hash)<span class="question-mark">?
-                        </span>.ok_or(Error::GenesisUnavailable)<span class="question-mark">?
-                        </span>.encode(),
-                    BlockObjectMapping::default(),
-                );
-            archived_segments.into_iter().find_map(|archived_segment| {
-                <span class="kw">if </span>archived_segment.segment_header.segment_index() == segment_index {
-                    <span class="prelude-val">Some</span>(archived_segment.segment_header.segment_commitment())
-                } <span class="kw">else </span>{
-                    <span class="prelude-val">None
-                </span>}
-            })
-        } <span class="kw">else </span>{
-            aux_schema::load_segment_commitment(<span class="self">self</span>.client.as_ref(), segment_index)<span class="question-mark">?
-        </span>};
+        <span class="kw">let </span>segment_commitment = <span class="self">self
+            </span>.segment_headers_store
+            .get_segment_header(segment_index)
+            .map(|segment_header| segment_header.segment_commitment())
+            .ok_or(Error::SegmentCommitmentNotFound(segment_index))<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>segment_commitment =
-            maybe_segment_commitment.ok_or(Error::SegmentCommitmentNotFound(segment_index))<span class="question-mark">?</span>;
+        <span class="kw">let </span>sector_expiration_check_segment_commitment = <span class="self">self
+            </span>.segment_headers_store
+            .get_segment_header(
+                subspace_digest_items
+                    .pre_digest
+                    .solution()
+                    .history_size
+                    .sector_expiration_check(<span class="self">self</span>.chain_constants.min_sector_lifetime())
+                    .ok_or(Error::InvalidHistorySize)<span class="question-mark">?
+                    </span>.segment_index(),
+            )
+            .map(|segment_header| segment_header.segment_commitment());
 
         <span class="comment">// Piece is not checked during initial block verification because it requires access to
-        // segment header, check it now.
-        </span>subspace_verification::check_piece(
+        // segment header and runtime, check it now.
+        </span>subspace_verification::verify_solution::&lt;PosTable, <span class="kw">_</span>, <span class="kw">_</span>&gt;(
+            pre_digest.solution(),
+            <span class="comment">// Slot was already checked during initial block verification
+            </span>pre_digest.slot().into(),
+            <span class="kw-2">&amp;</span>VerifySolutionParams {
+                <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+                </span>global_randomness: subspace_digest_items.global_randomness,
+                <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+                </span>proof_of_time: subspace_digest_items.pre_digest.pot_info().proof_of_time(),
+                solution_range: subspace_digest_items.solution_range,
+                piece_check_params: <span class="prelude-val">Some</span>(PieceCheckParams {
+                    max_pieces_in_sector,
+                    segment_commitment,
+                    recent_segments: <span class="self">self</span>.chain_constants.recent_segments(),
+                    recent_history_fraction: <span class="self">self</span>.chain_constants.recent_history_fraction(),
+                    min_sector_lifetime: <span class="self">self</span>.chain_constants.min_sector_lifetime(),
+                    <span class="comment">// TODO: Below `skip_runtime_access` has no impact on this, but ideally it
+                    //  should (though we don&#39;t support fast sync yet, so doesn&#39;t matter in
+                    //  practice)
+                    </span>current_history_size: <span class="self">self</span>.client.runtime_api().history_size(parent_hash)<span class="question-mark">?</span>,
+                    sector_expiration_check_segment_commitment,
+                }),
+            },
             <span class="kw-2">&amp;</span><span class="self">self</span>.subspace_link.kzg,
-            <span class="kw-2">&amp;</span>segment_commitment,
-            position,
-            <span class="kw-2">&amp;</span>pre_digest.solution,
         )
-        .map_err(|error| VerificationError::VerificationError(pre_digest.slot, error))<span class="question-mark">?</span>;
-
-        <span class="kw">let </span>parent_slot = extract_pre_digest(<span class="kw-2">&amp;</span>parent_header).map(|d| d.slot)<span class="question-mark">?</span>;
-
-        <span class="comment">// Make sure that slot number is strictly increasing
-        </span><span class="kw">if </span>pre_digest.slot &lt;= parent_slot {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::SlotMustIncrease(parent_slot, pre_digest.slot));
-        }
+        .map_err(|error| VerificationError::VerificationError(pre_digest.slot(), error))<span class="question-mark">?</span>;
 
         <span class="kw">if </span>!skip_runtime_access {
             <span class="comment">// If the body is passed through, we need to use the runtime to check that the
@@ -2320,10 +2130,11 @@
 }
 
 <span class="attr">#[async_trait::async_trait]
-</span><span class="kw">impl</span>&lt;Block, Client, Inner, CIDP&gt; BlockImport&lt;Block&gt;
-    <span class="kw">for </span>SubspaceBlockImport&lt;Block, Client, Inner, CIDP&gt;
+</span><span class="kw">impl</span>&lt;PosTable, Block, Client, Inner, CIDP, AS&gt; BlockImport&lt;Block&gt;
+    <span class="kw">for </span>SubspaceBlockImport&lt;PosTable, Block, Client, Inner, CIDP, AS&gt;
 <span class="kw">where
-    </span>Block: BlockT,
+    </span>PosTable: Table,
+    Block: BlockT,
     Inner: BlockImport&lt;Block, Transaction = TransactionFor&lt;Client, Block&gt;, Error = ConsensusError&gt;
         + Send
         + Sync,
@@ -2336,6 +2147,8 @@
         + Sync,
     Client::Api: BlockBuilderApi&lt;Block&gt; + SubspaceApi&lt;Block, FarmerPublicKey&gt; + ApiExt&lt;Block&gt;,
     CIDP: CreateInherentDataProviders&lt;Block, SubspaceLink&lt;Block&gt;&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
+    AS: AuxStore + Send + Sync + <span class="lifetime">&#39;static</span>,
+    BlockNumber: From&lt;&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Header <span class="kw">as </span>HeaderT&gt;::Number&gt;,
 {
     <span class="kw">type </span>Error = ConsensusError;
     <span class="kw">type </span>Transaction = TransactionFor&lt;Client, Block&gt;;
@@ -2380,8 +2193,6 @@
         .<span class="kw">await
         </span>.map_err(|error| ConsensusError::ClientImport(error.to_string()))<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>pre_digest = subspace_digest_items.pre_digest;
-
         <span class="kw">let </span>parent_weight = <span class="kw">if </span>block_number.is_one() {
             <span class="number">0
         </span>} <span class="kw">else </span>{
@@ -2395,29 +2206,7 @@
                 })<span class="question-mark">?
         </span>};
 
-        <span class="kw">let </span>added_weight = {
-            <span class="kw">let </span>global_challenge = derive_global_challenge(
-                <span class="kw-2">&amp;</span>subspace_digest_items.global_randomness,
-                pre_digest.slot.into(),
-            );
-
-            <span class="kw">let </span>sector_id = LegacySectorId::new(
-                <span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span>pre_digest.solution.public_key).into(),
-                pre_digest.solution.sector_index,
-            );
-
-            <span class="kw">let </span>local_challenge = sector_id.derive_local_challenge(<span class="kw-2">&amp;</span>global_challenge);
-
-            <span class="kw">let </span>audit_chunk = derive_audit_chunk(<span class="kw-2">&amp;</span>pre_digest.solution.chunk.to_bytes());
-
-            BlockWeight::from(
-                SolutionRange::MAX
-                    - subspace_core_primitives::bidirectional_distance(
-                        <span class="kw-2">&amp;</span>local_challenge,
-                        <span class="kw-2">&amp;</span>audit_chunk,
-                    ),
-            )
-        };
+        <span class="kw">let </span>added_weight = calculate_block_weight(subspace_digest_items.solution_range);
         <span class="kw">let </span>total_weight = parent_weight + added_weight;
 
         <span class="kw">let </span>info = <span class="self">self</span>.client.info();
@@ -2429,36 +2218,40 @@
         });
 
         <span class="kw">for </span>(<span class="kw-2">&amp;</span>segment_index, segment_commitment) <span class="kw">in </span><span class="kw-2">&amp;</span>subspace_digest_items.segment_commitments {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(found_segment_commitment) =
-                aux_schema::load_segment_commitment(<span class="self">self</span>.client.as_ref(), segment_index)
-                    .map_err(|e| ConsensusError::ClientImport(e.to_string()))<span class="question-mark">?
-            </span>{
-                <span class="kw">if </span><span class="kw-2">&amp;</span>found_segment_commitment != segment_commitment {
-                    <span class="kw">return </span><span class="prelude-val">Err</span>(ConsensusError::ClientImport(
-                        Error::&lt;Block::Header&gt;::DifferentSegmentCommitment(segment_index)
-                            .to_string(),
-                    ));
-                }
-            }
+            <span class="kw">let </span>found_segment_commitment = <span class="self">self
+                </span>.segment_headers_store
+                .get_segment_header(segment_index)
+                .ok_or_else(|| {
+                    ConsensusError::ClientImport(<span class="macro">format!</span>(
+                        <span class="string">&quot;Segment header for index {segment_index} not found&quot;
+                    </span>))
+                })<span class="question-mark">?
+                </span>.segment_commitment();
 
-            aux_schema::write_segment_commitment(segment_index, segment_commitment, |values| {
-                block
-                    .auxiliary
-                    .extend(values.iter().map(|(k, v)| (k.to_vec(), <span class="prelude-val">Some</span>(v.to_vec()))))
-            });
+            <span class="kw">if </span><span class="kw-2">&amp;</span>found_segment_commitment != segment_commitment {
+                <span class="macro">warn!</span>(
+                    target: <span class="string">&quot;subspace&quot;</span>,
+                    <span class="string">&quot;Different segment commitment for segment index {} was found in storage, \
+                    likely fork below archiving point. expected {:?}, found {:?}&quot;</span>,
+                    segment_index,
+                    segment_commitment,
+                    found_segment_commitment
+                );
+                <span class="kw">return </span><span class="prelude-val">Err</span>(ConsensusError::ClientImport(
+                    Error::&lt;Block::Header&gt;::DifferentSegmentCommitment(segment_index).to_string(),
+                ));
+            }
         }
 
         <span class="comment">// The fork choice rule is that we pick the heaviest chain (i.e. smallest solution
         // range), if there&#39;s a tie we go with the longest chain.
         </span><span class="kw">let </span>fork_choice = {
-            <span class="kw">let </span>(last_best, last_best_number) = (info.best_hash, info.best_number);
-
-            <span class="kw">let </span>last_best_weight = <span class="kw">if </span><span class="kw-2">&amp;</span>last_best == block.header.parent_hash() {
+            <span class="kw">let </span>last_best_weight = <span class="kw">if </span><span class="kw-2">&amp;</span>info.best_hash == block.header.parent_hash() {
                 <span class="comment">// the parent=genesis case is already covered for loading parent weight,
                 // so we don&#39;t need to cover again here.
                 </span>parent_weight
             } <span class="kw">else </span>{
-                aux_schema::load_block_weight(<span class="kw-2">&amp;*</span><span class="self">self</span>.client, last_best)
+                aux_schema::load_block_weight(<span class="kw-2">&amp;*</span><span class="self">self</span>.client, info.best_hash)
                     .map_err(|e| ConsensusError::ChainLookup(e.to_string()))<span class="question-mark">?
                     </span>.ok_or_else(|| {
                         ConsensusError::ChainLookup(
@@ -2467,11 +2260,7 @@
                     })<span class="question-mark">?
             </span>};
 
-            ForkChoiceStrategy::Custom(<span class="kw">match </span>total_weight.cmp(<span class="kw-2">&amp;</span>last_best_weight) {
-                Ordering::Greater =&gt; <span class="bool-val">true</span>,
-                Ordering::Equal =&gt; block_number &gt; last_best_number,
-                Ordering::Less =&gt; <span class="bool-val">false</span>,
-            })
+            ForkChoiceStrategy::Custom(total_weight &gt; last_best_weight)
         };
         block.fork_choice = <span class="prelude-val">Some</span>(fork_choice);
 
@@ -2538,20 +2327,29 @@
 ///
 /// Also returns a link object used to correctly instantiate the import queue and background worker.
 </span><span class="attr">#[allow(clippy::type_complexity)]
-</span><span class="kw">pub fn </span>block_import&lt;Client, Block, I, CIDP&gt;(
+</span><span class="kw">pub fn </span>block_import&lt;PosTable, Client, Block, I, CIDP, AS&gt;(
     slot_duration: SlotDuration,
     wrapped_block_import: I,
     client: Arc&lt;Client&gt;,
+    kzg: Kzg,
     create_inherent_data_providers: CIDP,
-) -&gt; ClientResult&lt;(
-    SubspaceBlockImport&lt;Block, Client, I, CIDP&gt;,
-    SubspaceLink&lt;Block&gt;,
-)&gt;
+    segment_headers_store: SegmentHeadersStore&lt;AS&gt;,
+    <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)] </span>pot_verifier: PotVerifier,
+) -&gt; <span class="prelude-ty">Result</span>&lt;
+    (
+        SubspaceBlockImport&lt;PosTable, Block, Client, I, CIDP, AS&gt;,
+        SubspaceLink&lt;Block&gt;,
+    ),
+    sp_blockchain::Error,
+&gt;
 <span class="kw">where
-    </span>Block: BlockT,
+    </span>PosTable: Table,
+    Block: BlockT,
     Client: ProvideRuntimeApi&lt;Block&gt; + BlockBackend&lt;Block&gt; + HeaderBackend&lt;Block&gt; + AuxStore,
     Client::Api: BlockBuilderApi&lt;Block&gt; + SubspaceApi&lt;Block, FarmerPublicKey&gt;,
     CIDP: CreateInherentDataProviders&lt;Block, SubspaceLink&lt;Block&gt;&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
+    AS: AuxStore + Send + Sync + <span class="lifetime">&#39;static</span>,
+    BlockNumber: From&lt;&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Header <span class="kw">as </span>HeaderT&gt;::Number&gt;,
 {
     <span class="kw">let </span>(new_slot_notification_sender, new_slot_notification_stream) =
         notification::channel(<span class="string">&quot;subspace_new_slot_notification_stream&quot;</span>);
@@ -2562,12 +2360,8 @@
     <span class="kw">let </span>(block_importing_notification_sender, block_importing_notification_stream) =
         notification::channel(<span class="string">&quot;subspace_block_importing_notification_stream&quot;</span>);
 
-    <span class="kw">let </span>confirmation_depth_k = get_chain_constants(client.as_ref())
-        .expect(<span class="string">&quot;Must always be able to get chain constants&quot;</span>)
-        .confirmation_depth_k();
-
-    <span class="comment">// TODO: Probably should have public parameters in chain constants instead
-    </span><span class="kw">let </span>kzg = Kzg::new(kzg::embedded_kzg_settings());
+    <span class="kw">let </span>chain_constants = get_chain_constants(client.as_ref())
+        .map_err(|error| sp_blockchain::Error::Application(error.into()))<span class="question-mark">?</span>;
 
     <span class="kw">let </span>link = SubspaceLink {
         slot_duration,
@@ -2581,8 +2375,11 @@
         block_importing_notification_stream,
         <span class="comment">// TODO: Consider making `confirmation_depth_k` non-zero
         </span>segment_headers: Arc::new(Mutex::new(LruCache::new(
-            NonZeroUsize::new(confirmation_depth_k <span class="kw">as </span>usize)
-                .expect(<span class="string">&quot;Confirmation depth of zero is not supported&quot;</span>),
+            NonZeroUsize::new(
+                (FINALIZATION_DEPTH_IN_SEGMENTS + <span class="number">1</span>)
+                    .max(chain_constants.confirmation_depth_k() <span class="kw">as </span>usize),
+            )
+            .expect(<span class="string">&quot;Confirmation depth of zero is not supported&quot;</span>),
         ))),
         kzg,
     };
@@ -2593,59 +2390,12 @@
         block_importing_notification_sender,
         link.clone(),
         create_inherent_data_providers,
+        chain_constants,
+        segment_headers_store,
+        <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+        </span>pot_verifier,
     );
 
     <span class="prelude-val">Ok</span>((import, link))
-}
-
-<span class="doccomment">/// Start an import queue for the Subspace consensus algorithm.
-///
-/// This method returns the import queue, some data that needs to be passed to the block authoring
-/// logic (`SubspaceLink`), and a future that must be run to
-/// completion and is responsible for listening to finality notifications and
-/// pruning the epoch changes tree.
-///
-/// The block import object provided must be the `SubspaceBlockImport` or a wrapper
-/// of it, otherwise crucial import logic will be omitted.
-</span><span class="comment">// TODO: Create a struct for these parameters
-</span><span class="attr">#[allow(clippy::too_many_arguments)]
-</span><span class="kw">pub fn </span>import_queue&lt;Block: BlockT, Client, SelectChain, Inner, SN&gt;(
-    block_import: Inner,
-    justification_import: <span class="prelude-ty">Option</span>&lt;BoxJustificationImport&lt;Block&gt;&gt;,
-    client: Arc&lt;Client&gt;,
-    select_chain: SelectChain,
-    slot_now: SN,
-    spawner: <span class="kw-2">&amp;</span><span class="kw">impl </span>sp_core::traits::SpawnEssentialNamed,
-    registry: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Registry&gt;,
-    telemetry: <span class="prelude-ty">Option</span>&lt;TelemetryHandle&gt;,
-    is_authoring_blocks: bool,
-) -&gt; ClientResult&lt;DefaultImportQueue&lt;Block, Client&gt;&gt;
-<span class="kw">where
-    </span>Inner: BlockImport&lt;Block, Error = ConsensusError, Transaction = TransactionFor&lt;Client, Block&gt;&gt;
-        + Send
-        + Sync
-        + <span class="lifetime">&#39;static</span>,
-    Client: ProvideRuntimeApi&lt;Block&gt; + HeaderBackend&lt;Block&gt; + AuxStore + Send + Sync + <span class="lifetime">&#39;static</span>,
-    Client::Api: BlockBuilderApi&lt;Block&gt; + SubspaceApi&lt;Block, FarmerPublicKey&gt; + ApiExt&lt;Block&gt;,
-    SelectChain: sp_consensus::SelectChain&lt;Block&gt; + <span class="lifetime">&#39;static</span>,
-    SN: Fn() -&gt; Slot + Send + Sync + <span class="lifetime">&#39;static</span>,
-{
-    <span class="kw">let </span>verifier = SubspaceVerifier {
-        select_chain,
-        slot_now,
-        telemetry,
-        client,
-        reward_signing_context: schnorrkel::context::signing_context(REWARD_SIGNING_CONTEXT),
-        is_authoring_blocks,
-        block: PhantomData::default(),
-    };
-
-    <span class="prelude-val">Ok</span>(BasicQueue::new(
-        verifier,
-        Box::new(block_import),
-        justification_import,
-        spawner,
-        registry,
-    ))
 }
 </code></pre></div></section></main></body></html>

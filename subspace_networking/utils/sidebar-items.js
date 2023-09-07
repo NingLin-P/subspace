@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["online_status_informer"],"mod":["multihash","piece_provider","pieces"]};
+window.SIDEBAR_ITEMS = {"fn":["strip_peer_id"],"mod":["multihash","piece_provider"]};

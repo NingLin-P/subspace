@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `domains/primitives/messenger/src/messages.rs`."><title>messages.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sp_messenger" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../sp_messenger/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `domains/primitives/messenger/src/messages.rs`."><title>messages.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sp_messenger" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../sp_messenger/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -325,17 +325,95 @@
 <a href="#325" id="325">325</a>
 <a href="#326" id="326">326</a>
 <a href="#327" id="327">327</a>
-</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::endpoint::{EndpointRequest, EndpointResponse};
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+<a href="#337" id="337">337</a>
+<a href="#338" id="338">338</a>
+<a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a>
+<a href="#355" id="355">355</a>
+<a href="#356" id="356">356</a>
+<a href="#357" id="357">357</a>
+<a href="#358" id="358">358</a>
+<a href="#359" id="359">359</a>
+<a href="#360" id="360">360</a>
+<a href="#361" id="361">361</a>
+<a href="#362" id="362">362</a>
+<a href="#363" id="363">363</a>
+<a href="#364" id="364">364</a>
+<a href="#365" id="365">365</a>
+<a href="#366" id="366">366</a>
+<a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
+<a href="#401" id="401">401</a>
+<a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::endpoint::{Endpoint, EndpointRequest, EndpointResponse};
 <span class="kw">use </span><span class="kw">crate</span>::verification::StorageProofVerifier;
-<span class="kw">use </span>codec::{Decode, Encode, FullCodec};
-<span class="kw">use </span>frame_support::pallet_prelude::NMapKey;
-<span class="kw">use </span>frame_support::storage::generator::StorageNMap;
-<span class="kw">use </span>frame_support::{log, Twox64Concat};
+<span class="kw">use </span>codec::{Decode, Encode, FullCodec, MaxEncodedLen};
+<span class="kw">use </span>frame_support::storage::generator::StorageMap;
+<span class="kw">use </span>frame_support::{log, Identity};
 <span class="kw">use </span>scale_info::TypeInfo;
+<span class="kw">use </span>serde::{Deserialize, Serialize};
 <span class="kw">use </span>sp_core::storage::StorageKey;
 <span class="kw">use </span>sp_domains::DomainId;
 <span class="kw">use </span>sp_runtime::app_crypto::sp_core::U256;
-<span class="kw">use </span>sp_runtime::traits::CheckedAdd;
 <span class="kw">use </span>sp_runtime::{sp_std, DispatchError};
 <span class="kw">use </span>sp_std::marker::PhantomData;
 <span class="kw">use </span>sp_std::vec::Vec;
@@ -348,64 +426,33 @@
 /// Nonce is always increasing.
 </span><span class="kw">pub type </span>Nonce = U256;
 
-<span class="doccomment">/// Unique Id of a message between two domains.
+<span class="doccomment">/// Unique Id of a message between two chains.
 </span><span class="kw">pub type </span>MessageId = (ChannelId, Nonce);
 
-<span class="doccomment">/// Execution Fee to execute a send or receive request.
-</span><span class="attr">#[derive(Default, Debug, Encode, Decode, Clone, Copy, Eq, PartialEq, TypeInfo)]
-</span><span class="kw">pub struct </span>ExecutionFee&lt;Balance&gt; {
-    <span class="doccomment">/// Fee paid to the relayer pool for the execution.
-    </span><span class="kw">pub </span>relayer_pool_fee: Balance,
-    <span class="doccomment">/// Fee paid to the network for computation.
-    </span><span class="kw">pub </span>compute_fee: Balance,
-}
-
-<span class="doccomment">/// Fee model to send a request and receive a response from another domain.
-/// A user of the endpoint will pay
-///     - outbox_fee on src_domain
-///     - inbox_fee on dst_domain
-/// The reward is distributed to
-///     - src_domain relayer pool when the response is received
-///     - dst_domain relayer pool when the response acknowledgement from src_domain.
+<span class="doccomment">/// Fee model to send a request and receive a response from another chain.
 </span><span class="attr">#[derive(Default, Debug, Encode, Decode, Clone, Copy, Eq, PartialEq, TypeInfo)]
 </span><span class="kw">pub struct </span>FeeModel&lt;Balance&gt; {
-    <span class="doccomment">/// Fee paid by the endpoint user for any outgoing message.
-    </span><span class="kw">pub </span>outbox_fee: ExecutionFee&lt;Balance&gt;,
-    <span class="doccomment">/// Fee paid by the endpoint user any incoming message.
-    </span><span class="kw">pub </span>inbox_fee: ExecutionFee&lt;Balance&gt;,
+    <span class="doccomment">/// Fee to relay message from one chain to another
+    </span><span class="kw">pub </span>relay_fee: Balance,
 }
 
-<span class="kw">impl</span>&lt;Balance: CheckedAdd&gt; FeeModel&lt;Balance&gt; {
-    <span class="kw">pub fn </span>outbox_fee(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Balance&gt; {
-        <span class="self">self</span>.outbox_fee
-            .compute_fee
-            .checked_add(<span class="kw-2">&amp;</span><span class="self">self</span>.outbox_fee.relayer_pool_fee)
-    }
-
-    <span class="kw">pub fn </span>inbox_fee(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Balance&gt; {
-        <span class="self">self</span>.inbox_fee
-            .compute_fee
-            .checked_add(<span class="kw-2">&amp;</span><span class="self">self</span>.inbox_fee.relayer_pool_fee)
-    }
-}
-
-<span class="doccomment">/// Parameters for a new channel between two domains.
+<span class="doccomment">/// Parameters for a new channel between two chains.
 </span><span class="attr">#[derive(Default, Debug, Encode, Decode, Clone, Eq, PartialEq, TypeInfo, Copy)]
 </span><span class="kw">pub struct </span>InitiateChannelParams&lt;Balance&gt; {
     <span class="kw">pub </span>max_outgoing_messages: u32,
     <span class="kw">pub </span>fee_model: FeeModel&lt;Balance&gt;,
 }
 
-<span class="doccomment">/// Defines protocol requests performed on domains.
+<span class="doccomment">/// Defines protocol requests performed on chains.
 </span><span class="attr">#[derive(Debug, Encode, Decode, Clone, Eq, PartialEq, TypeInfo)]
 </span><span class="kw">pub enum </span>ProtocolMessageRequest&lt;Balance&gt; {
-    <span class="doccomment">/// Request to open a channel with foreign domain.
+    <span class="doccomment">/// Request to open a channel with foreign chain.
     </span>ChannelOpen(InitiateChannelParams&lt;Balance&gt;),
-    <span class="doccomment">/// Request to close an open channel with foreign domain.
+    <span class="doccomment">/// Request to close an open channel with foreign chain.
     </span>ChannelClose,
 }
 
-<span class="doccomment">/// Defines protocol requests performed on domains.
+<span class="doccomment">/// Defines protocol requests performed on chains.
 </span><span class="kw">pub type </span>ProtocolMessageResponse = <span class="prelude-ty">Result</span>&lt;(), DispatchError&gt;;
 
 <span class="doccomment">/// Protocol message that encompasses  request or its response.
@@ -430,79 +477,197 @@
     V0(Payload&lt;Balance&gt;),
 }
 
-<span class="doccomment">/// Message contains information to be sent to or received from another domain
+<span class="doccomment">/// Message weight tag used to indicate the consumed weight when handling the message
+</span><span class="attr">#[derive(Debug, Encode, Decode, Clone, Eq, PartialEq, TypeInfo, Default)]
+</span><span class="kw">pub enum </span>MessageWeightTag {
+    ProtocolChannelOpen,
+    ProtocolChannelClose,
+    EndpointRequest(Endpoint),
+    EndpointResponse(Endpoint),
+    <span class="attr">#[default]
+    </span><span class="prelude-val">None</span>,
+}
+
+<span class="kw">impl </span>MessageWeightTag {
+    <span class="comment">// Construct the weight tag for outbox message based on the outbox payload
+    </span><span class="kw">pub fn </span>outbox&lt;Balance&gt;(outbox_payload: <span class="kw-2">&amp;</span>VersionedPayload&lt;Balance&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>outbox_payload {
+            VersionedPayload::V0(Payload::Protocol(RequestResponse::Request(
+                ProtocolMessageRequest::ChannelOpen(<span class="kw">_</span>),
+            ))) =&gt; MessageWeightTag::ProtocolChannelOpen,
+            VersionedPayload::V0(Payload::Protocol(RequestResponse::Request(
+                ProtocolMessageRequest::ChannelClose,
+            ))) =&gt; MessageWeightTag::ProtocolChannelClose,
+            VersionedPayload::V0(Payload::Endpoint(RequestResponse::Request(endpoint_req))) =&gt; {
+                MessageWeightTag::EndpointRequest(endpoint_req.dst_endpoint.clone())
+            }
+            <span class="kw">_ </span>=&gt; MessageWeightTag::None,
+        }
+    }
+
+    <span class="comment">// Construct the weight tag for inbox response based on the weight tag of the request
+    // message and the response payload
+    </span><span class="kw">pub fn </span>inbox_response&lt;Balance&gt;(
+        req_type: MessageWeightTag,
+        resp_payload: <span class="kw-2">&amp;</span>VersionedPayload&lt;Balance&gt;,
+    ) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>(req_type, resp_payload) {
+            (
+                MessageWeightTag::ProtocolChannelOpen,
+                VersionedPayload::V0(Payload::Protocol(RequestResponse::Response(<span class="prelude-val">Ok</span>(<span class="kw">_</span>)))),
+            ) =&gt; MessageWeightTag::ProtocolChannelOpen,
+            (
+                MessageWeightTag::EndpointRequest(endpoint),
+                VersionedPayload::V0(Payload::Endpoint(RequestResponse::Response(<span class="kw">_</span>))),
+            ) =&gt; MessageWeightTag::EndpointResponse(endpoint),
+            <span class="kw">_ </span>=&gt; MessageWeightTag::None,
+        }
+    }
+}
+
+<span class="doccomment">/// Identifier of a chain.
+</span><span class="attr">#[derive(
+    Clone,
+    Copy,
+    Debug,
+    Hash,
+    Eq,
+    PartialEq,
+    Ord,
+    PartialOrd,
+    Encode,
+    Decode,
+    TypeInfo,
+    Serialize,
+    Deserialize,
+    MaxEncodedLen,
+)]
+</span><span class="kw">pub enum </span>ChainId {
+    Consensus,
+    Domain(DomainId),
+}
+
+<span class="kw">impl </span>ChainId {
+    <span class="attr">#[inline]
+    </span><span class="kw">pub fn </span>consensus_chain_id() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Consensus
+    }
+
+    <span class="attr">#[inline]
+    </span><span class="kw">pub fn </span>is_consensus_chain(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="kw">match </span><span class="self">self </span>{
+            ChainId::Consensus =&gt; <span class="bool-val">true</span>,
+            ChainId::Domain(<span class="kw">_</span>) =&gt; <span class="bool-val">false</span>,
+        }
+    }
+}
+
+<span class="kw">impl </span>From&lt;u32&gt; <span class="kw">for </span>ChainId {
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>from(x: u32) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Domain(DomainId::new(x))
+    }
+}
+
+<span class="kw">impl </span>From&lt;DomainId&gt; <span class="kw">for </span>ChainId {
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>from(x: DomainId) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Domain(x)
+    }
+}
+
+<span class="doccomment">/// Message contains information to be sent to or received from another chain.
 </span><span class="attr">#[derive(Debug, Encode, Decode, Clone, Eq, PartialEq, TypeInfo)]
 </span><span class="kw">pub struct </span>Message&lt;Balance&gt; {
-    <span class="doccomment">/// Domain which initiated this message.
-    </span><span class="kw">pub </span>src_domain_id: DomainId,
-    <span class="doccomment">/// Domain this message is intended for.
-    </span><span class="kw">pub </span>dst_domain_id: DomainId,
+    <span class="doccomment">/// Chain which initiated this message.
+    </span><span class="kw">pub </span>src_chain_id: ChainId,
+    <span class="doccomment">/// Chain this message is intended for.
+    </span><span class="kw">pub </span>dst_chain_id: ChainId,
     <span class="doccomment">/// ChannelId the message was sent through.
     </span><span class="kw">pub </span>channel_id: ChannelId,
     <span class="doccomment">/// Message nonce within the channel.
     </span><span class="kw">pub </span>nonce: Nonce,
     <span class="doccomment">/// Payload of the message
     </span><span class="kw">pub </span>payload: VersionedPayload&lt;Balance&gt;,
-    <span class="doccomment">/// Last delivered message response nonce on src_domain.
+    <span class="doccomment">/// Last delivered message response nonce on src_chain.
     </span><span class="kw">pub </span>last_delivered_message_response_nonce: <span class="prelude-ty">Option</span>&lt;Nonce&gt;,
 }
 
-<span class="doccomment">/// Domain block info used as part of the Cross domain message proof.
+<span class="doccomment">/// Block info used as part of the Cross chain message proof.
 </span><span class="attr">#[derive(Default, Debug, Encode, Decode, Clone, Eq, PartialEq, TypeInfo)]
-</span><span class="kw">pub struct </span>DomainBlockInfo&lt;Number, Hash&gt; {
-    <span class="doccomment">/// Block number of the domain.
+</span><span class="kw">pub struct </span>BlockInfo&lt;Number, Hash&gt; {
+    <span class="doccomment">/// Block number of the chain.
     </span><span class="kw">pub </span>block_number: Number,
-    <span class="doccomment">/// Block hash of the domain.
+    <span class="doccomment">/// Block hash of the chain.
     </span><span class="kw">pub </span>block_hash: Hash,
 }
 
 <span class="doccomment">/// Proof combines the storage proofs to validate messages.
 </span><span class="attr">#[derive(Debug, Encode, Decode, Clone, Eq, PartialEq, TypeInfo)]
 </span><span class="kw">pub struct </span>Proof&lt;BlockNumber, BlockHash, StateRoot&gt; {
-    <span class="doccomment">/// System domain block info when proof was constructed
-    </span><span class="kw">pub </span>system_domain_block_info: DomainBlockInfo&lt;BlockNumber, BlockHash&gt;,
-    <span class="doccomment">/// State root of System domain at above number and block hash.
+    <span class="doccomment">/// Consensus chain block info when proof was constructed
+    </span><span class="kw">pub </span>consensus_chain_block_info: BlockInfo&lt;BlockNumber, BlockHash&gt;,
+    <span class="doccomment">/// State root of Consensus chain at above number and block hash.
     /// This is the used to extract the message from proof.
-    </span><span class="kw">pub </span>system_domain_state_root: StateRoot,
-    <span class="doccomment">/// Storage proof that src core domain state_root is registered on System domain.
-    /// This is optional when the src_domain is the system domain.
+    </span><span class="kw">pub </span>consensus_chain_state_root: StateRoot,
+    <span class="doccomment">/// Storage proof that src chain state_root is registered on Consensus chain.
+    /// This is optional when the src_chain is Consensus.
     /// BlockNumber and BlockHash is used with storage proof to validate and fetch its state root.
-    </span><span class="kw">pub </span>core_domain_proof: <span class="prelude-ty">Option</span>&lt;(DomainBlockInfo&lt;BlockNumber, BlockHash&gt;, StorageProof)&gt;,
-    <span class="doccomment">/// Storage proof that message is processed on src_domain.
+    </span><span class="kw">pub </span>domain_proof: <span class="prelude-ty">Option</span>&lt;(BlockInfo&lt;BlockNumber, BlockHash&gt;, StorageProof)&gt;,
+    <span class="doccomment">/// Storage proof that message is processed on src_chain.
     </span><span class="kw">pub </span>message_proof: StorageProof,
+}
+
+<span class="kw">impl</span>&lt;BlockNumber: Default, BlockHash: Default, StateRoot: Default&gt;
+    Proof&lt;BlockNumber, BlockHash, StateRoot&gt;
+{
+    <span class="attr">#[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
+    </span><span class="kw">pub fn </span>dummy() -&gt; <span class="self">Self </span>{
+        Proof {
+            consensus_chain_block_info: BlockInfo {
+                block_number: Default::default(),
+                block_hash: Default::default(),
+            },
+            consensus_chain_state_root: Default::default(),
+            domain_proof: <span class="prelude-val">None</span>,
+            message_proof: StorageProof::empty(),
+        }
+    }
 }
 
 <span class="doccomment">/// Holds the Block info and state roots from which a proof was constructed.
 </span><span class="attr">#[derive(Debug, Encode, Decode, Clone, Eq, PartialEq, TypeInfo)]
 </span><span class="kw">pub struct </span>ExtractedStateRootsFromProof&lt;BlockNumber, BlockHash, StateRoot&gt; {
-    <span class="doccomment">/// System domain block info when proof was constructed
-    </span><span class="kw">pub </span>system_domain_block_info: DomainBlockInfo&lt;BlockNumber, BlockHash&gt;,
-    <span class="doccomment">/// State root of System domain at above number and block hash.
-    </span><span class="kw">pub </span>system_domain_state_root: StateRoot,
-    <span class="doccomment">/// Storage proof that src core domain state_root is registered on System domain.
-    /// This is optional when the src_domain is the system domain.
+    <span class="doccomment">/// Consensus chain block info when proof was constructed
+    </span><span class="kw">pub </span>consensus_chain_block_info: BlockInfo&lt;BlockNumber, BlockHash&gt;,
+    <span class="doccomment">/// State root of Consensus chain at above number and block hash.
+    </span><span class="kw">pub </span>consensus_chain_state_root: StateRoot,
+    <span class="doccomment">/// Storage proof that src chain state_root is registered on Consensus chain.
+    /// This is optional when the src_chain is the consensus chain.
     /// BlockNumber and BlockHash is used with storage proof to validate and fetch its state root.
-    </span><span class="kw">pub </span>core_domain_info: <span class="prelude-ty">Option</span>&lt;(DomainId, DomainBlockInfo&lt;BlockNumber, BlockHash&gt;, StateRoot)&gt;,
+    </span><span class="kw">pub </span>domain_info: <span class="prelude-ty">Option</span>&lt;(DomainId, BlockInfo&lt;BlockNumber, BlockHash&gt;, StateRoot)&gt;,
 }
 
-<span class="doccomment">/// Cross Domain message contains Message and its proof on src_domain.
+<span class="doccomment">/// Cross Domain message contains Message and its proof on src_chain.
 </span><span class="attr">#[derive(Debug, Encode, Decode, Clone, Eq, PartialEq, TypeInfo)]
 </span><span class="kw">pub struct </span>CrossDomainMessage&lt;BlockNumber, BlockHash, StateRoot&gt; {
-    <span class="doccomment">/// Domain which initiated this message.
-    </span><span class="kw">pub </span>src_domain_id: DomainId,
-    <span class="doccomment">/// Domain this message is intended for.
-    </span><span class="kw">pub </span>dst_domain_id: DomainId,
+    <span class="doccomment">/// Chain which initiated this message.
+    </span><span class="kw">pub </span>src_chain_id: ChainId,
+    <span class="doccomment">/// Chain this message is intended for.
+    </span><span class="kw">pub </span>dst_chain_id: ChainId,
     <span class="doccomment">/// ChannelId the message was sent through.
     </span><span class="kw">pub </span>channel_id: ChannelId,
     <span class="doccomment">/// Message nonce within the channel.
     </span><span class="kw">pub </span>nonce: Nonce,
-    <span class="doccomment">/// Proof of message processed on src_domain.
+    <span class="doccomment">/// Proof of message processed on src_chain.
     </span><span class="kw">pub </span>proof: Proof&lt;BlockNumber, BlockHash, StateRoot&gt;,
+    <span class="doccomment">/// The message weight tag
+    </span><span class="kw">pub </span>weight_tag: MessageWeightTag,
 }
 
 <span class="kw">impl</span>&lt;BlockNumber, BlockHash, StateRoot&gt; CrossDomainMessage&lt;BlockNumber, BlockHash, StateRoot&gt; {
     <span class="doccomment">/// Extracts state roots.
-    /// If the core domain proof is present, then then we construct the trie and extract core domain state root.
+    /// If the chain proof is present, then then we construct the trie and extract chain state root.
     </span><span class="kw">pub fn </span>extract_state_roots_from_proof&lt;Hashing&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
     ) -&gt; <span class="prelude-ty">Option</span>&lt;ExtractedStateRootsFromProof&lt;BlockNumber, BlockHash, StateRoot&gt;&gt;
@@ -513,116 +678,111 @@
         BlockHash: Clone + FullCodec + TypeInfo + <span class="lifetime">&#39;static</span>,
     {
         <span class="kw">let </span>xdm_proof = <span class="self">self</span>.proof.clone();
-        <span class="kw">let </span>system_domain_state_root = xdm_proof.system_domain_state_root.clone();
+        <span class="kw">let </span>consensus_chain_state_root = xdm_proof.consensus_chain_state_root.clone();
         <span class="kw">let </span><span class="kw-2">mut </span>extracted_state_roots = ExtractedStateRootsFromProof {
-            system_domain_block_info: xdm_proof.system_domain_block_info,
-            system_domain_state_root: xdm_proof.system_domain_state_root,
-            core_domain_info: <span class="prelude-val">None</span>,
+            consensus_chain_block_info: xdm_proof.consensus_chain_block_info,
+            consensus_chain_state_root: xdm_proof.consensus_chain_state_root,
+            domain_info: <span class="prelude-val">None</span>,
         };
 
-        <span class="comment">// verify intermediate core domain proof and retrieve state root of the message.
-        </span><span class="kw">let </span>core_domain_state_root_proof = xdm_proof.core_domain_proof;
-        <span class="comment">// if the src_domain is a system domain, return the state root as is since message is on system domain runtime
-        </span><span class="kw">if </span><span class="self">self</span>.src_domain_id.is_system() &amp;&amp; core_domain_state_root_proof.is_none() {
-            <span class="prelude-val">Some</span>(extracted_state_roots)
-        }
-        <span class="comment">// if the src_domain is a core domain, then return the state root of the core domain by verifying the core domain proof.
-        </span><span class="kw">else if </span><span class="self">self</span>.src_domain_id.is_core() &amp;&amp; core_domain_state_root_proof.is_some() {
-            <span class="kw">let </span>(domain_info, core_domain_state_root_proof) =
-                core_domain_state_root_proof.expect(<span class="string">&quot;checked for existence value above&quot;</span>);
-            <span class="kw">let </span>core_domain_state_root_key =
-                CoreDomainStateRootStorage::&lt;<span class="kw">_</span>, <span class="kw">_</span>, StateRoot&gt;::storage_key(
-                    <span class="self">self</span>.src_domain_id,
+        <span class="comment">// verify intermediate domain proof and retrieve state root of the message.
+        </span><span class="kw">let </span>domain_proof = xdm_proof.domain_proof;
+        <span class="kw">match </span><span class="self">self</span>.src_chain_id {
+            <span class="comment">// if the src_chain is a consensus chain, return the state root as is since message is on consensus runtime
+            </span>ChainId::Consensus <span class="kw">if </span>domain_proof.is_none() =&gt; <span class="prelude-val">Some</span>(extracted_state_roots),
+            <span class="comment">// if the src_chain is a domain, then return the state root of the domain by verifying the domain proof.
+            </span>ChainId::Domain(domain_id) <span class="kw">if </span>domain_proof.is_some() =&gt; {
+                <span class="kw">let </span>(domain_info, domain_state_root_proof) =
+                    domain_proof.expect(<span class="string">&quot;checked for existence value above&quot;</span>);
+                <span class="kw">let </span>domain_state_root_key = DomainStateRootStorage::&lt;<span class="kw">_</span>, <span class="kw">_</span>, StateRoot&gt;::storage_key(
+                    domain_id,
                     domain_info.block_number.clone(),
                     domain_info.block_hash.clone(),
                 );
-            <span class="kw">let </span>core_domain_state_root =
-                <span class="kw">match </span>StorageProofVerifier::&lt;Hashing&gt;::verify_and_get_value::&lt;StateRoot&gt;(
-                    <span class="kw-2">&amp;</span>system_domain_state_root.into(),
-                    core_domain_state_root_proof,
-                    core_domain_state_root_key,
-                ) {
-                    <span class="prelude-val">Ok</span>(result) =&gt; result,
-                    <span class="prelude-val">Err</span>(err) =&gt; {
-                        <span class="macro">log::error!</span>(
+
+                <span class="kw">let </span>domain_state_root =
+                    <span class="kw">match </span>StorageProofVerifier::&lt;Hashing&gt;::verify_and_get_value::&lt;StateRoot&gt;(
+                        <span class="kw-2">&amp;</span>consensus_chain_state_root.into(),
+                        domain_state_root_proof,
+                        domain_state_root_key,
+                    ) {
+                        <span class="prelude-val">Ok</span>(result) =&gt; result,
+                        <span class="prelude-val">Err</span>(err) =&gt; {
+                            <span class="macro">log::error!</span>(
                             target: <span class="string">&quot;runtime::messenger&quot;</span>,
-                            <span class="string">&quot;Failed to verify Core domain proof: {:?}&quot;</span>,
+                            <span class="string">&quot;Failed to verify Domain proof: {:?}&quot;</span>,
                             err
-                        );
-                        <span class="kw">return </span><span class="prelude-val">None</span>;
-                    }
-                };
+                            );
+                            <span class="kw">return </span><span class="prelude-val">None</span>;
+                        }
+                    };
 
-            extracted_state_roots.core_domain_info =
-                <span class="prelude-val">Some</span>((<span class="self">self</span>.src_domain_id, domain_info, core_domain_state_root));
+                extracted_state_roots.domain_info =
+                    <span class="prelude-val">Some</span>((domain_id, domain_info, domain_state_root));
 
-            <span class="prelude-val">Some</span>(extracted_state_roots)
-        } <span class="kw">else </span>{
-            <span class="prelude-val">None
-        </span>}
+                <span class="prelude-val">Some</span>(extracted_state_roots)
+            }
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+        }
     }
 }
 
-<span class="doccomment">/// Relayer message with storage key to generate storage proof using the backend.
-</span><span class="attr">#[derive(Debug, Encode, Decode, Clone, Eq, PartialEq)]
-</span><span class="kw">pub struct </span>RelayerMessageWithStorageKey {
-    <span class="doccomment">/// Domain which initiated this message.
-    </span><span class="kw">pub </span>src_domain_id: DomainId,
-    <span class="doccomment">/// Domain this message is intended for.
-    </span><span class="kw">pub </span>dst_domain_id: DomainId,
+<span class="doccomment">/// Message with storage key to generate storage proof using the backend.
+</span><span class="attr">#[derive(Debug, Encode, Decode, TypeInfo, Clone, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>BlockMessageWithStorageKey {
+    <span class="doccomment">/// Chain which initiated this message.
+    </span><span class="kw">pub </span>src_chain_id: ChainId,
+    <span class="doccomment">/// Chain this message is intended for.
+    </span><span class="kw">pub </span>dst_chain_id: ChainId,
     <span class="doccomment">/// ChannelId the message was sent through.
     </span><span class="kw">pub </span>channel_id: ChannelId,
     <span class="doccomment">/// Message nonce within the channel.
     </span><span class="kw">pub </span>nonce: Nonce,
     <span class="doccomment">/// Storage key to generate proof for using proof backend.
     </span><span class="kw">pub </span>storage_key: Vec&lt;u8&gt;,
+    <span class="doccomment">/// The message weight tag
+    </span><span class="kw">pub </span>weight_tag: MessageWeightTag,
 }
 
-<span class="doccomment">/// Set of messages with storage keys to be relayed by a given relayer.
-</span><span class="attr">#[derive(Default, Debug, Encode, Decode, Clone, Eq, PartialEq)]
-</span><span class="kw">pub struct </span>RelayerMessagesWithStorageKey {
-    <span class="kw">pub </span>outbox: Vec&lt;RelayerMessageWithStorageKey&gt;,
-    <span class="kw">pub </span>inbox_responses: Vec&lt;RelayerMessageWithStorageKey&gt;,
+<span class="doccomment">/// Set of messages with storage keys to be relayed in a given block..
+</span><span class="attr">#[derive(Default, Debug, Encode, Decode, TypeInfo, Clone, Eq, PartialEq)]
+</span><span class="kw">pub struct </span>BlockMessagesWithStorageKey {
+    <span class="kw">pub </span>outbox: Vec&lt;BlockMessageWithStorageKey&gt;,
+    <span class="kw">pub </span>inbox_responses: Vec&lt;BlockMessageWithStorageKey&gt;,
 }
 
 <span class="kw">impl</span>&lt;BlockNumber, BlockHash, StateRoot&gt; CrossDomainMessage&lt;BlockNumber, BlockHash, StateRoot&gt; {
     <span class="kw">pub fn </span>from_relayer_msg_with_proof(
-        r_msg: RelayerMessageWithStorageKey,
+        r_msg: BlockMessageWithStorageKey,
         proof: Proof&lt;BlockNumber, BlockHash, StateRoot&gt;,
     ) -&gt; <span class="self">Self </span>{
         CrossDomainMessage {
-            src_domain_id: r_msg.src_domain_id,
-            dst_domain_id: r_msg.dst_domain_id,
+            src_chain_id: r_msg.src_chain_id,
+            dst_chain_id: r_msg.dst_chain_id,
             channel_id: r_msg.channel_id,
             nonce: r_msg.nonce,
             proof,
+            weight_tag: r_msg.weight_tag,
         }
     }
 }
 
-<span class="kw">type </span>KeyGenerator&lt;Number, Hash&gt; = (
-    NMapKey&lt;Twox64Concat, DomainId&gt;,
-    NMapKey&lt;Twox64Concat, Number&gt;,
-    NMapKey&lt;Twox64Concat, Hash&gt;,
-);
-
-<span class="doccomment">/// This is a representation of actual StateRoots storage in pallet-receipts.
+<span class="doccomment">/// This is a representation of actual StateRoots storage in pallet-domains.
 /// Any change in key or value there should be changed here accordingly.
-</span><span class="kw">pub struct </span>CoreDomainStateRootStorage&lt;Number, Hash, StateRoot&gt;(
-    PhantomData&lt;(Number, Hash, StateRoot)&gt;,
-);
+</span><span class="kw">pub struct </span>DomainStateRootStorage&lt;Number, Hash, StateRoot&gt;(PhantomData&lt;(Number, Hash, StateRoot)&gt;);
 
-<span class="kw">impl</span>&lt;Number, Hash, StateRoot&gt; StorageNMap&lt;KeyGenerator&lt;Number, Hash&gt;, StateRoot&gt;
-    <span class="kw">for </span>CoreDomainStateRootStorage&lt;Number, Hash, StateRoot&gt;
+<span class="kw">impl</span>&lt;Number, Hash, StateRoot&gt; StorageMap&lt;(DomainId, Number, Hash), StateRoot&gt;
+    <span class="kw">for </span>DomainStateRootStorage&lt;Number, Hash, StateRoot&gt;
 <span class="kw">where
     </span>Number: FullCodec + TypeInfo + <span class="lifetime">&#39;static</span>,
     Hash: FullCodec + TypeInfo + <span class="lifetime">&#39;static</span>,
     StateRoot: FullCodec + TypeInfo + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">type </span>Query = <span class="prelude-ty">Option</span>&lt;StateRoot&gt;;
+    <span class="kw">type </span>Hasher = Identity;
 
     <span class="kw">fn </span>module_prefix() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>[u8] {
-        <span class="string">&quot;Receipts&quot;</span>.as_ref()
+        <span class="string">&quot;Domains&quot;</span>.as_ref()
     }
 
     <span class="kw">fn </span>storage_prefix() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>[u8] {
@@ -638,18 +798,16 @@
     }
 }
 
-<span class="kw">impl</span>&lt;Number, Hash, StateRoot&gt; CoreDomainStateRootStorage&lt;Number, Hash, StateRoot&gt;
+<span class="kw">impl</span>&lt;Number, Hash, StateRoot&gt; DomainStateRootStorage&lt;Number, Hash, StateRoot&gt;
 <span class="kw">where
     </span>Number: FullCodec + TypeInfo + <span class="lifetime">&#39;static</span>,
     Hash: FullCodec + TypeInfo + <span class="lifetime">&#39;static</span>,
     StateRoot: FullCodec + TypeInfo + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">pub fn </span>storage_key(domain_id: DomainId, number: Number, hash: Hash) -&gt; StorageKey {
-        StorageKey(
-            <span class="self">Self</span>::storage_n_map_final_key::&lt;KeyGenerator&lt;Number, Hash&gt;, <span class="kw">_</span>&gt;((
-                domain_id, number, hash,
-            )),
-        )
+        StorageKey(<span class="self">Self</span>::storage_map_final_key::&lt;(DomainId, Number, Hash)&gt;((
+            domain_id, number, hash,
+        )))
     }
 }
 </code></pre></div></section></main></body></html>

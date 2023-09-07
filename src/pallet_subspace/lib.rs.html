@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/pallet-subspace/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pallet_subspace" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../pallet_subspace/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/pallet-subspace/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pallet_subspace" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../pallet_subspace/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1600,7 +1600,126 @@
 <a href="#1600" id="1600">1600</a>
 <a href="#1601" id="1601">1601</a>
 <a href="#1602" id="1602">1602</a>
-</pre><pre class="rust"><code><span class="attr">#![feature(assert_matches)]
+<a href="#1603" id="1603">1603</a>
+<a href="#1604" id="1604">1604</a>
+<a href="#1605" id="1605">1605</a>
+<a href="#1606" id="1606">1606</a>
+<a href="#1607" id="1607">1607</a>
+<a href="#1608" id="1608">1608</a>
+<a href="#1609" id="1609">1609</a>
+<a href="#1610" id="1610">1610</a>
+<a href="#1611" id="1611">1611</a>
+<a href="#1612" id="1612">1612</a>
+<a href="#1613" id="1613">1613</a>
+<a href="#1614" id="1614">1614</a>
+<a href="#1615" id="1615">1615</a>
+<a href="#1616" id="1616">1616</a>
+<a href="#1617" id="1617">1617</a>
+<a href="#1618" id="1618">1618</a>
+<a href="#1619" id="1619">1619</a>
+<a href="#1620" id="1620">1620</a>
+<a href="#1621" id="1621">1621</a>
+<a href="#1622" id="1622">1622</a>
+<a href="#1623" id="1623">1623</a>
+<a href="#1624" id="1624">1624</a>
+<a href="#1625" id="1625">1625</a>
+<a href="#1626" id="1626">1626</a>
+<a href="#1627" id="1627">1627</a>
+<a href="#1628" id="1628">1628</a>
+<a href="#1629" id="1629">1629</a>
+<a href="#1630" id="1630">1630</a>
+<a href="#1631" id="1631">1631</a>
+<a href="#1632" id="1632">1632</a>
+<a href="#1633" id="1633">1633</a>
+<a href="#1634" id="1634">1634</a>
+<a href="#1635" id="1635">1635</a>
+<a href="#1636" id="1636">1636</a>
+<a href="#1637" id="1637">1637</a>
+<a href="#1638" id="1638">1638</a>
+<a href="#1639" id="1639">1639</a>
+<a href="#1640" id="1640">1640</a>
+<a href="#1641" id="1641">1641</a>
+<a href="#1642" id="1642">1642</a>
+<a href="#1643" id="1643">1643</a>
+<a href="#1644" id="1644">1644</a>
+<a href="#1645" id="1645">1645</a>
+<a href="#1646" id="1646">1646</a>
+<a href="#1647" id="1647">1647</a>
+<a href="#1648" id="1648">1648</a>
+<a href="#1649" id="1649">1649</a>
+<a href="#1650" id="1650">1650</a>
+<a href="#1651" id="1651">1651</a>
+<a href="#1652" id="1652">1652</a>
+<a href="#1653" id="1653">1653</a>
+<a href="#1654" id="1654">1654</a>
+<a href="#1655" id="1655">1655</a>
+<a href="#1656" id="1656">1656</a>
+<a href="#1657" id="1657">1657</a>
+<a href="#1658" id="1658">1658</a>
+<a href="#1659" id="1659">1659</a>
+<a href="#1660" id="1660">1660</a>
+<a href="#1661" id="1661">1661</a>
+<a href="#1662" id="1662">1662</a>
+<a href="#1663" id="1663">1663</a>
+<a href="#1664" id="1664">1664</a>
+<a href="#1665" id="1665">1665</a>
+<a href="#1666" id="1666">1666</a>
+<a href="#1667" id="1667">1667</a>
+<a href="#1668" id="1668">1668</a>
+<a href="#1669" id="1669">1669</a>
+<a href="#1670" id="1670">1670</a>
+<a href="#1671" id="1671">1671</a>
+<a href="#1672" id="1672">1672</a>
+<a href="#1673" id="1673">1673</a>
+<a href="#1674" id="1674">1674</a>
+<a href="#1675" id="1675">1675</a>
+<a href="#1676" id="1676">1676</a>
+<a href="#1677" id="1677">1677</a>
+<a href="#1678" id="1678">1678</a>
+<a href="#1679" id="1679">1679</a>
+<a href="#1680" id="1680">1680</a>
+<a href="#1681" id="1681">1681</a>
+<a href="#1682" id="1682">1682</a>
+<a href="#1683" id="1683">1683</a>
+<a href="#1684" id="1684">1684</a>
+<a href="#1685" id="1685">1685</a>
+<a href="#1686" id="1686">1686</a>
+<a href="#1687" id="1687">1687</a>
+<a href="#1688" id="1688">1688</a>
+<a href="#1689" id="1689">1689</a>
+<a href="#1690" id="1690">1690</a>
+<a href="#1691" id="1691">1691</a>
+<a href="#1692" id="1692">1692</a>
+<a href="#1693" id="1693">1693</a>
+<a href="#1694" id="1694">1694</a>
+<a href="#1695" id="1695">1695</a>
+<a href="#1696" id="1696">1696</a>
+<a href="#1697" id="1697">1697</a>
+<a href="#1698" id="1698">1698</a>
+<a href="#1699" id="1699">1699</a>
+<a href="#1700" id="1700">1700</a>
+<a href="#1701" id="1701">1701</a>
+<a href="#1702" id="1702">1702</a>
+<a href="#1703" id="1703">1703</a>
+<a href="#1704" id="1704">1704</a>
+<a href="#1705" id="1705">1705</a>
+<a href="#1706" id="1706">1706</a>
+<a href="#1707" id="1707">1707</a>
+<a href="#1708" id="1708">1708</a>
+<a href="#1709" id="1709">1709</a>
+<a href="#1710" id="1710">1710</a>
+<a href="#1711" id="1711">1711</a>
+<a href="#1712" id="1712">1712</a>
+<a href="#1713" id="1713">1713</a>
+<a href="#1714" id="1714">1714</a>
+<a href="#1715" id="1715">1715</a>
+<a href="#1716" id="1716">1716</a>
+<a href="#1717" id="1717">1717</a>
+<a href="#1718" id="1718">1718</a>
+<a href="#1719" id="1719">1719</a>
+<a href="#1720" id="1720">1720</a>
+<a href="#1721" id="1721">1721</a>
+</pre></div><pre class="rust"><code><span class="attr">#![feature(assert_matches, const_option)]
 </span><span class="comment">// Copyright (C) 2019-2021 Parity Technologies (UK) Ltd.
 // Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
@@ -1622,21 +1741,27 @@
 
 </span><span class="kw">extern crate </span>alloc;
 
-<span class="kw">mod </span>default_weights;
 <span class="kw">pub mod </span>equivocation;
 
-<span class="attr">#[cfg(all(feature = <span class="string">&quot;std&quot;</span>, test))]
+<span class="comment">// TODO: Unlock tests for PoT as well once PoT implementation settled
+</span><span class="attr">#[cfg(all(test, not(feature = <span class="string">&quot;pot&quot;</span>)))]
 </span><span class="kw">mod </span>mock;
-<span class="attr">#[cfg(all(feature = <span class="string">&quot;std&quot;</span>, test))]
+<span class="attr">#[cfg(all(test, not(feature = <span class="string">&quot;pot&quot;</span>)))]
 </span><span class="kw">mod </span>tests;
+
+<span class="attr">#[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
+</span><span class="kw">mod </span>benchmarking;
+
+<span class="kw">pub mod </span>weights;
 
 <span class="kw">use </span>alloc::string::String;
 <span class="kw">use </span>codec::{Decode, Encode, MaxEncodedLen};
 <span class="kw">use </span>core::num::NonZeroU64;
 <span class="kw">use </span>equivocation::{HandleEquivocation, SubspaceEquivocationOffence};
 <span class="kw">use </span>frame_support::dispatch::{DispatchResult, DispatchResultWithPostInfo, Pays};
-<span class="kw">use </span>frame_support::traits::{Get, OnTimestampSet};
-<span class="kw">use </span>frame_support::weights::Weight;
+<span class="kw">use </span>frame_support::traits::Get;
+<span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+</span><span class="kw">use </span>frame_support::traits::OnTimestampSet;
 <span class="kw">use </span>frame_system::offchain::{SendTransactionTypes, SubmitTransaction};
 <span class="kw">use </span>log::{debug, error, warn};
 <span class="kw">pub use </span>pallet::<span class="kw-2">*</span>;
@@ -1646,11 +1771,15 @@
 <span class="kw">use </span>sp_consensus_subspace::consensus::verify_solution;
 <span class="kw">use </span>sp_consensus_subspace::digests::CompatibleDigestItem;
 <span class="kw">use </span>sp_consensus_subspace::offence::{OffenceDetails, OffenceError, OnOffenceHandler};
+<span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+</span><span class="kw">use </span>sp_consensus_subspace::PotParameters;
 <span class="kw">use </span>sp_consensus_subspace::{
     ChainConstants, EquivocationProof, FarmerPublicKey, FarmerSignature, SignedVote, Vote,
 };
 <span class="kw">use </span>sp_runtime::generic::DigestItem;
-<span class="kw">use </span>sp_runtime::traits::{BlockNumberProvider, Hash, One, SaturatedConversion, Saturating, Zero};
+<span class="kw">use </span>sp_runtime::traits::{BlockNumberProvider, Hash, One, Zero};
+<span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+</span><span class="kw">use </span>sp_runtime::traits::{SaturatedConversion, Saturating};
 <span class="kw">use </span>sp_runtime::transaction_validity::{
     InvalidTransaction, TransactionPriority, TransactionSource, TransactionValidity,
     TransactionValidityError, ValidTransaction,
@@ -1658,37 +1787,37 @@
 <span class="kw">use </span>sp_runtime::DispatchError;
 <span class="kw">use </span>sp_std::collections::btree_map::BTreeMap;
 <span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span>subspace_core_primitives::crypto::Scalar;
+<span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+</span><span class="kw">use </span>subspace_core_primitives::PotProof;
 <span class="kw">use </span>subspace_core_primitives::{
-    ArchivedHistorySegment, LegacySectorId, PublicKey, Randomness, RewardSignature, SectorIndex,
-    SegmentHeader, SegmentIndex, SolutionRange,
+    ArchivedHistorySegment, HistorySize, PublicKey, Randomness, RewardSignature, SectorId,
+    SectorIndex, SegmentHeader, SegmentIndex, SolutionRange,
 };
 <span class="kw">use </span>subspace_solving::REWARD_SIGNING_CONTEXT;
+<span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+</span><span class="kw">use </span>subspace_verification::derive_randomness;
 <span class="kw">use </span>subspace_verification::{
-    check_reward_signature, derive_next_solution_range, derive_randomness, PieceCheckParams,
-    VerifySolutionParams,
+    check_reward_signature, derive_next_solution_range, PieceCheckParams, VerifySolutionParams,
 };
-
-<span class="kw">pub trait </span>WeightInfo {
-    <span class="kw">fn </span>report_equivocation() -&gt; Weight;
-    <span class="kw">fn </span>store_segment_headers(segment_headers_count: usize) -&gt; Weight;
-    <span class="kw">fn </span>vote() -&gt; Weight;
-}
 
 <span class="doccomment">/// Trigger global randomness every interval.
 </span><span class="kw">pub trait </span>GlobalRandomnessIntervalTrigger {
     <span class="doccomment">/// Trigger a global randomness update. This should be called during every block, after
     /// initialization is done.
-    </span><span class="kw">fn </span>trigger&lt;T: Config&gt;(block_number: T::BlockNumber, por_randomness: Randomness);
+    </span><span class="kw">fn </span>trigger&lt;T: Config&gt;(block_number: T::BlockNumber, block_randomness: Randomness);
 }
 
 <span class="doccomment">/// A type signifying to Subspace that it should perform a global randomness update with an internal
 /// trigger.
+</span><span class="comment">// TODO: Remove when switching to PoT by default
 </span><span class="kw">pub struct </span>NormalGlobalRandomnessInterval;
 
-<span class="kw">impl </span>GlobalRandomnessIntervalTrigger <span class="kw">for </span>NormalGlobalRandomnessInterval {
-    <span class="kw">fn </span>trigger&lt;T: Config&gt;(block_number: T::BlockNumber, por_randomness: Randomness) {
+<span class="comment">// TODO: Remove when switching to PoT by default
+</span><span class="kw">impl </span>GlobalRandomnessIntervalTrigger <span class="kw">for </span>NormalGlobalRandomnessInterval {
+    <span class="kw">fn </span>trigger&lt;T: Config&gt;(block_number: T::BlockNumber, block_randomness: Randomness) {
         <span class="kw">if </span>&lt;Pallet&lt;T&gt;&gt;::should_update_global_randomness(block_number) {
-            &lt;Pallet&lt;T&gt;&gt;::enact_update_global_randomness(block_number, por_randomness);
+            &lt;Pallet&lt;T&gt;&gt;::enact_update_global_randomness(block_number, block_randomness);
         }
     }
 }
@@ -1723,15 +1852,15 @@
 </span><span class="attr">#[derive(
     Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Encode, Decode, MaxEncodedLen, TypeInfo,
 )]
-</span><span class="kw">struct </span>ChunkOffset(u32);
+</span><span class="kw">struct </span>AuditChunkOffset(u8);
 
 <span class="attr">#[frame_support::pallet]
 </span><span class="kw">mod </span>pallet {
     <span class="kw">use super</span>::{
-        ChunkOffset, EraChangeTrigger, GlobalRandomnessIntervalTrigger, VoteVerificationData,
-        WeightInfo,
+        AuditChunkOffset, EraChangeTrigger, GlobalRandomnessIntervalTrigger, VoteVerificationData,
     };
     <span class="kw">use </span><span class="kw">crate</span>::equivocation::HandleEquivocation;
+    <span class="kw">use </span><span class="kw">crate</span>::weights::WeightInfo;
     <span class="kw">use </span>frame_support::pallet_prelude::<span class="kw-2">*</span>;
     <span class="kw">use </span>frame_system::pallet_prelude::<span class="kw-2">*</span>;
     <span class="kw">use </span>sp_consensus_slots::Slot;
@@ -1740,9 +1869,11 @@
     <span class="kw">use </span>sp_consensus_subspace::{EquivocationProof, FarmerPublicKey, FarmerSignature, SignedVote};
     <span class="kw">use </span>sp_runtime::DigestItem;
     <span class="kw">use </span>sp_std::collections::btree_map::BTreeMap;
+    <span class="kw">use </span>sp_std::num::NonZeroU32;
     <span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
+    <span class="kw">use </span>subspace_core_primitives::crypto::Scalar;
     <span class="kw">use </span>subspace_core_primitives::{
-        Randomness, SectorIndex, SegmentHeader, SegmentIndex, SolutionRange,
+        HistorySize, Randomness, SectorIndex, SegmentHeader, SegmentIndex, SolutionRange,
     };
 
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>InitialSolutionRanges&lt;T: Config&gt; {
@@ -1787,7 +1918,12 @@
 
         <span class="doccomment">/// The amount of time, in blocks, between updates of global randomness.
         </span><span class="attr">#[pallet::constant]
+        </span><span class="comment">// TODO: Remove when switching to PoT by default
         </span><span class="kw">type </span>GlobalRandomnessUpdateInterval: Get&lt;<span class="self">Self</span>::BlockNumber&gt;;
+
+        <span class="doccomment">/// The amount of time, in blocks, between updates of global randomness.
+        </span><span class="attr">#[pallet::constant]
+        </span><span class="kw">type </span>BlockAuthoringDelay: Get&lt;Slot&gt;;
 
         <span class="doccomment">/// The amount of time, in blocks, that each era should last.
         /// NOTE: Currently it is not possible to change the era duration after
@@ -1819,11 +1955,27 @@
         </span><span class="attr">#[pallet::constant]
         </span><span class="kw">type </span>ConfirmationDepthK: Get&lt;<span class="self">Self</span>::BlockNumber&gt;;
 
+        <span class="doccomment">/// Number of latest archived segments that are considered &quot;recent history&quot;.
+        </span><span class="attr">#[pallet::constant]
+        </span><span class="kw">type </span>RecentSegments: Get&lt;HistorySize&gt;;
+
+        <span class="doccomment">/// Fraction of pieces from the &quot;recent history&quot; (`recent_segments`) in each sector.
+        </span><span class="attr">#[pallet::constant]
+        </span><span class="kw">type </span>RecentHistoryFraction: Get&lt;(HistorySize, HistorySize)&gt;;
+
+        <span class="doccomment">/// Minimum lifetime of a plotted sector, measured in archived segment.
+        </span><span class="attr">#[pallet::constant]
+        </span><span class="kw">type </span>MinSectorLifetime: Get&lt;HistorySize&gt;;
+
         <span class="doccomment">/// Number of votes expected per block.
         ///
         /// This impacts solution range for votes in consensus.
         </span><span class="attr">#[pallet::constant]
         </span><span class="kw">type </span>ExpectedVotesPerBlock: Get&lt;u32&gt;;
+
+        <span class="doccomment">/// How many pieces one sector is supposed to contain (max)
+        </span><span class="attr">#[pallet::constant]
+        </span><span class="kw">type </span>MaxPiecesInSector: Get&lt;u16&gt;;
 
         <span class="kw">type </span>ShouldAdjustSolutionRange: Get&lt;bool&gt;;
 
@@ -1869,16 +2021,16 @@
         </span><span class="kw">pub </span>enable_storage_access: bool,
         <span class="doccomment">/// Who can author blocks at genesis.
         </span><span class="kw">pub </span>allow_authoring_by: AllowAuthoringBy,
+        <span class="doccomment">/// Number of iterations for proof of time per slot
+        </span><span class="kw">pub </span>pot_slot_iterations: NonZeroU32,
     }
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
-    </span><span class="kw">impl </span>Default <span class="kw">for </span>GenesisConfig {
-        <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-            <span class="self">Self </span>{
-                enable_rewards: <span class="bool-val">true</span>,
-                enable_storage_access: <span class="bool-val">true</span>,
-                allow_authoring_by: AllowAuthoringBy::Anyone,
-            }
+    <span class="kw">impl </span>Default <span class="kw">for </span>GenesisConfig {
+        <span class="attr">#[inline]
+        </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+            <span class="comment">// TODO: Remove once https://github.com/paritytech/polkadot-sdk/pull/1221 is in our
+            //  fork
+            </span><span class="macro">unreachable!</span>(<span class="string">&quot;Config must be initialized explicitly&quot;</span>);
         }
     }
 
@@ -1901,6 +2053,7 @@
                     RootPlotPublicKey::&lt;T&gt;::put(root_farmer.clone());
                 }
             }
+            PotSlotIterations::&lt;T&gt;::put(<span class="self">self</span>.pot_slot_iterations);
         }
     }
 
@@ -1921,8 +2074,6 @@
 
     <span class="attr">#[pallet::error]
     </span><span class="kw">pub enum </span>Error&lt;T&gt; {
-        <span class="doccomment">/// An equivocation proof provided as part of an equivocation report is invalid.
-        </span>InvalidEquivocationProof,
         <span class="doccomment">/// A given equivocation report is valid but already previously reported.
         </span>DuplicateOffenceReport,
         <span class="doccomment">/// Solution range adjustment already enabled.
@@ -1944,8 +2095,13 @@
     <span class="doccomment">/// Global randomnesses derived from from PoR signature and used for deriving global challenges.
     </span><span class="attr">#[pallet::storage]
     #[pallet::getter(<span class="kw">fn </span>global_randomnesses)]
+    #[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>GlobalRandomnesses&lt;T&gt; =
         StorageValue&lt;<span class="kw">_</span>, sp_consensus_subspace::GlobalRandomnesses, ValueQuery&gt;;
+
+    <span class="doccomment">/// Number of iterations for proof of time per slot
+    </span><span class="attr">#[pallet::storage]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>PotSlotIterations&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, NonZeroU32&gt;;
 
     <span class="doccomment">/// Solution ranges used for challenges.
     </span><span class="attr">#[pallet::storage]
@@ -1992,7 +2148,7 @@
     <span class="doccomment">/// Parent block author information.
     </span><span class="attr">#[pallet::storage]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>ParentBlockAuthorInfo&lt;T&gt; =
-        StorageValue&lt;<span class="kw">_</span>, (FarmerPublicKey, SectorIndex, ChunkOffset, Slot)&gt;;
+        StorageValue&lt;<span class="kw">_</span>, (FarmerPublicKey, SectorIndex, Scalar, AuditChunkOffset, Slot)&gt;;
 
     <span class="doccomment">/// Enable rewards since specified block number.
     </span><span class="attr">#[pallet::storage]
@@ -2005,7 +2161,8 @@
         (
             FarmerPublicKey,
             SectorIndex,
-            ChunkOffset,
+            Scalar,
+            AuditChunkOffset,
             Slot,
             T::AccountId,
         ),
@@ -2016,7 +2173,7 @@
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>ParentBlockVoters&lt;T: Config&gt; = StorageValue&lt;
         <span class="kw">_</span>,
         BTreeMap&lt;
-            (FarmerPublicKey, SectorIndex, ChunkOffset, Slot),
+            (FarmerPublicKey, SectorIndex, Scalar, AuditChunkOffset, Slot),
             (T::AccountId, FarmerSignature),
         &gt;,
         ValueQuery,
@@ -2027,14 +2184,15 @@
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>CurrentBlockVoters&lt;T: Config&gt; = StorageValue&lt;
         <span class="kw">_</span>,
         BTreeMap&lt;
-            (FarmerPublicKey, SectorIndex, ChunkOffset, Slot),
+            (FarmerPublicKey, SectorIndex, Scalar, AuditChunkOffset, Slot),
             (T::AccountId, FarmerSignature),
         &gt;,
     &gt;;
 
-    <span class="doccomment">/// Temporary value (cleared at block finalization) which contains current block PoR randomness.
+    <span class="doccomment">/// The current block randomness, updated at block initialization. When the proof of time feature
+    /// is enabled it derived from PoT otherwise PoR.
     </span><span class="attr">#[pallet::storage]
-    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>PorRandomness&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, Randomness&gt;;
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>BlockRandomness&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, Randomness&gt;;
 
     <span class="doccomment">/// Enable storage access for all users.
     </span><span class="attr">#[pallet::storage]
@@ -2089,7 +2247,7 @@
         <span class="doccomment">/// Submit new segment header to the blockchain. This is an inherent extrinsic and part of
         /// the Subspace consensus logic.
         </span><span class="attr">#[pallet::call_index(<span class="number">1</span>)]
-        #[pallet::weight((&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::store_segment_headers(segment_headers.len()), DispatchClass::Mandatory, Pays::No))]
+        #[pallet::weight((&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::store_segment_headers(segment_headers.len() <span class="kw">as </span>u32), DispatchClass::Mandatory, Pays::No))]
         </span><span class="kw">pub fn </span>store_segment_headers(
             origin: OriginFor&lt;T&gt;,
             segment_headers: Vec&lt;SegmentHeader&gt;,
@@ -2101,7 +2259,7 @@
         <span class="doccomment">/// Enable solution range adjustment after every era.
         /// Note: No effect on the solution range for the current era
         </span><span class="attr">#[pallet::call_index(<span class="number">2</span>)]
-        #[pallet::weight(T::DbWeight::get().writes(<span class="number">1</span>))]
+        #[pallet::weight(&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::enable_solution_range_adjustment())]
         </span><span class="kw">pub fn </span>enable_solution_range_adjustment(
             origin: OriginFor&lt;T&gt;,
             solution_range_override: <span class="prelude-ty">Option</span>&lt;u64&gt;,
@@ -2139,7 +2297,7 @@
 
         <span class="doccomment">/// Enable rewards for blocks and votes at specified block height.
         </span><span class="attr">#[pallet::call_index(<span class="number">4</span>)]
-        #[pallet::weight(T::DbWeight::get().writes(<span class="number">1</span>))]
+        #[pallet::weight(&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::enable_rewards())]
         </span><span class="kw">pub fn </span>enable_rewards(
             origin: OriginFor&lt;T&gt;,
             height: <span class="prelude-ty">Option</span>&lt;T::BlockNumber&gt;,
@@ -2151,7 +2309,7 @@
 
         <span class="doccomment">/// Enable storage access for all users.
         </span><span class="attr">#[pallet::call_index(<span class="number">5</span>)]
-        #[pallet::weight(T::DbWeight::get().writes(<span class="number">1</span>))]
+        #[pallet::weight(&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::enable_storage_access())]
         </span><span class="kw">pub fn </span>enable_storage_access(origin: OriginFor&lt;T&gt;) -&gt; DispatchResult {
             ensure_root(origin)<span class="question-mark">?</span>;
 
@@ -2162,7 +2320,7 @@
 
         <span class="doccomment">/// Enable storage access for all users.
         </span><span class="attr">#[pallet::call_index(<span class="number">6</span>)]
-        #[pallet::weight(T::DbWeight::get().writes(<span class="number">1</span>))]
+        #[pallet::weight(&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::enable_authoring_by_anyone())]
         </span><span class="kw">pub fn </span>enable_authoring_by_anyone(origin: OriginFor&lt;T&gt;) -&gt; DispatchResult {
             ensure_root(origin)<span class="question-mark">?</span>;
 
@@ -2264,6 +2422,7 @@
 
 <span class="kw">impl</span>&lt;T: Config&gt; Pallet&lt;T&gt; {
     <span class="doccomment">/// Determine the Subspace slot duration based on the Timestamp module configuration.
+    </span><span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
     </span><span class="kw">pub fn </span>slot_duration() -&gt; T::Moment {
         <span class="comment">// we double the minimum block-period so each author can always propose within
         // the majority of their slot.
@@ -2271,15 +2430,15 @@
     }
 
     <span class="doccomment">/// Total number of pieces in the blockchain
-    </span><span class="kw">pub fn </span>total_pieces() -&gt; NonZeroU64 {
+    </span><span class="kw">pub fn </span>history_size() -&gt; HistorySize {
         <span class="comment">// Chain starts with one segment plotted, even if it is not recorded in the runtime yet
         </span><span class="kw">let </span>number_of_segments = u64::from(SegmentCommitment::&lt;T&gt;::count()).max(<span class="number">1</span>);
-        NonZeroU64::new(number_of_segments * ArchivedHistorySegment::NUM_PIECES <span class="kw">as </span>u64)
-            .expect(<span class="string">&quot;Neither of multiplied values is zero; qed&quot;</span>)
+        HistorySize::from(NonZeroU64::new(number_of_segments).expect(<span class="string">&quot;Not zero; qed&quot;</span>))
     }
 
     <span class="doccomment">/// Determine whether a randomness update should take place at this block.
     /// Assumes that initialization has already taken place.
+    </span><span class="comment">// TODO: Remove when switching to PoT by default
     </span><span class="kw">fn </span>should_update_global_randomness(block_number: T::BlockNumber) -&gt; bool {
         block_number % T::GlobalRandomnessUpdateInterval::get() == Zero::zero()
     }
@@ -2292,9 +2451,12 @@
 
     <span class="doccomment">/// DANGEROUS: Enact update of global randomness. Should be done on every block where `should_update_global_randomness`
     /// has returned `true`, and the caller is the only caller of this function.
-    </span><span class="kw">fn </span>enact_update_global_randomness(_block_number: T::BlockNumber, por_randomness: Randomness) {
-        GlobalRandomnesses::&lt;T&gt;::mutate(|global_randomnesses| {
-            global_randomnesses.next = <span class="prelude-val">Some</span>(por_randomness);
+    </span><span class="comment">// TODO: Remove when switching to PoT by default
+    </span><span class="attr">#[cfg_attr(feature = <span class="string">&quot;pot&quot;</span>, allow(unused_variables))]
+    </span><span class="kw">fn </span>enact_update_global_randomness(_block_number: T::BlockNumber, block_randomness: Randomness) {
+        <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+        </span>GlobalRandomnesses::&lt;T&gt;::mutate(|global_randomnesses| {
+            global_randomnesses.next = <span class="prelude-val">Some</span>(block_randomness);
         });
     }
 
@@ -2351,15 +2513,15 @@
         <span class="comment">// On the first non-zero block (i.e. block #1) we need to adjust internal storage
         // accordingly.
         </span><span class="kw">if </span><span class="kw-2">*</span>GenesisSlot::&lt;T&gt;::get() == <span class="number">0 </span>{
-            GenesisSlot::&lt;T&gt;::put(pre_digest.slot);
+            GenesisSlot::&lt;T&gt;::put(pre_digest.slot());
             <span class="macro">debug_assert_ne!</span>(<span class="kw-2">*</span>GenesisSlot::&lt;T&gt;::get(), <span class="number">0</span>);
         }
 
         <span class="comment">// The slot number of the current block being initialized.
-        </span>CurrentSlot::&lt;T&gt;::put(pre_digest.slot);
+        </span>CurrentSlot::&lt;T&gt;::put(pre_digest.slot());
 
         {
-            <span class="kw">let </span>farmer_public_key = pre_digest.solution.public_key.clone();
+            <span class="kw">let </span>farmer_public_key = pre_digest.solution().public_key.clone();
 
             <span class="comment">// Optional restriction for block authoring to the root user
             </span><span class="kw">if </span>!AllowAuthoringByAnyone::&lt;T&gt;::get() {
@@ -2383,12 +2545,13 @@
 
             <span class="kw">let </span>key = (
                 farmer_public_key,
-                pre_digest.solution.sector_index,
-                ChunkOffset(pre_digest.solution.chunk_offset),
-                pre_digest.slot,
+                pre_digest.solution().sector_index,
+                pre_digest.solution().chunk,
+                AuditChunkOffset(pre_digest.solution().audit_chunk_offset),
+                pre_digest.slot(),
             );
             <span class="kw">if </span>ParentBlockVoters::&lt;T&gt;::get().contains_key(<span class="kw-2">&amp;</span>key) {
-                <span class="kw">let </span>(public_key, _sector_index, _chunk_offset, slot) = key;
+                <span class="kw">let </span>(public_key, _sector_index, _chunk, _audit_chunk_offset, slot) = key;
 
                 <span class="kw">let </span>offence = SubspaceEquivocationOffence {
                     slot,
@@ -2405,23 +2568,25 @@
                     </span>);
                 }
             } <span class="kw">else </span>{
-                <span class="kw">let </span>(public_key, sector_index, chunk_offset, slot) = key;
+                <span class="kw">let </span>(public_key, sector_index, chunk, audit_chunk_offset, slot) = key;
 
                 CurrentBlockAuthorInfo::&lt;T&gt;::put((
                     public_key,
                     sector_index,
-                    chunk_offset,
+                    chunk,
+                    audit_chunk_offset,
                     slot,
-                    pre_digest.solution.reward_address,
+                    pre_digest.solution().reward_address.clone(),
                 ));
             }
         }
         CurrentBlockVoters::&lt;T&gt;::put(BTreeMap::&lt;
-            (FarmerPublicKey, SectorIndex, ChunkOffset, Slot),
+            (FarmerPublicKey, SectorIndex, Scalar, AuditChunkOffset, Slot),
             (T::AccountId, FarmerSignature),
         &gt;::default());
 
         <span class="comment">// If global randomness was updated in previous block, set it as current.
+        </span><span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(next_randomness) = GlobalRandomnesses::&lt;T&gt;::get().next {
             GlobalRandomnesses::&lt;T&gt;::put(sp_consensus_subspace::GlobalRandomnesses {
                 current: next_randomness,
@@ -2445,17 +2610,20 @@
         }
 
         <span class="comment">// Extract PoR randomness from pre-digest.
-        // Tag signature is validated by the client and is always valid here.
-        </span><span class="kw">let </span>por_randomness: Randomness = derive_randomness(
-            <span class="kw-2">&amp;</span>PublicKey::from(<span class="kw-2">&amp;</span>pre_digest.solution.public_key),
-            <span class="kw-2">&amp;</span>pre_digest.solution.chunk.to_bytes(),
-            <span class="kw-2">&amp;</span>pre_digest.solution.chunk_signature,
-        )
-        .expect(<span class="string">&quot;Tag signature is verified by the client and is always valid; qed&quot;</span>);
-        <span class="comment">// Store PoR randomness for block duration as it might be useful.
-        </span>PorRandomness::&lt;T&gt;::put(por_randomness);
+        </span><span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+        </span><span class="kw">let </span>block_randomness = derive_randomness(pre_digest.solution(), pre_digest.slot().into());
+
+        <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+        </span><span class="kw">let </span>block_randomness = pre_digest
+            .pot_info()
+            .proof_of_time()
+            .derive_global_randomness();
+
+        <span class="comment">// Update the block randomness.
+        </span>BlockRandomness::&lt;T&gt;::put(block_randomness);
 
         <span class="comment">// Deposit global randomness data such that light client can validate blocks later.
+        </span><span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
         </span>frame_system::Pallet::&lt;T&gt;::deposit_log(DigestItem::global_randomness(
             GlobalRandomnesses::&lt;T&gt;::get().current,
         ));
@@ -2465,16 +2633,24 @@
         ));
 
         <span class="comment">// Enact global randomness update, if necessary.
-        </span>T::GlobalRandomnessIntervalTrigger::trigger::&lt;T&gt;(block_number, por_randomness);
+        </span><span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+        </span>T::GlobalRandomnessIntervalTrigger::trigger::&lt;T&gt;(block_number, block_randomness);
         <span class="comment">// Enact era change, if necessary.
         </span>T::EraChangeTrigger::trigger::&lt;T&gt;(block_number);
 
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(next_global_randomness) = GlobalRandomnesses::&lt;T&gt;::get().next {
+        <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(next_global_randomness) = GlobalRandomnesses::&lt;T&gt;::get().next {
             <span class="comment">// Deposit next global randomness data such that light client can validate blocks later.
             </span>frame_system::Pallet::&lt;T&gt;::deposit_log(DigestItem::next_global_randomness(
                 next_global_randomness,
             ));
         }
+
+        <span class="comment">// TODO: Take adjustment of iterations into account once we have it
+        </span><span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+        </span>frame_system::Pallet::&lt;T&gt;::deposit_log(DigestItem::pot_slot_iterations(
+            PotSlotIterations::&lt;T&gt;::get().expect(<span class="string">&quot;Always instantiated during genesis; qed&quot;</span>),
+        ));
     }
 
     <span class="kw">fn </span>do_finalize(_block_number: T::BlockNumber) {
@@ -2487,12 +2663,16 @@
             ));
         }
 
-        PorRandomness::&lt;T&gt;::take();
-
-        <span class="kw">if let </span><span class="prelude-val">Some</span>((public_key, sector_index, chunk_offset, slot, _reward_address)) =
+        <span class="kw">if let </span><span class="prelude-val">Some</span>((public_key, sector_index, scalar, audit_chunk_offset, slot, _reward_address)) =
             CurrentBlockAuthorInfo::&lt;T&gt;::take()
         {
-            ParentBlockAuthorInfo::&lt;T&gt;::put((public_key, sector_index, chunk_offset, slot));
+            ParentBlockAuthorInfo::&lt;T&gt;::put((
+                public_key,
+                sector_index,
+                scalar,
+                audit_chunk_offset,
+                slot,
+            ));
         }
 
         ParentVoteVerificationData::&lt;T&gt;::put(current_vote_verification_data::&lt;T&gt;(<span class="bool-val">true</span>));
@@ -2505,13 +2685,6 @@
     ) -&gt; DispatchResultWithPostInfo {
         <span class="kw">let </span>offender = equivocation_proof.offender.clone();
         <span class="kw">let </span>slot = equivocation_proof.slot;
-
-        <span class="comment">// validate the equivocation proof
-        </span><span class="kw">if </span>!sp_consensus_subspace::is_equivocation_proof_valid::&lt;<span class="kw">_</span>, T::AccountId&gt;(
-            equivocation_proof,
-        ) {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::&lt;T&gt;::InvalidEquivocationProof.into());
-        }
 
         <span class="kw">let </span>offence = SubspaceEquivocationOffence { slot, offender };
 
@@ -2628,6 +2801,18 @@
         <span class="prelude-val">Some</span>(())
     }
 
+    <span class="doccomment">/// Proof of time parameters
+    </span><span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+    </span><span class="kw">pub fn </span>pot_parameters() -&gt; PotParameters {
+        PotParameters::V0 {
+            slot_iterations: PotSlotIterations::&lt;T&gt;::get()
+                .expect(<span class="string">&quot;Always instantiated during genesis; qed&quot;</span>),
+            <span class="comment">// TODO: This is where adjustment for number of iterations and entropy injection will
+            //  happen for runtime API calls
+            </span>next_change: <span class="prelude-val">None</span>,
+        }
+    }
+
     <span class="doccomment">/// Check if `farmer_public_key` is in block list (due to equivocation)
     </span><span class="kw">pub fn </span>is_in_block_list(farmer_public_key: <span class="kw-2">&amp;</span>FarmerPublicKey) -&gt; bool {
         BlockList::&lt;T&gt;::contains_key(farmer_public_key)
@@ -2645,13 +2830,22 @@
             confirmation_depth_k: T::ConfirmationDepthK::get()
                 .try_into()
                 .unwrap_or_else(|<span class="kw">_</span>| <span class="macro">panic!</span>(<span class="string">&quot;Block number always fits in BlockNumber; qed&quot;</span>)),
-            global_randomness_interval: T::GlobalRandomnessUpdateInterval::get()
+            <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+            </span>global_randomness_interval: T::GlobalRandomnessUpdateInterval::get()
                 .try_into()
                 .unwrap_or_else(|<span class="kw">_</span>| <span class="macro">panic!</span>(<span class="string">&quot;Block number always fits in BlockNumber; qed&quot;</span>)),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+            </span>block_authoring_delay: T::BlockAuthoringDelay::get(),
             era_duration: T::EraDuration::get()
                 .try_into()
                 .unwrap_or_else(|<span class="kw">_</span>| <span class="macro">panic!</span>(<span class="string">&quot;Block number always fits in BlockNumber; qed&quot;</span>)),
             slot_probability: T::SlotProbability::get(),
+            recent_segments: T::RecentSegments::get(),
+            recent_history_fraction: (
+                T::RecentHistoryFraction::get().<span class="number">0</span>,
+                T::RecentHistoryFraction::get().<span class="number">1</span>,
+            ),
+            min_sector_lifetime: T::MinSectorLifetime::get(),
         }
     }
 }
@@ -2761,16 +2955,21 @@
 /// initialization has already happened) or from `validate_unsigned` by transaction pool (meaning
 /// block initialization didn&#39;t happen yet).
 </span><span class="kw">fn </span>current_vote_verification_data&lt;T: Config&gt;(is_block_initialized: bool) -&gt; VoteVerificationData {
-    <span class="kw">let </span>global_randomnesses = GlobalRandomnesses::&lt;T&gt;::get();
+    <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+    </span><span class="kw">let </span>global_randomnesses = GlobalRandomnesses::&lt;T&gt;::get();
     <span class="kw">let </span>solution_ranges = SolutionRanges::&lt;T&gt;::get();
     VoteVerificationData {
-        global_randomness: <span class="kw">if </span>is_block_initialized {
+        <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+        </span>global_randomness: <span class="kw">if </span>is_block_initialized {
             global_randomnesses.current
         } <span class="kw">else </span>{
             global_randomnesses
                 .next
                 .unwrap_or(global_randomnesses.current)
         },
+        <span class="comment">// TODO: This is invalid and must be fixed for PoT
+        </span><span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+        </span>global_randomness: Default::default(),
         solution_range: <span class="kw">if </span>is_block_initialized {
             solution_ranges.voting_current
         } <span class="kw">else </span>{
@@ -2802,13 +3001,15 @@
     SlotInThePast,
     BadRewardSignature(SignatureError),
     UnknownSegmentCommitment,
+    InvalidHistorySize,
     InvalidSolution(String),
     DuplicateVote,
     Equivocated(SubspaceEquivocationOffence&lt;FarmerPublicKey&gt;),
 }
 
 <span class="kw">impl </span>From&lt;CheckVoteError&gt; <span class="kw">for </span>TransactionValidityError {
-    <span class="kw">fn </span>from(error: CheckVoteError) -&gt; <span class="self">Self </span>{
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>from(error: CheckVoteError) -&gt; <span class="self">Self </span>{
         TransactionValidityError::Invalid(<span class="kw">match </span>error {
             CheckVoteError::BlockListed =&gt; InvalidTransaction::BadSigner,
             CheckVoteError::UnexpectedBeforeHeightTwo =&gt; InvalidTransaction::Call,
@@ -2819,6 +3020,7 @@
             CheckVoteError::SlotInThePast =&gt; InvalidTransaction::Stale,
             CheckVoteError::BadRewardSignature(<span class="kw">_</span>) =&gt; InvalidTransaction::BadProof,
             CheckVoteError::UnknownSegmentCommitment =&gt; InvalidTransaction::Call,
+            CheckVoteError::InvalidHistorySize =&gt; InvalidTransaction::Call,
             CheckVoteError::InvalidSolution(<span class="kw">_</span>) =&gt; InvalidTransaction::Call,
             CheckVoteError::DuplicateVote =&gt; InvalidTransaction::Call,
             CheckVoteError::Equivocated(<span class="kw">_</span>) =&gt; InvalidTransaction::BadSigner,
@@ -2947,10 +3149,24 @@
         parent_vote_verification_data
     };
 
-    <span class="kw">let </span>sector_id = LegacySectorId::new(<span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span>solution.public_key).into(), solution.sector_index);
+    <span class="kw">let </span>sector_id = SectorId::new(
+        PublicKey::from(<span class="kw-2">&amp;</span>solution.public_key).hash(),
+        solution.sector_index,
+    );
 
+    <span class="kw">let </span>recent_segments = T::RecentSegments::get();
+    <span class="kw">let </span>recent_history_fraction = (
+        T::RecentHistoryFraction::get().<span class="number">0</span>,
+        T::RecentHistoryFraction::get().<span class="number">1</span>,
+    );
     <span class="kw">let </span>segment_index = sector_id
-        .derive_piece_index(solution.piece_offset, solution.total_pieces)
+        .derive_piece_index(
+            solution.piece_offset,
+            solution.history_size,
+            T::MaxPiecesInSector::get(),
+            recent_segments,
+            recent_history_fraction,
+        )
         .segment_index();
 
     <span class="kw">let </span>segment_commitment =
@@ -2964,13 +3180,33 @@
             <span class="kw">return </span><span class="prelude-val">Err</span>(CheckVoteError::UnknownSegmentCommitment);
         };
 
+    <span class="kw">let </span>sector_expiration_check_segment_commitment = Pallet::&lt;T&gt;::segment_commitment(
+        solution
+            .history_size
+            .sector_expiration_check(T::MinSectorLifetime::get())
+            .ok_or(CheckVoteError::InvalidHistorySize)<span class="question-mark">?
+            </span>.segment_index(),
+    );
+
     <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = verify_solution(
         solution.into(),
         slot.into(),
         (<span class="kw-2">&amp;</span>VerifySolutionParams {
-            global_randomness: vote_verification_data.global_randomness,
+            <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+            </span>global_randomness: vote_verification_data.global_randomness,
+            <span class="comment">// TODO: This is incorrect, find a way to verify votes
+            </span><span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+            </span>proof_of_time: PotProof::default(),
             solution_range: vote_verification_data.solution_range,
-            piece_check_params: <span class="prelude-val">Some</span>(PieceCheckParams { segment_commitment }),
+            piece_check_params: <span class="prelude-val">Some</span>(PieceCheckParams {
+                max_pieces_in_sector: T::MaxPiecesInSector::get(),
+                segment_commitment,
+                recent_segments,
+                recent_history_fraction,
+                min_sector_lifetime: T::MinSectorLifetime::get(),
+                current_history_size: Pallet::&lt;T&gt;::history_size(),
+                sector_expiration_check_segment_commitment,
+            }),
         })
             .into(),
     ) {
@@ -2984,7 +3220,8 @@
     <span class="kw">let </span>key = (
         solution.public_key.clone(),
         solution.sector_index,
-        ChunkOffset(solution.chunk_offset),
+        solution.chunk,
+        AuditChunkOffset(solution.audit_chunk_offset),
         slot,
     );
     <span class="comment">// Check that farmer didn&#39;t use solution from this vote yet in:
@@ -2995,8 +3232,8 @@
     </span><span class="kw">let </span><span class="kw-2">mut </span>is_equivocating = ParentBlockAuthorInfo::&lt;T&gt;::get().as_ref() == <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>key)
         || CurrentBlockAuthorInfo::&lt;T&gt;::get()
             .map(
-                |(public_key, sector_index, chunk_offset, slot, _reward_address)| {
-                    (public_key, sector_index, chunk_offset, slot)
+                |(public_key, sector_index, chunk, audit_chunk_offset, slot, _reward_address)| {
+                    (public_key, sector_index, chunk, audit_chunk_offset, slot)
                 },
             )
             .as_ref()
@@ -3034,7 +3271,7 @@
             }
         });
 
-        <span class="kw">let </span>(public_key, _sector_index, _chunk_offset, _slot) = key;
+        <span class="kw">let </span>(public_key, _sector_index, _chunk, _audit_chunk_offset, _slot) = key;
 
         <span class="kw">return </span><span class="prelude-val">Err</span>(CheckVoteError::Equivocated(SubspaceEquivocationOffence {
             slot,
@@ -3109,7 +3346,8 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">impl</span>&lt;T: Config&gt; OnTimestampSet&lt;T::Moment&gt; <span class="kw">for </span>Pallet&lt;T&gt; {
+<span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+</span><span class="kw">impl</span>&lt;T: Config&gt; OnTimestampSet&lt;T::Moment&gt; <span class="kw">for </span>Pallet&lt;T&gt; {
     <span class="kw">fn </span>on_timestamp_set(moment: T::Moment) {
         <span class="kw">let </span>slot_duration = <span class="self">Self</span>::slot_duration();
         <span class="macro">assert!</span>(
@@ -3131,7 +3369,7 @@
 <span class="kw">impl</span>&lt;T: Config&gt; subspace_runtime_primitives::FindBlockRewardAddress&lt;T::AccountId&gt; <span class="kw">for </span>Pallet&lt;T&gt; {
     <span class="kw">fn </span>find_block_reward_address() -&gt; <span class="prelude-ty">Option</span>&lt;T::AccountId&gt; {
         CurrentBlockAuthorInfo::&lt;T&gt;::get().and_then(
-            |(public_key, _sector_index, _chunk_offset, _slot, reward_address)| {
+            |(public_key, _sector_index, _chunk, _audit_chunk_offset, _slot, reward_address)| {
                 <span class="comment">// Equivocation might have happened in this block, if so - no reward for block
                 // author
                 </span><span class="kw">if </span>!BlockList::&lt;T&gt;::contains_key(public_key) {
@@ -3172,8 +3410,8 @@
     <span class="kw">fn </span>random(subject: <span class="kw-2">&amp;</span>[u8]) -&gt; (T::Hash, T::BlockNumber) {
         <span class="kw">let </span><span class="kw-2">mut </span>subject = subject.to_vec();
         subject.extend_from_slice(
-            PorRandomness::&lt;T&gt;::get()
-                .expect(<span class="string">&quot;PoR randomness is always set in block initialization; qed&quot;</span>)
+            BlockRandomness::&lt;T&gt;::get()
+                .expect(<span class="string">&quot;Block randomness is always set in block initialization; qed&quot;</span>)
                 .as_ref(),
         );
 
@@ -3186,8 +3424,8 @@
     <span class="kw">fn </span>random_seed() -&gt; (T::Hash, T::BlockNumber) {
         (
             T::Hashing::hash(
-                PorRandomness::&lt;T&gt;::get()
-                    .expect(<span class="string">&quot;PoR randomness is always set in block initialization; qed&quot;</span>)
+                BlockRandomness::&lt;T&gt;::get()
+                    .expect(<span class="string">&quot;Block randomness is always set in block initialization; qed&quot;</span>)
                     .as_ref(),
             ),
             frame_system::Pallet::&lt;T&gt;::current_block_number(),

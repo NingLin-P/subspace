@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["Keyring"],"fn":["construct_extrinsic","node_config"],"mod":["chain_spec"],"struct":["RuntimeExecutor","SystemDomainNode","SystemDomainNodeBuilder"],"type":["Backend","Client","CodeExecutor","Executor","WrapAnnounceBlockFn"]};
+window.SIDEBAR_ITEMS = {"constant":["GENESIS_DOMAIN_ID"],"enum":["Sr25519Keyring"],"fn":["construct_extrinsic_generic","construct_unsigned_extrinsic","node_config"],"mod":["chain_spec","domain","keyring"]};

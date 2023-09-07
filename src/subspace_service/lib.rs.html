@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-service/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_service" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_service/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-service/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_service" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_service/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -878,7 +878,68 @@
 <a href="#878" id="878">878</a>
 <a href="#879" id="879">879</a>
 <a href="#880" id="880">880</a>
-</pre><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
+<a href="#881" id="881">881</a>
+<a href="#882" id="882">882</a>
+<a href="#883" id="883">883</a>
+<a href="#884" id="884">884</a>
+<a href="#885" id="885">885</a>
+<a href="#886" id="886">886</a>
+<a href="#887" id="887">887</a>
+<a href="#888" id="888">888</a>
+<a href="#889" id="889">889</a>
+<a href="#890" id="890">890</a>
+<a href="#891" id="891">891</a>
+<a href="#892" id="892">892</a>
+<a href="#893" id="893">893</a>
+<a href="#894" id="894">894</a>
+<a href="#895" id="895">895</a>
+<a href="#896" id="896">896</a>
+<a href="#897" id="897">897</a>
+<a href="#898" id="898">898</a>
+<a href="#899" id="899">899</a>
+<a href="#900" id="900">900</a>
+<a href="#901" id="901">901</a>
+<a href="#902" id="902">902</a>
+<a href="#903" id="903">903</a>
+<a href="#904" id="904">904</a>
+<a href="#905" id="905">905</a>
+<a href="#906" id="906">906</a>
+<a href="#907" id="907">907</a>
+<a href="#908" id="908">908</a>
+<a href="#909" id="909">909</a>
+<a href="#910" id="910">910</a>
+<a href="#911" id="911">911</a>
+<a href="#912" id="912">912</a>
+<a href="#913" id="913">913</a>
+<a href="#914" id="914">914</a>
+<a href="#915" id="915">915</a>
+<a href="#916" id="916">916</a>
+<a href="#917" id="917">917</a>
+<a href="#918" id="918">918</a>
+<a href="#919" id="919">919</a>
+<a href="#920" id="920">920</a>
+<a href="#921" id="921">921</a>
+<a href="#922" id="922">922</a>
+<a href="#923" id="923">923</a>
+<a href="#924" id="924">924</a>
+<a href="#925" id="925">925</a>
+<a href="#926" id="926">926</a>
+<a href="#927" id="927">927</a>
+<a href="#928" id="928">928</a>
+<a href="#929" id="929">929</a>
+<a href="#930" id="930">930</a>
+<a href="#931" id="931">931</a>
+<a href="#932" id="932">932</a>
+<a href="#933" id="933">933</a>
+<a href="#934" id="934">934</a>
+<a href="#935" id="935">935</a>
+<a href="#936" id="936">936</a>
+<a href="#937" id="937">937</a>
+<a href="#938" id="938">938</a>
+<a href="#939" id="939">939</a>
+<a href="#940" id="940">940</a>
+<a href="#941" id="941">941</a>
+</pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 // This program is free software: you can redistribute it and/or modify
@@ -895,78 +956,99 @@
 // along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
 </span><span class="doccomment">//! Service and ServiceFactory implementation. Specialized wrapper over substrate service.
-</span><span class="attr">#![feature(type_alias_impl_trait, type_changing_struct_update)]
+</span><span class="attr">#![feature(
+    const_option,
+    impl_trait_in_assoc_type,
+    int_roundings,
+    type_alias_impl_trait,
+    type_changing_struct_update
+)]
 
 </span><span class="kw">pub mod </span>dsn;
-<span class="kw">pub mod </span>piece_cache;
+<span class="kw">mod </span>metrics;
 <span class="kw">pub mod </span>rpc;
-<span class="kw">pub mod </span>segment_headers;
+<span class="kw">mod </span>sync_from_dsn;
 <span class="kw">pub mod </span>tx_pre_validator;
 
-<span class="kw">use </span><span class="kw">crate</span>::dsn::import_blocks::import_blocks <span class="kw">as </span>import_blocks_from_dsn;
 <span class="kw">use </span><span class="kw">crate</span>::dsn::{create_dsn_instance, DsnConfigurationError};
-<span class="kw">use </span><span class="kw">crate</span>::piece_cache::PieceCache;
-<span class="kw">use </span><span class="kw">crate</span>::segment_headers::{start_segment_header_archiver, SegmentHeaderCache};
-<span class="kw">use </span><span class="kw">crate</span>::tx_pre_validator::PrimaryChainTxPreValidator;
+<span class="kw">use </span><span class="kw">crate</span>::metrics::NodeMetrics;
+<span class="kw">use </span><span class="kw">crate</span>::tx_pre_validator::ConsensusChainTxPreValidator;
+<span class="kw">use </span>cross_domain_message_gossip::cdm_gossip_peers_set_config;
 <span class="kw">use </span>derive_more::{Deref, DerefMut, Into};
-<span class="kw">use </span>domain_runtime_primitives::Hash <span class="kw">as </span>DomainHash;
-<span class="kw">use </span>dsn::start_dsn_archiver;
+<span class="kw">use </span>domain_runtime_primitives::{BlockNumber <span class="kw">as </span>DomainNumber, Hash <span class="kw">as </span>DomainHash};
 <span class="kw">pub use </span>dsn::DsnConfig;
 <span class="kw">use </span>frame_system_rpc_runtime_api::AccountNonceApi;
 <span class="kw">use </span>futures::channel::oneshot;
-<span class="kw">use </span>futures::StreamExt;
 <span class="kw">use </span>jsonrpsee::RpcModule;
 <span class="kw">use </span>pallet_transaction_payment_rpc_runtime_api::TransactionPaymentApi;
+<span class="kw">use </span>parking_lot::Mutex;
 <span class="kw">use </span>sc_basic_authorship::ProposerFactory;
 <span class="kw">use </span>sc_client_api::execution_extensions::ExtensionsFactory;
 <span class="kw">use </span>sc_client_api::{
     BlockBackend, BlockchainEvents, ExecutorProvider, HeaderBackend, StateBackendFor,
 };
-<span class="kw">use </span>sc_consensus::{BlockImport, DefaultImportQueue};
+<span class="kw">use </span>sc_consensus::{BlockImport, DefaultImportQueue, ImportQueue};
 <span class="kw">use </span>sc_consensus_slots::SlotProportion;
+<span class="kw">use </span>sc_consensus_subspace::archiver::{create_subspace_archiver, SegmentHeadersStore};
 <span class="kw">use </span>sc_consensus_subspace::notification::SubspaceNotificationStream;
 <span class="kw">use </span>sc_consensus_subspace::{
     ArchivedSegmentNotification, BlockImportingNotification, NewSlotNotification,
-    RewardSigningNotification, SubspaceLink, SubspaceParams,
+    RewardSigningNotification, SubspaceLink, SubspaceParams, SubspaceSyncOracle,
 };
 <span class="kw">use </span>sc_executor::{NativeElseWasmExecutor, NativeExecutionDispatch};
+<span class="kw">use </span>sc_network::NetworkService;
+<span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+</span><span class="kw">use </span>sc_proof_of_time::gossip::pot_gossip_peers_set_config;
+<span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+</span><span class="kw">use </span>sc_proof_of_time::source::PotSource;
+<span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+</span><span class="kw">use </span>sc_proof_of_time::verifier::PotVerifier;
 <span class="kw">use </span>sc_service::error::Error <span class="kw">as </span>ServiceError;
-<span class="kw">use </span>sc_service::{
-    Configuration, NetworkStarter, PartialComponents, SpawnTaskHandle, SpawnTasksParams,
-    TaskManager,
-};
+<span class="kw">use </span>sc_service::{Configuration, NetworkStarter, SpawnTasksParams, TaskManager};
+<span class="kw">use </span>sc_subspace_block_relay::{build_consensus_relay, NetworkWrapper};
 <span class="kw">use </span>sc_telemetry::{Telemetry, TelemetryWorker};
 <span class="kw">use </span>sp_api::{ApiExt, ConstructRuntimeApi, Metadata, ProvideRuntimeApi, TransactionFor};
 <span class="kw">use </span>sp_block_builder::BlockBuilder;
 <span class="kw">use </span>sp_blockchain::HeaderMetadata;
-<span class="kw">use </span>sp_consensus::{Error <span class="kw">as </span>ConsensusError, SyncOracle};
+<span class="kw">use </span>sp_consensus::Error <span class="kw">as </span>ConsensusError;
 <span class="kw">use </span>sp_consensus_slots::Slot;
-<span class="kw">use </span>sp_consensus_subspace::{FarmerPublicKey, KzgExtension, SubspaceApi};
+<span class="kw">use </span>sp_consensus_subspace::{FarmerPublicKey, KzgExtension, PosExtension, SubspaceApi};
 <span class="kw">use </span>sp_core::offchain;
 <span class="kw">use </span>sp_core::traits::SpawnEssentialNamed;
 <span class="kw">use </span>sp_domains::transaction::PreValidationObjectApi;
-<span class="kw">use </span>sp_domains::ExecutorApi;
+<span class="kw">use </span>sp_domains::{DomainsApi, GenerateGenesisStateRoot, GenesisReceiptExtension};
 <span class="kw">use </span>sp_externalities::Extensions;
 <span class="kw">use </span>sp_objects::ObjectsApi;
 <span class="kw">use </span>sp_offchain::OffchainWorkerApi;
-<span class="kw">use </span>sp_receipts::ReceiptsApi;
 <span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, BlockIdTo, NumberFor};
 <span class="kw">use </span>sp_session::SessionKeys;
 <span class="kw">use </span>sp_transaction_pool::runtime_api::TaggedTransactionQueue;
-<span class="kw">use </span>std::num::NonZeroUsize;
-<span class="kw">use </span>std::sync::{Arc, Mutex};
+<span class="kw">use </span>static_assertions::const_assert;
+<span class="kw">use </span>std::marker::PhantomData;
+<span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+</span><span class="kw">use </span>std::num::NonZeroUsize;
+<span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>subspace_core_primitives::crypto::kzg::{embedded_kzg_settings, Kzg};
-<span class="kw">use </span>subspace_fraud_proof::domain_extrinsics_builder::SystemDomainExtrinsicsBuilder;
+<span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+</span><span class="kw">use </span>subspace_core_primitives::PotSeed;
 <span class="kw">use </span>subspace_fraud_proof::verifier_api::VerifierClient;
 <span class="kw">use </span>subspace_networking::libp2p::multiaddr::Protocol;
 <span class="kw">use </span>subspace_networking::libp2p::Multiaddr;
-<span class="kw">use </span>subspace_networking::utils::online_status_informer;
-<span class="kw">use </span>subspace_networking::{peer_id, Node};
+<span class="kw">use </span>subspace_networking::Node;
+<span class="kw">use </span>subspace_proof_of_space::Table;
 <span class="kw">use </span>subspace_runtime_primitives::opaque::Block;
 <span class="kw">use </span>subspace_runtime_primitives::{AccountId, Balance, Hash, Index <span class="kw">as </span>Nonce};
-<span class="kw">use </span>subspace_transaction_pool::bundle_validator::BundleValidator;
 <span class="kw">use </span>subspace_transaction_pool::{FullPool, PreValidateTransaction};
 <span class="kw">use </span>tracing::{debug, error, info, Instrument};
+
+<span class="comment">// There are multiple places where it is assumed that node is running on 64-bit system, refuse to
+// compile otherwise
+</span><span class="macro">const_assert!</span>(std::mem::size_of::&lt;usize&gt;() &gt;= std::mem::size_of::&lt;u64&gt;());
+
+<span class="doccomment">/// This is over 15 minutes of slots assuming there are no forks, should be both sufficient and not
+/// too large to handle
+</span><span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+</span><span class="kw">const </span>POT_VERIFIER_CACHE_SIZE: NonZeroUsize = NonZeroUsize::new(<span class="number">10_000</span>).expect(<span class="string">&quot;Not zero; qed&quot;</span>);
 
 <span class="doccomment">/// Error type for Subspace service.
 </span><span class="attr">#[derive(thiserror::Error, Debug)]
@@ -1011,23 +1093,27 @@
 <span class="kw">pub type </span>FullBackend = sc_service::TFullBackend&lt;Block&gt;;
 <span class="kw">pub type </span>FullSelectChain = sc_consensus::LongestChain&lt;FullBackend, Block&gt;;
 
+<span class="kw">pub type </span>InvalidTransactionProofVerifier&lt;RuntimeApi, ExecutorDispatch&gt; =
+    subspace_fraud_proof::invalid_transaction_proof::InvalidTransactionProofVerifier&lt;
+        Block,
+        FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
+        Hash,
+        NativeElseWasmExecutor&lt;ExecutorDispatch&gt;,
+        VerifierClient&lt;FullClient&lt;RuntimeApi, ExecutorDispatch&gt;, Block&gt;,
+    &gt;;
+
 <span class="kw">pub type </span>InvalidStateTransitionProofVerifier&lt;RuntimeApi, ExecutorDispatch&gt; =
     subspace_fraud_proof::invalid_state_transition_proof::InvalidStateTransitionProofVerifier&lt;
         Block,
         FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
         NativeElseWasmExecutor&lt;ExecutorDispatch&gt;,
-        SpawnTaskHandle,
         Hash,
         VerifierClient&lt;FullClient&lt;RuntimeApi, ExecutorDispatch&gt;, Block&gt;,
-        SystemDomainExtrinsicsBuilder&lt;
-            Block,
-            FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
-            NativeElseWasmExecutor&lt;ExecutorDispatch&gt;,
-        &gt;,
     &gt;;
 
 <span class="kw">pub type </span>FraudProofVerifier&lt;RuntimeApi, ExecutorDispatch&gt; = subspace_fraud_proof::ProofVerifier&lt;
     Block,
+    InvalidTransactionProofVerifier&lt;RuntimeApi, ExecutorDispatch&gt;,
     InvalidStateTransitionProofVerifier&lt;RuntimeApi, ExecutorDispatch&gt;,
 &gt;;
 
@@ -1046,8 +1132,6 @@
     </span>Create {
         <span class="doccomment">/// Configuration to use for DSN instantiation
         </span>config: DsnConfig,
-        <span class="doccomment">/// Piece cache size in bytes
-        </span>piece_cache_size: u64,
     },
 }
 
@@ -1064,19 +1148,26 @@
     </span><span class="kw">pub </span>force_new_slot_notifications: bool,
     <span class="doccomment">/// Subspace networking (DSN).
     </span><span class="kw">pub </span>subspace_networking: SubspaceNetworking,
-    <span class="doccomment">/// Max number of segments that can be published concurrently.
-    </span><span class="kw">pub </span>segment_publish_concurrency: NonZeroUsize,
     <span class="doccomment">/// Enables DSN-sync on startup.
     </span><span class="kw">pub </span>sync_from_dsn: bool,
+    <span class="doccomment">/// Use the block request handler implementation from subspace
+    /// instead of the default substrate handler.
+    </span><span class="kw">pub </span>enable_subspace_block_relay: bool,
+    <span class="doccomment">/// Is this node a Timekeeper
+    </span><span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+    </span><span class="kw">pub </span>is_timekeeper: bool,
 }
 
-<span class="kw">struct </span>SubspaceExtensionsFactory {
+<span class="kw">struct </span>SubspaceExtensionsFactory&lt;PosTable&gt; {
     kzg: Kzg,
+    domain_genesis_receipt_ext: <span class="prelude-ty">Option</span>&lt;Arc&lt;<span class="kw">dyn </span>GenerateGenesisStateRoot&gt;&gt;,
+    _pos_table: PhantomData&lt;PosTable&gt;,
 }
 
-<span class="kw">impl</span>&lt;Block&gt; ExtensionsFactory&lt;Block&gt; <span class="kw">for </span>SubspaceExtensionsFactory
+<span class="kw">impl</span>&lt;PosTable, Block&gt; ExtensionsFactory&lt;Block&gt; <span class="kw">for </span>SubspaceExtensionsFactory&lt;PosTable&gt;
 <span class="kw">where
-    </span>Block: BlockT,
+    </span>PosTable: Table,
+    Block: BlockT,
 {
     <span class="kw">fn </span>extensions_for(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -1086,45 +1177,75 @@
     ) -&gt; Extensions {
         <span class="kw">let </span><span class="kw-2">mut </span>exts = Extensions::new();
         exts.register(KzgExtension::new(<span class="self">self</span>.kzg.clone()));
+        exts.register(PosExtension::new::&lt;PosTable&gt;());
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(ext) = <span class="self">self</span>.domain_genesis_receipt_ext.clone() {
+            exts.register(GenesisReceiptExtension::new(ext));
+        }
         exts
     }
 }
 
-<span class="doccomment">/// Creates `PartialComponents` for Subspace client.
-</span><span class="attr">#[allow(clippy::type_complexity)]
-</span><span class="kw">pub fn </span>new_partial&lt;RuntimeApi, ExecutorDispatch&gt;(
-    config: <span class="kw-2">&amp;</span>Configuration,
-) -&gt; <span class="prelude-ty">Result</span>&lt;
-    PartialComponents&lt;
-        FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
-        FullBackend,
-        FullSelectChain,
-        DefaultImportQueue&lt;Block, FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;,
-        FullPool&lt;
-            Block,
-            FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
-            PrimaryChainTxPreValidator&lt;
-                Block,
-                FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
-                FraudProofVerifier&lt;RuntimeApi, ExecutorDispatch&gt;,
-                BundleValidator&lt;Block, FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;,
-            &gt;,
-        &gt;,
-        (
-            <span class="kw">impl </span>BlockImport&lt;
+<span class="doccomment">/// Other partial components returned by [`new_partial()`]
+</span><span class="kw">pub struct </span>OtherPartialComponents&lt;RuntimeApi, ExecutorDispatch&gt;
+<span class="kw">where
+    </span>RuntimeApi: ConstructRuntimeApi&lt;Block, FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;
+        + Send
+        + Sync
+        + <span class="lifetime">&#39;static</span>,
+    ExecutorDispatch: NativeExecutionDispatch + <span class="lifetime">&#39;static</span>,
+{
+    <span class="doccomment">/// Subspace block import
+    </span><span class="kw">pub </span>block_import: Box&lt;
+        <span class="kw">dyn </span>BlockImport&lt;
                 Block,
                 Error = ConsensusError,
                 Transaction = TransactionFor&lt;FullClient&lt;RuntimeApi, ExecutorDispatch&gt;, Block&gt;,
-            &gt;,
-            SubspaceLink&lt;Block&gt;,
-            <span class="prelude-ty">Option</span>&lt;Telemetry&gt;,
-            BundleValidator&lt;Block, FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;,
-        ),
+            &gt; + Send
+            + Sync,
     &gt;,
-    ServiceError,
-&gt;
+    <span class="doccomment">/// Subspace link
+    </span><span class="kw">pub </span>subspace_link: SubspaceLink&lt;Block&gt;,
+    <span class="doccomment">/// Segment headers store
+    </span><span class="kw">pub </span>segment_headers_store: SegmentHeadersStore&lt;FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;,
+    <span class="doccomment">/// Proof of time verifier
+    </span><span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+    </span><span class="kw">pub </span>pot_verifier: PotVerifier,
+    <span class="doccomment">/// Telemetry
+    </span><span class="kw">pub </span>telemetry: <span class="prelude-ty">Option</span>&lt;Telemetry&gt;,
+}
+
+<span class="kw">type </span>PartialComponents&lt;RuntimeApi, ExecutorDispatch&gt; = sc_service::PartialComponents&lt;
+    FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
+    FullBackend,
+    FullSelectChain,
+    DefaultImportQueue&lt;Block, FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;,
+    FullPool&lt;
+        Block,
+        FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
+        ConsensusChainTxPreValidator&lt;
+            Block,
+            FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
+            FraudProofVerifier&lt;RuntimeApi, ExecutorDispatch&gt;,
+        &gt;,
+    &gt;,
+    OtherPartialComponents&lt;RuntimeApi, ExecutorDispatch&gt;,
+&gt;;
+
+<span class="doccomment">/// Creates `PartialComponents` for Subspace client.
+</span><span class="attr">#[allow(clippy::type_complexity)]
+</span><span class="kw">pub fn </span>new_partial&lt;PosTable, RuntimeApi, ExecutorDispatch&gt;(
+    config: <span class="kw-2">&amp;</span>Configuration,
+    construct_domain_genesis_block_builder: <span class="prelude-ty">Option</span>&lt;
+        <span class="kw-2">&amp;</span><span class="kw">dyn </span>Fn(
+            Arc&lt;FullBackend&gt;,
+            NativeElseWasmExecutor&lt;ExecutorDispatch&gt;,
+        ) -&gt; Arc&lt;<span class="kw">dyn </span>GenerateGenesisStateRoot&gt;,
+    &gt;,
+    <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)] </span>pot_external_entropy: <span class="kw-2">&amp;</span>[u8],
+) -&gt; <span class="prelude-ty">Result</span>&lt;PartialComponents&lt;RuntimeApi, ExecutorDispatch&gt;, ServiceError&gt;
 <span class="kw">where
-    </span>RuntimeApi: ConstructRuntimeApi&lt;Block, FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;
+    </span>PosTable: Table,
+    RuntimeApi: ConstructRuntimeApi&lt;Block, FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;
         + Send
         + Sync
         + <span class="lifetime">&#39;static</span>,
@@ -1134,11 +1255,10 @@
         + OffchainWorkerApi&lt;Block&gt;
         + SessionKeys&lt;Block&gt;
         + TaggedTransactionQueue&lt;Block&gt;
-        + ExecutorApi&lt;Block, DomainHash&gt;
+        + SubspaceApi&lt;Block, FarmerPublicKey&gt;
+        + DomainsApi&lt;Block, DomainNumber, DomainHash&gt;
         + ObjectsApi&lt;Block&gt;
-        + ReceiptsApi&lt;Block, domain_runtime_primitives::Hash&gt;
-        + PreValidationObjectApi&lt;Block, domain_runtime_primitives::Hash&gt;
-        + SubspaceApi&lt;Block, FarmerPublicKey&gt;,
+        + PreValidationObjectApi&lt;Block, DomainNumber, DomainHash&gt;,
     ExecutorDispatch: NativeExecutionDispatch + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">let </span>telemetry = config
@@ -1152,12 +1272,7 @@
         })
         .transpose()<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>executor = NativeElseWasmExecutor::&lt;ExecutorDispatch&gt;::new(
-        config.wasm_method,
-        config.default_heap_pages,
-        config.max_runtime_instances,
-        config.runtime_cache_size,
-    );
+    <span class="kw">let </span>executor = sc_service::new_native_or_wasm_executor(config);
 
     <span class="kw">let </span>(client, backend, keystore_container, task_manager) =
         sc_service::new_full_parts::&lt;Block, RuntimeApi, <span class="kw">_</span>&gt;(
@@ -1166,10 +1281,17 @@
             executor.clone(),
         )<span class="question-mark">?</span>;
 
+    <span class="kw">let </span>kzg = Kzg::new(embedded_kzg_settings());
+
+    <span class="kw">let </span>domain_genesis_receipt_ext =
+        construct_domain_genesis_block_builder.map(|f| f(backend.clone(), executor.clone()));
+
     client
         .execution_extensions()
-        .set_extensions_factory(SubspaceExtensionsFactory {
-            kzg: Kzg::new(embedded_kzg_settings()),
+        .set_extensions_factory(SubspaceExtensionsFactory::&lt;PosTable&gt; {
+            kzg: kzg.clone(),
+            domain_genesis_receipt_ext,
+            _pos_table: PhantomData,
         });
 
     <span class="kw">let </span>client = Arc::new(client);
@@ -1183,22 +1305,27 @@
 
     <span class="kw">let </span>select_chain = sc_consensus::LongestChain::new(backend.clone());
 
-    <span class="kw">let </span>bundle_validator = BundleValidator::new(client.clone());
+    <span class="kw">let </span>invalid_transaction_proof_verifier = InvalidTransactionProofVerifier::new(
+        client.clone(),
+        Arc::new(executor.clone()),
+        VerifierClient::new(client.clone()),
+    );
 
-    <span class="kw">let </span>proof_verifier = subspace_fraud_proof::ProofVerifier::new(Arc::new(
-        InvalidStateTransitionProofVerifier::new(
-            client.clone(),
-            executor.clone(),
-            task_manager.spawn_handle(),
-            VerifierClient::new(client.clone()),
-            SystemDomainExtrinsicsBuilder::new(client.clone(), Arc::new(executor)),
-        ),
-    ));
-    <span class="kw">let </span>tx_pre_validator = PrimaryChainTxPreValidator::new(
+    <span class="kw">let </span>invalid_state_transition_proof_verifier = InvalidStateTransitionProofVerifier::new(
+        client.clone(),
+        executor,
+        VerifierClient::new(client.clone()),
+    );
+
+    <span class="kw">let </span>proof_verifier = subspace_fraud_proof::ProofVerifier::new(
+        Arc::new(invalid_transaction_proof_verifier),
+        Arc::new(invalid_state_transition_proof_verifier),
+    );
+
+    <span class="kw">let </span>tx_pre_validator = ConsensusChainTxPreValidator::new(
         client.clone(),
         Box::new(task_manager.spawn_handle()),
         proof_verifier.clone(),
-        bundle_validator.clone(),
     );
     <span class="kw">let </span>transaction_pool = subspace_transaction_pool::new_full(
         config,
@@ -1207,13 +1334,28 @@
         tx_pre_validator,
     );
 
+    <span class="kw">let </span>segment_headers_store = SegmentHeadersStore::new(client.clone())
+        .map_err(|error| ServiceError::Application(error.into()))<span class="question-mark">?</span>;
     <span class="kw">let </span>fraud_proof_block_import =
         sc_consensus_fraud_proof::block_import(client.clone(), client.clone(), proof_verifier);
 
-    <span class="kw">let </span>(block_import, subspace_link) = sc_consensus_subspace::block_import(
+    <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+    </span><span class="kw">let </span>pot_verifier = PotVerifier::new(
+        PotSeed::from_genesis(client.info().genesis_hash.as_ref(), pot_external_entropy),
+        POT_VERIFIER_CACHE_SIZE,
+    );
+    <span class="kw">let </span>(block_import, subspace_link) = sc_consensus_subspace::block_import::&lt;
+        PosTable,
+        <span class="kw">_</span>,
+        <span class="kw">_</span>,
+        <span class="kw">_</span>,
+        <span class="kw">_</span>,
+        <span class="kw">_</span>,
+    &gt;(
         sc_consensus_subspace::slot_duration(<span class="kw-2">&amp;*</span>client)<span class="question-mark">?</span>,
         fraud_proof_block_import,
         client.clone(),
+        kzg.clone(),
         {
             <span class="kw">let </span>client = client.clone();
 
@@ -1225,9 +1367,8 @@
 
                     <span class="comment">// TODO: Would be nice if the whole header was passed in here
                     </span><span class="kw">let </span>parent_block_number = client
-                        .header(parent_hash)
-                        .expect(<span class="string">&quot;Parent header must always exist when block is created; qed&quot;</span>)
-                        .expect(<span class="string">&quot;Parent header must always exist when block is created; qed&quot;</span>)
+                        .header(parent_hash)<span class="question-mark">?
+                        </span>.expect(<span class="string">&quot;Parent header must always exist when block is created; qed&quot;</span>)
                         .number;
 
                     <span class="kw">let </span>subspace_inherents =
@@ -1241,15 +1382,20 @@
                 }
             }
         },
+        segment_headers_store.clone(),
+        <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+        </span>pot_verifier.clone(),
     )<span class="question-mark">?</span>;
 
     <span class="kw">let </span>slot_duration = subspace_link.slot_duration();
-    <span class="kw">let </span>import_queue = sc_consensus_subspace::import_queue(
+    <span class="kw">let </span>import_queue = sc_consensus_subspace::import_queue::import_queue::&lt;PosTable, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>&gt;(
         block_import.clone(),
         <span class="prelude-val">None</span>,
         client.clone(),
+        kzg,
         select_chain.clone(),
-        <span class="kw">move </span>|| {
+        <span class="comment">// TODO: Remove use current best slot known from PoT verifier in PoT case
+        </span><span class="kw">move </span>|| {
             <span class="kw">let </span>timestamp = sp_timestamp::InherentDataProvider::from_system_time();
 
             Slot::from_timestamp(<span class="kw-2">*</span>timestamp, slot_duration)
@@ -1258,7 +1404,18 @@
         config.prometheus_registry(),
         telemetry.as_ref().map(|x| x.handle()),
         config.role.is_authority(),
+        <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+        </span>pot_verifier.clone(),
     )<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>other = OtherPartialComponents {
+        block_import: Box::new(block_import),
+        subspace_link,
+        segment_headers_store,
+        <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+        </span>pot_verifier,
+        telemetry,
+    };
 
     <span class="prelude-val">Ok</span>(PartialComponents {
         client,
@@ -1268,7 +1425,7 @@
         keystore_container,
         select_chain,
         transaction_pool,
-        other: (block_import, subspace_link, telemetry, bundle_validator),
+        other,
     })
 }
 
@@ -1282,8 +1439,8 @@
         + HeaderMetadata&lt;Block, Error = sp_blockchain::Error&gt;
         + <span class="lifetime">&#39;static</span>,
     Client::Api: TaggedTransactionQueue&lt;Block&gt;
-        + ExecutorApi&lt;Block, DomainHash&gt;
-        + PreValidationObjectApi&lt;Block, domain_runtime_primitives::Hash&gt;,
+        + DomainsApi&lt;Block, DomainNumber, DomainHash&gt;
+        + PreValidationObjectApi&lt;Block, DomainNumber, DomainHash&gt;,
     TxPreValidator: PreValidateTransaction&lt;Block = Block&gt; + Send + Sync + Clone + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Task manager.
@@ -1293,7 +1450,7 @@
     <span class="doccomment">/// Chain selection rule.
     </span><span class="kw">pub </span>select_chain: FullSelectChain,
     <span class="doccomment">/// Network service.
-    </span><span class="kw">pub </span>network_service: Arc&lt;sc_network::NetworkService&lt;Block, &lt;Block <span class="kw">as </span>BlockT&gt;::Hash&gt;&gt;,
+    </span><span class="kw">pub </span>network_service: Arc&lt;NetworkService&lt;Block, &lt;Block <span class="kw">as </span>BlockT&gt;::Hash&gt;&gt;,
     <span class="doccomment">/// Sync service.
     </span><span class="kw">pub </span>sync_service: Arc&lt;sc_network_sync::SyncingService&lt;Block&gt;&gt;,
     <span class="doccomment">/// RPC handlers.
@@ -1318,45 +1475,23 @@
 
 <span class="kw">type </span>FullNode&lt;RuntimeApi, ExecutorDispatch&gt; = NewFull&lt;
     FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
-    PrimaryChainTxPreValidator&lt;
+    ConsensusChainTxPreValidator&lt;
         Block,
         FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
         FraudProofVerifier&lt;RuntimeApi, ExecutorDispatch&gt;,
-        BundleValidator&lt;Block, FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;,
     &gt;,
 &gt;;
 
 <span class="doccomment">/// Builds a new service for a full client.
-</span><span class="attr">#[allow(clippy::type_complexity)]
-</span><span class="kw">pub async fn </span>new_full&lt;RuntimeApi, ExecutorDispatch, I&gt;(
+</span><span class="kw">pub async fn </span>new_full&lt;PosTable, RuntimeApi, ExecutorDispatch&gt;(
     config: SubspaceConfiguration,
-    partial_components: PartialComponents&lt;
-        FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
-        FullBackend,
-        FullSelectChain,
-        DefaultImportQueue&lt;Block, FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;,
-        FullPool&lt;
-            Block,
-            FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
-            PrimaryChainTxPreValidator&lt;
-                Block,
-                FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
-                FraudProofVerifier&lt;RuntimeApi, ExecutorDispatch&gt;,
-                BundleValidator&lt;Block, FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;,
-            &gt;,
-        &gt;,
-        (
-            I,
-            SubspaceLink&lt;Block&gt;,
-            <span class="prelude-ty">Option</span>&lt;Telemetry&gt;,
-            BundleValidator&lt;Block, FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;,
-        ),
-    &gt;,
+    partial_components: PartialComponents&lt;RuntimeApi, ExecutorDispatch&gt;,
     enable_rpc_extensions: bool,
     block_proposal_slot_portion: SlotProportion,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;FullNode&lt;RuntimeApi, ExecutorDispatch&gt;, Error&gt;
 <span class="kw">where
-    </span>RuntimeApi: ConstructRuntimeApi&lt;Block, FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;
+    </span>PosTable: Table,
+    RuntimeApi: ConstructRuntimeApi&lt;Block, FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;
         + Send
         + Sync
         + <span class="lifetime">&#39;static</span>,
@@ -1368,42 +1503,37 @@
         + SessionKeys&lt;Block&gt;
         + TaggedTransactionQueue&lt;Block&gt;
         + TransactionPaymentApi&lt;Block, Balance&gt;
-        + ExecutorApi&lt;Block, DomainHash&gt;
+        + SubspaceApi&lt;Block, FarmerPublicKey&gt;
+        + DomainsApi&lt;Block, DomainNumber, DomainHash&gt;
         + ObjectsApi&lt;Block&gt;
-        + ReceiptsApi&lt;Block, domain_runtime_primitives::Hash&gt;
-        + PreValidationObjectApi&lt;Block, domain_runtime_primitives::Hash&gt;
-        + SubspaceApi&lt;Block, FarmerPublicKey&gt;,
+        + PreValidationObjectApi&lt;Block, DomainNumber, DomainHash&gt;,
     ExecutorDispatch: NativeExecutionDispatch + <span class="lifetime">&#39;static</span>,
-    I: BlockImport&lt;
-            Block,
-            Error = ConsensusError,
-            Transaction = TransactionFor&lt;FullClient&lt;RuntimeApi, ExecutorDispatch&gt;, Block&gt;,
-        &gt; + Send
-        + Sync
-        + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">let </span>PartialComponents {
         client,
         backend,
         <span class="kw-2">mut </span>task_manager,
-        <span class="kw-2">mut </span>import_queue,
+        import_queue,
         keystore_container,
         select_chain,
         transaction_pool,
-        other: (block_import, subspace_link, <span class="kw-2">mut </span>telemetry, <span class="kw-2">mut </span>bundle_validator),
+        other,
     } = partial_components;
-
-    <span class="kw">let </span>segment_header_cache = SegmentHeaderCache::new(client.clone());
+    <span class="kw">let </span>OtherPartialComponents {
+        block_import,
+        subspace_link,
+        segment_headers_store,
+        <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+        </span>pot_verifier,
+        <span class="kw-2">mut </span>telemetry,
+    } = other;
 
     <span class="kw">let </span>(node, bootstrap_nodes) = <span class="kw">match </span>config.subspace_networking.clone() {
         SubspaceNetworking::Reuse {
             node,
             bootstrap_nodes,
         } =&gt; (node, bootstrap_nodes),
-        SubspaceNetworking::Create {
-            config: dsn_config,
-            piece_cache_size,
-        } =&gt; {
+        SubspaceNetworking::Create { config: dsn_config } =&gt; {
             <span class="kw">let </span>dsn_protocol_version = hex::encode(client.chain_info().genesis_hash);
 
             <span class="macro">debug!</span>(
@@ -1412,48 +1542,10 @@
                 <span class="string">&quot;Setting DSN protocol version...&quot;
             </span>);
 
-            <span class="kw">let </span>piece_cache = PieceCache::new(
-                client.clone(),
-                piece_cache_size,
-                peer_id(<span class="kw-2">&amp;</span>dsn_config.keypair),
-            );
-
-            <span class="comment">// Start before archiver below, so we don&#39;t have potential race condition and miss pieces
-            </span>task_manager
-                .spawn_handle()
-                .spawn_blocking(<span class="string">&quot;subspace-piece-cache&quot;</span>, <span class="prelude-val">None</span>, {
-                    <span class="kw">let </span><span class="kw-2">mut </span>piece_cache = piece_cache.clone();
-                    <span class="kw">let </span><span class="kw-2">mut </span>archived_segment_notification_stream = subspace_link
-                        .archived_segment_notification_stream()
-                        .subscribe();
-
-                    <span class="kw">async move </span>{
-                        <span class="kw">while let </span><span class="prelude-val">Some</span>(archived_segment_notification) =
-                            archived_segment_notification_stream.next().<span class="kw">await
-                        </span>{
-                            <span class="kw">let </span>segment_index = archived_segment_notification
-                                .archived_segment
-                                .segment_header
-                                .segment_index();
-                            <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = piece_cache.add_pieces(
-                                segment_index.first_piece_index(),
-                                <span class="kw-2">&amp;</span>archived_segment_notification.archived_segment.pieces,
-                            ) {
-                                <span class="macro">error!</span>(
-                                    %segment_index,
-                                    %error,
-                                    <span class="string">&quot;Failed to store pieces for segment in cache&quot;
-                                </span>);
-                            }
-                        }
-                    }
-                });
-
             <span class="kw">let </span>(node, <span class="kw-2">mut </span>node_runner) = create_dsn_instance(
                 dsn_protocol_version,
                 dsn_config.clone(),
-                piece_cache,
-                segment_header_cache.clone(),
+                segment_headers_store.clone(),
             )<span class="question-mark">?</span>;
 
             <span class="macro">info!</span>(<span class="string">&quot;Subspace networking initialized: Node ID is {}&quot;</span>, node.id());
@@ -1464,66 +1556,28 @@
                 <span class="kw">move </span>|address| {
                     <span class="macro">info!</span>(
                         <span class="string">&quot;DSN listening on {}&quot;</span>,
-                        address.clone().with(Protocol::P2p(node.id().into()))
+                        address.clone().with(Protocol::P2p(node.id()))
                     );
                 }
             }))
             .detach();
 
-            <span class="kw">let </span>status_informer_fut = online_status_informer(<span class="kw-2">&amp;</span>node);
-            task_manager.spawn_handle().spawn(
-                <span class="string">&quot;status-observer&quot;</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;subspace-networking&quot;</span>),
-                Box::pin(
-                    <span class="kw">async move </span>{
-                        status_informer_fut.<span class="kw">await</span>;
-                    }
-                    .in_current_span(),
-                ),
-            );
-
-            task_manager.spawn_essential_handle().spawn_essential(
-                <span class="string">&quot;node-runner&quot;</span>,
-                <span class="prelude-val">Some</span>(<span class="string">&quot;subspace-networking&quot;</span>),
-                Box::pin(
-                    <span class="kw">async move </span>{
-                        node_runner.run().<span class="kw">await</span>;
-                    }
-                    .in_current_span(),
-                ),
-            );
+            task_manager
+                .spawn_essential_handle()
+                .spawn_essential_blocking(
+                    <span class="string">&quot;node-runner&quot;</span>,
+                    <span class="prelude-val">Some</span>(<span class="string">&quot;subspace-networking&quot;</span>),
+                    Box::pin(
+                        <span class="kw">async move </span>{
+                            node_runner.run().<span class="kw">await</span>;
+                        }
+                        .in_current_span(),
+                    ),
+                );
 
             (node, dsn_config.bootstrap_nodes)
         }
     };
-
-    <span class="kw">let </span>dsn_archiving_fut = start_dsn_archiver(
-        subspace_link
-            .archived_segment_notification_stream()
-            .subscribe(),
-        node.clone(),
-        task_manager.spawn_handle(),
-        config.segment_publish_concurrency,
-    );
-
-    task_manager.spawn_essential_handle().spawn_essential(
-        <span class="string">&quot;dsn-archiver&quot;</span>,
-        <span class="prelude-val">Some</span>(<span class="string">&quot;subspace-networking&quot;</span>),
-        Box::pin(dsn_archiving_fut.in_current_span()),
-    );
-
-    <span class="kw">let </span>segment_header_archiving_fut = start_segment_header_archiver(
-        segment_header_cache.clone(),
-        subspace_link
-            .archived_segment_notification_stream()
-            .subscribe(),
-    );
-
-    task_manager.spawn_essential_handle().spawn_essential(
-        <span class="string">&quot;segment-header-archiver&quot;</span>,
-        <span class="prelude-val">Some</span>(<span class="string">&quot;subspace-networking&quot;</span>),
-        Box::pin(segment_header_archiving_fut.in_current_span()),
-    );
 
     <span class="kw">let </span>dsn_bootstrap_nodes = {
         <span class="comment">// Fall back to node itself as bootstrap node for DSN so farmer always has someone to
@@ -1535,11 +1589,7 @@
 
                 <span class="kw">move </span>|address| {
                     <span class="kw">if </span><span class="macro">matches!</span>(address.iter().next(), <span class="prelude-val">Some</span>(Protocol::Ip4(<span class="kw">_</span>))) {
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>(node_address_sender) = node_address_sender
-                            .lock()
-                            .expect(<span class="string">&quot;Must not be poisoned here&quot;</span>)
-                            .take()
-                        {
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(node_address_sender) = node_address_sender.lock().take() {
                             <span class="kw">if let </span><span class="prelude-val">Err</span>(err) = node_address_sender.send(address.clone()) {
                                 <span class="macro">debug!</span>(<span class="question-mark">?</span>err, <span class="string">&quot;Couldn&#39;t send a node address to the channel.&quot;</span>);
                             }
@@ -1563,7 +1613,7 @@
             }
 
             node_listeners.iter_mut().for_each(|multiaddr| {
-                multiaddr.push(Protocol::P2p(node.id().into()));
+                multiaddr.push(Protocol::P2p(node.id()));
             });
 
             node_listeners
@@ -1572,9 +1622,43 @@
         }
     };
 
-    <span class="kw">let </span>subspace_archiver = sc_consensus_subspace::create_subspace_archiver(
+    <span class="kw">let </span>import_queue_service = import_queue.service();
+    <span class="kw">let </span>network_wrapper = Arc::new(NetworkWrapper::default());
+    <span class="kw">let </span>block_relay = <span class="kw">if </span>config.enable_subspace_block_relay {
+        <span class="prelude-val">Some</span>(build_consensus_relay(
+            network_wrapper.clone(),
+            client.clone(),
+            transaction_pool.clone(),
+        ))
+    } <span class="kw">else </span>{
+        <span class="prelude-val">None
+    </span>};
+    <span class="kw">let </span><span class="kw-2">mut </span>net_config = sc_network::config::FullNetworkConfiguration::new(<span class="kw-2">&amp;</span>config.network);
+    net_config.add_notification_protocol(cdm_gossip_peers_set_config());
+    <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+    </span>net_config.add_notification_protocol(pot_gossip_peers_set_config());
+    <span class="kw">let </span>sync_mode = Arc::clone(<span class="kw-2">&amp;</span>net_config.network_config.sync_mode);
+    <span class="kw">let </span>(network_service, system_rpc_tx, tx_handler_controller, network_starter, sync_service) =
+        sc_service::build_network(sc_service::BuildNetworkParams {
+            config: <span class="kw-2">&amp;</span>config,
+            net_config,
+            client: client.clone(),
+            transaction_pool: transaction_pool.clone(),
+            spawn_handle: task_manager.spawn_handle(),
+            import_queue,
+            block_announce_validator_builder: <span class="prelude-val">None</span>,
+            warp_sync_params: <span class="prelude-val">None</span>,
+            block_relay,
+        })<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>subspace_sync_oracle =
+        SubspaceSyncOracle::new(config.force_authoring, sync_service.clone());
+
+    <span class="kw">let </span>subspace_archiver = create_subspace_archiver(
+        segment_headers_store.clone(),
         <span class="kw-2">&amp;</span>subspace_link,
         client.clone(),
+        subspace_sync_oracle.clone(),
         telemetry.as_ref().map(|telemetry| telemetry.handle()),
     );
 
@@ -1582,42 +1666,55 @@
         .spawn_essential_handle()
         .spawn_essential_blocking(<span class="string">&quot;subspace-archiver&quot;</span>, <span class="prelude-val">None</span>, Box::pin(subspace_archiver));
 
+    <span class="kw">if </span>config.enable_subspace_block_relay {
+        network_wrapper.set(network_service.clone());
+    }
     <span class="kw">if </span>config.sync_from_dsn {
-        import_blocks_from_dsn(<span class="kw-2">&amp;</span>node, client.clone(), <span class="kw-2">&amp;mut </span>import_queue, <span class="bool-val">false</span>)
-            .<span class="kw">await
-            </span>.map_err(|error| {
-                sc_service::Error::Other(<span class="macro">format!</span>(<span class="string">&quot;Failed to import blocks from DSN: {error:?}&quot;</span>))
-            })<span class="question-mark">?</span>;
+        <span class="kw">let </span>(observer, worker) = sync_from_dsn::create_observer_and_worker(
+            segment_headers_store.clone(),
+            Arc::clone(<span class="kw-2">&amp;</span>network_service),
+            node.clone(),
+            Arc::clone(<span class="kw-2">&amp;</span>client),
+            import_queue_service,
+            sync_mode,
+            subspace_link.kzg().clone(),
+        );
+        task_manager
+            .spawn_handle()
+            .spawn(<span class="string">&quot;observer&quot;</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;sync-from-dsn&quot;</span>), observer);
+        task_manager
+            .spawn_essential_handle()
+            .spawn_essential_blocking(
+                <span class="string">&quot;worker&quot;</span>,
+                <span class="prelude-val">Some</span>(<span class="string">&quot;sync-from-dsn&quot;</span>),
+                Box::pin(<span class="kw">async move </span>{
+                    <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = worker.<span class="kw">await </span>{
+                        <span class="macro">error!</span>(%error, <span class="string">&quot;Sync from DSN exited with an error&quot;</span>);
+                    }
+                }),
+            );
     }
 
-    <span class="kw">let </span>(network_service, system_rpc_tx, tx_handler_controller, network_starter, sync_service) =
-        sc_service::build_network(sc_service::BuildNetworkParams {
-            config: <span class="kw-2">&amp;</span>config,
-            client: client.clone(),
-            transaction_pool: transaction_pool.clone(),
-            spawn_handle: task_manager.spawn_handle(),
-            import_queue,
-            block_announce_validator_builder: <span class="prelude-val">None</span>,
-            warp_sync_params: <span class="prelude-val">None</span>,
-        })<span class="question-mark">?</span>;
-
-    <span class="kw">let </span>sync_oracle = sync_service.clone();
-    <span class="kw">let </span>best_hash = client.info().best_hash;
-    <span class="kw">let </span><span class="kw-2">mut </span>imported_blocks_stream = client.import_notification_stream();
-    task_manager.spawn_handle().spawn(
-        <span class="string">&quot;maintain-bundles-stored-in-last-k&quot;</span>,
-        <span class="prelude-val">None</span>,
-        Box::pin(<span class="kw">async move </span>{
-            <span class="kw">if </span>!sync_oracle.is_major_syncing() {
-                bundle_validator.update_recent_stored_bundles(best_hash);
+    <span class="kw">if let </span><span class="prelude-val">Some</span>(registry) = config.prometheus_registry().as_ref() {
+        <span class="kw">match </span>NodeMetrics::new(
+            client.clone(),
+            client.import_notification_stream(),
+            registry,
+        ) {
+            <span class="prelude-val">Ok</span>(node_metrics) =&gt; {
+                task_manager.spawn_handle().spawn(
+                    <span class="string">&quot;node_metrics&quot;</span>,
+                    <span class="prelude-val">None</span>,
+                    Box::pin(<span class="kw">async move </span>{
+                        node_metrics.run().<span class="kw">await</span>;
+                    }),
+                );
             }
-            <span class="kw">while let </span><span class="prelude-val">Some</span>(incoming_block) = imported_blocks_stream.next().<span class="kw">await </span>{
-                <span class="kw">if </span>!sync_oracle.is_major_syncing() &amp;&amp; incoming_block.is_new_best {
-                    bundle_validator.update_recent_stored_bundles(incoming_block.hash);
-                }
+            <span class="prelude-val">Err</span>(err) =&gt; {
+                <span class="macro">error!</span>(<span class="string">&quot;Failed to initialize node metrics: {err:?}&quot;</span>);
             }
-        }),
-    );
+        }
+    }
 
     <span class="kw">if </span>config.offchain_worker.enabled {
         sc_service::build_offchain_workers(
@@ -1636,6 +1733,24 @@
     <span class="kw">let </span>block_importing_notification_stream = subspace_link.block_importing_notification_stream();
     <span class="kw">let </span>archived_segment_notification_stream = subspace_link.archived_segment_notification_stream();
 
+    <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+    </span><span class="kw">let </span>pot_slot_info_stream = {
+        <span class="kw">let </span>(pot_source, pot_gossip_worker, pot_slot_info_stream) = PotSource::new(
+            config.is_timekeeper,
+            client.clone(),
+            pot_verifier,
+            network_service.clone(),
+            sync_service.clone(),
+        )
+        .map_err(|error| Error::Other(error.into()))<span class="question-mark">?</span>;
+        <span class="kw">let </span>spawn_essential_handle = task_manager.spawn_essential_handle();
+
+        spawn_essential_handle.spawn(<span class="string">&quot;pot-source&quot;</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;pot&quot;</span>), pot_source.run());
+        spawn_essential_handle.spawn_blocking(<span class="string">&quot;pot-gossip&quot;</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;pot&quot;</span>), pot_gossip_worker.run());
+
+        pot_slot_info_stream
+    };
+
     <span class="kw">if </span>config.role.is_authority() || config.force_new_slot_notifications {
         <span class="kw">let </span>proposer_factory = ProposerFactory::new(
             task_manager.spawn_handle(),
@@ -1650,7 +1765,7 @@
             select_chain: select_chain.clone(),
             env: proposer_factory,
             block_import,
-            sync_oracle: sync_service.clone(),
+            sync_oracle: subspace_sync_oracle.clone(),
             justification_sync_link: sync_service.clone(),
             create_inherent_data_providers: {
                 <span class="kw">let </span>client = client.clone();
@@ -1683,12 +1798,18 @@
             force_authoring: config.force_authoring,
             backoff_authoring_blocks,
             subspace_link: subspace_link.clone(),
+            segment_headers_store: segment_headers_store.clone(),
             block_proposal_slot_portion,
             max_block_proposal_slot_portion: <span class="prelude-val">None</span>,
             telemetry: <span class="prelude-val">None</span>,
+            <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+            </span>pot_slot_info_stream,
         };
 
-        <span class="kw">let </span>subspace = sc_consensus_subspace::start_subspace(subspace_config)<span class="question-mark">?</span>;
+        <span class="kw">let </span>subspace =
+            sc_consensus_subspace::start_subspace::&lt;PosTable, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>&gt;(
+                subspace_config,
+            )<span class="question-mark">?</span>;
 
         <span class="comment">// Subspace authoring task is considered essential, i.e. if it fails we take down the
         // service with it.
@@ -1725,8 +1846,9 @@
                     archived_segment_notification_stream: archived_segment_notification_stream
                         .clone(),
                     dsn_bootstrap_nodes: dsn_bootstrap_nodes.clone(),
-                    subspace_link: subspace_link.clone(),
-                    segment_headers_provider: segment_header_cache.clone(),
+                    segment_headers_store: segment_headers_store.clone(),
+                    sync_oracle: subspace_sync_oracle.clone(),
+                    kzg: subspace_link.kzg().clone(),
                 };
 
                 rpc::create_full(deps).map_err(Into::into)

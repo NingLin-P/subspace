@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-networking/src/behavior.rs`."><title>behavior.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_networking" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_networking/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-networking/src/behavior.rs`."><title>behavior.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_networking" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_networking/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -88,15 +88,99 @@
 <a href="#88" id="88">88</a>
 <a href="#89" id="89">89</a>
 <a href="#90" id="90">90</a>
-</pre><pre class="rust"><code><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>persistent_parameters;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>provider_storage;
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
+</pre></div><pre class="rust"><code><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>persistent_parameters;
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests;
 
-<span class="kw">use </span><span class="kw">crate</span>::request_responses::{
-    Event <span class="kw">as </span>RequestResponseEvent, RequestHandler, RequestResponsesBehaviour,
+<span class="kw">use </span><span class="kw">crate</span>::protocols::connected_peers::{
+    Behaviour <span class="kw">as </span>ConnectedPeersBehaviour, Config <span class="kw">as </span>ConnectedPeersConfig,
+    Event <span class="kw">as </span>ConnectedPeersEvent,
 };
+<span class="kw">use </span><span class="kw">crate</span>::protocols::peer_info::{
+    Behaviour <span class="kw">as </span>PeerInfoBehaviour, Config <span class="kw">as </span>PeerInfoConfig, Event <span class="kw">as </span>PeerInfoEvent,
+};
+<span class="kw">use </span><span class="kw">crate</span>::protocols::request_response::request_response_factory::{
+    Event <span class="kw">as </span>RequestResponseEvent, RequestHandler, RequestResponseFactoryBehaviour,
+};
+<span class="kw">use </span><span class="kw">crate</span>::protocols::reserved_peers::{
+    Behaviour <span class="kw">as </span>ReservedPeersBehaviour, Config <span class="kw">as </span>ReservedPeersConfig, Event <span class="kw">as </span>ReservedPeersEvent,
+};
+<span class="kw">use </span><span class="kw">crate</span>::PeerInfoProvider;
 <span class="kw">use </span>derive_more::From;
+<span class="kw">use </span>libp2p::allow_block_list::{Behaviour <span class="kw">as </span>AllowBlockListBehaviour, BlockedPeers};
+<span class="kw">use </span>libp2p::autonat::{Behaviour <span class="kw">as </span>Autonat, Config <span class="kw">as </span>AutonatConfig, Event <span class="kw">as </span>AutonatEvent};
+<span class="kw">use </span>libp2p::connection_limits::{Behaviour <span class="kw">as </span>ConnectionLimitsBehaviour, ConnectionLimits};
 <span class="kw">use </span>libp2p::gossipsub::{
     Behaviour <span class="kw">as </span>Gossipsub, Config <span class="kw">as </span>GossipsubConfig, Event <span class="kw">as </span>GossipsubEvent, MessageAuthenticity,
 };
@@ -106,6 +190,9 @@
 <span class="kw">use </span>libp2p::swarm::behaviour::toggle::Toggle;
 <span class="kw">use </span>libp2p::swarm::NetworkBehaviour;
 <span class="kw">use </span>libp2p::PeerId;
+<span class="kw">use </span>void::Void <span class="kw">as </span>VoidEvent;
+
+<span class="kw">type </span>BlockListBehaviour = AllowBlockListBehaviour&lt;BlockedPeers&gt;;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>BehaviorConfig&lt;RecordStore&gt; {
     <span class="doccomment">/// Identity keypair of a node used for authenticated connections.
@@ -120,17 +207,45 @@
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) record_store: RecordStore,
     <span class="doccomment">/// The configuration for the [`RequestResponsesBehaviour`] protocol.
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) request_response_protocols: Vec&lt;Box&lt;<span class="kw">dyn </span>RequestHandler&gt;&gt;,
+    <span class="doccomment">/// Connection limits for the swarm.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) connection_limits: ConnectionLimits,
+    <span class="doccomment">/// The configuration for the [`ReservedPeersBehaviour`].
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) reserved_peers: ReservedPeersConfig,
+    <span class="doccomment">/// The configuration for the [`PeerInfo`] protocol.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) peer_info_config: PeerInfoConfig,
+    <span class="doccomment">/// Provides peer-info for local peer.
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) peer_info_provider: <span class="prelude-ty">Option</span>&lt;PeerInfoProvider&gt;,
+    <span class="doccomment">/// The configuration for the [`ConnectedPeers`] protocol (general instance).
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) general_connected_peers_config: <span class="prelude-ty">Option</span>&lt;ConnectedPeersConfig&gt;,
+    <span class="doccomment">/// The configuration for the [`ConnectedPeers`] protocol (special instance).
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) special_connected_peers_config: <span class="prelude-ty">Option</span>&lt;ConnectedPeersConfig&gt;,
+    <span class="doccomment">/// Autonat configuration (optional).
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) autonat: <span class="prelude-ty">Option</span>&lt;AutonatConfig&gt;,
 }
 
+<span class="attr">#[derive(Debug, Clone, Copy)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>GeneralConnectedPeersInstance;
+<span class="attr">#[derive(Debug, Clone, Copy)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>SpecialConnectedPeersInstance;
+
 <span class="attr">#[derive(NetworkBehaviour)]
-#[behaviour(out_event = <span class="string">&quot;Event&quot;</span>)]
+#[behaviour(to_swarm = <span class="string">&quot;Event&quot;</span>)]
 #[behaviour(event_process = <span class="bool-val">false</span>)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Behavior&lt;RecordStore&gt; {
     <span class="kw">pub</span>(<span class="kw">crate</span>) identify: Identify,
     <span class="kw">pub</span>(<span class="kw">crate</span>) kademlia: Kademlia&lt;RecordStore&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) gossipsub: Toggle&lt;Gossipsub&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) ping: Ping,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) request_response: RequestResponsesBehaviour,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) request_response: RequestResponseFactoryBehaviour,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) connection_limits: ConnectionLimitsBehaviour,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) block_list: BlockListBehaviour,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) reserved_peers: ReservedPeersBehaviour,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) peer_info: Toggle&lt;PeerInfoBehaviour&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) general_connected_peers:
+        Toggle&lt;ConnectedPeersBehaviour&lt;GeneralConnectedPeersInstance&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) special_connected_peers:
+        Toggle&lt;ConnectedPeersBehaviour&lt;SpecialConnectedPeersInstance&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) autonat: Toggle&lt;Autonat&gt;,
 }
 
 <span class="kw">impl</span>&lt;RecordStore&gt; Behavior&lt;RecordStore&gt;
@@ -156,16 +271,36 @@
             })
             .into();
 
+        <span class="kw">let </span>peer_info = config
+            .peer_info_provider
+            .map(|provider| PeerInfoBehaviour::new(config.peer_info_config, provider));
+
         <span class="self">Self </span>{
             identify: Identify::new(config.identify),
             kademlia,
             gossipsub,
             ping: Ping::default(),
-            request_response: RequestResponsesBehaviour::new(
-                config.request_response_protocols.into_iter(),
+            request_response: RequestResponseFactoryBehaviour::new(
+                config.request_response_protocols,
             )
             <span class="comment">//TODO: Convert to an error.
             </span>.expect(<span class="string">&quot;RequestResponse protocols registration failed.&quot;</span>),
+            connection_limits: ConnectionLimitsBehaviour::new(config.connection_limits),
+            block_list: BlockListBehaviour::default(),
+            reserved_peers: ReservedPeersBehaviour::new(config.reserved_peers),
+            peer_info: peer_info.into(),
+            general_connected_peers: config
+                .general_connected_peers_config
+                .map(ConnectedPeersBehaviour::new)
+                .into(),
+            special_connected_peers: config
+                .special_connected_peers_config
+                .map(ConnectedPeersBehaviour::new)
+                .into(),
+            autonat: config
+                .autonat
+                .map(|autonat_config| Autonat::new(config.peer_id, autonat_config))
+                .into(),
         }
     }
 }
@@ -177,5 +312,12 @@
     Gossipsub(GossipsubEvent),
     Ping(PingEvent),
     RequestResponse(RequestResponseEvent),
+    <span class="doccomment">/// Event stub for connection limits and block list behaviours. We won&#39;t receive such events.
+    </span>VoidEventStub(VoidEvent),
+    ReservedPeers(ReservedPeersEvent),
+    PeerInfo(PeerInfoEvent),
+    GeneralConnectedPeers(ConnectedPeersEvent&lt;GeneralConnectedPeersInstance&gt;),
+    SpecialConnectedPeers(ConnectedPeersEvent&lt;SpecialConnectedPeersInstance&gt;),
+    Autonat(AutonatEvent),
 }
 </code></pre></div></section></main></body></html>

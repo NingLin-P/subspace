@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `domains/client/block-preprocessor/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="domain_block_preprocessor" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../domain_block_preprocessor/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `domains/client/block-preprocessor/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="domain_block_preprocessor" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../domain_block_preprocessor/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -505,179 +505,114 @@
 <a href="#505" id="505">505</a>
 <a href="#506" id="506">506</a>
 <a href="#507" id="507">507</a>
-<a href="#508" id="508">508</a>
-<a href="#509" id="509">509</a>
-<a href="#510" id="510">510</a>
-<a href="#511" id="511">511</a>
-<a href="#512" id="512">512</a>
-<a href="#513" id="513">513</a>
-<a href="#514" id="514">514</a>
-<a href="#515" id="515">515</a>
-<a href="#516" id="516">516</a>
-<a href="#517" id="517">517</a>
-<a href="#518" id="518">518</a>
-<a href="#519" id="519">519</a>
-<a href="#520" id="520">520</a>
-<a href="#521" id="521">521</a>
-<a href="#522" id="522">522</a>
-<a href="#523" id="523">523</a>
-<a href="#524" id="524">524</a>
-<a href="#525" id="525">525</a>
-<a href="#526" id="526">526</a>
-<a href="#527" id="527">527</a>
-<a href="#528" id="528">528</a>
-<a href="#529" id="529">529</a>
-<a href="#530" id="530">530</a>
-<a href="#531" id="531">531</a>
-<a href="#532" id="532">532</a>
-<a href="#533" id="533">533</a>
-<a href="#534" id="534">534</a>
-<a href="#535" id="535">535</a>
-<a href="#536" id="536">536</a>
-<a href="#537" id="537">537</a>
-<a href="#538" id="538">538</a>
-<a href="#539" id="539">539</a>
-</pre><pre class="rust"><code><span class="doccomment">//! This crate provides a preprocessor for the domain block, which is used to construct
-//! domain extrinsics from the primary block.
+</pre></div><pre class="rust"><code><span class="doccomment">//! This crate provides a preprocessor for the domain block, which is used to construct
+//! domain extrinsics from the consensus block.
 //!
 //! The workflow is as follows:
-//! 1. Extract domain-specific bundles from the primary block.
+//! 1. Extract domain-specific bundles from the consensus block.
 //! 2. Compile the domain bundles into a list of extrinsics.
-//!     - System domain: Each core domain bundle in the primary block will be wrapped
-//!     in an extrinsic and then joined with the extrinsics extracted from the system
-//!     domain bundle.
-//!     - Core domain: Extrinsics extracted from the core domain bundle.
-//! 3. Shuffle the extrisnics using the seed from the primary chain.
+//! 3. Shuffle the extrisnics using the seed from the consensus chain.
 //! 4. Filter out the invalid xdm extrinsics.
 //! 5. Push back the potential new domain runtime extrisnic.
 
 </span><span class="attr">#![warn(rust_2018_idioms)]
 
-</span><span class="kw">pub mod </span>runtime_api;
+</span><span class="kw">mod </span>inherents;
+<span class="kw">pub mod </span>runtime_api;
 <span class="kw">pub mod </span>runtime_api_full;
 <span class="kw">pub mod </span>runtime_api_light;
-<span class="kw">mod </span>utils;
 <span class="kw">pub mod </span>xdm_verifier;
 
-<span class="kw">use </span><span class="kw">crate</span>::runtime_api::{
-    CoreBundleConstructor, SetCodeConstructor, SignerExtractor, StateRootExtractor,
-};
-<span class="kw">use </span><span class="kw">crate</span>::xdm_verifier::{
-    verify_xdm_with_primary_chain_client, verify_xdm_with_system_domain_client,
-};
+<span class="kw">use </span><span class="kw">crate</span>::inherents::construct_inherent_extrinsics;
+<span class="kw">use </span><span class="kw">crate</span>::runtime_api::{SetCodeConstructor, SignerExtractor, StateRootExtractor};
+<span class="kw">use </span><span class="kw">crate</span>::xdm_verifier::is_valid_xdm;
 <span class="kw">use </span>codec::{Decode, Encode};
 <span class="kw">use </span>domain_runtime_primitives::opaque::AccountId;
+<span class="kw">use </span>domain_runtime_primitives::DomainCoreApi;
 <span class="kw">use </span>rand::seq::SliceRandom;
 <span class="kw">use </span>rand::SeedableRng;
 <span class="kw">use </span>rand_chacha::ChaCha8Rng;
+<span class="kw">use </span>runtime_api::InherentExtrinsicConstructor;
 <span class="kw">use </span>sc_client_api::BlockBackend;
 <span class="kw">use </span>sp_api::ProvideRuntimeApi;
 <span class="kw">use </span>sp_blockchain::HeaderBackend;
-<span class="kw">use </span>sp_domains::{DomainId, ExecutorApi, OpaqueBundles};
+<span class="kw">use </span>sp_domains::{
+    BundleValidity, DomainId, DomainsApi, DomainsDigestItem, ExecutionReceipt, ExtrinsicsRoot,
+    InvalidBundle, InvalidBundleType, OpaqueBundle, OpaqueBundles, ReceiptValidity,
+};
 <span class="kw">use </span>sp_messenger::MessengerApi;
-<span class="kw">use </span>sp_runtime::generic::DigestItem;
 <span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, Header <span class="kw">as </span>HeaderT, NumberFor};
 <span class="kw">use </span>std::borrow::Cow;
 <span class="kw">use </span>std::collections::{BTreeMap, VecDeque};
 <span class="kw">use </span>std::fmt::Debug;
 <span class="kw">use </span>std::marker::PhantomData;
 <span class="kw">use </span>std::sync::Arc;
-<span class="kw">use </span>subspace_core_primitives::Randomness;
-<span class="kw">use </span>subspace_wasm_tools::read_core_domain_runtime_blob;
-<span class="kw">use </span>system_runtime_primitives::SystemDomainApi;
+<span class="kw">use </span>subspace_core_primitives::{Randomness, U256};
+<span class="kw">use </span>subspace_runtime_primitives::Balance;
 
 <span class="kw">type </span>MaybeNewRuntime = <span class="prelude-ty">Option</span>&lt;Cow&lt;<span class="lifetime">&#39;static</span>, [u8]&gt;&gt;;
 
-<span class="kw">type </span>DomainBlockElements&lt;PBlock&gt; = (
-    Vec&lt;&lt;PBlock <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;,
+<span class="kw">type </span>DomainBlockElements&lt;CBlock&gt; = (
+    Vec&lt;&lt;CBlock <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;,
     Randomness,
     MaybeNewRuntime,
 );
 
 <span class="doccomment">/// Extracts the raw materials for building a new domain block from the primary block.
-</span><span class="kw">fn </span>prepare_domain_block_elements&lt;Block, PBlock, PClient&gt;(
+</span><span class="kw">fn </span>prepare_domain_block_elements&lt;Block, CBlock, CClient&gt;(
     domain_id: DomainId,
-    primary_chain_client: <span class="kw-2">&amp;</span>PClient,
-    block_hash: PBlock::Hash,
-) -&gt; sp_blockchain::Result&lt;DomainBlockElements&lt;PBlock&gt;&gt;
+    consensus_client: <span class="kw-2">&amp;</span>CClient,
+    block_hash: CBlock::Hash,
+) -&gt; sp_blockchain::Result&lt;DomainBlockElements&lt;CBlock&gt;&gt;
 <span class="kw">where
     </span>Block: BlockT,
-    PBlock: BlockT,
-    PClient: HeaderBackend&lt;PBlock&gt; + BlockBackend&lt;PBlock&gt; + ProvideRuntimeApi&lt;PBlock&gt; + Send + Sync,
-    PClient::Api: ExecutorApi&lt;PBlock, Block::Hash&gt;,
+    CBlock: BlockT,
+    CClient: HeaderBackend&lt;CBlock&gt; + BlockBackend&lt;CBlock&gt; + ProvideRuntimeApi&lt;CBlock&gt; + Send + Sync,
+    CClient::Api: DomainsApi&lt;CBlock, NumberFor&lt;Block&gt;, Block::Hash&gt;,
 {
-    <span class="kw">let </span>extrinsics = primary_chain_client
-        .block_body(block_hash)<span class="question-mark">?
-        </span>.ok_or_else(|| {
-            sp_blockchain::Error::Backend(<span class="macro">format!</span>(<span class="string">&quot;BlockBody of {block_hash:?} unavailable&quot;</span>))
-        })<span class="question-mark">?</span>;
+    <span class="kw">let </span>extrinsics = consensus_client.block_body(block_hash)<span class="question-mark">?</span>.ok_or_else(|| {
+        sp_blockchain::Error::Backend(<span class="macro">format!</span>(<span class="string">&quot;BlockBody of {block_hash:?} unavailable&quot;</span>))
+    })<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>header = primary_chain_client.header(block_hash)<span class="question-mark">?</span>.ok_or_else(|| {
+    <span class="kw">let </span>header = consensus_client.header(block_hash)<span class="question-mark">?</span>.ok_or_else(|| {
         sp_blockchain::Error::Backend(<span class="macro">format!</span>(<span class="string">&quot;BlockHeader of {block_hash:?} unavailable&quot;</span>))
     })<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>runtime_id = consensus_client
+        .runtime_api()
+        .runtime_id(block_hash, domain_id)<span class="question-mark">?
+        </span>.ok_or_else(|| {
+            sp_blockchain::Error::Application(Box::from(<span class="macro">format!</span>(
+                <span class="string">&quot;Runtime id not found for {domain_id:?}&quot;
+            </span>)))
+        })<span class="question-mark">?</span>;
 
     <span class="kw">let </span>maybe_new_runtime = <span class="kw">if </span>header
         .digest()
         .logs
         .iter()
-        .any(|item| <span class="kw-2">*</span>item == DigestItem::RuntimeEnvironmentUpdated)
+        .filter_map(|log| log.as_domain_runtime_upgrade())
+        .any(|upgraded_runtime_id| upgraded_runtime_id == runtime_id)
     {
-        <span class="kw">let </span>system_domain_runtime = primary_chain_client
+        <span class="kw">let </span>new_domain_runtime = consensus_client
             .runtime_api()
-            .system_domain_wasm_bundle(block_hash)<span class="question-mark">?</span>;
-
-        <span class="kw">let </span>new_runtime = {
-            <span class="kw">if </span>domain_id.is_system() {
-                system_domain_runtime
-            } <span class="kw">else if </span>domain_id.is_core() {
-                read_core_domain_runtime_blob(system_domain_runtime.as_ref(), domain_id)
-                    .map_err(|err| sp_blockchain::Error::Application(Box::new(err)))<span class="question-mark">?
-                    </span>.into()
-            } <span class="kw">else </span>{
-                <span class="kw">return </span><span class="prelude-val">Err</span>(sp_blockchain::Error::Application(Box::from(<span class="macro">format!</span>(
+            .domain_runtime_code(block_hash, domain_id)<span class="question-mark">?
+            </span>.ok_or_else(|| {
+                sp_blockchain::Error::Application(Box::from(<span class="macro">format!</span>(
                     <span class="string">&quot;No new runtime code for {domain_id:?}&quot;
-                </span>))));
-            }
-        };
+                </span>)))
+            })<span class="question-mark">?</span>;
 
-        <span class="prelude-val">Some</span>(new_runtime)
+        <span class="prelude-val">Some</span>(new_domain_runtime.into())
     } <span class="kw">else </span>{
         <span class="prelude-val">None
     </span>};
 
-    <span class="kw">let </span>shuffling_seed = primary_chain_client
+    <span class="kw">let </span>shuffling_seed = consensus_client
         .runtime_api()
-        .extrinsics_shuffling_seed(block_hash, header)<span class="question-mark">?</span>;
+        .extrinsics_shuffling_seed(block_hash)<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>((extrinsics, shuffling_seed, maybe_new_runtime))
-}
-
-<span class="kw">fn </span>compile_own_domain_bundles&lt;Block, PBlock&gt;(
-    bundles: OpaqueBundles&lt;PBlock, Block::Hash&gt;,
-) -&gt; Vec&lt;Block::Extrinsic&gt;
-<span class="kw">where
-    </span>Block: BlockT,
-    PBlock: BlockT,
-{
-    bundles
-        .into_iter()
-        .flat_map(|bundle| {
-            bundle.extrinsics.into_iter().filter_map(|opaque_extrinsic| {
-                <span class="kw">match </span>&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;::decode(
-                    <span class="kw-2">&amp;mut </span>opaque_extrinsic.encode().as_slice(),
-                ) {
-                    <span class="prelude-val">Ok</span>(uxt) =&gt; <span class="prelude-val">Some</span>(uxt),
-                    <span class="prelude-val">Err</span>(e) =&gt; {
-                        <span class="macro">tracing::error!</span>(
-                                error = <span class="question-mark">?</span>e,
-                                <span class="string">&quot;Failed to decode the opaque extrisic in bundle, this should not happen&quot;
-                            </span>);
-                        <span class="prelude-val">None
-                    </span>}
-                }
-            })
-        })
-        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
 }
 
 <span class="kw">fn </span>deduplicate_and_shuffle_extrinsics&lt;Block, SE&gt;(
@@ -728,7 +663,7 @@
     extrinsics: Vec&lt;(<span class="prelude-ty">Option</span>&lt;AccountId&gt;, Extrinsic)&gt;,
     shuffling_seed: Randomness,
 ) -&gt; Vec&lt;Extrinsic&gt; {
-    <span class="kw">let </span><span class="kw-2">mut </span>rng = ChaCha8Rng::from_seed(shuffling_seed);
+    <span class="kw">let </span><span class="kw-2">mut </span>rng = ChaCha8Rng::from_seed(<span class="kw-2">*</span>shuffling_seed);
 
     <span class="kw">let </span><span class="kw-2">mut </span>positions = extrinsics
         .iter()
@@ -766,95 +701,128 @@
     shuffled_extrinsics
 }
 
-<span class="kw">pub struct </span>SystemDomainBlockPreprocessor&lt;Block, PBlock, PClient, RuntimeApi&gt; {
-    primary_chain_client: Arc&lt;PClient&gt;,
-    runtime_api: RuntimeApi,
-    _phantom_data: PhantomData&lt;(Block, PBlock)&gt;,
+<span class="kw">pub struct </span>PreprocessResult&lt;Block: BlockT&gt; {
+    <span class="kw">pub </span>extrinsics: Vec&lt;Block::Extrinsic&gt;,
+    <span class="kw">pub </span>extrinsics_roots: Vec&lt;ExtrinsicsRoot&gt;,
+    <span class="kw">pub </span>invalid_bundles: Vec&lt;InvalidBundle&gt;,
 }
 
-<span class="kw">impl</span>&lt;Block, PBlock, PClient, RuntimeApi: Clone&gt; Clone
-    <span class="kw">for </span>SystemDomainBlockPreprocessor&lt;Block, PBlock, PClient, RuntimeApi&gt;
+<span class="kw">pub struct </span>DomainBlockPreprocessor&lt;Block, CBlock, Client, CClient, RuntimeApi, ReceiptValidator&gt; {
+    domain_id: DomainId,
+    client: Arc&lt;Client&gt;,
+    consensus_client: Arc&lt;CClient&gt;,
+    runtime_api: RuntimeApi,
+    receipt_validator: ReceiptValidator,
+    _phantom_data: PhantomData&lt;(Block, CBlock)&gt;,
+}
+
+<span class="kw">impl</span>&lt;Block, CBlock, Client, CClient, RuntimeApi: Clone, ReceiptValidator: Clone&gt; Clone
+    <span class="kw">for </span>DomainBlockPreprocessor&lt;Block, CBlock, Client, CClient, RuntimeApi, ReceiptValidator&gt;
 {
     <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
-            primary_chain_client: <span class="self">self</span>.primary_chain_client.clone(),
+            domain_id: <span class="self">self</span>.domain_id,
+            client: <span class="self">self</span>.client.clone(),
+            consensus_client: <span class="self">self</span>.consensus_client.clone(),
             runtime_api: <span class="self">self</span>.runtime_api.clone(),
+            receipt_validator: <span class="self">self</span>.receipt_validator.clone(),
             _phantom_data: <span class="self">self</span>._phantom_data,
         }
     }
 }
 
-<span class="kw">impl</span>&lt;Block, PBlock, PClient, RuntimeApi&gt;
-    SystemDomainBlockPreprocessor&lt;Block, PBlock, PClient, RuntimeApi&gt;
+<span class="kw">pub trait </span>ValidateReceipt&lt;Block, CBlock&gt;
 <span class="kw">where
     </span>Block: BlockT,
-    PBlock: BlockT,
-    PBlock::Hash: From&lt;Block::Hash&gt;,
-    NumberFor&lt;PBlock&gt;: From&lt;NumberFor&lt;Block&gt;&gt;,
-    RuntimeApi: CoreBundleConstructor&lt;PBlock, Block&gt;
-        + SignerExtractor&lt;Block&gt;
+    CBlock: BlockT,
+{
+    <span class="kw">fn </span>validate_receipt(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        receipt: <span class="kw-2">&amp;</span>ExecutionReceipt&lt;
+            NumberFor&lt;CBlock&gt;,
+            CBlock::Hash,
+            NumberFor&lt;Block&gt;,
+            Block::Hash,
+            Balance,
+        &gt;,
+    ) -&gt; sp_blockchain::Result&lt;ReceiptValidity&gt;;
+}
+
+<span class="kw">impl</span>&lt;Block, CBlock, Client, CClient, RuntimeApi, ReceiptValidator&gt;
+    DomainBlockPreprocessor&lt;Block, CBlock, Client, CClient, RuntimeApi, ReceiptValidator&gt;
+<span class="kw">where
+    </span>Block: BlockT,
+    CBlock: BlockT,
+    CBlock::Hash: From&lt;Block::Hash&gt;,
+    NumberFor&lt;CBlock&gt;: From&lt;NumberFor&lt;Block&gt;&gt;,
+    RuntimeApi: SignerExtractor&lt;Block&gt;
         + StateRootExtractor&lt;Block&gt;
-        + SetCodeConstructor&lt;Block&gt;,
-    PClient: HeaderBackend&lt;PBlock&gt;
-        + BlockBackend&lt;PBlock&gt;
-        + ProvideRuntimeApi&lt;PBlock&gt;
+        + SetCodeConstructor&lt;Block&gt;
+        + InherentExtrinsicConstructor&lt;Block&gt;,
+    Client: ProvideRuntimeApi&lt;Block&gt; + <span class="lifetime">&#39;static</span>,
+    Client::Api: DomainCoreApi&lt;Block&gt;,
+    CClient: HeaderBackend&lt;CBlock&gt;
+        + BlockBackend&lt;CBlock&gt;
+        + ProvideRuntimeApi&lt;CBlock&gt;
         + Send
         + Sync
         + <span class="lifetime">&#39;static</span>,
-    PClient::Api: ExecutorApi&lt;PBlock, Block::Hash&gt;,
+    CClient::Api:
+        DomainsApi&lt;CBlock, NumberFor&lt;Block&gt;, Block::Hash&gt; + MessengerApi&lt;CBlock, NumberFor&lt;CBlock&gt;&gt;,
+    ReceiptValidator: ValidateReceipt&lt;Block, CBlock&gt;,
 {
-    <span class="kw">pub fn </span>new(primary_chain_client: Arc&lt;PClient&gt;, runtime_api: RuntimeApi) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>new(
+        domain_id: DomainId,
+        client: Arc&lt;Client&gt;,
+        consensus_client: Arc&lt;CClient&gt;,
+        runtime_api: RuntimeApi,
+        receipt_validator: ReceiptValidator,
+    ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
-            primary_chain_client,
+            domain_id,
+            client,
+            consensus_client,
             runtime_api,
+            receipt_validator,
             _phantom_data: Default::default(),
         }
     }
 
-    <span class="kw">pub fn </span>preprocess_primary_block_for_verifier(
+    <span class="kw">pub fn </span>preprocess_consensus_block(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        primary_hash: PBlock::Hash,
-    ) -&gt; sp_blockchain::Result&lt;Vec&lt;Vec&lt;u8&gt;&gt;&gt; {
-        <span class="comment">// `domain_hash` is unused in `preprocess_primary_block` when using stateless runtime api.
-        </span><span class="kw">let </span>domain_hash = Default::default();
-        <span class="prelude-val">Ok</span>(<span class="self">self
-            </span>.preprocess_primary_block(primary_hash, domain_hash)<span class="question-mark">?
-            </span>.into_iter()
-            .map(|ext| ext.encode())
-            .collect())
-    }
-
-    <span class="kw">pub fn </span>preprocess_primary_block(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        primary_hash: PBlock::Hash,
+        consensus_block_hash: CBlock::Hash,
         domain_hash: Block::Hash,
-    ) -&gt; sp_blockchain::Result&lt;Vec&lt;Block::Extrinsic&gt;&gt; {
+    ) -&gt; sp_blockchain::Result&lt;<span class="prelude-ty">Option</span>&lt;PreprocessResult&lt;Block&gt;&gt;&gt; {
         <span class="kw">let </span>(primary_extrinsics, shuffling_seed, maybe_new_runtime) =
-            prepare_domain_block_elements::&lt;Block, PBlock, <span class="kw">_</span>&gt;(
-                DomainId::SYSTEM,
-                <span class="kw-2">&amp;*</span><span class="self">self</span>.primary_chain_client,
-                primary_hash,
+            prepare_domain_block_elements::&lt;Block, CBlock, <span class="kw">_</span>&gt;(
+                <span class="self">self</span>.domain_id,
+                <span class="kw-2">&amp;*</span><span class="self">self</span>.consensus_client,
+                consensus_block_hash,
             )<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>(system_bundles, core_bundles) = <span class="self">self
-            </span>.primary_chain_client
+        <span class="kw">let </span>bundles = <span class="self">self
+            </span>.consensus_client
             .runtime_api()
-            .extract_system_bundles(primary_hash, primary_extrinsics)<span class="question-mark">?</span>;
+            .extract_successful_bundles(consensus_block_hash, <span class="self">self</span>.domain_id, primary_extrinsics)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>origin_system_extrinsics = compile_own_domain_bundles::&lt;Block, PBlock&gt;(system_bundles);
+        <span class="kw">if </span>bundles.is_empty() &amp;&amp; maybe_new_runtime.is_none() {
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
+        }
 
-        <span class="kw">let </span>extrinsics = <span class="self">self
-            </span>.runtime_api
-            .construct_submit_core_bundle_extrinsics(domain_hash, core_bundles)<span class="question-mark">?
-            </span>.into_iter()
-            .map(|uxt| {
-                &lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;::decode(<span class="kw-2">&amp;mut </span>uxt.as_slice())
-                    .expect(<span class="string">&quot;Internally constructed extrinsic must be valid; qed&quot;</span>)
-            })
-            .chain(origin_system_extrinsics)
-            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+        <span class="kw">let </span>extrinsics_roots = bundles
+            .iter()
+            .map(|bundle| bundle.extrinsics_root())
+            .collect();
 
-        <span class="kw">let </span><span class="kw-2">mut </span>extrinsics = deduplicate_and_shuffle_extrinsics(
+        <span class="kw">let </span>tx_range = <span class="self">self
+            </span>.consensus_client
+            .runtime_api()
+            .domain_tx_range(consensus_block_hash, <span class="self">self</span>.domain_id)<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>(invalid_bundles, extrinsics) =
+            <span class="self">self</span>.compile_bundles_to_extrinsics(bundles, tx_range, domain_hash)<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>extrinsics_in_bundle = deduplicate_and_shuffle_extrinsics(
             domain_hash,
             <span class="kw-2">&amp;</span><span class="self">self</span>.runtime_api,
             extrinsics,
@@ -862,6 +830,16 @@
         )
         .map(|exts| <span class="self">self</span>.filter_invalid_xdm_extrinsics(domain_hash, exts))<span class="question-mark">?</span>;
 
+        <span class="comment">// Fetch inherent extrinsics
+        </span><span class="kw">let </span><span class="kw-2">mut </span>extrinsics = construct_inherent_extrinsics(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.consensus_client,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.runtime_api,
+            consensus_block_hash,
+            domain_hash,
+        )<span class="question-mark">?</span>;
+
+        extrinsics.extend(extrinsics_in_bundle);
+
         <span class="kw">if let </span><span class="prelude-val">Some</span>(new_runtime) = maybe_new_runtime {
             <span class="kw">let </span>encoded_set_code = <span class="self">self
                 </span>.runtime_api
@@ -874,144 +852,105 @@
                 })<span class="question-mark">?</span>;
             extrinsics.push(set_code_extrinsic);
         }
-
-        <span class="prelude-val">Ok</span>(extrinsics)
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(PreprocessResult {
+            extrinsics,
+            extrinsics_roots,
+            invalid_bundles,
+        }))
     }
 
-    <span class="kw">fn </span>filter_invalid_xdm_extrinsics(
+    <span class="doccomment">/// Filter out the invalid bundles first and then convert the remaining valid ones to
+    /// a list of extrinsics.
+    </span><span class="kw">fn </span>compile_bundles_to_extrinsics(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
+        bundles: OpaqueBundles&lt;CBlock, NumberFor&lt;Block&gt;, Block::Hash, Balance&gt;,
+        tx_range: U256,
         at: Block::Hash,
-        exts: Vec&lt;Block::Extrinsic&gt;,
-    ) -&gt; Vec&lt;Block::Extrinsic&gt; {
-        exts.into_iter()
-            .filter(|ext| {
-                <span class="kw">match </span>verify_xdm_with_primary_chain_client::&lt;PClient, PBlock, Block, <span class="kw">_</span>&gt;(
-                    <span class="kw-2">&amp;</span><span class="self">self</span>.primary_chain_client,
-                    at,
-                    <span class="kw-2">&amp;</span><span class="self">self</span>.runtime_api,
-                    ext,
-                ) {
-                    <span class="prelude-val">Ok</span>(valid) =&gt; valid,
-                    <span class="prelude-val">Err</span>(err) =&gt; {
-                        <span class="macro">tracing::error!</span>(
-                            target = <span class="string">&quot;system_domain_xdm_filter&quot;</span>,
-                            <span class="string">&quot;failed to verify extrinsic: {}&quot;</span>,
-                            err
-                        );
-                        <span class="bool-val">false
-                    </span>}
+    ) -&gt; sp_blockchain::Result&lt;(Vec&lt;InvalidBundle&gt;, Vec&lt;Block::Extrinsic&gt;)&gt; {
+        <span class="kw">let </span><span class="kw-2">mut </span>invalid_bundles = Vec::with_capacity(bundles.len());
+        <span class="kw">let </span><span class="kw-2">mut </span>valid_extrinsics = Vec::new();
+
+        <span class="kw">for </span>(index, bundle) <span class="kw">in </span>bundles.into_iter().enumerate() {
+            <span class="kw">match </span><span class="self">self</span>.check_bundle_validity(<span class="kw-2">&amp;</span>bundle, <span class="kw-2">&amp;</span>tx_range, at)<span class="question-mark">? </span>{
+                BundleValidity::Valid(extrinsics) =&gt; valid_extrinsics.extend(extrinsics),
+                BundleValidity::Invalid(invalid_bundle_type) =&gt; {
+                    invalid_bundles.push(InvalidBundle {
+                        bundle_index: index <span class="kw">as </span>u32,
+                        invalid_bundle_type,
+                    });
                 }
-            })
-            .collect()
-    }
-}
-
-<span class="kw">pub struct </span>CoreDomainBlockPreprocessor&lt;Block, PBlock, SBlock, PClient, SClient, RuntimeApi&gt; {
-    domain_id: DomainId,
-    runtime_api: RuntimeApi,
-    system_domain_client: Arc&lt;SClient&gt;,
-    primary_chain_client: Arc&lt;PClient&gt;,
-    _phantom_data: PhantomData&lt;(Block, PBlock, SBlock)&gt;,
-}
-
-<span class="kw">impl</span>&lt;Block, PBlock, SBlock, PClient, SClient, RuntimeApi: Clone&gt; Clone
-    <span class="kw">for </span>CoreDomainBlockPreprocessor&lt;Block, PBlock, SBlock, PClient, SClient, RuntimeApi&gt;
-{
-    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            domain_id: <span class="self">self</span>.domain_id,
-            runtime_api: <span class="self">self</span>.runtime_api.clone(),
-            system_domain_client: <span class="self">self</span>.system_domain_client.clone(),
-            primary_chain_client: <span class="self">self</span>.primary_chain_client.clone(),
-            _phantom_data: <span class="self">self</span>._phantom_data,
+            }
         }
-    }
-}
 
-<span class="kw">impl</span>&lt;Block, PBlock, SBlock, PClient, SClient, RuntimeApi&gt;
-    CoreDomainBlockPreprocessor&lt;Block, PBlock, SBlock, PClient, SClient, RuntimeApi&gt;
-<span class="kw">where
-    </span>Block: BlockT,
-    PBlock: BlockT,
-    SBlock: BlockT,
-    SBlock::Hash: From&lt;Block::Hash&gt;,
-    NumberFor&lt;SBlock&gt;: From&lt;NumberFor&lt;Block&gt;&gt;,
-    RuntimeApi: SignerExtractor&lt;Block&gt; + SetCodeConstructor&lt;Block&gt; + StateRootExtractor&lt;Block&gt;,
-    PClient: HeaderBackend&lt;PBlock&gt; + BlockBackend&lt;PBlock&gt; + ProvideRuntimeApi&lt;PBlock&gt; + Send + Sync,
-    PClient::Api: ExecutorApi&lt;PBlock, Block::Hash&gt;,
-    SClient: HeaderBackend&lt;SBlock&gt; + ProvideRuntimeApi&lt;SBlock&gt; + <span class="lifetime">&#39;static</span>,
-    SClient::Api: SystemDomainApi&lt;SBlock, NumberFor&lt;PBlock&gt;, PBlock::Hash&gt;
-        + MessengerApi&lt;SBlock, NumberFor&lt;SBlock&gt;&gt;,
-{
-    <span class="kw">pub fn </span>new(
-        domain_id: DomainId,
-        runtime_api: RuntimeApi,
-        primary_chain_client: Arc&lt;PClient&gt;,
-        system_domain_client: Arc&lt;SClient&gt;,
-    ) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            domain_id,
-            runtime_api,
-            system_domain_client,
-            primary_chain_client,
-            _phantom_data: Default::default(),
+        <span class="prelude-val">Ok</span>((invalid_bundles, valid_extrinsics))
+    }
+
+    <span class="kw">fn </span>check_bundle_validity(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        bundle: <span class="kw-2">&amp;</span>OpaqueBundle&lt;
+            NumberFor&lt;CBlock&gt;,
+            CBlock::Hash,
+            NumberFor&lt;Block&gt;,
+            Block::Hash,
+            Balance,
+        &gt;,
+        tx_range: <span class="kw-2">&amp;</span>U256,
+        at: Block::Hash,
+    ) -&gt; sp_blockchain::Result&lt;BundleValidity&lt;Block::Extrinsic&gt;&gt; {
+        <span class="comment">// Bundles with incorrect ER are considered invalid.
+        </span><span class="kw">if let </span>ReceiptValidity::Invalid(invalid_receipt) =
+            <span class="self">self</span>.receipt_validator.validate_receipt(bundle.receipt())<span class="question-mark">?
+        </span>{
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(BundleValidity::Invalid(InvalidBundleType::InvalidReceipt(
+                invalid_receipt,
+            )));
         }
-    }
 
-    <span class="kw">pub fn </span>preprocess_primary_block_for_verifier(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        primary_hash: PBlock::Hash,
-    ) -&gt; sp_blockchain::Result&lt;Vec&lt;Vec&lt;u8&gt;&gt;&gt; {
-        <span class="comment">// `domain_hash` is unused in `preprocess_primary_block` when using stateless runtime api.
-        </span><span class="kw">let </span>domain_hash = Default::default();
-        <span class="prelude-val">Ok</span>(<span class="self">self
-            </span>.preprocess_primary_block(primary_hash, domain_hash)<span class="question-mark">?
-            </span>.into_iter()
-            .map(|ext| ext.encode())
-            .collect())
-    }
+        <span class="kw">let </span>bundle_vrf_hash =
+            U256::from_be_bytes(bundle.sealed_header.header.proof_of_election.vrf_hash());
 
-    <span class="kw">pub fn </span>preprocess_primary_block(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        primary_hash: PBlock::Hash,
-        domain_hash: Block::Hash,
-    ) -&gt; sp_blockchain::Result&lt;Vec&lt;Block::Extrinsic&gt;&gt; {
-        <span class="kw">let </span>(primary_extrinsics, shuffling_seed, maybe_new_runtime) =
-            prepare_domain_block_elements::&lt;Block, PBlock, <span class="kw">_</span>&gt;(
-                <span class="self">self</span>.domain_id,
-                <span class="kw-2">&amp;*</span><span class="self">self</span>.primary_chain_client,
-                primary_hash,
+        <span class="kw">let </span><span class="kw-2">mut </span>extrinsics = Vec::with_capacity(bundle.extrinsics.len());
+
+        <span class="kw">for </span>opaque_extrinsic <span class="kw">in </span><span class="kw-2">&amp;</span>bundle.extrinsics {
+            <span class="kw">let </span><span class="prelude-val">Ok</span>(extrinsic) =
+                &lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;::decode(<span class="kw-2">&amp;mut </span>opaque_extrinsic.encode().as_slice())
+            <span class="kw">else </span>{
+                <span class="macro">tracing::error!</span>(
+                    <span class="question-mark">?</span>opaque_extrinsic,
+                    <span class="string">&quot;Undecodable extrinsic in bundle({})&quot;</span>,
+                    bundle.hash()
+                );
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(BundleValidity::Invalid(InvalidBundleType::UndecodableTx));
+            };
+
+            <span class="kw">let </span>is_within_tx_range = <span class="self">self</span>.client.runtime_api().is_within_tx_range(
+                at,
+                <span class="kw-2">&amp;</span>extrinsic,
+                <span class="kw-2">&amp;</span>bundle_vrf_hash,
+                tx_range,
             )<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>core_bundles = <span class="self">self
-            </span>.primary_chain_client
-            .runtime_api()
-            .extract_core_bundles(primary_hash, primary_extrinsics, <span class="self">self</span>.domain_id)<span class="question-mark">?</span>;
+            <span class="kw">if </span>!is_within_tx_range {
+                <span class="comment">// TODO: Generate a fraud proof for this invalid bundle
+                </span><span class="kw">return </span><span class="prelude-val">Ok</span>(BundleValidity::Invalid(InvalidBundleType::OutOfRangeTx));
+            }
 
-        <span class="kw">let </span>extrinsics = compile_own_domain_bundles::&lt;Block, PBlock&gt;(core_bundles);
+            <span class="comment">// TODO: the `check_transaction_validity` is unimplemented
+            </span><span class="kw">let </span>is_legal_tx = <span class="self">self
+                </span>.client
+                .runtime_api()
+                .check_transaction_validity(at, <span class="kw-2">&amp;</span>extrinsic, at)<span class="question-mark">?
+                </span>.is_ok();
 
-        <span class="kw">let </span><span class="kw-2">mut </span>extrinsics = deduplicate_and_shuffle_extrinsics(
-            domain_hash,
-            <span class="kw-2">&amp;</span><span class="self">self</span>.runtime_api,
-            extrinsics,
-            shuffling_seed,
-        )
-        .map(|extrinsics| <span class="self">self</span>.filter_invalid_xdm_extrinsics(domain_hash, extrinsics))<span class="question-mark">?</span>;
+            <span class="kw">if </span>!is_legal_tx {
+                <span class="comment">// TODO: Generate a fraud proof for this invalid bundle
+                </span><span class="kw">return </span><span class="prelude-val">Ok</span>(BundleValidity::Invalid(InvalidBundleType::IllegalTx));
+            }
 
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(new_runtime) = maybe_new_runtime {
-            <span class="kw">let </span>encoded_set_code = <span class="self">self
-                </span>.runtime_api
-                .construct_set_code_extrinsic(domain_hash, new_runtime.to_vec())<span class="question-mark">?</span>;
-            <span class="kw">let </span>set_code_extrinsic = Block::Extrinsic::decode(<span class="kw-2">&amp;mut </span>encoded_set_code.as_slice())
-                .map_err(|err| {
-                    sp_blockchain::Error::Application(Box::from(<span class="macro">format!</span>(
-                        <span class="string">&quot;Failed to decode `set_code` extrinsic: {err}&quot;
-                    </span>)))
-                })<span class="question-mark">?</span>;
-            extrinsics.push(set_code_extrinsic);
+            extrinsics.push(extrinsic);
         }
 
-        <span class="prelude-val">Ok</span>(extrinsics)
+        <span class="prelude-val">Ok</span>(BundleValidity::Valid(extrinsics))
     }
 
     <span class="kw">fn </span>filter_invalid_xdm_extrinsics(
@@ -1021,19 +960,15 @@
     ) -&gt; Vec&lt;Block::Extrinsic&gt; {
         exts.into_iter()
             .filter(|ext| {
-                <span class="kw">match </span>verify_xdm_with_system_domain_client::&lt;<span class="kw">_</span>, Block, SBlock, PBlock, <span class="kw">_</span>&gt;(
-                    <span class="kw-2">&amp;</span><span class="self">self</span>.system_domain_client,
+                <span class="kw">match </span>is_valid_xdm::&lt;CClient, CBlock, Block, <span class="kw">_</span>&gt;(
+                    <span class="kw-2">&amp;</span><span class="self">self</span>.consensus_client,
                     at,
-                    ext,
                     <span class="kw-2">&amp;</span><span class="self">self</span>.runtime_api,
+                    ext,
                 ) {
                     <span class="prelude-val">Ok</span>(valid) =&gt; valid,
                     <span class="prelude-val">Err</span>(err) =&gt; {
-                        <span class="macro">tracing::error!</span>(
-                            target = <span class="string">&quot;core_domain_xdm_filter&quot;</span>,
-                            <span class="string">&quot;failed to verify extrinsic: {}&quot;</span>,
-                            err
-                        );
+                        <span class="macro">tracing::error!</span>(<span class="string">&quot;failed to verify extrinsic: {err}&quot;</span>,);
                         <span class="bool-val">false
                     </span>}
                 }
@@ -1047,6 +982,7 @@
     <span class="kw">use </span><span class="kw">super</span>::shuffle_extrinsics;
     <span class="kw">use </span>sp_keyring::sr25519::Keyring;
     <span class="kw">use </span>sp_runtime::traits::{BlakeTwo256, Hash <span class="kw">as </span>HashT};
+    <span class="kw">use </span>subspace_core_primitives::Randomness;
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>shuffle_extrinsics_should_work() {
@@ -1067,7 +1003,7 @@
             (<span class="prelude-val">Some</span>(alice), <span class="number">12</span>),
         ];
 
-        <span class="kw">let </span>dummy_seed = BlakeTwo256::hash_of(<span class="kw-2">&amp;</span>[<span class="number">1u8</span>; <span class="number">64</span>]).into();
+        <span class="kw">let </span>dummy_seed = Randomness::from(BlakeTwo256::hash_of(<span class="kw-2">&amp;</span>[<span class="number">1u8</span>; <span class="number">64</span>]).to_fixed_bytes());
         <span class="kw">let </span>shuffled_extrinsics = shuffle_extrinsics(extrinsics, dummy_seed);
 
         <span class="macro">assert_eq!</span>(

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-archiving/src/archiver.rs`."><title>archiver.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_archiving" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_archiving/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-archiving/src/archiver.rs`."><title>archiver.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_archiving" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_archiving/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -907,7 +907,11 @@
 <a href="#907" id="907">907</a>
 <a href="#908" id="908">908</a>
 <a href="#909" id="909">909</a>
-</pre><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
+<a href="#910" id="910">910</a>
+<a href="#911" id="911">911</a>
+<a href="#912" id="912">912</a>
+<a href="#913" id="913">913</a>
+</pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
 // Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -936,7 +940,7 @@
 <span class="kw">use </span>core::cmp::Ordering;
 <span class="kw">use </span>core::num::NonZeroUsize;
 <span class="kw">use </span>parity_scale_codec::{Compact, CompactLen, Decode, Encode, Input, Output};
-<span class="attr">#[cfg(feature = <span class="string">&quot;rayon&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">&quot;parallel&quot;</span>)]
 </span><span class="kw">use </span>rayon::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>subspace_core_primitives::crypto::kzg::{Kzg, Witness};
 <span class="kw">use </span>subspace_core_primitives::crypto::{blake2b_256_254_hash_to_scalar, Scalar};
@@ -975,7 +979,7 @@
         RecordedHistorySegment::SIZE
     }
 
-    <span class="kw">fn </span>encode_to&lt;T: Output + <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, dest: <span class="kw-2">&amp;mut </span>T) {
+    <span class="kw">fn </span>encode_to&lt;O: Output + <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, dest: <span class="kw-2">&amp;mut </span>O) {
         <span class="kw">match </span><span class="self">self </span>{
             Segment::V0 { items } =&gt; {
                 dest.push_byte(<span class="number">0</span>);
@@ -1032,11 +1036,6 @@
     <span class="kw">fn </span>push_item(<span class="kw-2">&amp;mut </span><span class="self">self</span>, segment_item: SegmentItem) {
         <span class="kw">let </span><span class="self">Self</span>::V0 { items } = <span class="self">self</span>;
         items.push(segment_item);
-    }
-
-    <span class="kw">fn </span>pop_item(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SegmentItem&gt; {
-        <span class="kw">let </span><span class="self">Self</span>::V0 { items } = <span class="self">self</span>;
-        items.pop()
     }
 }
 
@@ -1157,7 +1156,8 @@
 }
 
 <span class="kw">impl </span>Archiver {
-    <span class="doccomment">/// Create a new instance with specified record size and recorded history segment size.
+    <span class="comment">// TODO: Make erasure coding an explicit argument
+    </span><span class="doccomment">/// Create a new instance with specified record size and recorded history segment size.
     ///
     /// Note: this is the only way to instantiate object archiver, while block archiver can be
     /// instantiated with `BlockArchiver::with_initial_state()` in case of restarts.
@@ -1167,7 +1167,7 @@
 
         </span><span class="kw">let </span>erasure_coding = ErasureCoding::new(
             NonZeroUsize::new(ArchivedHistorySegment::NUM_PIECES.ilog2() <span class="kw">as </span>usize)
-                .expect(<span class="string">&quot;Recorded history segment contains at very least one record; qed&quot;</span>),
+                .expect(<span class="string">&quot;Archived history segment contains at very least one piece; qed&quot;</span>),
         )
         .map_err(ArchiverInstantiationError::FailedToInitializeErasureCoding)<span class="question-mark">?</span>;
 
@@ -1225,13 +1225,13 @@
                     // buffer and block continuation
                     </span>object_mapping
                         .objects
-                        .drain_filter(|block_object: <span class="kw-2">&amp;mut </span>BlockObject| {
+                        .retain_mut(|block_object: <span class="kw-2">&amp;mut </span>BlockObject| {
                             <span class="kw">let </span>current_offset = block_object.offset();
                             <span class="kw">if </span>current_offset &gt;= archived_block_bytes {
                                 block_object.set_offset(current_offset - archived_block_bytes);
-                                <span class="bool-val">false
-                            </span>} <span class="kw">else </span>{
                                 <span class="bool-val">true
+                            </span>} <span class="kw">else </span>{
+                                <span class="bool-val">false
                             </span>}
                         });
                     archiver.buffer.push_back(SegmentItem::BlockContinuation {
@@ -1254,11 +1254,15 @@
         </span>}
     }
 
-    <span class="doccomment">/// Adds new block to internal buffer, potentially producing pieces and segment header headers
+    <span class="doccomment">/// Adds new block to internal buffer, potentially producing pieces and segment header headers.
+    ///
+    /// Incremental archiving can be enabled if amortized block addition cost is preferred over
+    /// throughput.
     </span><span class="kw">pub fn </span>add_block(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         bytes: Vec&lt;u8&gt;,
         object_mapping: BlockObjectMapping,
+        incremental: bool,
     ) -&gt; Vec&lt;NewArchivedSegment&gt; {
         <span class="comment">// Append new block to the buffer
         </span><span class="self">self</span>.buffer.push_back(SegmentItem::Block {
@@ -1268,7 +1272,7 @@
 
         <span class="kw">let </span><span class="kw-2">mut </span>archived_segments = Vec::new();
 
-        <span class="kw">while let </span><span class="prelude-val">Some</span>(segment) = <span class="self">self</span>.produce_segment() {
+        <span class="kw">while let </span><span class="prelude-val">Some</span>(segment) = <span class="self">self</span>.produce_segment(incremental) {
             archived_segments.push(<span class="self">self</span>.produce_archived_segment(segment));
         }
 
@@ -1277,24 +1281,32 @@
 
     <span class="doccomment">/// Try to slice buffer contents into segments if there is enough data, producing one segment at
     /// a time
-    </span><span class="kw">fn </span>produce_segment(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Segment&gt; {
+    </span><span class="kw">fn </span>produce_segment(<span class="kw-2">&amp;mut </span><span class="self">self</span>, incremental: bool) -&gt; <span class="prelude-ty">Option</span>&lt;Segment&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>segment = Segment::V0 {
             items: Vec::with_capacity(<span class="self">self</span>.buffer.len()),
         };
 
         <span class="kw">let </span><span class="kw-2">mut </span>last_archived_block = <span class="self">self</span>.last_archived_block;
 
+        <span class="kw">let </span><span class="kw-2">mut </span>segment_size = segment.encoded_size();
+
         <span class="comment">// `-2` because even the smallest segment item will take 2 bytes to encode, so it makes
         // sense to stop earlier here
-        </span><span class="kw">while </span>segment.encoded_size() &lt; (RecordedHistorySegment::SIZE - <span class="number">2</span>) {
+        </span><span class="kw">while </span>segment_size &lt; (RecordedHistorySegment::SIZE - <span class="number">2</span>) {
             <span class="kw">let </span>segment_item = <span class="kw">match </span><span class="self">self</span>.buffer.pop_front() {
                 <span class="prelude-val">Some</span>(segment_item) =&gt; segment_item,
                 <span class="prelude-val">None </span>=&gt; {
-                    update_record_commitments(
-                        <span class="kw-2">&amp;mut </span><span class="self">self</span>.incremental_record_commitments,
-                        <span class="kw-2">&amp;</span>segment,
-                        <span class="kw-2">&amp;</span><span class="self">self</span>.kzg,
-                    );
+                    <span class="kw">let </span>existing_commitments = <span class="self">self</span>.incremental_record_commitments.len();
+                    <span class="kw">let </span>bytes_committed_to = existing_commitments * RawRecord::SIZE;
+                    <span class="comment">// Run incremental archiver only when there is at least two records to archive,
+                    // otherwise we&#39;re wasting CPU cycles encoding segment over and over again
+                    </span><span class="kw">if </span>incremental &amp;&amp; segment_size - bytes_committed_to &gt;= RawRecord::SIZE * <span class="number">2 </span>{
+                        update_record_commitments(
+                            <span class="kw-2">&amp;mut </span><span class="self">self</span>.incremental_record_commitments,
+                            <span class="kw-2">&amp;</span>segment,
+                            <span class="kw-2">&amp;</span><span class="self">self</span>.kzg,
+                        );
+                    }
 
                     <span class="kw">let </span>Segment::V0 { items } = segment;
                     <span class="comment">// Push all of the items back into the buffer, we don&#39;t have enough data yet
@@ -1306,18 +1318,14 @@
                 }
             };
 
-            <span class="comment">// Push segment item into the segment temporarily to measure encoded size of resulting
-            // segment
-            </span>segment.push_item(segment_item);
-            <span class="kw">let </span>encoded_segment_length = segment.encoded_size();
-            <span class="comment">// Pop segment item back from segment
-            </span><span class="kw">let </span>segment_item = segment.pop_item().unwrap();
+            <span class="kw">let </span>segment_item_encoded_size = segment_item.encoded_size();
+            segment_size += segment_item_encoded_size;
 
             <span class="comment">// Check if there would be enough data collected with above segment item inserted
-            </span><span class="kw">if </span>encoded_segment_length &gt;= RecordedHistorySegment::SIZE {
+            </span><span class="kw">if </span>segment_size &gt;= RecordedHistorySegment::SIZE {
                 <span class="comment">// Check if there is an excess of data that should be spilled over into the next
                 // segment
-                </span><span class="kw">let </span>spill_over = encoded_segment_length - RecordedHistorySegment::SIZE;
+                </span><span class="kw">let </span>spill_over = segment_size - RecordedHistorySegment::SIZE;
 
                 <span class="comment">// Due to compact vector length encoding in scale codec, spill over might happen to
                 // be the same or even bigger than the inserted segment item bytes, in which case
@@ -1342,6 +1350,7 @@
 
                 <span class="kw">if </span>spill_over &gt; inner_bytes_size {
                     <span class="self">self</span>.buffer.push_front(segment_item);
+                    segment_size -= segment_item_encoded_size;
                     <span class="kw">break</span>;
                 }
             }
@@ -1385,8 +1394,7 @@
         }
 
         <span class="comment">// Check if there is an excess of data that should be spilled over into the next segment
-        </span><span class="kw">let </span>segment_encoded_length = segment.encoded_size();
-        <span class="kw">let </span>spill_over = segment_encoded_length
+        </span><span class="kw">let </span>spill_over = segment_size
             .checked_sub(RecordedHistorySegment::SIZE)
             .unwrap_or_default();
 
@@ -1412,7 +1420,7 @@
                     <span class="kw">let </span>continuation_object_mapping = BlockObjectMapping {
                         objects: object_mapping
                             .objects
-                            .drain_filter(|block_object: <span class="kw-2">&amp;mut </span>BlockObject| {
+                            .extract_if(|block_object: <span class="kw-2">&amp;mut </span>BlockObject| {
                                 <span class="kw">let </span>current_offset = block_object.offset();
                                 <span class="kw">if </span>current_offset &gt;= split_point <span class="kw">as </span>u32 {
                                     block_object.set_offset(current_offset - split_point <span class="kw">as </span>u32);
@@ -1456,7 +1464,7 @@
                     <span class="kw">let </span>continuation_object_mapping = BlockObjectMapping {
                         objects: object_mapping
                             .objects
-                            .drain_filter(|block_object: <span class="kw-2">&amp;mut </span>BlockObject| {
+                            .extract_if(|block_object: <span class="kw-2">&amp;mut </span>BlockObject| {
                                 <span class="kw">let </span>current_offset = block_object.offset();
                                 <span class="kw">if </span>current_offset &gt;= split_point <span class="kw">as </span>u32 {
                                     block_object.set_offset(current_offset - split_point <span class="kw">as </span>u32);
@@ -1631,9 +1639,9 @@
         <span class="kw">let </span>existing_commitments = <span class="self">self</span>.incremental_record_commitments.len();
         <span class="comment">// Add commitments for pieces that were not created incrementally
         </span>{
-            <span class="attr">#[cfg(not(feature = <span class="string">&quot;rayon&quot;</span>))]
+            <span class="attr">#[cfg(not(feature = <span class="string">&quot;parallel&quot;</span>))]
             </span><span class="kw">let </span>source_pieces = pieces.source();
-            <span class="attr">#[cfg(feature = <span class="string">&quot;rayon&quot;</span>)]
+            <span class="attr">#[cfg(feature = <span class="string">&quot;parallel&quot;</span>)]
             </span><span class="kw">let </span>source_pieces = pieces.par_source();
 
             <span class="kw">let </span>iter = source_pieces
@@ -1663,11 +1671,11 @@
                         .expect(<span class="string">&quot;KZG instance must be configured to support this many scalars; qed&quot;</span>)
                 });
 
-            <span class="attr">#[cfg(not(feature = <span class="string">&quot;rayon&quot;</span>))]
+            <span class="attr">#[cfg(not(feature = <span class="string">&quot;parallel&quot;</span>))]
             </span>iter.collect_into(<span class="kw-2">&amp;mut *</span><span class="self">self</span>.incremental_record_commitments);
             <span class="comment">// TODO: `collect_into_vec()`, unfortunately, truncates input, which is not what we want
             //  can be unified when https://github.com/rayon-rs/rayon/issues/1039 is resolved
-            </span><span class="attr">#[cfg(feature = <span class="string">&quot;rayon&quot;</span>)]
+            </span><span class="attr">#[cfg(feature = <span class="string">&quot;parallel&quot;</span>)]
             </span><span class="self">self</span>.incremental_record_commitments.par_extend(iter);
         }
         <span class="comment">// Collect hashes to commitments from all records
@@ -1800,10 +1808,10 @@
     )
 }
 
-<span class="doccomment">/// Validate witness for piece commitment hash produced by archiver
+<span class="doccomment">/// Validate witness for record commitment hash produced by archiver
 </span><span class="kw">pub fn </span>is_record_commitment_hash_valid(
     kzg: <span class="kw-2">&amp;</span>Kzg,
-    commitment_hash: <span class="kw-2">&amp;</span>Scalar,
+    record_commitment_hash: <span class="kw-2">&amp;</span>Scalar,
     commitment: <span class="kw-2">&amp;</span>SegmentCommitment,
     witness: <span class="kw-2">&amp;</span>Witness,
     position: u32,
@@ -1812,7 +1820,7 @@
         commitment,
         ArchivedHistorySegment::NUM_PIECES,
         position,
-        commitment_hash,
+        record_commitment_hash,
         witness,
     )
 }

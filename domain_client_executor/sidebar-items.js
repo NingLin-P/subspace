@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["CoreDomainParentChain","CoreExecutor","CoreGossipMessageValidator","EssentialExecutorParams","ExecutorStreams","SystemDomainParentChain","SystemExecutor","SystemGossipMessageValidator"]};

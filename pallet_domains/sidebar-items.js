@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["BundleError","Call","Error","Event","ExecutionReceiptError"],"mod":["dispatchables","storage_types"],"struct":["Pallet"],"trait":["Config"],"type":["Module"]};
+window.SIDEBAR_ITEMS = {"enum":["BundleError","Call","Error","Event"],"fn":["calculate_tx_range"],"mod":["block_tree","dispatchables","domain_registry","runtime_registry","storage_types","weights"],"struct":["GenesisConfig","Pallet","TxRangeState"],"trait":["Config","HoldIdentifier"],"type":["ConsensusBlockHash","ExecutionInbox","ExecutionReceiptOf","Module","OpaqueBundleOf"]};

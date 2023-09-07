@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-networking/src/node.rs`."><title>node.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_networking" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_networking/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-networking/src/node.rs`."><title>node.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_networking" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_networking/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -529,50 +529,26 @@
 <a href="#529" id="529">529</a>
 <a href="#530" id="530">530</a>
 <a href="#531" id="531">531</a>
-<a href="#532" id="532">532</a>
-<a href="#533" id="533">533</a>
-<a href="#534" id="534">534</a>
-<a href="#535" id="535">535</a>
-<a href="#536" id="536">536</a>
-<a href="#537" id="537">537</a>
-<a href="#538" id="538">538</a>
-<a href="#539" id="539">539</a>
-<a href="#540" id="540">540</a>
-<a href="#541" id="541">541</a>
-<a href="#542" id="542">542</a>
-<a href="#543" id="543">543</a>
-<a href="#544" id="544">544</a>
-<a href="#545" id="545">545</a>
-<a href="#546" id="546">546</a>
-<a href="#547" id="547">547</a>
-<a href="#548" id="548">548</a>
-<a href="#549" id="549">549</a>
-<a href="#550" id="550">550</a>
-</pre><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::request_handlers::generic_request_handler::GenericRequest;
-<span class="kw">use </span><span class="kw">crate</span>::request_responses;
-<span class="kw">use </span><span class="kw">crate</span>::shared::{Command, CreatedSubscription, HandlerFn, HandlerFn2, Shared};
-<span class="kw">use </span><span class="kw">crate</span>::utils::ResizableSemaphorePermit;
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::protocols::request_response::handlers::generic_request_handler::GenericRequest;
+<span class="kw">use </span><span class="kw">crate</span>::protocols::request_response::request_response_factory;
+<span class="kw">pub use </span><span class="kw">crate</span>::shared::NewPeerInfo;
+<span class="kw">use </span><span class="kw">crate</span>::shared::{Command, CreatedSubscription, Shared};
+<span class="kw">use </span><span class="kw">crate</span>::utils::multihash::Multihash;
+<span class="kw">use </span><span class="kw">crate</span>::utils::{HandlerFn, ResizableSemaphorePermit};
 <span class="kw">use </span>bytes::Bytes;
 <span class="kw">use </span>event_listener_primitives::HandlerId;
 <span class="kw">use </span>futures::channel::mpsc::SendError;
 <span class="kw">use </span>futures::channel::{mpsc, oneshot};
-<span class="kw">use </span>futures::{SinkExt, Stream};
-<span class="kw">use </span>libp2p::core::multihash::Multihash;
-<span class="kw">use </span>libp2p::gossipsub::error::SubscriptionError;
-<span class="kw">use </span>libp2p::gossipsub::Sha256Topic;
-<span class="kw">use </span>libp2p::kad::handler::InboundStreamEventGuard;
-<span class="kw">use </span>libp2p::kad::record::Key;
-<span class="kw">use </span>libp2p::kad::{PeerRecord, ProviderRecord};
+<span class="kw">use </span>futures::{SinkExt, Stream, StreamExt};
+<span class="kw">use </span>libp2p::gossipsub::{Sha256Topic, SubscriptionError};
+<span class="kw">use </span>libp2p::kad::PeerRecord;
 <span class="kw">use </span>libp2p::{Multiaddr, PeerId};
 <span class="kw">use </span>parity_scale_codec::Decode;
 <span class="kw">use </span>std::pin::Pin;
 <span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>std::task::{Context, Poll};
-<span class="kw">use </span>std::time::Duration;
 <span class="kw">use </span>thiserror::Error;
-<span class="kw">use </span>tokio::sync::watch;
-<span class="kw">use </span>tokio::time::sleep;
-<span class="kw">use </span>tracing::{error, trace};
+<span class="kw">use </span>tracing::{debug, error, trace};
 
 <span class="doccomment">/// Topic subscription, will unsubscribe when last instance is dropped for a particular topic.
 </span><span class="attr">#[derive(Debug)]
@@ -632,7 +608,8 @@
 }
 
 <span class="kw">impl </span>From&lt;oneshot::Canceled&gt; <span class="kw">for </span>GetValueError {
-    <span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::NodeRunnerDropped
     }
 }
@@ -648,12 +625,14 @@
 }
 
 <span class="kw">impl </span>From&lt;oneshot::Canceled&gt; <span class="kw">for </span>PutValueError {
-    <span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::NodeRunnerDropped
     }
 }
 
-<span class="attr">#[derive(Debug, Error)]
+<span class="doccomment">/// Defines errors for `get-closest-peers` operation.
+</span><span class="attr">#[derive(Debug, Error)]
 </span><span class="kw">pub enum </span>GetClosestPeersError {
     <span class="doccomment">/// Failed to send command to the node runner
     </span><span class="attr">#[error(<span class="string">&quot;Failed to send command to the node runner: {0}&quot;</span>)]
@@ -664,19 +643,14 @@
 }
 
 <span class="kw">impl </span>From&lt;oneshot::Canceled&gt; <span class="kw">for </span>GetClosestPeersError {
-    <span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::NodeRunnerDropped
     }
 }
 
-<span class="attr">#[derive(Debug, Error)]
-</span><span class="kw">pub enum </span>CheckConnectedPeersError {
-    <span class="doccomment">/// Node runner was dropped, impossible to check connected peers.
-    </span><span class="attr">#[error(<span class="string">&quot;Node runner was dropped, impossible to check connected peers&quot;</span>)]
-    </span>NodeRunnerDropped,
-}
-
-<span class="attr">#[derive(Debug, Error)]
+<span class="doccomment">/// Defines errors for `subscribe` operation.
+</span><span class="attr">#[derive(Debug, Error)]
 </span><span class="kw">pub enum </span>SubscribeError {
     <span class="doccomment">/// Failed to send command to the node runner
     </span><span class="attr">#[error(<span class="string">&quot;Failed to send command to the node runner: {0}&quot;</span>)]
@@ -690,7 +664,8 @@
 }
 
 <span class="kw">impl </span>From&lt;oneshot::Canceled&gt; <span class="kw">for </span>SubscribeError {
-    <span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::NodeRunnerDropped
     }
 }
@@ -705,11 +680,12 @@
     </span>NodeRunnerDropped,
     <span class="doccomment">/// Failed to publish message.
     </span><span class="attr">#[error(<span class="string">&quot;Failed to publish message: {0}&quot;</span>)]
-    </span>Publish(<span class="attr">#[from] </span>libp2p::gossipsub::error::PublishError),
+    </span>Publish(<span class="attr">#[from] </span>libp2p::gossipsub::PublishError),
 }
 
 <span class="kw">impl </span>From&lt;oneshot::Canceled&gt; <span class="kw">for </span>PublishError {
-    <span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::NodeRunnerDropped
     }
 }
@@ -728,47 +704,14 @@
 }
 
 <span class="kw">impl </span>From&lt;oneshot::Canceled&gt; <span class="kw">for </span>GetProvidersError {
-    <span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::NodeRunnerDropped
     }
 }
 
-<span class="attr">#[derive(Debug, Error)]
-</span><span class="kw">pub enum </span>AnnounceError {
-    <span class="doccomment">/// Failed to send command to the node runner
-    </span><span class="attr">#[error(<span class="string">&quot;Failed to send command to the node runner: {0}&quot;</span>)]
-    </span>SendCommand(<span class="attr">#[from] </span>SendError),
-    <span class="doccomment">/// Node runner was dropped
-    </span><span class="attr">#[error(<span class="string">&quot;Node runner was dropped&quot;</span>)]
-    </span>NodeRunnerDropped,
-}
-
-<span class="kw">impl </span>From&lt;oneshot::Canceled&gt; <span class="kw">for </span>AnnounceError {
-    <span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
-        <span class="self">Self</span>::NodeRunnerDropped
-    }
-}
-
-<span class="attr">#[derive(Debug, Error)]
-</span><span class="kw">pub enum </span>StopAnnouncingError {
-    <span class="doccomment">/// Failed to send command to the node runner
-    </span><span class="attr">#[error(<span class="string">&quot;Failed to send command to the node runner: {0}&quot;</span>)]
-    </span>SendCommand(<span class="attr">#[from] </span>SendError),
-    <span class="doccomment">/// Node runner was dropped
-    </span><span class="attr">#[error(<span class="string">&quot;Node runner was dropped&quot;</span>)]
-    </span>NodeRunnerDropped,
-    <span class="doccomment">/// Failed to stop announcing an item.
-    </span><span class="attr">#[error(<span class="string">&quot;Failed to stop announcing an item.&quot;</span>)]
-    </span>StopAnnouncing,
-}
-
-<span class="kw">impl </span>From&lt;oneshot::Canceled&gt; <span class="kw">for </span>StopAnnouncingError {
-    <span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
-        <span class="self">Self</span>::NodeRunnerDropped
-    }
-}
-
-<span class="attr">#[derive(Debug, Error)]
+<span class="doccomment">/// Defines errors for `send-request` operation.
+</span><span class="attr">#[derive(Debug, Error)]
 </span><span class="kw">pub enum </span>SendRequestError {
     <span class="doccomment">/// Failed to send command to the node runner
     </span><span class="attr">#[error(<span class="string">&quot;Failed to send command to the node runner: {0}&quot;</span>)]
@@ -778,31 +721,56 @@
     </span>NodeRunnerDropped,
     <span class="doccomment">/// Underlying protocol returned an error, impossible to get response.
     </span><span class="attr">#[error(<span class="string">&quot;Underlying protocol returned an error: {0}&quot;</span>)]
-    </span>ProtocolFailure(<span class="attr">#[from] </span>request_responses::RequestFailure),
+    </span>ProtocolFailure(<span class="attr">#[from] </span>request_response_factory::RequestFailure),
     <span class="doccomment">/// Underlying protocol returned an incorrect format, impossible to get response.
     </span><span class="attr">#[error(<span class="string">&quot;Received incorrectly formatted response: {0}&quot;</span>)]
     </span>IncorrectResponseFormat(<span class="attr">#[from] </span>parity_scale_codec::Error),
 }
 
 <span class="kw">impl </span>From&lt;oneshot::Canceled&gt; <span class="kw">for </span>SendRequestError {
-    <span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::NodeRunnerDropped
     }
 }
 
 <span class="attr">#[derive(Debug, Error)]
-</span><span class="kw">pub enum </span>CircuitRelayClientError {
-    <span class="doccomment">/// Expected node to be a circuit relay server, found only client
-    </span><span class="attr">#[error(<span class="string">&quot;Expected node to be a circuit relay server, found only client&quot;</span>)]
-    </span>ExpectedServer,
-    <span class="doccomment">/// Failed to retrieve memory address, typically means networking was destroyed.
-    </span><span class="attr">#[error(<span class="string">&quot;Failed to retrieve memory address&quot;</span>)]
-    </span>FailedToRetrieveMemoryAddress,
+</span><span class="kw">pub enum </span>ConnectedPeersError {
+    <span class="doccomment">/// Failed to send command to the node runner
+    </span><span class="attr">#[error(<span class="string">&quot;Failed to send command to the node runner: {0}&quot;</span>)]
+    </span>SendCommand(<span class="attr">#[from] </span>SendError),
+    <span class="doccomment">/// Node runner was dropped
+    </span><span class="attr">#[error(<span class="string">&quot;Node runner was dropped&quot;</span>)]
+    </span>NodeRunnerDropped,
+    <span class="doccomment">/// Failed to get connected peers.
+    </span><span class="attr">#[error(<span class="string">&quot;Failed to get connected peers.&quot;</span>)]
+    </span>ConnectedPeers,
 }
 
-<span class="kw">impl </span>From&lt;oneshot::Canceled&gt; <span class="kw">for </span>CircuitRelayClientError {
-    <span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
-        <span class="self">Self</span>::FailedToRetrieveMemoryAddress
+<span class="kw">impl </span>From&lt;oneshot::Canceled&gt; <span class="kw">for </span>ConnectedPeersError {
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::NodeRunnerDropped
+    }
+}
+
+<span class="attr">#[derive(Debug, Error)]
+</span><span class="kw">pub enum </span>BootstrapError {
+    <span class="doccomment">/// Failed to send command to the node runner
+    </span><span class="attr">#[error(<span class="string">&quot;Failed to send command to the node runner: {0}&quot;</span>)]
+    </span>SendCommand(<span class="attr">#[from] </span>SendError),
+    <span class="doccomment">/// Node runner was dropped
+    </span><span class="attr">#[error(<span class="string">&quot;Node runner was dropped&quot;</span>)]
+    </span>NodeRunnerDropped,
+    <span class="doccomment">/// Failed to bootstrap a peer.
+    </span><span class="attr">#[error(<span class="string">&quot;Failed to bootstrap a peer.&quot;</span>)]
+    </span>Bootstrap,
+}
+
+<span class="kw">impl </span>From&lt;oneshot::Canceled&gt; <span class="kw">for </span>BootstrapError {
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>from(oneshot::Canceled: oneshot::Canceled) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::NodeRunnerDropped
     }
 }
 
@@ -823,11 +791,8 @@
         <span class="self">self</span>.shared.id
     }
 
-    <span class="kw">pub fn </span>online_status_observer(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>watch::Receiver&lt;bool&gt; {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.shared.online_status_observer_rx
-    }
-
-    <span class="kw">pub async fn </span>get_value(
+    <span class="doccomment">/// Return a value from the Kademlia network of the DSN.
+    </span><span class="kw">pub async fn </span>get_value(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         key: Multihash,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw">impl </span>Stream&lt;Item = PeerRecord&gt;, GetValueError&gt; {
@@ -848,7 +813,8 @@
         </span><span class="prelude-val">Ok</span>(result_receiver)
     }
 
-    <span class="kw">pub async fn </span>put_value(
+    <span class="doccomment">/// Puts a value into the Kademlia network of the DSN.
+    </span><span class="kw">pub async fn </span>put_value(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         key: Multihash,
         value: Vec&lt;u8&gt;,
@@ -871,7 +837,8 @@
         </span><span class="prelude-val">Ok</span>(result_receiver)
     }
 
-    <span class="kw">pub async fn </span>subscribe(<span class="kw-2">&amp;</span><span class="self">self</span>, topic: Sha256Topic) -&gt; <span class="prelude-ty">Result</span>&lt;TopicSubscription, SubscribeError&gt; {
+    <span class="doccomment">/// Subcribe to some topic on the DSN.
+    </span><span class="kw">pub async fn </span>subscribe(<span class="kw-2">&amp;</span><span class="self">self</span>, topic: Sha256Topic) -&gt; <span class="prelude-ty">Result</span>&lt;TopicSubscription, SubscribeError&gt; {
         <span class="kw">let </span>permit = <span class="self">self</span>.shared.regular_tasks_semaphore.acquire().<span class="kw">await</span>;
         <span class="kw">let </span>(result_sender, result_receiver) = oneshot::channel();
 
@@ -898,7 +865,8 @@
         })
     }
 
-    <span class="kw">pub async fn </span>publish(<span class="kw-2">&amp;</span><span class="self">self</span>, topic: Sha256Topic, message: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), PublishError&gt; {
+    <span class="doccomment">/// Subcribe a messgo to some topic on the DSN.
+    </span><span class="kw">pub async fn </span>publish(<span class="kw-2">&amp;</span><span class="self">self</span>, topic: Sha256Topic, message: Vec&lt;u8&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), PublishError&gt; {
         <span class="kw">let </span>_permit = <span class="self">self</span>.shared.regular_tasks_semaphore.acquire().<span class="kw">await</span>;
         <span class="kw">let </span>(result_sender, result_receiver) = oneshot::channel();
 
@@ -964,77 +932,6 @@
         </span><span class="prelude-val">Ok</span>(result_receiver)
     }
 
-    <span class="comment">// TODO: add timeout
-    </span><span class="doccomment">/// Waits for peers connection to the swarm and for Kademlia address registration.
-    </span><span class="kw">pub async fn </span>wait_for_connected_peers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), CheckConnectedPeersError&gt; {
-        <span class="kw">loop </span>{
-            <span class="macro">trace!</span>(<span class="string">&quot;Starting &#39;CheckConnectedPeers&#39; request.&quot;</span>);
-
-            <span class="kw">let </span>(result_sender, result_receiver) = oneshot::channel();
-
-            <span class="self">self</span>.shared
-                .command_sender
-                .clone()
-                .send(Command::CheckConnectedPeers { result_sender })
-                .<span class="kw">await
-                </span>.map_err(|<span class="kw">_</span>| CheckConnectedPeersError::NodeRunnerDropped)<span class="question-mark">?</span>;
-
-            <span class="kw">let </span>connected_peers_present = result_receiver
-                .<span class="kw">await
-                </span>.map_err(|<span class="kw">_</span>| CheckConnectedPeersError::NodeRunnerDropped)<span class="question-mark">?</span>;
-
-            <span class="macro">trace!</span>(<span class="string">&quot;&#39;CheckConnectedPeers&#39; request returned {connected_peers_present}&quot;</span>);
-
-            <span class="kw">if </span>connected_peers_present {
-                <span class="kw">return </span><span class="prelude-val">Ok</span>(());
-            }
-
-            sleep(Duration::from_millis(<span class="number">50</span>)).<span class="kw">await</span>;
-        }
-    }
-
-    <span class="doccomment">/// Start announcing item by its key. Initiate &#39;start_providing&#39; Kademlia operation.
-    </span><span class="kw">pub async fn </span>start_announcing(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        key: Key,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="kw">impl </span>Stream&lt;Item = ()&gt;, AnnounceError&gt; {
-        <span class="kw">let </span>permit = <span class="self">self</span>.shared.kademlia_tasks_semaphore.acquire().<span class="kw">await</span>;
-        <span class="kw">let </span>(result_sender, result_receiver) = mpsc::unbounded();
-
-        <span class="macro">trace!</span>(<span class="question-mark">?</span>key, <span class="string">&quot;Starting &#39;start_announcing&#39; request.&quot;</span>);
-
-        <span class="self">self</span>.shared
-            .command_sender
-            .clone()
-            .send(Command::StartAnnouncing {
-                key,
-                result_sender,
-                permit,
-            })
-            .<span class="kw">await</span><span class="question-mark">?</span>;
-
-        <span class="comment">// TODO: A wrapper that&#39;ll immediately cancel query on drop
-        </span><span class="prelude-val">Ok</span>(result_receiver)
-    }
-
-    <span class="doccomment">/// Stop announcing item by its key. Initiate &#39;stop_providing&#39; Kademlia operation.
-    </span><span class="kw">pub async fn </span>stop_announcing(<span class="kw-2">&amp;</span><span class="self">self</span>, key: Multihash) -&gt; <span class="prelude-ty">Result</span>&lt;(), StopAnnouncingError&gt; {
-        <span class="kw">let </span>(result_sender, result_receiver) = oneshot::channel();
-
-        <span class="macro">trace!</span>(<span class="question-mark">?</span>key, <span class="string">&quot;Starting &#39;stop_announcing&#39; request.&quot;</span>);
-
-        <span class="self">self</span>.shared
-            .command_sender
-            .clone()
-            .send(Command::StopAnnouncing { key, result_sender })
-            .<span class="kw">await</span><span class="question-mark">?</span>;
-
-        result_receiver
-            .<span class="kw">await</span><span class="question-mark">?
-            </span>.then_some(())
-            .ok_or(StopAnnouncingError::StopAnnouncing)
-    }
-
     <span class="doccomment">/// Get item providers by its key. Initiate &#39;providers&#39; Kademlia operation.
     </span><span class="kw">pub async fn </span>get_providers(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -1085,17 +982,82 @@
         <span class="self">self</span>.shared.listeners.lock().clone()
     }
 
+    <span class="doccomment">/// Node&#39;s own addresses observed remotely.
+    </span><span class="kw">pub fn </span>external_addresses(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;Multiaddr&gt; {
+        <span class="self">self</span>.shared.external_addresses.lock().clone()
+    }
+
     <span class="doccomment">/// Callback is called when node starts listening on new address.
     </span><span class="kw">pub fn </span>on_new_listener(<span class="kw-2">&amp;</span><span class="self">self</span>, callback: HandlerFn&lt;Multiaddr&gt;) -&gt; HandlerId {
         <span class="self">self</span>.shared.handlers.new_listener.add(callback)
     }
 
-    <span class="doccomment">/// Callback is called when node starts listening on new address.
-    </span><span class="kw">pub fn </span>on_announcement(
+    <span class="doccomment">/// Callback is called when number of established peer connections changes.
+    </span><span class="kw">pub fn </span>on_num_established_peer_connections_change(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        callback: HandlerFn2&lt;ProviderRecord, Arc&lt;InboundStreamEventGuard&gt;&gt;,
+        callback: HandlerFn&lt;usize&gt;,
     ) -&gt; HandlerId {
-        <span class="self">self</span>.shared.handlers.announcement.add(callback)
+        <span class="self">self</span>.shared
+            .handlers
+            .num_established_peer_connections_change
+            .add(callback)
+    }
+
+    <span class="doccomment">/// Returns a collection of currently connected peers.
+    </span><span class="kw">pub async fn </span>connected_peers(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;PeerId&gt;, ConnectedPeersError&gt; {
+        <span class="kw">let </span>(result_sender, result_receiver) = oneshot::channel();
+
+        <span class="macro">trace!</span>(<span class="string">&quot;Starting &#39;connected_peers&#39; request.&quot;</span>);
+
+        <span class="self">self</span>.shared
+            .command_sender
+            .clone()
+            .send(Command::ConnectedPeers { result_sender })
+            .<span class="kw">await</span><span class="question-mark">?</span>;
+
+        result_receiver
+            .<span class="kw">await
+            </span>.map_err(|<span class="kw">_</span>| ConnectedPeersError::ConnectedPeers)
+    }
+
+    <span class="doccomment">/// Bootstraps Kademlia network
+    </span><span class="kw">pub async fn </span>bootstrap(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;(), BootstrapError&gt; {
+        <span class="kw">let </span>(result_sender, <span class="kw-2">mut </span>result_receiver) = mpsc::unbounded();
+
+        <span class="macro">debug!</span>(<span class="string">&quot;Starting &#39;bootstrap&#39; request.&quot;</span>);
+
+        <span class="self">self</span>.shared
+            .command_sender
+            .clone()
+            .send(Command::Bootstrap { result_sender })
+            .<span class="kw">await</span><span class="question-mark">?</span>;
+
+        <span class="kw">for </span>step <span class="kw">in </span><span class="number">0</span>.. {
+            <span class="kw">let </span>result = result_receiver.next().<span class="kw">await</span>;
+
+            <span class="kw">if </span>result.is_some() {
+                <span class="macro">debug!</span>(%step, <span class="string">&quot;Kademlia bootstrapping...&quot;</span>);
+            } <span class="kw">else </span>{
+                <span class="kw">break</span>;
+            }
+        }
+
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="doccomment">/// Callback is called when we receive new [`crate::protocols::peer_info::PeerInfo`]
+    </span><span class="kw">pub fn </span>on_peer_info(<span class="kw-2">&amp;</span><span class="self">self</span>, callback: HandlerFn&lt;NewPeerInfo&gt;) -&gt; HandlerId {
+        <span class="self">self</span>.shared.handlers.new_peer_info.add(callback)
+    }
+
+    <span class="doccomment">/// Callback is called when a peer is disconnected.
+    </span><span class="kw">pub fn </span>on_disconnected_peer(<span class="kw-2">&amp;</span><span class="self">self</span>, callback: HandlerFn&lt;PeerId&gt;) -&gt; HandlerId {
+        <span class="self">self</span>.shared.handlers.disconnected_peer.add(callback)
+    }
+
+    <span class="doccomment">/// Callback is called when a peer is connected.
+    </span><span class="kw">pub fn </span>on_connected_peer(<span class="kw-2">&amp;</span><span class="self">self</span>, callback: HandlerFn&lt;PeerId&gt;) -&gt; HandlerId {
+        <span class="self">self</span>.shared.handlers.connected_peer.add(callback)
     }
 }
 </code></pre></div></section></main></body></html>

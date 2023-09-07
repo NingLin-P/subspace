@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sp-lightclient/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fbd14db5c88ed452.css" id="mainThemeStyle"><div id="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sp_lightclient" data-themes="" data-resource-suffix="" data-rustdoc-version="1.70.0-nightly (0599b6b93 2023-04-01)" data-search-js="search-bc5a112813b5d712.js" data-settings-js="settings-f0c5c39777a9a2f6.js" data-settings-css="settings-0bcba95ff279c1db.css" data-theme-light-css="light-db279b6232be9c13.css" data-theme-dark-css="dark-cf923f49f397b216.css" data-theme-ayu-css="ayu-be46fdc453a55015.css" ></div><script src="../../static.files/storage-d4a1a279bad1a0c0.js"></script><script defer src="../../static.files/source-script-1b95b7cca98b26e5.js"></script><script defer src="../../source-files.js"></script><script defer src="../../static.files/main-8e6affb8c73a5ff1.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-db279b6232be9c13.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-cf923f49f397b216.css"><link rel="stylesheet" href="../../static.files/noscript-13285aec31fa243e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../sp_lightclient/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sp-lightclient/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sp_lightclient" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../sp_lightclient/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -886,7 +886,32 @@
 <a href="#886" id="886">886</a>
 <a href="#887" id="887">887</a>
 <a href="#888" id="888">888</a>
-</pre><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
+<a href="#889" id="889">889</a>
+<a href="#890" id="890">890</a>
+<a href="#891" id="891">891</a>
+<a href="#892" id="892">892</a>
+<a href="#893" id="893">893</a>
+<a href="#894" id="894">894</a>
+<a href="#895" id="895">895</a>
+<a href="#896" id="896">896</a>
+<a href="#897" id="897">897</a>
+<a href="#898" id="898">898</a>
+<a href="#899" id="899">899</a>
+<a href="#900" id="900">900</a>
+<a href="#901" id="901">901</a>
+<a href="#902" id="902">902</a>
+<a href="#903" id="903">903</a>
+<a href="#904" id="904">904</a>
+<a href="#905" id="905">905</a>
+<a href="#906" id="906">906</a>
+<a href="#907" id="907">907</a>
+<a href="#908" id="908">908</a>
+<a href="#909" id="909">909</a>
+<a href="#910" id="910">910</a>
+<a href="#911" id="911">911</a>
+<a href="#912" id="912">912</a>
+<a href="#913" id="913">913</a>
+</pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
 // This program is free software: you can redistribute it and/or modify
@@ -907,7 +932,14 @@
 #![warn(rust_2018_idioms, missing_docs)]
 #![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 
-</span><span class="kw">use </span>codec::{Decode, Encode};
+</span><span class="comment">// TODO: Unlock tests for PoT as well once PoT implementation settled (there are multiple items with
+//  this conditional compilation in the file
+</span><span class="attr">#[cfg(all(test, not(feature = <span class="string">&quot;pot&quot;</span>)))]
+</span><span class="kw">mod </span>mock;
+<span class="attr">#[cfg(all(test, not(feature = <span class="string">&quot;pot&quot;</span>)))]
+</span><span class="kw">mod </span>tests;
+
+<span class="kw">use </span>codec::{Decode, Encode};
 <span class="kw">use </span>scale_info::TypeInfo;
 <span class="kw">use </span>sp_arithmetic::traits::{CheckedAdd, CheckedSub, One, Zero};
 <span class="kw">use </span>sp_consensus_slots::Slot;
@@ -923,48 +955,46 @@
 <span class="kw">use </span>sp_std::cmp::Ordering;
 <span class="kw">use </span>sp_std::collections::btree_map::BTreeMap;
 <span class="kw">use </span>sp_std::marker::PhantomData;
+<span class="kw">use </span>sp_std::num::NonZeroU64;
+<span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+</span><span class="kw">use </span>subspace_core_primitives::Randomness;
 <span class="kw">use </span>subspace_core_primitives::{
-    ArchivedHistorySegment, BlockWeight, LegacySectorId, PublicKey, Randomness, RewardSignature,
+    ArchivedHistorySegment, BlockWeight, HistorySize, PublicKey, RewardSignature, SectorId,
     SegmentCommitment, SegmentIndex, SolutionRange,
 };
-<span class="kw">use </span>subspace_solving::{derive_global_challenge, REWARD_SIGNING_CONTEXT};
+<span class="kw">use </span>subspace_solving::REWARD_SIGNING_CONTEXT;
 <span class="kw">use </span>subspace_verification::{
-    check_reward_signature, derive_audit_chunk, PieceCheckParams, VerifySolutionParams,
+    calculate_block_weight, check_reward_signature, PieceCheckParams, VerifySolutionParams,
 };
-
-<span class="attr">#[cfg(test)]
-</span><span class="kw">mod </span>tests;
-
-<span class="attr">#[cfg(test)]
-</span><span class="kw">mod </span>mock;
 
 <span class="doccomment">/// Chain constants.
 </span><span class="attr">#[derive(Debug, Encode, Decode, Clone, TypeInfo)]
 </span><span class="kw">pub struct </span>ChainConstants&lt;Header: HeaderT&gt; {
     <span class="doccomment">/// K Depth at which we finalize the heads.
     </span><span class="kw">pub </span>k_depth: NumberOf&lt;Header&gt;,
-
     <span class="doccomment">/// Genesis digest items at the start of the chain since the genesis block will not have any
     /// digests to verify the Block #1 digests.
     </span><span class="kw">pub </span>genesis_digest_items: NextDigestItems,
-
     <span class="doccomment">/// Genesis block segment commitments to verify the Block #1 and other block solutions until
     /// Block #1 is finalized.
     /// When Block #1 is finalized, these segment commitments are present in Block #1 are stored in
     /// the storage.
     </span><span class="kw">pub </span>genesis_segment_commitments: BTreeMap&lt;SegmentIndex, SegmentCommitment&gt;,
-
     <span class="doccomment">/// Defines interval at which randomness is updated.
+    </span><span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
     </span><span class="kw">pub </span>global_randomness_interval: NumberOf&lt;Header&gt;,
-
     <span class="doccomment">/// Era duration at which solution range is updated.
     </span><span class="kw">pub </span>era_duration: NumberOf&lt;Header&gt;,
-
     <span class="doccomment">/// Slot probability.
     </span><span class="kw">pub </span>slot_probability: (u64, u64),
-
     <span class="doccomment">/// Storage bound for the light client store.
     </span><span class="kw">pub </span>storage_bound: StorageBound&lt;NumberOf&lt;Header&gt;&gt;,
+    <span class="doccomment">/// Number of latest archived segments that are considered &quot;recent history&quot;.
+    </span><span class="kw">pub </span>recent_segments: HistorySize,
+    <span class="doccomment">/// Fraction of pieces from the &quot;recent history&quot; (`recent_segments`) in each sector.
+    </span><span class="kw">pub </span>recent_history_fraction: (HistorySize, HistorySize),
+    <span class="doccomment">/// Minimum lifetime of a plotted sector, measured in archived segment.
+    </span><span class="kw">pub </span>min_sector_lifetime: HistorySize,
 }
 
 <span class="doccomment">/// Defines the storage bound for the light client store.
@@ -996,7 +1026,7 @@
     <span class="doccomment">/// Restrict block authoring to this public key.
     </span><span class="kw">pub </span>maybe_root_plot_public_key: <span class="prelude-ty">Option</span>&lt;FarmerPublicKey&gt;,
 
-    <span class="attr">#[cfg(test)]
+    <span class="attr">#[cfg(all(test, not(feature = <span class="string">&quot;pot&quot;</span>)))]
     </span>test_overrides: mock::TestOverrides,
 }
 
@@ -1004,15 +1034,20 @@
 /// descendant.
 </span><span class="attr">#[derive(Default, Debug, Encode, Decode, Clone, TypeInfo)]
 </span><span class="kw">pub struct </span>NextDigestItems {
-    next_global_randomness: Randomness,
+    <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+    </span>next_global_randomness: Randomness,
     next_solution_range: SolutionRange,
 }
 
 <span class="kw">impl </span>NextDigestItems {
     <span class="doccomment">/// Constructs self with provided next digest items.
-    </span><span class="kw">pub fn </span>new(next_global_randomness: Randomness, next_solution_range: SolutionRange) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub fn </span>new(
+        <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))] </span>next_global_randomness: Randomness,
+        next_solution_range: SolutionRange,
+    ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{
-            next_global_randomness,
+            <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+            </span>next_global_randomness,
             next_solution_range,
         }
     }
@@ -1023,9 +1058,11 @@
     /// If next digests are not present, then we fallback to the current ones.
     </span><span class="kw">fn </span>extract_next_digest_items(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;NextDigestItems, ImportError&lt;Header&gt;&gt; {
         <span class="kw">let </span>SubspaceDigestItems {
-            global_randomness,
+            <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+            </span>global_randomness,
             solution_range,
-            next_global_randomness,
+            <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+            </span>next_global_randomness,
             next_solution_range,
             ..
         } = extract_subspace_digest_items::&lt;<span class="kw">_</span>, FarmerPublicKey, FarmerPublicKey, FarmerSignature&gt;(
@@ -1037,7 +1074,7 @@
             </span>.maybe_current_solution_range_override
             .unwrap_or(solution_range);
 
-        <span class="attr">#[cfg(test)]
+        <span class="attr">#[cfg(all(test, not(feature = <span class="string">&quot;pot&quot;</span>)))]
         </span><span class="kw">let </span>solution_range = {
             <span class="kw">if </span><span class="self">self</span>.test_overrides.solution_range.is_some() {
                 <span class="self">self</span>.test_overrides.solution_range.unwrap()
@@ -1046,7 +1083,7 @@
             }
         };
 
-        <span class="attr">#[cfg(test)]
+        <span class="attr">#[cfg(all(test, not(feature = <span class="string">&quot;pot&quot;</span>)))]
         </span><span class="kw">let </span>next_solution_range = {
             <span class="kw">if </span><span class="self">self</span>.test_overrides.next_solution_range.is_some() {
                 <span class="self">self</span>.test_overrides.next_solution_range
@@ -1056,7 +1093,8 @@
         };
 
         <span class="prelude-val">Ok</span>(NextDigestItems {
-            next_global_randomness: next_global_randomness.unwrap_or(global_randomness),
+            <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+            </span>next_global_randomness: next_global_randomness.unwrap_or(global_randomness),
             next_solution_range: next_solution_range.unwrap_or(solution_range),
         })
     }
@@ -1102,7 +1140,11 @@
     </span><span class="kw">fn </span>segment_commitment(<span class="kw-2">&amp;</span><span class="self">self</span>, segment_index: SegmentIndex) -&gt; <span class="prelude-ty">Option</span>&lt;SegmentCommitment&gt;;
 
     <span class="doccomment">/// Returns the stored segment count.
+    </span><span class="comment">// TODO: Ideally should use `HistorySize` instead of `u64`
     </span><span class="kw">fn </span>number_of_segments(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64;
+
+    <span class="doccomment">/// How many pieces one sector is supposed to contain (max)
+    </span><span class="kw">fn </span>max_pieces_in_sector(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u16;
 }
 
 <span class="doccomment">/// Error type that holds the current finalized number and the header number we are trying to import.
@@ -1143,10 +1185,15 @@
     </span>MissingSegmentCommitment(SegmentIndex),
     <span class="doccomment">/// Incorrect block author.
     </span>IncorrectBlockAuthor(FarmerPublicKey),
+    <span class="doccomment">/// Segment commitment history is empty
+    </span>EmptySegmentCommitmentHistory,
+    <span class="doccomment">/// Invalid history size
+    </span>InvalidHistorySize,
 }
 
 <span class="kw">impl</span>&lt;Header: HeaderT&gt; From&lt;DigestError&gt; <span class="kw">for </span>ImportError&lt;Header&gt; {
-    <span class="kw">fn </span>from(error: DigestError) -&gt; <span class="self">Self </span>{
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>from(error: DigestError) -&gt; <span class="self">Self </span>{
         ImportError::DigestError(error)
     }
 }
@@ -1199,9 +1246,9 @@
         </span><span class="kw">let </span>constants = <span class="self">self</span>.store.chain_constants();
         <span class="kw">let </span><span class="kw-2">mut </span>maybe_root_plot_public_key = parent_header.maybe_root_plot_public_key;
         <span class="kw">if let </span><span class="prelude-val">Some</span>(root_plot_public_key) = <span class="kw-2">&amp;</span>maybe_root_plot_public_key {
-            <span class="kw">if </span>root_plot_public_key != <span class="kw-2">&amp;</span>header_digests.pre_digest.solution.public_key {
+            <span class="kw">if </span>root_plot_public_key != <span class="kw-2">&amp;</span>header_digests.pre_digest.solution().public_key {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(ImportError::IncorrectBlockAuthor(
-                    header_digests.pre_digest.solution.public_key,
+                    header_digests.pre_digest.solution().public_key.clone(),
                 ));
             }
         }
@@ -1212,7 +1259,8 @@
         verify_next_digests::&lt;Header&gt;(NextDigestsVerificationParams {
             number: <span class="kw-2">*</span>header.number(),
             header_digests: <span class="kw-2">&amp;</span>header_digests,
-            global_randomness_interval: constants.global_randomness_interval,
+            <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+            </span>global_randomness_interval: constants.global_randomness_interval,
             era_duration: constants.era_duration,
             slot_probability: constants.slot_probability,
             era_start_slot: parent_header.era_start_slot,
@@ -1225,61 +1273,82 @@
         </span><span class="self">Self</span>::verify_slot(<span class="kw-2">&amp;</span>parent_header.header, <span class="kw-2">&amp;</span>header_digests.pre_digest)<span class="question-mark">?</span>;
 
         <span class="comment">// verify block signature
-        </span><span class="self">Self</span>::verify_block_signature(<span class="kw-2">&amp;mut </span>header, <span class="kw-2">&amp;</span>header_digests.pre_digest.solution.public_key)<span class="question-mark">?</span>;
+        </span><span class="self">Self</span>::verify_block_signature(
+            <span class="kw-2">&amp;mut </span>header,
+            <span class="kw-2">&amp;</span>header_digests.pre_digest.solution().public_key,
+        )<span class="question-mark">?</span>;
 
         <span class="comment">// verify solution
-        </span><span class="kw">let </span>sector_id = LegacySectorId::new(
-            <span class="kw-2">&amp;</span>(<span class="kw-2">&amp;</span>header_digests.pre_digest.solution.public_key).into(),
-            header_digests.pre_digest.solution.sector_index,
+        </span><span class="kw">let </span>sector_id = SectorId::new(
+            PublicKey::from(<span class="kw-2">&amp;</span>header_digests.pre_digest.solution().public_key).hash(),
+            header_digests.pre_digest.solution().sector_index,
         );
+
+        <span class="kw">let </span>max_pieces_in_sector = <span class="self">self</span>.store.max_pieces_in_sector();
 
         <span class="kw">let </span>segment_index = sector_id
             .derive_piece_index(
-                header_digests.pre_digest.solution.piece_offset,
-                header_digests.pre_digest.solution.total_pieces,
+                header_digests.pre_digest.solution().piece_offset,
+                header_digests.pre_digest.solution().history_size,
+                max_pieces_in_sector,
+                constants.recent_segments,
+                constants.recent_history_fraction,
             )
             .segment_index();
 
-        <span class="kw">let </span>segment_commitment = <span class="self">self</span>.find_segment_commitment_for_segment_index(
-            segment_index,
-            parent_header.header.hash(),
-        )<span class="question-mark">?</span>;
+        <span class="kw">let </span>segment_commitment = <span class="self">self
+            </span>.find_segment_commitment_for_segment_index(segment_index, parent_header.header.hash())<span class="question-mark">?
+            </span>.ok_or(ImportError::MissingSegmentCommitment(segment_index))<span class="question-mark">?</span>;
+        <span class="kw">let </span>current_history_size = HistorySize::new(
+            NonZeroU64::try_from(<span class="self">self</span>.store.number_of_segments())
+                .map_err(|_error| ImportError::EmptySegmentCommitmentHistory)<span class="question-mark">?</span>,
+        );
+        <span class="kw">let </span>sector_expiration_check_segment_commitment = <span class="self">self
+            </span>.find_segment_commitment_for_segment_index(
+                header_digests
+                    .pre_digest
+                    .solution()
+                    .history_size
+                    .sector_expiration_check(constants.min_sector_lifetime)
+                    .ok_or(ImportError::InvalidHistorySize)<span class="question-mark">?
+                    </span>.segment_index(),
+                parent_header.header.hash(),
+            )<span class="question-mark">?</span>;
 
         verify_solution(
-            (<span class="kw-2">&amp;</span>header_digests.pre_digest.solution).into(),
-            header_digests.pre_digest.slot.into(),
+            header_digests.pre_digest.solution().into(),
+            header_digests.pre_digest.slot().into(),
             (<span class="kw-2">&amp;</span>VerifySolutionParams {
-                global_randomness: header_digests.global_randomness,
+                <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
+                </span>global_randomness: header_digests.global_randomness,
+                <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
+                </span>proof_of_time: header_digests.pre_digest.pot_info().proof_of_time(),
                 solution_range: header_digests.solution_range,
-                piece_check_params: <span class="prelude-val">Some</span>(PieceCheckParams { segment_commitment }),
+                piece_check_params: <span class="prelude-val">Some</span>(PieceCheckParams {
+                    max_pieces_in_sector,
+                    segment_commitment,
+                    recent_segments: constants.recent_segments,
+                    recent_history_fraction: constants.recent_history_fraction,
+                    min_sector_lifetime: constants.min_sector_lifetime,
+                    current_history_size,
+                    sector_expiration_check_segment_commitment,
+                }),
             })
                 .into(),
         )
         .map_err(ImportError::InvalidSolution)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>block_weight = <span class="self">Self</span>::calculate_block_weight(<span class="kw-2">&amp;</span>sector_id, <span class="kw-2">&amp;</span>header_digests);
-        <span class="kw">let </span>total_weight = parent_header.total_weight + block_weight;
+        <span class="kw">let </span>added_weight = calculate_block_weight(header_digests.solution_range);
+        <span class="kw">let </span>total_weight = parent_header.total_weight + added_weight;
 
         <span class="comment">// last best header should ideally be parent header. if not check for forks and pick the best chain
         </span><span class="kw">let </span>last_best_header = <span class="self">self</span>.store.best_header();
-        <span class="kw">let </span>is_best_header = <span class="kw">if </span>last_best_header.header.hash() == parent_header.header.hash() {
-            <span class="comment">// header is extending the current best header. consider this best header
-            </span><span class="bool-val">true
-        </span>} <span class="kw">else </span>{
-            <span class="kw">let </span>last_best_weight = last_best_header.total_weight;
-            <span class="kw">match </span>total_weight.cmp(<span class="kw-2">&amp;</span>last_best_weight) {
-                <span class="comment">// current weight is greater than last best. pick this header as best
-                </span>Ordering::Greater =&gt; <span class="bool-val">true</span>,
-                <span class="comment">// if weights are equal, pick the longest chain
-                </span>Ordering::Equal =&gt; header.number() &gt; last_best_header.header.number(),
-                <span class="comment">// we already are on the best chain
-                </span>Ordering::Less =&gt; <span class="bool-val">false</span>,
-            }
-        };
+        <span class="kw">let </span>last_best_weight = last_best_header.total_weight;
+        <span class="kw">let </span>is_best_header = total_weight &gt; last_best_weight;
 
         <span class="comment">// check if era has changed
         </span><span class="kw">let </span>era_start_slot = <span class="kw">if </span><span class="self">Self</span>::has_era_changed(<span class="kw-2">&amp;</span>header, constants.era_duration) {
-            header_digests.pre_digest.slot
+            header_digests.pre_digest.slot()
         } <span class="kw">else </span>{
             parent_header.era_start_slot
         };
@@ -1312,7 +1381,7 @@
             maybe_next_solution_range_override,
             maybe_root_plot_public_key,
 
-            <span class="attr">#[cfg(test)]
+            <span class="attr">#[cfg(all(test, not(feature = <span class="string">&quot;pot&quot;</span>)))]
             </span>test_overrides: Default::default(),
         };
 
@@ -1357,6 +1426,7 @@
         };
 
         <span class="comment">// check the digest items against the next digest items from parent header
+        </span><span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
         </span><span class="kw">if </span>pre_digest_items.global_randomness != next_digest_items.next_global_randomness {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ImportError::InvalidDigest(
                 ErrorDigestType::GlobalRandomness,
@@ -1377,7 +1447,7 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ImportError&lt;Header&gt;&gt; {
         <span class="kw">let </span>parent_pre_digest = extract_pre_digest(parent_header)<span class="question-mark">?</span>;
 
-        <span class="kw">if </span>pre_digest.slot &lt;= parent_pre_digest.slot {
+        <span class="kw">if </span>pre_digest.slot() &lt;= parent_pre_digest.slot() {
             <span class="kw">return </span><span class="prelude-val">Err</span>(ImportError::InvalidSlot);
         }
 
@@ -1416,26 +1486,6 @@
         <span class="comment">// push the seal back into the header
         </span>header.digest_mut().push(seal);
         <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="doccomment">/// Calculates block weight from randomness and predigest.
-    </span><span class="kw">fn </span>calculate_block_weight(
-        sector_id: <span class="kw-2">&amp;</span>LegacySectorId,
-        header_digests: <span class="kw-2">&amp;</span>SubspaceDigestItems&lt;FarmerPublicKey, FarmerPublicKey, FarmerSignature&gt;,
-    ) -&gt; BlockWeight {
-        <span class="kw">let </span>global_challenge = derive_global_challenge(
-            <span class="kw-2">&amp;</span>header_digests.global_randomness,
-            header_digests.pre_digest.slot.into(),
-        );
-
-        <span class="kw">let </span>local_challenge = sector_id.derive_local_challenge(<span class="kw-2">&amp;</span>global_challenge);
-
-        <span class="kw">let </span>audit_chunk = derive_audit_chunk(<span class="kw-2">&amp;</span>header_digests.pre_digest.solution.chunk.to_bytes());
-
-        BlockWeight::from(
-            SolutionRange::MAX
-                - subspace_core_primitives::bidirectional_distance(<span class="kw-2">&amp;</span>local_challenge, <span class="kw-2">&amp;</span>audit_chunk),
-        )
     }
 
     <span class="doccomment">/// Returns the ancestor of the header at number.
@@ -1567,10 +1617,10 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         segment_index: SegmentIndex,
         chain_tip: HashOf&lt;Header&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;SegmentCommitment, ImportError&lt;Header&gt;&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;SegmentCommitment&gt;, ImportError&lt;Header&gt;&gt; {
         <span class="comment">// check if the segment commitment is already in the store
         </span><span class="kw">if let </span><span class="prelude-val">Some</span>(segment_commitment) = <span class="self">self</span>.store.segment_commitment(segment_index) {
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(segment_commitment);
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(segment_commitment));
         };
 
         <span class="comment">// special case: check the genesis segment commitments if the Block #1 is not finalized yet
@@ -1580,7 +1630,7 @@
             .genesis_segment_commitments
             .get(<span class="kw-2">&amp;</span>segment_index)
         {
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="kw-2">*</span>segment_commitment);
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="kw-2">*</span>segment_commitment));
         }
 
         <span class="comment">// find the segment commitment from the headers which are not finalized yet.
@@ -1599,7 +1649,7 @@
             &gt;(<span class="kw-2">&amp;</span>header.header)<span class="question-mark">?</span>;
 
             <span class="kw">if let </span><span class="prelude-val">Some</span>(segment_commitment) = digest_items.segment_commitments.get(<span class="kw-2">&amp;</span>segment_index) {
-                <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="kw-2">*</span>segment_commitment);
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="kw-2">*</span>segment_commitment));
             }
 
             header = <span class="self">self
@@ -1608,7 +1658,7 @@
                 .ok_or_else(|| ImportError::MissingParent(header.header.hash()))<span class="question-mark">?</span>;
         }
 
-        <span class="prelude-val">Err</span>(ImportError::MissingSegmentCommitment(segment_index))
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
     }
 
     <span class="doccomment">/// Stores finalized header and segment commitments present in the header.

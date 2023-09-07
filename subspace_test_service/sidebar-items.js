@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["construct_extrinsic","construct_transfer_extrinsic","node_config","run_validator_node"],"mod":["mock"],"struct":["PrimaryTestNode"]};
+window.SIDEBAR_ITEMS = {"fn":["node_config"],"macro":["produce_block_with","produce_blocks","produce_blocks_until"],"struct":["MockConsensusNode"]};
