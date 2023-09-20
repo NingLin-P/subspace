@@ -601,7 +601,11 @@ where
         + 'static,
     Client::Api:
         DomainCoreApi<Block> + sp_block_builder::BlockBuilder<Block> + sp_api::ApiExt<Block>,
-    CClient: HeaderBackend<CBlock> + BlockBackend<CBlock> + ProvideRuntimeApi<CBlock> + 'static,
+    CClient: HeaderBackend<CBlock>
+        + BlockBackend<CBlock>
+        + ProvideRuntimeApi<CBlock>
+        + ProofProvider<CBlock>
+        + 'static,
     CClient::Api: DomainsApi<CBlock, NumberFor<Block>, Block::Hash>,
     Backend: sc_client_api::Backend<Block> + 'static,
     E: CodeExecutor,
@@ -653,7 +657,14 @@ where
     fn check_receipts(
         &self,
         receipts: Vec<ExecutionReceiptFor<Block, ParentChainBlock>>,
-        fraud_proofs: Vec<FraudProof<NumberFor<ParentChainBlock>, ParentChainBlock::Hash>>,
+        fraud_proofs: Vec<
+            FraudProof<
+                NumberFor<ParentChainBlock>,
+                ParentChainBlock::Hash,
+                NumberFor<Block>,
+                Block::Hash,
+            >,
+        >,
     ) -> Result<(), sp_blockchain::Error> {
         let mut bad_receipts_to_write = vec![];
 
@@ -755,7 +766,14 @@ where
     fn create_fraud_proof_for_first_unconfirmed_bad_receipt(
         &self,
     ) -> sp_blockchain::Result<
-        Option<FraudProof<NumberFor<ParentChainBlock>, ParentChainBlock::Hash>>,
+        Option<
+            FraudProof<
+                NumberFor<ParentChainBlock>,
+                ParentChainBlock::Hash,
+                NumberFor<Block>,
+                Block::Hash,
+            >,
+        >,
     > {
         if let Some((bad_receipt_hash, mismatch_info)) =
             crate::aux_schema::find_first_unconfirmed_bad_receipt_info::<_, Block, CBlock, _>(

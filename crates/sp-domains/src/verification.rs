@@ -17,6 +17,8 @@ pub enum VerificationError {
     MissingValue,
     /// Failed to decode value.
     FailedToDecode,
+    /// Emits when the given bundle storage proof is invalid.
+    InvalidBundleStorageProof,
 }
 
 pub struct StorageProofVerifier<H: Hasher>(PhantomData<H>);

@@ -1,9 +1,16 @@
-use crate::{DomainId, ReceiptHash, SealedBundleHeader};
-use parity_scale_codec::{Decode, Encode};
+use crate::storage_proof::{DomainRuntimeCodeWithProof, OpaqueBundleWithProof};
+use crate::{DomainId, ExecutionReceipt, OpaqueBundle, ReceiptHash, SealedBundleHeader};
+use frame_support::storage::generator::{StorageDoubleMap, StorageMap};
+use frame_support::Identity;
+use parity_scale_codec::{Decode, Encode, FullCodec};
 use scale_info::TypeInfo;
 use sp_consensus_slots::Slot;
 use sp_core::H256;
-use sp_runtime::traits::{BlakeTwo256, Hash as HashT, Header as HeaderT};
+use sp_runtime::traits::{
+    BlakeTwo256, Block as BlockT, Hash as HashT, Header as HeaderT, NumberFor, Zero,
+};
+use sp_std::collections::btree_set::BTreeSet;
+use sp_std::marker::PhantomData;
 use sp_std::vec::Vec;
 use sp_trie::StorageProof;
 use subspace_core_primitives::BlockNumber;
@@ -155,8 +162,8 @@ pub enum VerificationError {
     Client(#[from] sp_blockchain::Error),
     /// Invalid storage proof.
     #[cfg(feature = "std")]
-    #[cfg_attr(feature = "thiserror", error("Invalid stroage proof"))]
-    InvalidStorageProof,
+    #[cfg_attr(feature = "thiserror", error("Invalid stroage proof: {0:?}"))]
+    InvalidStorageProof(#[from] crate::storage_proof::VerificationError),
     /// Can not find signer from the domain extrinsic.
     #[cfg_attr(
         feature = "thiserror",
@@ -179,18 +186,31 @@ pub enum VerificationError {
         error("Oneshot error when verifying fraud proof in tx pool: {0}")
     )]
     Oneshot(String),
+    /// Domain bundle not found.
+    #[cfg_attr(feature = "thiserror", error("Domain bundle not found"))]
+    DomainBundleNotFound,
+    /// `bundle_digest` is same as the one stored on chain.
+    #[cfg_attr(
+        feature = "thiserror",
+        error("`bundle_digest` is same as the one on chain")
+    )]
+    /// The targetted bad receipt not found
+    SameBundleDigest,
+    #[cfg_attr(feature = "thiserror", error("Bad Receipt not found"))]
+    BadReceiptNotFound,
 }
 
 /// Fraud proof.
 // TODO: Revisit when fraud proof v2 is implemented.
 #[allow(clippy::large_enum_variant)]
 #[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
-pub enum FraudProof<Number, Hash> {
+pub enum FraudProof<Number, Hash, DomainNumber, DomainHash> {
     InvalidStateTransition(InvalidStateTransitionProof),
     InvalidTransaction(InvalidTransactionProof),
-    BundleEquivocation(BundleEquivocationProof<Number, Hash>),
+    BundleEquivocation(BundleEquivocationProof<Number, Hash, DomainNumber, DomainHash, Balance>),
     ImproperTransactionSortition(ImproperTransactionSortitionProof),
     InvalidTotalRewards(InvalidTotalRewardsProof),
+    ValidBundle(ValidBundleProof<Number, Hash, DomainNumber, DomainHash, Balance>),
     // Dummy fraud proof only used in test and benchmark
     #[cfg(any(feature = "std", feature = "runtime-benchmarks"))]
     Dummy {
@@ -201,7 +221,14 @@ pub enum FraudProof<Number, Hash> {
     },
 }
 
-impl<Number, Hash> FraudProof<Number, Hash> {
+impl<Number, Hash, DomainNumber, DomainHash> FraudProof<Number, Hash, DomainNumber, DomainHash>
+where
+    Number: Encode + Zero,
+    Hash: Encode + Default,
+    DomainNumber: Encode + Zero,
+    DomainHash: Clone + Encode + Default,
+    Balance: Encode + Zero,
+{
     pub fn domain_id(&self) -> DomainId {
         match self {
             Self::InvalidStateTransition(proof) => proof.domain_id,
@@ -210,7 +237,8 @@ impl<Number, Hash> FraudProof<Number, Hash> {
             Self::ImproperTransactionSortition(proof) => proof.domain_id,
             #[cfg(any(feature = "std", feature = "runtime-benchmarks"))]
             Self::Dummy { domain_id, .. } => *domain_id,
-            FraudProof::InvalidTotalRewards(proof) => proof.domain_id(),
+            Self::InvalidTotalRewards(proof) => proof.domain_id(),
+            Self::ValidBundle(proof) => proof.domain_id,
         }
     }
 
@@ -227,7 +255,8 @@ impl<Number, Hash> FraudProof<Number, Hash> {
             Self::Dummy {
                 bad_receipt_hash, ..
             } => *bad_receipt_hash,
-            FraudProof::InvalidTotalRewards(proof) => proof.bad_receipt_hash(),
+            Self::InvalidTotalRewards(proof) => proof.bad_receipt_hash(),
+            Self::ValidBundle(proof) => proof.bad_receipt.hash(),
         }
     }
 
@@ -235,19 +264,13 @@ impl<Number, Hash> FraudProof<Number, Hash> {
     pub fn dummy_fraud_proof(
         domain_id: DomainId,
         bad_receipt_hash: ReceiptHash,
-    ) -> FraudProof<Number, Hash> {
+    ) -> FraudProof<Number, Hash, DomainNumber, DomainHash> {
         FraudProof::Dummy {
             domain_id,
             bad_receipt_hash,
         }
     }
-}
 
-impl<Number, Hash> FraudProof<Number, Hash>
-where
-    Number: Encode,
-    Hash: Encode,
-{
     pub fn hash(&self) -> H256 {
         BlakeTwo256::hash(&self.encode())
     }
@@ -298,24 +321,28 @@ pub fn dummy_invalid_state_transition_proof(
 /// are the given distinct bundle headers that were signed by the validator and which
 /// include the slot number.
 #[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
-pub struct BundleEquivocationProof<Number, Hash> {
+pub struct BundleEquivocationProof<Number, Hash, DomainNumber, DomainHash, Balance> {
     /// The id of the domain this fraud proof targeted
     pub domain_id: DomainId,
     /// The authority id of the equivocator.
     pub offender: AccountId,
     /// The slot at which the equivocation happened.
     pub slot: Slot,
-    // TODO: The generic type should be `<Number, Hash, DomainNumber, DomainHash, Balance>`
     // TODO: `SealedBundleHeader` contains `ExecutionReceipt` which make the size of the proof
     // large, revisit when proceeding to fraud proof v2.
     /// The first header involved in the equivocation.
-    pub first_header: SealedBundleHeader<Number, Hash, Number, H256, Balance>,
+    pub first_header: SealedBundleHeader<Number, Hash, DomainNumber, DomainHash, Balance>,
     /// The second header involved in the equivocation.
-    pub second_header: SealedBundleHeader<Number, Hash, Number, H256, Balance>,
+    pub second_header: SealedBundleHeader<Number, Hash, DomainNumber, DomainHash, Balance>,
 }
 
-impl<Number: Clone + From<u32> + Encode, Hash: Clone + Default + Encode>
-    BundleEquivocationProof<Number, Hash>
+impl<
+        Number: Clone + From<u32> + Encode,
+        Hash: Clone + Default + Encode,
+        DomainNumber: Clone + From<u32> + Encode,
+        DomainHash: Clone + Default + Encode,
+        Balance: Encode + Zero,
+    > BundleEquivocationProof<Number, Hash, DomainNumber, DomainHash, Balance>
 {
     /// Returns the hash of this bundle equivocation proof.
     pub fn hash(&self) -> H256 {
@@ -374,4 +401,76 @@ impl InvalidTotalRewardsProof {
 pub fn operator_block_rewards_final_key() -> Vec<u8> {
     frame_support::storage::storage_prefix("OperatorRewards".as_ref(), "BlockRewards".as_ref())
         .to_vec()
+}
+
+/// This is a representation of actual `SuccessfulBundle` storage in pallet-domains.
+/// Any change in key or value there should be changed here accordingly.
+pub struct SuccessfulBundlesStorage;
+impl StorageMap<DomainId, Vec<H256>> for SuccessfulBundlesStorage {
+    type Query = Vec<H256>;
+    type Hasher = Identity;
+
+    fn module_prefix() -> &'static [u8] {
+        "Domains".as_ref()
+    }
+
+    fn storage_prefix() -> &'static [u8] {
+        "SuccessfulBundles".as_ref()
+    }
+
+    fn from_optional_value_to_query(v: Option<Vec<H256>>) -> Self::Query {
+        v.unwrap_or(Default::default())
+    }
+
+    fn from_query_to_optional_value(v: Self::Query) -> Option<Vec<H256>> {
+        Some(v)
+    }
+}
+
+/// This is a representation of actual `BlockTree` storage in pallet-domains.
+/// Any change in key or value there should be changed here accordingly.
+pub struct BlockTreeStorage<DomainNumber>(PhantomData<DomainNumber>);
+impl<DomainNumber> StorageDoubleMap<DomainId, DomainNumber, BTreeSet<ReceiptHash>>
+    for BlockTreeStorage<DomainNumber>
+where
+    DomainNumber: FullCodec + TypeInfo + 'static,
+{
+    type Query = BTreeSet<ReceiptHash>;
+    type Hasher1 = Identity;
+    type Hasher2 = Identity;
+
+    fn module_prefix() -> &'static [u8] {
+        "Domains".as_ref()
+    }
+
+    fn storage_prefix() -> &'static [u8] {
+        "BlockTree".as_ref()
+    }
+
+    fn from_optional_value_to_query(v: Option<BTreeSet<ReceiptHash>>) -> Self::Query {
+        v.unwrap_or(Default::default())
+    }
+
+    fn from_query_to_optional_value(v: Self::Query) -> Option<BTreeSet<ReceiptHash>> {
+        Some(v)
+    }
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct ValidBundleProof<Number, Hash, DomainNumber, DomainHash, Balance> {
+    /// The id of the domain this fraud proof targeted
+    pub domain_id: DomainId,
+
+    /// The targetted bad receipt
+    ///
+    /// NOTE: `bad_receipt` does not need storage proof because the existence of the
+    // bad receipt will be verified in the consensus chain runtime with any potential
+    // consensus chain fork properly handled.
+    pub bad_receipt: ExecutionReceipt<Number, Hash, DomainNumber, DomainHash, Balance>,
+
+    /// The targetted valid bundle with storage proof
+    pub bundle_with_proof: OpaqueBundleWithProof<Number, Hash, DomainNumber, DomainHash, Balance>,
+
+    /// The domain runtime code with storage proof
+    pub runtime_code_with_proof: DomainRuntimeCodeWithProof,
 }

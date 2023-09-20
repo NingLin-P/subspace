@@ -10821,6 +10821,7 @@ dependencies = [
  "num-traits",
  "parity-scale-codec",
  "rs_merkle",
+ "sc-client-api",
  "scale-info",
  "serde",
  "sp-api",
@@ -11931,6 +11932,7 @@ version = "0.1.0"
 name = "subspace-test-client"
 version = "0.1.0"
 dependencies = [
+ "domain-runtime-primitives",
  "evm-domain-test-runtime",
  "fp-evm",
  "futures",

@@ -20,6 +20,7 @@
 pub mod bundle_producer_election;
 pub mod fraud_proof;
 pub mod merkle_tree;
+pub mod storage_proof;
 #[cfg(test)]
 mod tests;
 pub mod transaction;
@@ -276,6 +277,15 @@ impl<
 pub type OpaqueBundle<Number, Hash, DomainNumber, DomainHash, Balance> =
     Bundle<OpaqueExtrinsic, Number, Hash, DomainNumber, DomainHash, Balance>;
 
+/// Handy type alias of `OpaqueBundle`
+pub type OpaqueBundleOf<Block, CBlock, Balance> = OpaqueBundle<
+    NumberFor<CBlock>,
+    <CBlock as BlockT>::Hash,
+    NumberFor<Block>,
+    <Block as BlockT>::Hash,
+    Balance,
+>;
+
 /// List of [`OpaqueBundle`].
 pub type OpaqueBundles<Block, DomainNumber, DomainHash, Balance> =
     Vec<OpaqueBundle<NumberFor<Block>, <Block as BlockT>::Hash, DomainNumber, DomainHash, Balance>>;
@@ -359,6 +369,7 @@ pub struct ExecutionReceipt<Number, Hash, DomainNumber, DomainHash, Balance> {
     pub consensus_block_number: Number,
     /// The block hash corresponding to `consensus_block_number`.
     pub consensus_block_hash: Hash,
+    // TODO: merge the `valid_bundles`, `invalid_bundles`, and `block_extrinsics_roots` into one
     /// All the bundles that are included in the domain block building.
     pub valid_bundles: Vec<ValidBundle>,
     /// Potential bundles that are excluded from the domain block building.
@@ -380,6 +391,15 @@ pub struct ExecutionReceipt<Number, Hash, DomainNumber, DomainHash, Balance> {
     /// All SSC rewards for this ER to be shared across operators.
     pub total_rewards: Balance,
 }
+
+/// Handy type alias of `ExecutionReceipt`
+pub type ExecutionReceiptOf<Block, CBlock, Balance> = ExecutionReceipt<
+    NumberFor<CBlock>,
+    <CBlock as BlockT>::Hash,
+    NumberFor<Block>,
+    <Block as BlockT>::Hash,
+    Balance,
+>;
 
 impl<
         Number: Encode + Zero,
@@ -549,6 +569,18 @@ pub type EpochIndex = u32;
 
 /// Type representing operator ID
 pub type OperatorId = u64;
+
+#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
+pub struct RuntimeObject<Number, Hash> {
+    pub runtime_name: Vec<u8>,
+    pub runtime_type: RuntimeType,
+    pub runtime_upgrades: u32,
+    pub hash: Hash,
+    pub code: Vec<u8>,
+    pub version: RuntimeVersion,
+    pub created_at: Number,
+    pub updated_at: Number,
+}
 
 /// Staking specific hold identifier
 #[derive(

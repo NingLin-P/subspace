@@ -45,7 +45,7 @@ use sp_core::storage::StorageKey;
 use sp_core::H256;
 use sp_domains::bundle_producer_election::{is_below_threshold, BundleProducerElectionParams};
 use sp_domains::fraud_proof::{FraudProof, InvalidTotalRewardsProof};
-use sp_domains::verification::StorageProofVerifier;
+use sp_domains::storage_proof::StorageProofVerifier;
 use sp_domains::{
     DomainBlockLimit, DomainId, DomainInstanceData, ExecutionReceipt, OpaqueBundle, OperatorId,
     OperatorPublicKey, ProofOfElection, RuntimeId, EMPTY_EXTRINSIC_ROOT,
@@ -108,8 +108,7 @@ mod pallet {
     };
     use crate::runtime_registry::{
         do_register_runtime, do_schedule_runtime_upgrade, do_upgrade_runtimes,
-        register_runtime_at_genesis, Error as RuntimeRegistryError, RuntimeObject,
-        ScheduledRuntimeUpgrade,
+        register_runtime_at_genesis, Error as RuntimeRegistryError, ScheduledRuntimeUpgrade,
     };
     use crate::staking::{
         do_auto_stake_block_rewards, do_deregister_operator, do_nominate_operator,
@@ -137,7 +136,7 @@ mod pallet {
     use sp_domains::transaction::InvalidTransactionCode;
     use sp_domains::{
         BundleDigest, DomainId, EpochIndex, GenesisDomain, OperatorId, ReceiptHash, RuntimeId,
-        RuntimeType,
+        RuntimeObject, RuntimeType,
     };
     use sp_runtime::traits::{
         AtLeast32BitUnsigned, BlockNumberProvider, Bounded, CheckEqual, CheckedAdd, MaybeDisplay,
@@ -432,6 +431,12 @@ mod pallet {
         DomainObject<BlockNumberFor<T>, T::AccountId>,
         OptionQuery,
     >;
+
+    /// A handy mapping of `domain_id` -> `runtime_id`, used in fraud proof to generate storage
+    /// proof of the domain runtime code.
+    #[pallet::storage]
+    pub(super) type DomainRuntime<T: Config> =
+        StorageMap<_, Identity, DomainId, RuntimeId, OptionQuery>;
 
     /// The domain block tree, map (`domain_id`, `domain_block_number`) to the hash of a domain blocks,
     /// which can be used get the domain block in `DomainBlocks`
@@ -841,7 +846,9 @@ mod pallet {
         #[pallet::weight((Weight::from_all(10_000), Pays::No))]
         pub fn submit_fraud_proof(
             origin: OriginFor<T>,
-            fraud_proof: Box<FraudProof<BlockNumberFor<T>, T::Hash>>,
+            fraud_proof: Box<
+                FraudProof<BlockNumberFor<T>, T::Hash, T::DomainNumber, T::DomainHash>,
+            >,
         ) -> DispatchResult {
             ensure_none(origin)?;
 
@@ -1304,8 +1311,7 @@ impl<T: Config> Pallet<T> {
     }
 
     pub fn runtime_id(domain_id: DomainId) -> Option<RuntimeId> {
-        DomainRegistry::<T>::get(domain_id)
-            .map(|domain_object| domain_object.domain_config.runtime_id)
+        DomainRuntime::<T>::get(domain_id)
     }
 
     pub fn domain_instance_data(
@@ -1479,7 +1485,7 @@ impl<T: Config> Pallet<T> {
     }
 
     fn validate_fraud_proof(
-        fraud_proof: &FraudProof<BlockNumberFor<T>, T::Hash>,
+        fraud_proof: &FraudProof<BlockNumberFor<T>, T::Hash, T::DomainNumber, T::DomainHash>,
     ) -> Result<(), FraudProofError> {
         let bad_receipt = DomainBlocks::<T>::get(fraud_proof.bad_receipt_hash())
             .ok_or(FraudProofError::BadReceiptNotFound)?
@@ -1718,7 +1724,9 @@ where
     }
 
     /// Submits an unsigned extrinsic [`Call::submit_fraud_proof`].
-    pub fn submit_fraud_proof_unsigned(fraud_proof: FraudProof<BlockNumberFor<T>, T::Hash>) {
+    pub fn submit_fraud_proof_unsigned(
+        fraud_proof: FraudProof<BlockNumberFor<T>, T::Hash, T::DomainNumber, T::DomainHash>,
+    ) {
         let call = Call::submit_fraud_proof {
             fraud_proof: Box::new(fraud_proof),
         };

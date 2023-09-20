@@ -784,7 +784,10 @@ fn generate_invalid_total_rewards_fraud_proof<T: Config>(
     domain_id: DomainId,
     bad_receipt_hash: ReceiptHash,
     rewards: BalanceOf<T>,
-) -> (FraudProof<BlockNumberFor<T>, T::Hash>, T::Hash) {
+) -> (
+    FraudProof<BlockNumberFor<T>, T::Hash, T::DomainNumber, T::DomainHash>,
+    T::Hash,
+) {
     let storage_key = sp_domains::fraud_proof::operator_block_rewards_final_key();
     let mut root = T::Hash::default();
     let mut mdb = PrefixedMemoryDB::<T::Hashing>::default();
