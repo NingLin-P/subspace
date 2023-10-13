@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-service/src/sync_from_dsn/import_blocks.rs`."><title>import_blocks.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="subspace_service" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../subspace_service/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-service/src/sync_from_dsn/import_blocks.rs`."><title>import_blocks.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="subspace_service" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (d627cf07c 2023-10-10)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-0689c575f077d64f.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../subspace_service/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -335,6 +335,13 @@
 <a href="#335" id="335">335</a>
 <a href="#336" id="336">336</a>
 <a href="#337" id="337">337</a>
+<a href="#338" id="338">338</a>
+<a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2023 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -357,9 +364,10 @@
 <span class="kw">use </span>sc_client_api::{AuxStore, BlockBackend, HeaderBackend};
 <span class="kw">use </span>sc_consensus::import_queue::ImportQueueService;
 <span class="kw">use </span>sc_consensus::IncomingBlock;
-<span class="kw">use </span>sc_consensus_subspace::archiver::SegmentHeadersStore;
+<span class="kw">use </span>sc_consensus_subspace::archiver::{decode_block, encode_block, SegmentHeadersStore};
 <span class="kw">use </span>sc_tracing::tracing::{debug, trace};
 <span class="kw">use </span>sp_consensus::BlockOrigin;
+<span class="kw">use </span>sp_runtime::generic::SignedBlock;
 <span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, Header, NumberFor, One};
 <span class="kw">use </span>sp_runtime::Saturating;
 <span class="kw">use </span>std::num::NonZeroU16;
@@ -373,7 +381,7 @@
 <span class="kw">use </span>tracing::warn;
 
 <span class="doccomment">/// Get piece retry attempts number.
-</span><span class="kw">const </span>PIECE_GETTER_RETRY_NUMBER: NonZeroU16 = NonZeroU16::new(<span class="number">3</span>).expect(<span class="string">&quot;Not zero; qed&quot;</span>);
+</span><span class="kw">const </span>PIECE_GETTER_RETRY_NUMBER: NonZeroU16 = NonZeroU16::new(<span class="number">4</span>).expect(<span class="string">&quot;Not zero; qed&quot;</span>);
 
 <span class="doccomment">/// How many blocks to queue before pausing and waiting for blocks to be imported, this is
 /// essentially used to ensure we use a bounded amount of RAM during sync process.
@@ -452,10 +460,9 @@
             .is_some();
 
         <span class="kw">let </span>info = client.info();
-        <span class="comment">// We already have this block imported and it is finalized, so can&#39;t change
-        </span><span class="kw">if </span>last_archived_block &lt;= info.finalized_number {
+        <span class="comment">// We have already processed this block, it can&#39;t change
+        </span><span class="kw">if </span>last_archived_block &lt;= <span class="kw-2">*</span>last_processed_block_number {
             <span class="kw-2">*</span>last_processed_segment_index = segment_index;
-            <span class="kw-2">*</span>last_processed_block_number = last_archived_block;
             <span class="comment">// Reset reconstructor instance
             </span>reconstructor = Reconstructor::new().map_err(|error| error.to_string())<span class="question-mark">?</span>;
             <span class="kw">continue</span>;
@@ -487,10 +494,9 @@
                             .hash(block_number)<span class="question-mark">?
                             </span>.expect(<span class="string">&quot;Block before best block number must always be found; qed&quot;</span>),
                     )<span class="question-mark">?
-                    </span>.expect(<span class="string">&quot;Block before best block number must always be found; qed&quot;</span>)
-                    .block;
+                    </span>.expect(<span class="string">&quot;Block before best block number must always be found; qed&quot;</span>);
 
-                <span class="kw">if </span>block.encode() != block_bytes {
+                <span class="kw">if </span>encode_block(block) != block_bytes {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(sc_service::Error::Other(
                         <span class="string">&quot;Wrong genesis block, block import failed&quot;</span>.to_string(),
                     ));
@@ -518,18 +524,22 @@
                 best_block_number = client.info().best_number;
             }
 
-            <span class="kw">let </span>block =
-                Block::decode(<span class="kw-2">&amp;mut </span>block_bytes.as_slice()).map_err(|error| error.to_string())<span class="question-mark">?</span>;
+            <span class="kw">let </span>signed_block =
+                decode_block::&lt;Block&gt;(<span class="kw-2">&amp;</span>block_bytes).map_err(|error| error.to_string())<span class="question-mark">?</span>;
 
             <span class="kw-2">*</span>last_processed_block_number = last_archived_block;
 
             <span class="comment">// No need to import blocks that are already present, if block is not present it might
             // correspond to a short fork, so we need to import it even if we already have another
             // block at this height
-            </span><span class="kw">if </span>client.expect_header(block.hash()).is_ok() {
+            </span><span class="kw">if </span>client.expect_header(signed_block.block.hash()).is_ok() {
                 <span class="kw">continue</span>;
             }
 
+            <span class="kw">let </span>SignedBlock {
+                block,
+                justifications,
+            } = signed_block;
             <span class="kw">let </span>(header, extrinsics) = block.deconstruct();
             <span class="kw">let </span>hash = header.hash();
 
@@ -538,7 +548,7 @@
                 header: <span class="prelude-val">Some</span>(header),
                 body: <span class="prelude-val">Some</span>(extrinsics),
                 indexed_body: <span class="prelude-val">None</span>,
-                justifications: <span class="prelude-val">None</span>,
+                justifications,
                 origin: <span class="prelude-val">None</span>,
                 allow_missing_state: <span class="bool-val">false</span>,
                 import_existing: <span class="bool-val">false</span>,
@@ -553,17 +563,21 @@
             }
         }
 
-        <span class="comment">// Import queue handles verification and importing it into the client
-        </span><span class="kw">let </span>last_segment = segment_indices_iter.peek().is_none();
-        <span class="kw">if </span>last_segment {
-            <span class="kw">let </span>last_block = blocks_to_import
-                .pop()
-                .expect(<span class="string">&quot;Not empty, checked above; qed&quot;</span>);
-            import_queue_service.import_blocks(BlockOrigin::NetworkInitialSync, blocks_to_import);
-            <span class="comment">// This will notify Substrate&#39;s sync mechanism and allow regular Substrate sync to continue gracefully
-            </span>import_queue_service.import_blocks(BlockOrigin::NetworkBroadcast, <span class="macro">vec!</span>[last_block]);
-        } <span class="kw">else </span>{
-            import_queue_service.import_blocks(BlockOrigin::NetworkInitialSync, blocks_to_import);
+        <span class="kw">if </span>!blocks_to_import.is_empty() {
+            <span class="comment">// Import queue handles verification and importing it into the client
+            </span><span class="kw">let </span>last_segment = segment_indices_iter.peek().is_none();
+            <span class="kw">if </span>last_segment {
+                <span class="kw">let </span>last_block = blocks_to_import
+                    .pop()
+                    .expect(<span class="string">&quot;Not empty, checked above; qed&quot;</span>);
+                import_queue_service
+                    .import_blocks(BlockOrigin::NetworkInitialSync, blocks_to_import);
+                <span class="comment">// This will notify Substrate&#39;s sync mechanism and allow regular Substrate sync to continue gracefully
+                </span>import_queue_service.import_blocks(BlockOrigin::NetworkBroadcast, <span class="macro">vec!</span>[last_block]);
+            } <span class="kw">else </span>{
+                import_queue_service
+                    .import_blocks(BlockOrigin::NetworkInitialSync, blocks_to_import);
+            }
         }
 
         <span class="kw-2">*</span>last_processed_segment_index = segment_index;

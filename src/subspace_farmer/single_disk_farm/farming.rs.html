@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-farmer/src/single_disk_farm/farming.rs`."><title>farming.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="subspace_farmer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../subspace_farmer/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-farmer/src/single_disk_farm/farming.rs`."><title>farming.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="subspace_farmer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (d627cf07c 2023-10-10)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-0689c575f077d64f.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../subspace_farmer/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -172,31 +172,125 @@
 <a href="#172" id="172">172</a>
 <a href="#173" id="173">173</a>
 <a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
+<a href="#181" id="181">181</a>
+<a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a>
+<a href="#184" id="184">184</a>
+<a href="#185" id="185">185</a>
+<a href="#186" id="186">186</a>
+<a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
+<a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
+<a href="#233" id="233">233</a>
+<a href="#234" id="234">234</a>
+<a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
+<a href="#238" id="238">238</a>
+<a href="#239" id="239">239</a>
+<a href="#240" id="240">240</a>
+<a href="#241" id="241">241</a>
+<a href="#242" id="242">242</a>
+<a href="#243" id="243">243</a>
+<a href="#244" id="244">244</a>
+<a href="#245" id="245">245</a>
+<a href="#246" id="246">246</a>
+<a href="#247" id="247">247</a>
+<a href="#248" id="248">248</a>
+<a href="#249" id="249">249</a>
+<a href="#250" id="250">250</a>
+<a href="#251" id="251">251</a>
+<a href="#252" id="252">252</a>
+<a href="#253" id="253">253</a>
+<a href="#254" id="254">254</a>
+<a href="#255" id="255">255</a>
+<a href="#256" id="256">256</a>
+<a href="#257" id="257">257</a>
+<a href="#258" id="258">258</a>
+<a href="#259" id="259">259</a>
+<a href="#260" id="260">260</a>
+<a href="#261" id="261">261</a>
+<a href="#262" id="262">262</a>
+<a href="#263" id="263">263</a>
+<a href="#264" id="264">264</a>
+<a href="#265" id="265">265</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::node_client;
 <span class="kw">use </span><span class="kw">crate</span>::node_client::NodeClient;
 <span class="kw">use </span><span class="kw">crate</span>::single_disk_farm::Handlers;
+<span class="kw">use </span>async_lock::RwLock;
 <span class="kw">use </span>futures::channel::mpsc;
 <span class="kw">use </span>futures::StreamExt;
-<span class="kw">use </span>memmap2::Mmap;
-<span class="kw">use </span>parking_lot::RwLock;
+<span class="attr">#[cfg(windows)]
+</span><span class="kw">use </span>memmap2::Mmap;
+<span class="kw">use </span>parking_lot::Mutex;
+<span class="kw">use </span>rayon::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span>rayon::ThreadPoolBuildError;
+<span class="kw">use </span>std::fs::File;
 <span class="kw">use </span>std::io;
 <span class="kw">use </span>std::sync::Arc;
+<span class="kw">use </span>std::time::Instant;
 <span class="kw">use </span>subspace_core_primitives::crypto::kzg::Kzg;
-<span class="kw">use </span>subspace_core_primitives::{PublicKey, SectorIndex, Solution};
+<span class="kw">use </span>subspace_core_primitives::{PosSeed, PublicKey, SectorIndex, SolutionRange};
 <span class="kw">use </span>subspace_erasure_coding::ErasureCoding;
 <span class="kw">use </span>subspace_farmer_components::auditing::audit_sector;
 <span class="kw">use </span>subspace_farmer_components::proving;
+<span class="kw">use </span>subspace_farmer_components::proving::ProvableSolutions;
 <span class="kw">use </span>subspace_farmer_components::sector::SectorMetadataChecksummed;
-<span class="kw">use </span>subspace_proof_of_space::Table;
+<span class="attr">#[cfg(not(windows))]
+</span><span class="kw">use </span>subspace_farmer_components::ReadAt;
+<span class="kw">use </span>subspace_proof_of_space::{Table, TableGenerator};
 <span class="kw">use </span>subspace_rpc_primitives::{SlotInfo, SolutionResponse};
 <span class="kw">use </span>thiserror::Error;
-<span class="kw">use </span>tracing::{debug, error, trace};
-
-<span class="doccomment">/// Self-imposed limit for number of solutions that farmer will not go over per challenge.
-///
-/// Only useful for initial network bootstrapping where due to initial plot size there might be too
-/// many solutions.
-</span><span class="kw">const </span>SOLUTIONS_LIMIT: usize = <span class="number">1</span>;
+<span class="kw">use </span>tracing::{debug, error, info, trace, warn};
 
 <span class="doccomment">/// Errors that happen during farming
 </span><span class="attr">#[derive(Debug, Error)]
@@ -213,97 +307,189 @@
         <span class="doccomment">/// Lower-level error
         </span>error: node_client::Error,
     },
-    <span class="doccomment">/// Failed to create memory mapping for metadata
-    </span><span class="attr">#[error(<span class="string">&quot;Failed to create memory mapping for metadata: {error}&quot;</span>)]
-    </span>FailedToMapMetadata {
-        <span class="doccomment">/// Lower-level error
-        </span>error: io::Error,
-    },
-    <span class="doccomment">/// Failed to submit solutions response
-    </span><span class="attr">#[error(<span class="string">&quot;Failed to submit solutions response: {error}&quot;</span>)]
-    </span>FailedToSubmitSolutionsResponse {
-        <span class="doccomment">/// Lower-level error
-        </span>error: node_client::Error,
-    },
     <span class="doccomment">/// Low-level proving error
     </span><span class="attr">#[error(<span class="string">&quot;Low-level proving error: {0}&quot;</span>)]
     </span>LowLevelProving(<span class="attr">#[from] </span>proving::ProvingError),
     <span class="doccomment">/// I/O error occurred
     </span><span class="attr">#[error(<span class="string">&quot;I/O error: {0}&quot;</span>)]
     </span>Io(<span class="attr">#[from] </span>io::Error),
+    <span class="doccomment">/// Failed to create thread pool
+    </span><span class="attr">#[error(<span class="string">&quot;Failed to create thread pool: {0}&quot;</span>)]
+    </span>FailedToCreateThreadPool(<span class="attr">#[from] </span>ThreadPoolBuildError),
+}
+
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">async fn </span>slot_notification_forwarder&lt;NC&gt;(
+    node_client: <span class="kw-2">&amp;</span>NC,
+    <span class="kw-2">mut </span>slot_info_forwarder_sender: mpsc::Sender&lt;SlotInfo&gt;,
+) -&gt; <span class="prelude-ty">Result</span>&lt;(), FarmingError&gt;
+<span class="kw">where
+    </span>NC: NodeClient,
+{
+    <span class="macro">info!</span>(<span class="string">&quot;Subscribing to slot info notifications&quot;</span>);
+
+    <span class="kw">let </span><span class="kw-2">mut </span>slot_info_notifications = node_client
+        .subscribe_slot_info()
+        .<span class="kw">await
+        </span>.map_err(|error| FarmingError::FailedToSubscribeSlotInfo { error })<span class="question-mark">?</span>;
+
+    <span class="kw">while let </span><span class="prelude-val">Some</span>(slot_info) = slot_info_notifications.next().<span class="kw">await </span>{
+        <span class="macro">debug!</span>(<span class="question-mark">?</span>slot_info, <span class="string">&quot;New slot&quot;</span>);
+
+        <span class="kw">let </span>slot = slot_info.slot_number;
+
+        <span class="comment">// Error means farmer is still solving for previous slot, which is too late and
+        // we need to skip this slot
+        </span><span class="kw">if </span>slot_info_forwarder_sender.try_send(slot_info).is_err() {
+            <span class="macro">debug!</span>(%slot, <span class="string">&quot;Slow farming, skipping slot&quot;</span>);
+        }
+    }
+
+    <span class="prelude-val">Ok</span>(())
+}
+
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct </span>FarmingOptions&lt;<span class="lifetime">&#39;a</span>, NC&gt; {
+    <span class="kw">pub</span>(<span class="kw">super</span>) public_key: PublicKey,
+    <span class="kw">pub</span>(<span class="kw">super</span>) reward_address: PublicKey,
+    <span class="kw">pub</span>(<span class="kw">super</span>) node_client: NC,
+    <span class="kw">pub</span>(<span class="kw">super</span>) sector_size: usize,
+    <span class="kw">pub</span>(<span class="kw">super</span>) plot_file: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>File,
+    <span class="kw">pub</span>(<span class="kw">super</span>) sectors_metadata: Arc&lt;RwLock&lt;Vec&lt;SectorMetadataChecksummed&gt;&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">super</span>) kzg: Kzg,
+    <span class="kw">pub</span>(<span class="kw">super</span>) erasure_coding: ErasureCoding,
+    <span class="kw">pub</span>(<span class="kw">super</span>) handlers: Arc&lt;Handlers&gt;,
+    <span class="kw">pub</span>(<span class="kw">super</span>) modifying_sector_index: Arc&lt;RwLock&lt;<span class="prelude-ty">Option</span>&lt;SectorIndex&gt;&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">super</span>) slot_info_notifications: mpsc::Receiver&lt;SlotInfo&gt;,
 }
 
 <span class="doccomment">/// Starts farming process.
 ///
 /// NOTE: Returned future is async, but does blocking operations and should be running in dedicated
 /// thread.
-</span><span class="comment">// False-positive, we do drop lock before .await
-</span><span class="attr">#[allow(clippy::await_holding_lock)]
-#[allow(clippy::too_many_arguments)]
-</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">async fn </span>farming&lt;NC, PosTable&gt;(
-    public_key: PublicKey,
-    reward_address: PublicKey,
-    node_client: NC,
-    sector_size: usize,
-    plot_mmap: Mmap,
-    sectors_metadata: Arc&lt;RwLock&lt;Vec&lt;SectorMetadataChecksummed&gt;&gt;&gt;,
-    kzg: Kzg,
-    erasure_coding: ErasureCoding,
-    handlers: Arc&lt;Handlers&gt;,
-    modifying_sector_index: Arc&lt;RwLock&lt;<span class="prelude-ty">Option</span>&lt;SectorIndex&gt;&gt;&gt;,
-    <span class="kw-2">mut </span>slot_info_notifications: mpsc::Receiver&lt;SlotInfo&gt;,
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">async fn </span>farming&lt;PosTable, NC&gt;(
+    farming_options: FarmingOptions&lt;<span class="lifetime">&#39;_</span>, NC&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;(), FarmingError&gt;
 <span class="kw">where
-    </span>NC: NodeClient,
-    PosTable: Table,
+    </span>PosTable: Table,
+    NC: NodeClient,
 {
-    <span class="kw">let </span><span class="kw-2">mut </span>table_generator = PosTable::generator();
+    <span class="kw">let </span>FarmingOptions {
+        public_key,
+        reward_address,
+        node_client,
+        sector_size,
+        plot_file,
+        sectors_metadata,
+        kzg,
+        erasure_coding,
+        handlers,
+        modifying_sector_index,
+        <span class="kw-2">mut </span>slot_info_notifications,
+    } = farming_options;
+
+    <span class="kw">let </span>farmer_app_info = node_client
+        .farmer_app_info()
+        .<span class="kw">await
+        </span>.map_err(|error| FarmingError::FailedToGetFarmerInfo { error })<span class="question-mark">?</span>;
+
+    <span class="comment">// We assume that each slot is one second
+    </span><span class="kw">let </span>farming_timeout = farmer_app_info.farming_timeout;
+
+    <span class="attr">#[cfg(windows)]
+    </span><span class="kw">let </span>plot_mmap = <span class="kw">unsafe </span>{ Mmap::map(plot_file)<span class="question-mark">? </span>};
+    <span class="kw">let </span>table_generator = Arc::new(Mutex::new(PosTable::generator()));
 
     <span class="kw">while let </span><span class="prelude-val">Some</span>(slot_info) = slot_info_notifications.next().<span class="kw">await </span>{
+        <span class="kw">let </span>start = Instant::now();
         <span class="kw">let </span>slot = slot_info.slot_number;
-        <span class="kw">let </span>sectors_metadata = sectors_metadata.read();
+        <span class="kw">let </span>sectors_metadata = sectors_metadata.read().<span class="kw">await</span>;
         <span class="kw">let </span>sector_count = sectors_metadata.len();
 
         <span class="macro">debug!</span>(%slot, %sector_count, <span class="string">&quot;Reading sectors&quot;</span>);
 
-        <span class="kw">let </span>modifying_sector_guard = modifying_sector_index.read();
-        <span class="kw">let </span>maybe_sector_being_modified = modifying_sector_guard.as_ref().copied();
-        <span class="kw">let </span><span class="kw-2">mut </span>solutions = Vec::&lt;Solution&lt;PublicKey, PublicKey&gt;&gt;::new();
+        <span class="attr">#[cfg(not(windows))]
+        </span><span class="kw">let </span>sectors = (<span class="number">0</span>..sector_count)
+            .into_par_iter()
+            .map(|sector_index| plot_file.offset(sector_index * sector_size));
+        <span class="comment">// On Windows random read is horrible in terms of performance, memory-mapped I/O helps
+        // TODO: Remove this once https://internals.rust-lang.org/t/introduce-write-all-at-read-exact-at-on-windows/19649
+        //  or similar exists in standard library
+        </span><span class="attr">#[cfg(windows)]
+        </span><span class="kw">let </span>sectors = plot_mmap.par_chunks_exact(sector_size);
 
-        <span class="kw">for </span>((sector_index, sector_metadata), sector) <span class="kw">in </span>(<span class="number">0</span>..)
-            .zip(<span class="kw-2">&amp;*</span>sectors_metadata)
-            .zip(plot_mmap.chunks_exact(sector_size))
-        {
-            <span class="kw">if </span>maybe_sector_being_modified == <span class="prelude-val">Some</span>(sector_index) {
-                <span class="comment">// Skip sector that is being modified right now
-                </span><span class="kw">continue</span>;
-            }
-            <span class="macro">trace!</span>(%slot, %sector_index, <span class="string">&quot;Auditing sector&quot;</span>);
+        <span class="kw">let </span>sectors_solutions = {
+            <span class="kw">let </span>modifying_sector_guard = modifying_sector_index.read().<span class="kw">await</span>;
+            <span class="kw">let </span>maybe_sector_being_modified = modifying_sector_guard.as_ref().copied();
 
-            <span class="kw">let </span>maybe_solution_candidates = audit_sector(
-                <span class="kw-2">&amp;</span>public_key,
-                sector_index,
-                <span class="kw-2">&amp;</span>slot_info.global_challenge,
-                slot_info.voting_solution_range,
-                sector,
-                sector_metadata,
-            );
-            <span class="kw">let </span><span class="prelude-val">Some</span>(solution_candidates) = maybe_solution_candidates <span class="kw">else </span>{
-                <span class="kw">continue</span>;
-            };
+            <span class="kw">let </span><span class="kw-2">mut </span>sectors_solutions = sectors_metadata
+                .par_iter()
+                .zip(sectors)
+                .enumerate()
+                .filter_map(|(sector_index, (sector_metadata, sector))| {
+                    <span class="kw">let </span>sector_index = sector_index <span class="kw">as </span>u16;
+                    <span class="kw">if </span>maybe_sector_being_modified == <span class="prelude-val">Some</span>(sector_index) {
+                        <span class="comment">// Skip sector that is being modified right now
+                        </span><span class="kw">return </span><span class="prelude-val">None</span>;
+                    }
+                    <span class="macro">trace!</span>(%slot, %sector_index, <span class="string">&quot;Auditing sector&quot;</span>);
 
-            <span class="kw">for </span>maybe_solution <span class="kw">in </span>solution_candidates.into_iter::&lt;<span class="kw">_</span>, PosTable&gt;(
-                <span class="kw-2">&amp;</span>reward_address,
-                <span class="kw-2">&amp;</span>kzg,
-                <span class="kw-2">&amp;</span>erasure_coding,
-                <span class="kw-2">&amp;mut </span>table_generator,
-            )<span class="question-mark">? </span>{
+                    <span class="kw">let </span>audit_results = audit_sector(
+                        <span class="kw-2">&amp;</span>public_key,
+                        sector_index,
+                        <span class="kw-2">&amp;</span>slot_info.global_challenge,
+                        slot_info.voting_solution_range,
+                        sector,
+                        sector_metadata,
+                    )<span class="question-mark">?</span>;
+
+                    <span class="prelude-val">Some</span>((sector_index, audit_results.solution_candidates))
+                })
+                .filter_map(|(sector_index, solution_candidates)| {
+                    <span class="kw">let </span>sector_solutions = <span class="kw">match </span>solution_candidates.into_solutions(
+                        <span class="kw-2">&amp;</span>reward_address,
+                        <span class="kw-2">&amp;</span>kzg,
+                        <span class="kw-2">&amp;</span>erasure_coding,
+                        |seed: <span class="kw-2">&amp;</span>PosSeed| table_generator.lock().generate_parallel(seed),
+                    ) {
+                        <span class="prelude-val">Ok</span>(solutions) =&gt; solutions,
+                        <span class="prelude-val">Err</span>(error) =&gt; {
+                            <span class="macro">warn!</span>(
+                                %error,
+                                %sector_index,
+                                <span class="string">&quot;Failed to turn solution candidates into solutions&quot;</span>,
+                            );
+
+                            <span class="kw">return </span><span class="prelude-val">None</span>;
+                        }
+                    };
+
+                    <span class="kw">if </span>sector_solutions.len() == <span class="number">0 </span>{
+                        <span class="kw">return </span><span class="prelude-val">None</span>;
+                    }
+
+                    <span class="prelude-val">Some</span>((sector_index, sector_solutions))
+                })
+                .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+
+            sectors_solutions.sort_by(|a, b| {
+                <span class="kw">let </span>a_solution_distance =
+                    a.<span class="number">1</span>.best_solution_distance().unwrap_or(SolutionRange::MAX);
+                <span class="kw">let </span>b_solution_distance =
+                    b.<span class="number">1</span>.best_solution_distance().unwrap_or(SolutionRange::MAX);
+
+                a_solution_distance.cmp(<span class="kw-2">&amp;</span>b_solution_distance)
+            });
+
+            sectors_solutions
+        };
+
+        <span class="lifetime">&#39;solutions_processing</span>: <span class="kw">for </span>(sector_index, sector_solutions) <span class="kw">in </span>sectors_solutions {
+            <span class="kw">for </span>maybe_solution <span class="kw">in </span>sector_solutions {
                 <span class="kw">let </span>solution = <span class="kw">match </span>maybe_solution {
                     <span class="prelude-val">Ok</span>(solution) =&gt; solution,
                     <span class="prelude-val">Err</span>(error) =&gt; {
                         <span class="macro">error!</span>(%slot, %sector_index, %error, <span class="string">&quot;Failed to prove&quot;</span>);
-                        <span class="comment">// Do not error completely on disk corruption or other
-                        // reasons why proving might fail
+                        <span class="comment">// Do not error completely as disk corruption or other reasons why
+                        // proving might fail
                         </span><span class="kw">continue</span>;
                     }
                 };
@@ -311,37 +497,33 @@
                 <span class="macro">debug!</span>(%slot, %sector_index, <span class="string">&quot;Solution found&quot;</span>);
                 <span class="macro">trace!</span>(<span class="question-mark">?</span>solution, <span class="string">&quot;Solution found&quot;</span>);
 
-                solutions.push(solution);
+                <span class="kw">if </span>start.elapsed() &gt;= farming_timeout {
+                    <span class="macro">warn!</span>(
+                        %slot,
+                        %sector_index,
+                        <span class="string">&quot;Proving for solution skipped due to farming time limit&quot;</span>,
+                    );
+                    <span class="kw">break </span><span class="lifetime">&#39;solutions_processing</span>;
+                }
 
-                <span class="kw">if </span>solutions.len() &gt;= SOLUTIONS_LIMIT {
-                    <span class="kw">break</span>;
+                <span class="kw">let </span>response = SolutionResponse {
+                    slot_number: slot_info.slot_number,
+                    solution,
+                };
+
+                handlers.solution.call_simple(<span class="kw-2">&amp;</span>response);
+
+                <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = node_client.submit_solution_response(response).<span class="kw">await </span>{
+                    <span class="macro">warn!</span>(
+                        %slot,
+                        %sector_index,
+                        %error,
+                        <span class="string">&quot;Failed to send solution to node, skipping further proving for this slot&quot;</span>,
+                    );
+                    <span class="kw">break </span><span class="lifetime">&#39;solutions_processing</span>;
                 }
             }
-
-            <span class="kw">if </span>solutions.len() &gt;= SOLUTIONS_LIMIT {
-                <span class="kw">break</span>;
-            }
-            <span class="comment">// TODO: It is known that decoding is slow now and we&#39;ll only be
-            //  able to decode a single sector within time slot reliably, in the
-            //  future we may want allow more than one sector to be valid within
-            //  the same disk plot.
-            </span><span class="kw">if </span>!solutions.is_empty() {
-                <span class="kw">break</span>;
-            }
         }
-
-        drop(sectors_metadata);
-        drop(modifying_sector_guard);
-
-        <span class="kw">let </span>response = SolutionResponse {
-            slot_number: slot_info.slot_number,
-            solutions,
-        };
-        handlers.solution.call_simple(<span class="kw-2">&amp;</span>response);
-        node_client
-            .submit_solution_response(response)
-            .<span class="kw">await
-            </span>.map_err(|error| FarmingError::FailedToSubmitSolutionsResponse { error })<span class="question-mark">?</span>;
     }
 
     <span class="prelude-val">Ok</span>(())

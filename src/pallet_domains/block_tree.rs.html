@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/pallet-domains/src/block_tree.rs`."><title>block_tree.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pallet_domains" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../pallet_domains/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/pallet-domains/src/block_tree.rs`."><title>block_tree.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pallet_domains" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (d627cf07c 2023-10-10)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0689c575f077d64f.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../pallet_domains/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -921,12 +921,45 @@
 <a href="#921" id="921">921</a>
 <a href="#922" id="922">922</a>
 <a href="#923" id="923">923</a>
+<a href="#924" id="924">924</a>
+<a href="#925" id="925">925</a>
+<a href="#926" id="926">926</a>
+<a href="#927" id="927">927</a>
+<a href="#928" id="928">928</a>
+<a href="#929" id="929">929</a>
+<a href="#930" id="930">930</a>
+<a href="#931" id="931">931</a>
+<a href="#932" id="932">932</a>
+<a href="#933" id="933">933</a>
+<a href="#934" id="934">934</a>
+<a href="#935" id="935">935</a>
+<a href="#936" id="936">936</a>
+<a href="#937" id="937">937</a>
+<a href="#938" id="938">938</a>
+<a href="#939" id="939">939</a>
+<a href="#940" id="940">940</a>
+<a href="#941" id="941">941</a>
+<a href="#942" id="942">942</a>
+<a href="#943" id="943">943</a>
+<a href="#944" id="944">944</a>
+<a href="#945" id="945">945</a>
+<a href="#946" id="946">946</a>
+<a href="#947" id="947">947</a>
+<a href="#948" id="948">948</a>
+<a href="#949" id="949">949</a>
+<a href="#950" id="950">950</a>
+<a href="#951" id="951">951</a>
+<a href="#952" id="952">952</a>
+<a href="#953" id="953">953</a>
+<a href="#954" id="954">954</a>
+<a href="#955" id="955">955</a>
+<a href="#956" id="956">956</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Domain block tree
 
 </span><span class="kw">use </span><span class="kw">crate</span>::pallet::StateRoots;
 <span class="kw">use crate</span>::{
-    BalanceOf, BlockTree, Config, ConsensusBlockHash, DomainBlocks, ExecutionInbox,
-    ExecutionReceiptOf, HeadReceiptNumber, InboxedBundle,
+    BalanceOf, BlockTree, Config, ConsensusBlockHash, DomainBlockDescendants, DomainBlocks,
+    ExecutionInbox, ExecutionReceiptOf, HeadReceiptNumber, InboxedBundleAuthor,
 };
 <span class="kw">use </span>codec::{Decode, Encode};
 <span class="kw">use </span>frame_support::{ensure, PalletError};
@@ -1046,7 +1079,7 @@
         consensus_block_number,
         consensus_block_hash,
         domain_block_number,
-        block_extrinsics_roots,
+        inboxed_bundles,
         parent_domain_block_receipt_hash,
         execution_trace,
         execution_trace_root,
@@ -1061,15 +1094,15 @@
             Error::BadGenesisReceipt
         );
     } <span class="kw">else </span>{
+        <span class="kw">let </span>bundles_extrinsics_roots: Vec&lt;<span class="kw">_</span>&gt; =
+            inboxed_bundles.iter().map(|b| b.extrinsics_root).collect();
         <span class="kw">let </span>execution_inbox =
             ExecutionInbox::&lt;T&gt;::get((domain_id, domain_block_number, consensus_block_number));
-        <span class="kw">let </span>expected_extrinsics_roots: Vec&lt;<span class="kw">_</span>&gt; = execution_inbox
-            .into_iter()
-            .map(|b| b.extrinsics_root)
-            .collect();
+        <span class="kw">let </span>expected_extrinsics_roots: Vec&lt;<span class="kw">_</span>&gt; =
+            execution_inbox.iter().map(|b| b.extrinsics_root).collect();
         <span class="macro">ensure!</span>(
-            !block_extrinsics_roots.is_empty()
-                &amp;&amp; <span class="kw-2">*</span>block_extrinsics_roots == expected_extrinsics_roots,
+            !bundles_extrinsics_roots.is_empty()
+                &amp;&amp; bundles_extrinsics_roots == expected_extrinsics_roots,
             Error::InvalidExtrinsicsRoots
         );
 
@@ -1140,15 +1173,17 @@
     }
 }
 
-<span class="doccomment">/// Details of the pruned domain block such as operators, rewards they would receive.
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>PrunedDomainBlockInfo&lt;DomainNumber, Balance&gt; {
+<span class="doccomment">/// Details of the confirmed domain block such as operators, rewards they would receive.
+</span><span class="attr">#[derive(Debug, PartialEq)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ConfirmedDomainBlockInfo&lt;DomainNumber, Balance&gt; {
     <span class="kw">pub </span>domain_block_number: DomainNumber,
     <span class="kw">pub </span>operator_ids: Vec&lt;OperatorId&gt;,
     <span class="kw">pub </span>rewards: Balance,
+    <span class="kw">pub </span>invalid_bundle_authors: Vec&lt;OperatorId&gt;,
 }
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>ProcessExecutionReceiptResult&lt;T&gt; =
-    <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;PrunedDomainBlockInfo&lt;&lt;T <span class="kw">as </span>Config&gt;::DomainNumber, BalanceOf&lt;T&gt;&gt;&gt;, Error&gt;;
+    <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;ConfirmedDomainBlockInfo&lt;&lt;T <span class="kw">as </span>Config&gt;::DomainNumber, BalanceOf&lt;T&gt;&gt;&gt;, Error&gt;;
 
 <span class="doccomment">/// Process the execution receipt to add it to the block tree
 /// Returns the domain block number that was pruned, if any
@@ -1158,7 +1193,6 @@
     execution_receipt: ExecutionReceiptOf&lt;T&gt;,
     receipt_type: AcceptedReceiptType,
 ) -&gt; ProcessExecutionReceiptResult&lt;T&gt; {
-    <span class="kw">let </span><span class="kw-2">mut </span>pruned_domain_block_info = <span class="prelude-val">None</span>;
     <span class="kw">match </span>receipt_type {
         AcceptedReceiptType::NewBranch =&gt; {
             add_new_receipt_to_block_tree::&lt;T&gt;(domain_id, submitter, execution_receipt);
@@ -1176,43 +1210,73 @@
                 domain_block_number.checked_sub(<span class="kw-2">&amp;</span>T::BlockTreePruningDepth::get())
             {
                 <span class="kw">let </span>receipts_at_number = BlockTree::&lt;T&gt;::take(domain_id, to_prune);
-                <span class="kw">if </span>receipts_at_number.len() != <span class="number">1 </span>{
+
+                <span class="comment">// The receipt at `to_prune` may already been pruned if there is fraud proof being
+                // processed and the `HeadReceiptNumber` is reverted.
+                </span><span class="kw">if </span>receipts_at_number.is_empty() {
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
+                }
+
+                <span class="comment">// FIXME: the following check is wrong because the ER at `to_prune` may not necessarily go through
+                // the whole challenge period since the malicious operator can submit `NewBranch` ER any time, thus
+                // the ER may just submitted a few blocks ago and `receipts_at_number` may contains more than one block.
+                //
+                // In current implementatiomn, the correct finalized ER should be the one that has `BlockTreePruningDepth`
+                // length of descendants which is non-trival to find, but once https://github.com/subspace/subspace/issues/1731
+                // is implemented this issue should be fixed automatically.
+                </span><span class="kw">if </span>receipts_at_number.len() != <span class="number">1 </span>{
                     <span class="kw">return </span><span class="prelude-val">Err</span>(Error::MultipleERsAfterChallengePeriod);
                 }
 
-                <span class="kw">let </span>receipt = receipts_at_number
+                <span class="kw">let </span>receipt_hash = receipts_at_number
                     .first()
                     .cloned()
                     .expect(<span class="string">&quot;should always have a value due to check above&quot;</span>);
 
-                <span class="kw">let </span>domain_block =
-                    DomainBlocks::&lt;T&gt;::take(receipt).ok_or(Error::MissingDomainBlock)<span class="question-mark">?</span>;
+                <span class="kw">let </span>DomainBlock {
+                    execution_receipt,
+                    operator_ids,
+                } = DomainBlocks::&lt;T&gt;::take(receipt_hash).ok_or(Error::MissingDomainBlock)<span class="question-mark">?</span>;
+
                 <span class="kw">_ </span>= StateRoots::&lt;T&gt;::take((
                     domain_id,
-                    domain_block.execution_receipt.domain_block_number,
-                    domain_block.execution_receipt.domain_block_hash,
+                    to_prune,
+                    execution_receipt.domain_block_hash,
                 ));
+                <span class="kw">_ </span>= DomainBlockDescendants::&lt;T&gt;::take(receipt_hash);
 
-                <span class="comment">// Remove the block&#39;s `ExecutionInbox` and `InboxedBundle` as the block is pruned and
-                // does not need to verify its receipt&#39;s `extrinsics_root` anymore.
-                </span><span class="kw">for </span>bundle_digests <span class="kw">in </span>ExecutionInbox::&lt;T&gt;::iter_prefix_values((domain_id, to_prune))
-                {
-                    <span class="kw">for </span>bd <span class="kw">in </span>bundle_digests {
-                        InboxedBundle::&lt;T&gt;::remove(bd.header_hash);
+                <span class="comment">// Collect the invalid bundle author
+                </span><span class="kw">let </span><span class="kw-2">mut </span>invalid_bundle_authors = Vec::new();
+                <span class="kw">let </span>bundle_digests = ExecutionInbox::&lt;T&gt;::get((
+                    domain_id,
+                    to_prune,
+                    execution_receipt.consensus_block_number,
+                ));
+                <span class="kw">for </span>(index, bd) <span class="kw">in </span>bundle_digests.into_iter().enumerate() {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(bundle_author) = InboxedBundleAuthor::&lt;T&gt;::take(bd.header_hash) {
+                        <span class="comment">// It is okay to index `ER::bundles` here since `verify_execution_receipt` have checked
+                        // the `ER::bundles` have the same length of `ExecutionInbox`
+                        </span><span class="kw">if </span>execution_receipt.inboxed_bundles[index].is_invalid() {
+                            invalid_bundle_authors.push(bundle_author);
+                        }
                     }
                 }
-                <span class="kw">let _ </span>= ExecutionInbox::&lt;T&gt;::clear_prefix((domain_id, to_prune), u32::MAX, <span class="prelude-val">None</span>);
+
+                <span class="comment">// Remove the block&#39;s `ExecutionInbox` as the domain block is confirmed and no need to verify
+                // its receipt&#39;s `extrinsics_root` anymore.
+                </span><span class="kw">let _ </span>= ExecutionInbox::&lt;T&gt;::clear_prefix((domain_id, to_prune), u32::MAX, <span class="prelude-val">None</span>);
 
                 ConsensusBlockHash::&lt;T&gt;::remove(
                     domain_id,
-                    domain_block.execution_receipt.consensus_block_number,
+                    execution_receipt.consensus_block_number,
                 );
 
-                pruned_domain_block_info = <span class="prelude-val">Some</span>(PrunedDomainBlockInfo {
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(ConfirmedDomainBlockInfo {
                     domain_block_number: to_prune,
-                    operator_ids: domain_block.operator_ids,
-                    rewards: domain_block.execution_receipt.total_rewards,
-                })
+                    operator_ids,
+                    rewards: execution_receipt.total_rewards,
+                    invalid_bundle_authors,
+                }));
             }
         }
         AcceptedReceiptType::CurrentHead =&gt; {
@@ -1226,7 +1290,7 @@
             });
         }
     }
-    <span class="prelude-val">Ok</span>(pruned_domain_block_info)
+    <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
 }
 
 <span class="kw">fn </span>add_new_receipt_to_block_tree&lt;T: Config&gt;(
@@ -1246,13 +1310,19 @@
         execution_receipt.final_state_root,
     );
 
+    BlockTree::&lt;T&gt;::mutate(domain_id, domain_block_number, |er_hashes| {
+        er_hashes.insert(er_hash);
+    });
+    DomainBlockDescendants::&lt;T&gt;::mutate(
+        execution_receipt.parent_domain_block_receipt_hash,
+        |er_hashes| {
+            er_hashes.insert(er_hash);
+        },
+    );
     <span class="kw">let </span>domain_block = DomainBlock {
         execution_receipt,
         operator_ids: <span class="macro">sp_std::vec!</span>[submitter],
     };
-    BlockTree::&lt;T&gt;::mutate(domain_id, domain_block_number, |er_hashes| {
-        er_hashes.insert(er_hash);
-    });
     DomainBlocks::&lt;T&gt;::insert(er_hash, domain_block);
 }
 
@@ -1285,130 +1355,16 @@
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use </span><span class="kw">crate</span>::domain_registry::DomainConfig;
-    <span class="kw">use </span><span class="kw">crate</span>::pallet::Operators;
-    <span class="kw">use </span><span class="kw">crate</span>::staking::{Operator, OperatorStatus};
     <span class="kw">use </span><span class="kw">crate</span>::tests::{
-        create_dummy_bundle_with_receipts, create_dummy_receipt, new_test_ext_with_extensions, Test,
+        create_dummy_bundle_with_receipts, create_dummy_receipt, extend_block_tree,
+        get_block_tree_node_at, new_test_ext_with_extensions, register_genesis_domain,
+        run_to_block, BlockTreePruningDepth, Test,
     };
-    <span class="kw">use crate</span>::{BalanceOf, NextDomainId};
     <span class="kw">use </span>frame_support::dispatch::RawOrigin;
-    <span class="kw">use </span>frame_support::traits::{Currency, Hooks};
-    <span class="kw">use </span>frame_support::weights::Weight;
     <span class="kw">use </span>frame_support::{assert_err, assert_ok};
-    <span class="kw">use </span>frame_system::Pallet <span class="kw">as </span>System;
-    <span class="kw">use </span>sp_core::{Pair, H256, U256};
-    <span class="kw">use </span>sp_domains::{BundleDigest, OperatorPair, RuntimeType};
+    <span class="kw">use </span>sp_core::H256;
+    <span class="kw">use </span>sp_domains::{BundleDigest, InboxedBundle, InvalidBundleType};
     <span class="kw">use </span>sp_runtime::traits::BlockNumberProvider;
-    <span class="kw">use </span>subspace_runtime_primitives::SSC;
-
-    <span class="kw">fn </span>run_to_block&lt;T: Config&gt;(block_number: T::BlockNumber, parent_hash: T::Hash) {
-        System::&lt;T&gt;::set_block_number(block_number);
-        System::&lt;T&gt;::initialize(<span class="kw-2">&amp;</span>block_number, <span class="kw-2">&amp;</span>parent_hash, <span class="kw-2">&amp;</span>Default::default());
-        &lt;<span class="kw">crate</span>::Pallet&lt;T&gt; <span class="kw">as </span>Hooks&lt;T::BlockNumber&gt;&gt;::on_initialize(block_number);
-        System::&lt;T&gt;::finalize();
-    }
-
-    <span class="kw">fn </span>register_genesis_domain(creator: u64, operator_ids: Vec&lt;OperatorId&gt;) -&gt; DomainId {
-        <span class="macro">assert_ok!</span>(<span class="kw">crate</span>::Pallet::&lt;Test&gt;::register_domain_runtime(
-            RawOrigin::Root.into(),
-            <span class="string">b&quot;evm&quot;</span>.to_vec(),
-            RuntimeType::Evm,
-            <span class="macro">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>],
-        ));
-
-        <span class="kw">let </span>domain_id = NextDomainId::&lt;Test&gt;::get();
-        &lt;Test <span class="kw">as </span>Config&gt;::Currency::make_free_balance_be(
-            <span class="kw-2">&amp;</span>creator,
-            &lt;Test <span class="kw">as </span>Config&gt;::DomainInstantiationDeposit::get()
-                + &lt;Test <span class="kw">as </span>pallet_balances::Config&gt;::ExistentialDeposit::get(),
-        );
-        <span class="kw">crate</span>::Pallet::&lt;Test&gt;::instantiate_domain(
-            RawOrigin::Signed(creator).into(),
-            DomainConfig {
-                domain_name: <span class="string">b&quot;evm-domain&quot;</span>.to_vec(),
-                runtime_id: <span class="number">0</span>,
-                max_block_size: <span class="number">1u32</span>,
-                max_block_weight: Weight::from_parts(<span class="number">1</span>, <span class="number">0</span>),
-                bundle_slot_probability: (<span class="number">1</span>, <span class="number">1</span>),
-                target_bundles_per_block: <span class="number">1</span>,
-            },
-            <span class="macro">vec!</span>[],
-        )
-        .unwrap();
-
-        <span class="kw">let </span>pair = OperatorPair::from_seed(<span class="kw-2">&amp;</span>U256::from(<span class="number">0u32</span>).into());
-        <span class="kw">for </span>operator_id <span class="kw">in </span>operator_ids {
-            Operators::&lt;Test&gt;::insert(
-                operator_id,
-                Operator {
-                    signing_key: pair.public(),
-                    current_domain_id: domain_id,
-                    next_domain_id: domain_id,
-                    minimum_nominator_stake: SSC,
-                    nomination_tax: Default::default(),
-                    current_total_stake: Zero::zero(),
-                    current_epoch_rewards: Zero::zero(),
-                    total_shares: Zero::zero(),
-                    status: OperatorStatus::Registered,
-                },
-            );
-        }
-
-        domain_id
-    }
-
-    <span class="comment">// Submit new head receipt to extend the block tree
-    </span><span class="kw">fn </span>extend_block_tree(domain_id: DomainId, operator_id: u64, to: u64) {
-        <span class="kw">let </span>head_receipt_number = HeadReceiptNumber::&lt;Test&gt;::get(domain_id);
-        <span class="macro">assert!</span>(head_receipt_number &lt; to);
-
-        <span class="kw">let </span>head_node = get_block_tree_node_at::&lt;Test&gt;(domain_id, head_receipt_number).unwrap();
-        <span class="kw">let </span><span class="kw-2">mut </span>receipt = head_node.execution_receipt;
-        <span class="macro">assert_eq!</span>(
-            receipt.consensus_block_number,
-            frame_system::Pallet::&lt;Test&gt;::current_block_number()
-        );
-        <span class="kw">for </span>block_number <span class="kw">in </span>(head_receipt_number + <span class="number">1</span>)..=to {
-            <span class="comment">// Finilize parent block and initialize block at `block_number`
-            </span>run_to_block::&lt;Test&gt;(block_number, receipt.consensus_block_hash);
-
-            <span class="comment">// Submit a bundle with the receipt of the last block
-            </span><span class="kw">let </span>bundle_extrinsics_root = H256::random();
-            <span class="kw">let </span>bundle = create_dummy_bundle_with_receipts(
-                domain_id,
-                operator_id,
-                bundle_extrinsics_root,
-                receipt,
-            );
-            <span class="macro">assert_ok!</span>(<span class="kw">crate</span>::Pallet::&lt;Test&gt;::submit_bundle(
-                RawOrigin::None.into(),
-                bundle,
-            ));
-
-            <span class="comment">// Construct a `NewHead` receipt of the just submitted bundle, which will be included in the next bundle
-            </span><span class="kw">let </span>head_receipt_number = HeadReceiptNumber::&lt;Test&gt;::get(domain_id);
-            <span class="kw">let </span>parent_block_tree_node =
-                get_block_tree_node_at::&lt;Test&gt;(domain_id, head_receipt_number).unwrap();
-            receipt = create_dummy_receipt(
-                block_number,
-                H256::random(),
-                parent_block_tree_node.execution_receipt.hash(),
-                <span class="macro">vec!</span>[bundle_extrinsics_root],
-            );
-        }
-    }
-
-    <span class="attr">#[allow(clippy::type_complexity)]
-    </span><span class="kw">fn </span>get_block_tree_node_at&lt;T: Config&gt;(
-        domain_id: DomainId,
-        block_number: T::DomainNumber,
-    ) -&gt; <span class="prelude-ty">Option</span>&lt;DomainBlock&lt;T::BlockNumber, T::Hash, T::DomainNumber, T::DomainHash, BalanceOf&lt;T&gt;&gt;&gt;
-    {
-        BlockTree::&lt;T&gt;::get(domain_id, block_number)
-            .first()
-            .and_then(DomainBlocks::&lt;T&gt;::get)
-    }
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_genesis_receipt() {
@@ -1501,7 +1457,9 @@
                         extrinsics_root: bundle_extrinsics_root,
                     }]
                 );
-                <span class="macro">assert!</span>(InboxedBundle::&lt;Test&gt;::contains_key(bundle_header_hash));
+                <span class="macro">assert!</span>(InboxedBundleAuthor::&lt;Test&gt;::contains_key(
+                    bundle_header_hash
+                ));
 
                 <span class="comment">// Head receipt number should be updated
                 </span><span class="kw">let </span>head_receipt_number = HeadReceiptNumber::&lt;Test&gt;::get(domain_id);
@@ -1540,7 +1498,7 @@
             <span class="kw">let </span>pruned_bundle = bundle_header_hash_of_block_1.unwrap();
             <span class="macro">assert!</span>(BlockTree::&lt;Test&gt;::get(domain_id, <span class="number">1</span>).is_empty());
             <span class="macro">assert!</span>(ExecutionInbox::&lt;Test&gt;::get((domain_id, <span class="number">1</span>, <span class="number">1</span>)).is_empty());
-            <span class="macro">assert!</span>(!InboxedBundle::&lt;Test&gt;::contains_key(pruned_bundle));
+            <span class="macro">assert!</span>(!InboxedBundleAuthor::&lt;Test&gt;::contains_key(pruned_bundle));
             <span class="macro">assert_eq!</span>(
                 execution_receipt_type::&lt;Test&gt;(domain_id, <span class="kw-2">&amp;</span>pruned_receipt),
                 ReceiptType::Rejected(RejectedReceiptType::Pruned)
@@ -1554,6 +1512,7 @@
                 pruned_receipt.consensus_block_number,
             )
             .is_none());
+            <span class="macro">assert!</span>(DomainBlockDescendants::&lt;Test&gt;::get(pruned_receipt.hash()).is_empty());
         });
     }
 
@@ -1735,12 +1694,12 @@
                     future_receipt.consensus_block_number,
                 ),
                 future_receipt
-                    .block_extrinsics_roots
+                    .inboxed_bundles
                     .clone()
                     .into_iter()
-                    .map(|er| BundleDigest {
+                    .map(|b| BundleDigest {
                         header_hash: H256::random(),
-                        extrinsics_root: er,
+                        extrinsics_root: b.extrinsics_root,
                     })
                     .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
             );
@@ -1768,7 +1727,8 @@
 
             <span class="comment">// Receipt with unknown extrinsics roots
             </span><span class="kw">let </span><span class="kw-2">mut </span>unknown_extrinsics_roots_receipt = current_head_receipt.clone();
-            unknown_extrinsics_roots_receipt.block_extrinsics_roots = <span class="macro">vec!</span>[H256::random()];
+            unknown_extrinsics_roots_receipt.inboxed_bundles =
+                <span class="macro">vec!</span>[InboxedBundle::valid(H256::random(), H256::random())];
             <span class="macro">assert_err!</span>(
                 verify_execution_receipt::&lt;Test&gt;(domain_id, <span class="kw-2">&amp;</span>unknown_extrinsics_roots_receipt),
                 Error::InvalidExtrinsicsRoots
@@ -1840,6 +1800,112 @@
             <span class="macro">assert_err!</span>(
                 verify_execution_receipt::&lt;Test&gt;(domain_id, <span class="kw-2">&amp;</span>invalid_receipt),
                 Error::InvalidTraceRoot
+            );
+        });
+    }
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>test_collect_invalid_bundle_author() {
+        <span class="kw">let </span>creator = <span class="number">0u64</span>;
+        <span class="kw">let </span>challenge_period = BlockTreePruningDepth::get() <span class="kw">as </span>u64;
+        <span class="kw">let </span>operator_set: Vec&lt;<span class="kw">_</span>&gt; = (<span class="number">1</span>..<span class="number">15</span>).collect();
+        <span class="kw">let </span><span class="kw-2">mut </span>ext = new_test_ext_with_extensions();
+        ext.execute_with(|| {
+            <span class="kw">let </span>domain_id = register_genesis_domain(creator, operator_set.clone());
+            <span class="kw">let </span><span class="kw-2">mut </span>target_receipt = extend_block_tree(domain_id, operator_set[<span class="number">0</span>], <span class="number">3</span>);
+
+            <span class="comment">// Submit bundle for every operator except operator 1 since it already submit one
+            </span><span class="kw">let </span>head_receipt_number = HeadReceiptNumber::&lt;Test&gt;::get(domain_id);
+            <span class="kw">let </span>current_head_receipt =
+                get_block_tree_node_at::&lt;Test&gt;(domain_id, head_receipt_number)
+                    .unwrap()
+                    .execution_receipt;
+            <span class="kw">for </span>operator_id <span class="kw">in </span>operator_set.iter().skip(<span class="number">1</span>) {
+                <span class="kw">let </span>bundle = create_dummy_bundle_with_receipts(
+                    domain_id,
+                    <span class="kw-2">*</span>operator_id,
+                    H256::random(),
+                    current_head_receipt.clone(),
+                );
+                <span class="macro">assert_ok!</span>(<span class="kw">crate</span>::Pallet::&lt;Test&gt;::submit_bundle(
+                    RawOrigin::None.into(),
+                    bundle,
+                ));
+            }
+            <span class="kw">let </span>head_node = get_block_tree_node_at::&lt;Test&gt;(domain_id, head_receipt_number).unwrap();
+            <span class="macro">assert_eq!</span>(head_node.operator_ids, operator_set);
+
+            <span class="comment">// Get the `bundles_extrinsics_roots` that contains all the submitted bundles
+            </span><span class="kw">let </span>current_block_number = frame_system::Pallet::&lt;Test&gt;::current_block_number();
+            <span class="kw">let </span>execution_inbox = ExecutionInbox::&lt;Test&gt;::get((
+                domain_id,
+                current_block_number,
+                current_block_number,
+            ));
+            <span class="kw">let </span>bundles_extrinsics_roots: Vec&lt;<span class="kw">_</span>&gt; = execution_inbox
+                .into_iter()
+                .map(|b| b.extrinsics_root)
+                .collect();
+            <span class="macro">assert_eq!</span>(bundles_extrinsics_roots.len(), operator_set.len());
+
+            <span class="comment">// Prepare the invalid bundles and invalid bundle authors
+            </span><span class="kw">let </span><span class="kw-2">mut </span>bundles = <span class="macro">vec!</span>[];
+            <span class="kw">let </span><span class="kw-2">mut </span>invalid_bundle_authors = <span class="macro">vec!</span>[];
+            <span class="kw">for </span>(i, (operator, extrinsics_root)) <span class="kw">in </span>operator_set
+                .iter()
+                .zip(bundles_extrinsics_roots)
+                .enumerate()
+            {
+                <span class="kw">if </span>i % <span class="number">2 </span>== <span class="number">0 </span>{
+                    invalid_bundle_authors.push(<span class="kw-2">*</span>operator);
+                    bundles.push(InboxedBundle::invalid(
+                        InvalidBundleType::OutOfRangeTx(<span class="number">0</span>),
+                        extrinsics_root,
+                    ));
+                } <span class="kw">else </span>{
+                    bundles.push(InboxedBundle::valid(H256::random(), extrinsics_root));
+                }
+            }
+            target_receipt.inboxed_bundles = bundles;
+
+            <span class="comment">// Run into next block
+            </span>run_to_block::&lt;Test&gt;(
+                current_block_number + <span class="number">1</span>,
+                target_receipt.consensus_block_hash,
+            );
+            <span class="kw">let </span>current_block_number = current_block_number + <span class="number">1</span>;
+
+            <span class="comment">// Submit `target_receipt`
+            </span><span class="macro">assert_ok!</span>(<span class="kw">crate</span>::Pallet::&lt;Test&gt;::submit_bundle(
+                RawOrigin::None.into(),
+                create_dummy_bundle_with_receipts(
+                    domain_id,
+                    operator_set[<span class="number">0</span>],
+                    H256::random(),
+                    target_receipt,
+                ),
+            ));
+
+            <span class="comment">// Extend the block tree by `challenge_period - 1` blocks
+            </span><span class="kw">let </span>next_receipt = extend_block_tree(
+                domain_id,
+                operator_set[<span class="number">0</span>],
+                current_block_number + challenge_period - <span class="number">1</span>,
+            );
+            <span class="comment">// Confirm `target_receipt`
+            </span><span class="kw">let </span>confirmed_domain_block = process_execution_receipt::&lt;Test&gt;(
+                domain_id,
+                operator_set[<span class="number">0</span>],
+                next_receipt,
+                AcceptedReceiptType::NewHead,
+            )
+            .unwrap()
+            .unwrap();
+
+            <span class="comment">// Invalid bundle authors should be collected correctly
+            </span><span class="macro">assert_eq!</span>(
+                confirmed_domain_block.invalid_bundle_authors,
+                invalid_bundle_authors
             );
         });
     }

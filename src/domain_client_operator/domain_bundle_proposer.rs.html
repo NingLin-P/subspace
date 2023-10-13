@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `domains/client/domain-operator/src/domain_bundle_proposer.rs`."><title>domain_bundle_proposer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="domain_client_operator" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../domain_client_operator/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `domains/client/domain-operator/src/domain_bundle_proposer.rs`."><title>domain_bundle_proposer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="domain_client_operator" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (d627cf07c 2023-10-10)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0689c575f077d64f.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../domain_client_operator/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -211,32 +211,6 @@
 <a href="#211" id="211">211</a>
 <a href="#212" id="212">212</a>
 <a href="#213" id="213">213</a>
-<a href="#214" id="214">214</a>
-<a href="#215" id="215">215</a>
-<a href="#216" id="216">216</a>
-<a href="#217" id="217">217</a>
-<a href="#218" id="218">218</a>
-<a href="#219" id="219">219</a>
-<a href="#220" id="220">220</a>
-<a href="#221" id="221">221</a>
-<a href="#222" id="222">222</a>
-<a href="#223" id="223">223</a>
-<a href="#224" id="224">224</a>
-<a href="#225" id="225">225</a>
-<a href="#226" id="226">226</a>
-<a href="#227" id="227">227</a>
-<a href="#228" id="228">228</a>
-<a href="#229" id="229">229</a>
-<a href="#230" id="230">230</a>
-<a href="#231" id="231">231</a>
-<a href="#232" id="232">232</a>
-<a href="#233" id="233">233</a>
-<a href="#234" id="234">234</a>
-<a href="#235" id="235">235</a>
-<a href="#236" id="236">236</a>
-<a href="#237" id="237">237</a>
-<a href="#238" id="238">238</a>
-<a href="#239" id="239">239</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::parent_chain::ParentChainInterface;
 <span class="kw">use </span><span class="kw">crate</span>::ExecutionReceiptFor;
 <span class="kw">use </span>codec::Encode;
@@ -248,7 +222,7 @@
 <span class="kw">use </span>sp_block_builder::BlockBuilder;
 <span class="kw">use </span>sp_blockchain::HeaderBackend;
 <span class="kw">use </span>sp_domains::{BundleHeader, ExecutionReceipt, ProofOfElection};
-<span class="kw">use </span>sp_runtime::traits::{BlakeTwo256, Block <span class="kw">as </span>BlockT, Hash <span class="kw">as </span>HashT, One, Saturating, Zero};
+<span class="kw">use </span>sp_runtime::traits::{BlakeTwo256, Block <span class="kw">as </span>BlockT, Hash <span class="kw">as </span>HashT, One, Zero};
 <span class="kw">use </span>sp_weights::Weight;
 <span class="kw">use </span>std::marker::PhantomData;
 <span class="kw">use </span>std::sync::Arc;
@@ -392,7 +366,7 @@
             sp_core::storage::StateVersion::V1,
         );
 
-        <span class="kw">let </span>receipt = <span class="self">self</span>.load_bundle_receipt(parent_number, parent_hash, parent_chain)<span class="question-mark">?</span>;
+        <span class="kw">let </span>receipt = <span class="self">self</span>.load_bundle_receipt(parent_number, parent_chain)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>header = BundleHeader {
             proof_of_election,
@@ -409,7 +383,6 @@
     </span><span class="kw">fn </span>load_bundle_receipt&lt;ParentChain, ParentChainBlock&gt;(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         header_number: NumberFor&lt;Block&gt;,
-        header_hash: Block::Hash,
         parent_chain: ParentChain,
     ) -&gt; sp_blockchain::Result&lt;ExecutionReceiptFor&lt;Block, CBlock&gt;&gt;
     <span class="kw">where
@@ -418,36 +391,14 @@
     {
         <span class="kw">let </span>parent_chain_block_hash = parent_chain.best_hash();
         <span class="kw">let </span>head_receipt_number = parent_chain.head_receipt_number(parent_chain_block_hash)<span class="question-mark">?</span>;
-        <span class="kw">let </span>max_drift = parent_chain.block_tree_pruning_depth(parent_chain_block_hash)<span class="question-mark">?</span>;
+        <span class="kw">let </span>receipt_number = (head_receipt_number + One::one()).min(header_number);
 
         <span class="macro">tracing::trace!</span>(
             <span class="question-mark">?</span>header_number,
             <span class="question-mark">?</span>head_receipt_number,
-            <span class="question-mark">?</span>max_drift,
+            <span class="question-mark">?</span>receipt_number,
             <span class="string">&quot;Collecting receipts at {parent_chain_block_hash:?}&quot;
         </span>);
-
-        <span class="kw">let </span>header_block_receipt_is_written = <span class="kw">crate</span>::aux_schema::latest_consensus_block_hash_for::&lt;
-            <span class="kw">_</span>,
-            <span class="kw">_</span>,
-            CBlock::Hash,
-        &gt;(<span class="kw-2">&amp;*</span><span class="self">self</span>.client, <span class="kw-2">&amp;</span>header_hash)<span class="question-mark">?
-        </span>.is_some();
-
-        <span class="comment">// TODO: remove once the receipt generation can be done before the domain block is
-        // committed to the database, in other words, only when the receipt of block N+1 has
-        // been generated can the `client.info().best_number` be updated from N to N+1.
-        //
-        // This requires:
-        // 1. Reimplement `runtime_api.intermediate_roots()` on the client side.
-        // 2. Add a hook before the upstream `client.commit_operation(op)`.
-        </span><span class="kw">let </span>available_best_receipt_number = <span class="kw">if </span>header_block_receipt_is_written {
-            header_number
-        } <span class="kw">else </span>{
-            header_number.saturating_sub(One::one())
-        };
-
-        <span class="kw">let </span>receipt_number = (head_receipt_number + One::one()).min(available_best_receipt_number);
 
         <span class="kw">if </span>receipt_number.is_zero() {
             <span class="kw">let </span>genesis_hash = <span class="self">self</span>.client.info().genesis_hash;
@@ -456,10 +407,7 @@
                     <span class="string">&quot;Domain block header for #{genesis_hash:?} not found&quot;</span>,
                 ))
             })<span class="question-mark">?</span>;
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(ExecutionReceipt::genesis(
-                <span class="self">self</span>.consensus_client.info().genesis_hash,
-                <span class="kw-2">*</span>genesis_header.state_root(),
-            ));
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(ExecutionReceipt::genesis(<span class="kw-2">*</span>genesis_header.state_root()));
         }
 
         <span class="comment">// Get the domain block hash corresponding to `receipt_number` in the domain canonical chain

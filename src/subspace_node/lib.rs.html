@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-node/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_node" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_node/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-node/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_node" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (d627cf07c 2023-10-10)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0689c575f077d64f.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_node/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -339,6 +339,45 @@
 <a href="#339" id="339">339</a>
 <a href="#340" id="340">340</a>
 <a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a>
+<a href="#355" id="355">355</a>
+<a href="#356" id="356">356</a>
+<a href="#357" id="357">357</a>
+<a href="#358" id="358">358</a>
+<a href="#359" id="359">359</a>
+<a href="#360" id="360">360</a>
+<a href="#361" id="361">361</a>
+<a href="#362" id="362">362</a>
+<a href="#363" id="363">363</a>
+<a href="#364" id="364">364</a>
+<a href="#365" id="365">365</a>
+<a href="#366" id="366">366</a>
+<a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -363,12 +402,13 @@
 
 <span class="kw">use </span>clap::Parser;
 <span class="kw">use </span>sc_cli::{RunCmd, SubstrateCli};
-<span class="kw">use </span>sc_executor::{NativeExecutionDispatch, RuntimeVersion};
+<span class="kw">use </span>sc_executor::NativeExecutionDispatch;
 <span class="kw">use </span>sc_service::ChainSpec;
 <span class="kw">use </span>sc_storage_monitor::StorageMonitorParams;
 <span class="kw">use </span>sc_subspace_chain_specs::ConsensusChainSpec;
 <span class="kw">use </span>sc_telemetry::serde_json;
 <span class="kw">use </span>serde_json::Value;
+<span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span>std::io::Write;
 <span class="kw">use </span>std::{fs, io};
 <span class="kw">use </span>subspace_networking::libp2p::Multiaddr;
@@ -382,13 +422,13 @@
     </span><span class="kw">type </span>ExtendHostFunctions = (
         frame_benchmarking::benchmarking::HostFunctions,
         sp_consensus_subspace::consensus::HostFunctions,
-        sp_domains::domain::HostFunctions,
+        sp_domains_fraud_proof::HostFunctions,
     );
     <span class="doccomment">/// Otherwise we only use the default Substrate host functions.
     </span><span class="attr">#[cfg(not(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>))]
     </span><span class="kw">type </span>ExtendHostFunctions = (
         sp_consensus_subspace::consensus::HostFunctions,
-        sp_domains::domain::HostFunctions,
+        sp_domains_fraud_proof::HostFunctions,
     );
 
     <span class="kw">fn </span>dispatch(method: <span class="kw-2">&amp;</span>str, data: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; {
@@ -515,12 +555,38 @@
     </span>Domain(domain::cli::Subcommand),
 
     <span class="doccomment">/// Sub-commands concerned with benchmarking.
-    </span><span class="attr">#[clap(subcommand)]
+    </span><span class="attr">#[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
+    #[clap(subcommand)]
     </span>Benchmark(frame_benchmarking_cli::BenchmarkCmd),
 }
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
-</span><span class="kw">fn </span>parse_pot_external_entropy(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, hex::FromHexError&gt; {
+<span class="kw">fn </span>parse_timekeeper_cpu_cores(
+    s: <span class="kw-2">&amp;</span>str,
+) -&gt; <span class="prelude-ty">Result</span>&lt;HashSet&lt;usize&gt;, Box&lt;<span class="kw">dyn </span>std::error::Error + Send + Sync&gt;&gt; {
+    <span class="kw">if </span>s.is_empty() {
+        <span class="kw">return </span><span class="prelude-val">Ok</span>(HashSet::new());
+    }
+
+    <span class="kw">let </span><span class="kw-2">mut </span>cpu_cores = HashSet::new();
+    <span class="kw">for </span>s <span class="kw">in </span>s.split(<span class="string">&#39;,&#39;</span>) {
+        <span class="kw">let </span><span class="kw-2">mut </span>parts = s.split(<span class="string">&#39;-&#39;</span>);
+        <span class="kw">let </span>range_start = parts
+            .next()
+            .ok_or(<span class="string">&quot;Bad string format, must be comma separated list of CPU cores or ranges&quot;</span>)<span class="question-mark">?
+            </span>.parse()<span class="question-mark">?</span>;
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(range_end) = parts.next() {
+            <span class="kw">let </span>range_end = range_end.parse()<span class="question-mark">?</span>;
+
+            cpu_cores.extend(range_start..=range_end);
+        } <span class="kw">else </span>{
+            cpu_cores.insert(range_start);
+        }
+    }
+
+    <span class="prelude-val">Ok</span>(cpu_cores)
+}
+
+<span class="kw">fn </span>parse_pot_external_entropy(s: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, hex::FromHexError&gt; {
     hex::decode(s)
 }
 
@@ -542,8 +608,11 @@
 
     <span class="doccomment">/// Where local DSN node will listen for incoming connections.
     </span><span class="comment">// TODO: Add more DSN-related parameters
-    </span><span class="attr">#[arg(long, default_value = <span class="string">&quot;/ip4/0.0.0.0/tcp/30433&quot;</span>)]
-    </span><span class="kw">pub </span>dsn_listen_on: Vec&lt;Multiaddr&gt;,
+    </span><span class="attr">#[arg(long, default_values_t = [
+        <span class="string">&quot;/ip4/0.0.0.0/udp/30433/quic-v1&quot;</span>.parse::&lt;Multiaddr&gt;().expect(<span class="string">&quot;Manual setting&quot;</span>),
+        <span class="string">&quot;/ip4/0.0.0.0/tcp/30433&quot;</span>.parse::&lt;Multiaddr&gt;().expect(<span class="string">&quot;Manual setting&quot;</span>),
+    ]</span>)]
+    <span class="kw">pub </span>dsn_listen_on: Vec&lt;Multiaddr&gt;,
 
     <span class="doccomment">/// Bootstrap nodes for DSN.
     </span><span class="attr">#[arg(long)]
@@ -558,7 +627,7 @@
     </span><span class="kw">pub </span>dsn_in_connections: u32,
 
     <span class="doccomment">/// Defines max established outgoing swarm connection limit for DSN.
-    </span><span class="attr">#[arg(long, default_value_t = <span class="number">100</span>)]
+    </span><span class="attr">#[arg(long, default_value_t = <span class="number">150</span>)]
     </span><span class="kw">pub </span>dsn_out_connections: u32,
 
     <span class="doccomment">/// Defines max pending incoming connection limit for DSN.
@@ -566,11 +635,11 @@
     </span><span class="kw">pub </span>dsn_pending_in_connections: u32,
 
     <span class="doccomment">/// Defines max pending outgoing swarm connection limit for DSN.
-    </span><span class="attr">#[arg(long, default_value_t = <span class="number">100</span>)]
+    </span><span class="attr">#[arg(long, default_value_t = <span class="number">150</span>)]
     </span><span class="kw">pub </span>dsn_pending_out_connections: u32,
 
     <span class="doccomment">/// Defines target total (in and out) connection number for DSN that should be maintained.
-    </span><span class="attr">#[arg(long, default_value_t = <span class="number">50</span>)]
+    </span><span class="attr">#[arg(long, default_value_t = <span class="number">30</span>)]
     </span><span class="kw">pub </span>dsn_target_connections: u32,
 
     <span class="doccomment">/// Determines whether we allow keeping non-global (private, shared, loopback..) addresses
@@ -606,12 +675,25 @@
 
     <span class="doccomment">/// Assigned PoT role for this node.
     </span><span class="attr">#[arg(long)]
-    #[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
     </span><span class="kw">pub </span>timekeeper: bool,
+
+    <span class="doccomment">/// CPU cores that timekeeper can use.
+    ///
+    /// At least 2 cores should be provided, if more cores than necessary are provided, random cores
+    /// out of provided will be utilized, if not enough cores are provided timekeeper may occupy
+    /// random CPU cores.
+    ///
+    /// Comma separated list of individual cores or ranges of cores.
+    ///
+    /// Examples:
+    /// * `0,1` - use cores 0 and 1
+    /// * `0-3` - use cores 0, 1, 2 and 3
+    /// * `0,1,6-7` - use cores 0, 1, 6 and 7
+    </span><span class="attr">#[arg(long, default_value = <span class="string">&quot;&quot;</span>, value_parser = parse_timekeeper_cpu_cores, verbatim_doc_comment)]
+    </span><span class="kw">pub </span>timekeeper_cpu_cores: HashSet&lt;usize&gt;,
 
     <span class="doccomment">/// External entropy, used initially when PoT chain starts to derive the first seed
     </span><span class="attr">#[arg(long, value_parser = parse_pot_external_entropy)]
-    #[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
     </span><span class="kw">pub </span>pot_external_entropy: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
 }
 
@@ -674,10 +756,6 @@
                 .map_err(|error| error.to_string())<span class="question-mark">?</span>;
         }
         <span class="prelude-val">Ok</span>(Box::new(chain_spec))
-    }
-
-    <span class="kw">fn </span>native_runtime_version(<span class="kw">_</span>: <span class="kw-2">&amp;</span>Box&lt;<span class="kw">dyn </span>ChainSpec&gt;) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>RuntimeVersion {
-        <span class="kw-2">&amp;</span>subspace_runtime::VERSION
     }
 }
 </code></pre></div></section></main></body></html>

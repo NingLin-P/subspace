@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-farmer-components/src/auditing.rs`."><title>auditing.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_farmer_components" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_farmer_components/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-farmer-components/src/auditing.rs`."><title>auditing.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_farmer_components" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (d627cf07c 2023-10-10)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0689c575f077d64f.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_farmer_components/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -94,33 +94,122 @@
 <a href="#94" id="94">94</a>
 <a href="#95" id="95">95</a>
 <a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::proving::SolutionCandidates;
 <span class="kw">use </span><span class="kw">crate</span>::sector::{SectorContentsMap, SectorMetadataChecksummed};
-<span class="kw">use </span>std::collections::VecDeque;
+<span class="kw">use </span><span class="kw">crate</span>::ReadAt;
 <span class="kw">use </span>std::mem;
 <span class="kw">use </span>subspace_core_primitives::crypto::Scalar;
-<span class="kw">use </span>subspace_core_primitives::{Blake2b256Hash, PublicKey, SectorId, SectorIndex, SolutionRange};
+<span class="kw">use </span>subspace_core_primitives::{Blake3Hash, PublicKey, SectorId, SectorIndex, SolutionRange};
 <span class="kw">use </span>subspace_verification::is_within_solution_range;
+<span class="kw">use </span>tracing::warn;
 
-<span class="attr">#[derive(Debug, Clone)]
+<span class="doccomment">/// Result of sector audit
+</span><span class="attr">#[derive(Debug, Clone)]
+</span><span class="kw">pub struct </span>AuditResult&lt;<span class="lifetime">&#39;a</span>, Sector&gt;
+<span class="kw">where
+    </span>Sector: <span class="lifetime">&#39;a</span>,
+{
+    <span class="doccomment">/// Solution candidates
+    </span><span class="kw">pub </span>solution_candidates: SolutionCandidates&lt;<span class="lifetime">&#39;a</span>, Sector&gt;,
+    <span class="doccomment">/// Best solution distance found
+    </span><span class="kw">pub </span>best_solution_distance: SolutionRange,
+}
+
+<span class="doccomment">/// Audit chunk candidate
+</span><span class="attr">#[derive(Debug, Clone)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>AuditChunkCandidate {
+    <span class="doccomment">/// Audit chunk offset
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) offset: u8,
+    <span class="doccomment">/// Solution distance of this audit chunk, can be used to prioritize higher quality solutions
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) solution_distance: SolutionRange,
+}
+
+<span class="doccomment">/// Chunk candidate, contains one or more potentially winning audit chunks (in case chunk itself was
+/// encoded and eligible for claiming a reward)
+</span><span class="attr">#[derive(Debug, Clone)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ChunkCandidate {
     <span class="doccomment">/// Chunk offset within s-bucket
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) chunk_offset: u32,
-    <span class="doccomment">/// Audit chunk offsets in above chunk
-    </span><span class="kw">pub</span>(<span class="kw">crate</span>) audit_chunk_offsets: VecDeque&lt;u8&gt;,
+    <span class="doccomment">/// Audit chunk candidates in above chunk
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) audit_chunks: Vec&lt;AuditChunkCandidate&gt;,
 }
 
 <span class="doccomment">/// Audit a single sector and generate a stream of solutions, where `sector` must be positioned
 /// correctly at the beginning of the sector (seek to desired offset before calling this function
 /// and seek back afterwards if necessary).
-</span><span class="kw">pub fn </span>audit_sector&lt;<span class="lifetime">&#39;a</span>&gt;(
+</span><span class="kw">pub fn </span>audit_sector&lt;<span class="lifetime">&#39;a</span>, Sector&gt;(
     public_key: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>PublicKey,
     sector_index: SectorIndex,
-    global_challenge: <span class="kw-2">&amp;</span>Blake2b256Hash,
+    global_challenge: <span class="kw-2">&amp;</span>Blake3Hash,
     solution_range: SolutionRange,
-    sector: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8],
+    sector: Sector,
     sector_metadata: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>SectorMetadataChecksummed,
-) -&gt; <span class="prelude-ty">Option</span>&lt;SolutionCandidates&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+) -&gt; <span class="prelude-ty">Option</span>&lt;AuditResult&lt;<span class="lifetime">&#39;a</span>, Sector&gt;&gt;
+<span class="kw">where
+    </span>Sector: ReadAt + <span class="lifetime">&#39;a</span>,
+{
     <span class="kw">let </span>sector_id = SectorId::new(public_key.hash(), sector_index);
 
     <span class="kw">let </span>sector_slot_challenge = sector_id.derive_sector_slot_challenge(global_challenge);
@@ -139,17 +228,21 @@
     <span class="kw">let </span>sector_contents_map_size =
         SectorContentsMap::encoded_size(sector_metadata.pieces_in_sector);
 
-    <span class="comment">// Read s-bucket
-    </span><span class="kw">let </span>s_bucket =
-        <span class="kw-2">&amp;</span>sector[sector_contents_map_size + s_bucket_audit_offset..][..s_bucket_audit_size];
+    <span class="kw">let </span>s_bucket_audit_offset_in_sector = sector_contents_map_size + s_bucket_audit_offset;
+
+    <span class="kw">let </span><span class="kw-2">mut </span>s_bucket = <span class="macro">vec!</span>[<span class="number">0</span>; s_bucket_audit_size];
+    <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = sector.read_at(<span class="kw-2">&amp;mut </span>s_bucket, s_bucket_audit_offset_in_sector) {
+        <span class="macro">warn!</span>(%error, %sector_index, %s_bucket_audit_index, <span class="string">&quot;Failed read s-bucket&quot;</span>);
+        <span class="kw">return </span><span class="prelude-val">None</span>;
+    }
 
     <span class="comment">// Map all winning chunks
-    </span><span class="kw">let </span>winning_chunks = s_bucket
+    </span><span class="kw">let </span><span class="kw-2">mut </span>winning_chunks = s_bucket
         .array_chunks::&lt;{ Scalar::FULL_BYTES }&gt;()
         .enumerate()
         .filter_map(|(chunk_offset, chunk)| {
             <span class="comment">// Check all audit chunks within chunk, there might be more than one winning
-            </span><span class="kw">let </span>winning_audit_chunk_offsets = chunk
+            </span><span class="kw">let </span><span class="kw-2">mut </span>winning_audit_chunks = chunk
                 .array_chunks::&lt;{ mem::size_of::&lt;SolutionRange&gt;() }&gt;()
                 .enumerate()
                 .filter_map(|(audit_chunk_offset, <span class="kw-2">&amp;</span>audit_chunk)| {
@@ -159,35 +252,66 @@
                         <span class="kw-2">&amp;</span>sector_slot_challenge,
                         solution_range,
                     )
-                    .then_some(audit_chunk_offset <span class="kw">as </span>u8)
+                    .map(|solution_distance| AuditChunkCandidate {
+                        offset: audit_chunk_offset <span class="kw">as </span>u8,
+                        solution_distance,
+                    })
                 })
-                .collect::&lt;VecDeque&lt;<span class="kw">_</span>&gt;&gt;();
+                .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
             <span class="comment">// In case none of the audit chunks are winning, we don&#39;t care about this sector
-            </span><span class="kw">if </span>winning_audit_chunk_offsets.is_empty() {
+            </span><span class="kw">if </span>winning_audit_chunks.is_empty() {
                 <span class="kw">return </span><span class="prelude-val">None</span>;
             }
 
+            winning_audit_chunks.sort_by(|a, b| a.solution_distance.cmp(<span class="kw-2">&amp;</span>b.solution_distance));
+
             <span class="prelude-val">Some</span>(ChunkCandidate {
                 chunk_offset: chunk_offset <span class="kw">as </span>u32,
-                audit_chunk_offsets: winning_audit_chunk_offsets,
+                audit_chunks: winning_audit_chunks,
             })
         })
-        .collect::&lt;VecDeque&lt;<span class="kw">_</span>&gt;&gt;();
+        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
     <span class="comment">// Check if there are any solutions possible
     </span><span class="kw">if </span>winning_chunks.is_empty() {
         <span class="kw">return </span><span class="prelude-val">None</span>;
     }
 
-    <span class="prelude-val">Some</span>(SolutionCandidates::new(
-        public_key,
-        sector_index,
-        sector_id,
-        s_bucket_audit_index,
-        sector,
-        sector_metadata,
-        winning_chunks,
-    ))
+    winning_chunks.sort_by(|a, b| {
+        <span class="kw">let </span>a_solution_distance = a
+            .audit_chunks
+            .first()
+            .expect(<span class="string">&quot;Lists of audit chunks are non-empty; qed&quot;</span>)
+            .solution_distance;
+        <span class="kw">let </span>b_solution_distance = b
+            .audit_chunks
+            .first()
+            .expect(<span class="string">&quot;Lists of audit chunks are non-empty; qed&quot;</span>)
+            .solution_distance;
+
+        a_solution_distance.cmp(<span class="kw-2">&amp;</span>b_solution_distance)
+    });
+
+    <span class="kw">let </span>best_solution_distance = winning_chunks
+        .first()
+        .expect(<span class="string">&quot;Not empty, checked above; qed&quot;</span>)
+        .audit_chunks
+        .first()
+        .expect(<span class="string">&quot;Lists of audit chunks are non-empty; qed&quot;</span>)
+        .solution_distance;
+
+    <span class="prelude-val">Some</span>(AuditResult {
+        solution_candidates: SolutionCandidates::new(
+            public_key,
+            sector_index,
+            sector_id,
+            s_bucket_audit_index,
+            sector,
+            sector_metadata,
+            winning_chunks.into(),
+        ),
+        best_solution_distance,
+    })
 }
 </code></pre></div></section></main></body></html>

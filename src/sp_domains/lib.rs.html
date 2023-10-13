@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sp-domains/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sp_domains" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../sp_domains/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sp-domains/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sp_domains" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (d627cf07c 2023-10-10)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0689c575f077d64f.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../sp_domains/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -787,6 +787,88 @@
 <a href="#787" id="787">787</a>
 <a href="#788" id="788">788</a>
 <a href="#789" id="789">789</a>
+<a href="#790" id="790">790</a>
+<a href="#791" id="791">791</a>
+<a href="#792" id="792">792</a>
+<a href="#793" id="793">793</a>
+<a href="#794" id="794">794</a>
+<a href="#795" id="795">795</a>
+<a href="#796" id="796">796</a>
+<a href="#797" id="797">797</a>
+<a href="#798" id="798">798</a>
+<a href="#799" id="799">799</a>
+<a href="#800" id="800">800</a>
+<a href="#801" id="801">801</a>
+<a href="#802" id="802">802</a>
+<a href="#803" id="803">803</a>
+<a href="#804" id="804">804</a>
+<a href="#805" id="805">805</a>
+<a href="#806" id="806">806</a>
+<a href="#807" id="807">807</a>
+<a href="#808" id="808">808</a>
+<a href="#809" id="809">809</a>
+<a href="#810" id="810">810</a>
+<a href="#811" id="811">811</a>
+<a href="#812" id="812">812</a>
+<a href="#813" id="813">813</a>
+<a href="#814" id="814">814</a>
+<a href="#815" id="815">815</a>
+<a href="#816" id="816">816</a>
+<a href="#817" id="817">817</a>
+<a href="#818" id="818">818</a>
+<a href="#819" id="819">819</a>
+<a href="#820" id="820">820</a>
+<a href="#821" id="821">821</a>
+<a href="#822" id="822">822</a>
+<a href="#823" id="823">823</a>
+<a href="#824" id="824">824</a>
+<a href="#825" id="825">825</a>
+<a href="#826" id="826">826</a>
+<a href="#827" id="827">827</a>
+<a href="#828" id="828">828</a>
+<a href="#829" id="829">829</a>
+<a href="#830" id="830">830</a>
+<a href="#831" id="831">831</a>
+<a href="#832" id="832">832</a>
+<a href="#833" id="833">833</a>
+<a href="#834" id="834">834</a>
+<a href="#835" id="835">835</a>
+<a href="#836" id="836">836</a>
+<a href="#837" id="837">837</a>
+<a href="#838" id="838">838</a>
+<a href="#839" id="839">839</a>
+<a href="#840" id="840">840</a>
+<a href="#841" id="841">841</a>
+<a href="#842" id="842">842</a>
+<a href="#843" id="843">843</a>
+<a href="#844" id="844">844</a>
+<a href="#845" id="845">845</a>
+<a href="#846" id="846">846</a>
+<a href="#847" id="847">847</a>
+<a href="#848" id="848">848</a>
+<a href="#849" id="849">849</a>
+<a href="#850" id="850">850</a>
+<a href="#851" id="851">851</a>
+<a href="#852" id="852">852</a>
+<a href="#853" id="853">853</a>
+<a href="#854" id="854">854</a>
+<a href="#855" id="855">855</a>
+<a href="#856" id="856">856</a>
+<a href="#857" id="857">857</a>
+<a href="#858" id="858">858</a>
+<a href="#859" id="859">859</a>
+<a href="#860" id="860">860</a>
+<a href="#861" id="861">861</a>
+<a href="#862" id="862">862</a>
+<a href="#863" id="863">863</a>
+<a href="#864" id="864">864</a>
+<a href="#865" id="865">865</a>
+<a href="#866" id="866">866</a>
+<a href="#867" id="867">867</a>
+<a href="#868" id="868">868</a>
+<a href="#869" id="869">869</a>
+<a href="#870" id="870">870</a>
+<a href="#871" id="871">871</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
@@ -809,16 +891,24 @@
 </span><span class="kw">pub mod </span>bundle_producer_election;
 <span class="kw">pub mod </span>fraud_proof;
 <span class="kw">pub mod </span>merkle_tree;
+<span class="kw">pub mod </span>storage;
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests;
 <span class="kw">pub mod </span>transaction;
+<span class="kw">pub mod </span>valued_trie_root;
+<span class="kw">pub mod </span>verification;
 
+<span class="kw">extern crate </span>alloc;
+
+<span class="kw">use </span><span class="kw">crate</span>::storage::{RawGenesis, StorageKey};
+<span class="kw">use </span>alloc::string::String;
 <span class="kw">use </span>bundle_producer_election::{BundleProducerElectionParams, VrfProofError};
 <span class="kw">use </span>hexlit::hex;
 <span class="kw">use </span>parity_scale_codec::{Decode, Encode, MaxEncodedLen};
 <span class="kw">use </span>scale_info::TypeInfo;
 <span class="kw">use </span>serde::{Deserialize, Serialize};
 <span class="kw">use </span>sp_api::RuntimeVersion;
+<span class="kw">use </span>sp_application_crypto::sr25519;
 <span class="kw">use </span>sp_core::crypto::KeyTypeId;
 <span class="kw">use </span>sp_core::sr25519::vrf::VrfSignature;
 <span class="attr">#[cfg(any(feature = <span class="string">&quot;std&quot;</span>, feature = <span class="string">&quot;runtime-benchmarks&quot;</span>))]
@@ -829,16 +919,20 @@
     BlakeTwo256, Block <span class="kw">as </span>BlockT, CheckedAdd, Hash <span class="kw">as </span>HashT, NumberFor, Zero,
 };
 <span class="kw">use </span>sp_runtime::{DigestItem, OpaqueExtrinsic, Percent};
+<span class="kw">use </span>sp_runtime_interface::pass_by;
 <span class="kw">use </span>sp_runtime_interface::pass_by::PassBy;
-<span class="kw">use </span>sp_runtime_interface::{pass_by, runtime_interface};
+<span class="kw">use </span>sp_std::collections::btree_set::BTreeSet;
 <span class="kw">use </span>sp_std::vec::Vec;
 <span class="kw">use </span>sp_weights::Weight;
-<span class="kw">use </span>subspace_core_primitives::crypto::blake2b_256_hash;
-<span class="kw">use </span>subspace_core_primitives::{bidirectional_distance, Blake2b256Hash, Randomness, U256};
+<span class="kw">use </span>subspace_core_primitives::crypto::blake3_hash;
+<span class="kw">use </span>subspace_core_primitives::{bidirectional_distance, Blake3Hash, Randomness, U256};
 <span class="kw">use </span>subspace_runtime_primitives::{Balance, Moment};
 
 <span class="doccomment">/// Key type for Operator.
 </span><span class="kw">const </span>KEY_TYPE: KeyTypeId = KeyTypeId(<span class="kw-2">*</span><span class="string">b&quot;oper&quot;</span>);
+
+<span class="doccomment">/// Extrinsics shuffling seed
+</span><span class="kw">pub const </span>DOMAIN_EXTRINSICS_SHUFFLING_SEED_SUBJECT: <span class="kw-2">&amp;</span>[u8] = <span class="string">b&quot;extrinsics-shuffling-seed&quot;</span>;
 
 <span class="kw">mod </span>app {
     <span class="kw">use </span><span class="kw">super</span>::KEY_TYPE;
@@ -896,10 +990,6 @@
 )]
 </span><span class="kw">pub struct </span>DomainId(u32);
 
-<span class="kw">impl </span>PassBy <span class="kw">for </span>DomainId {
-    <span class="kw">type </span>PassBy = pass_by::Codec&lt;<span class="self">Self</span>&gt;;
-}
-
 <span class="kw">impl </span>From&lt;u32&gt; <span class="kw">for </span>DomainId {
     <span class="attr">#[inline]
     </span><span class="kw">fn </span>from(x: u32) -&gt; <span class="self">Self </span>{
@@ -946,6 +1036,10 @@
     </span><span class="kw">pub fn </span>to_le_bytes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; [u8; <span class="number">4</span>] {
         <span class="self">self</span>.<span class="number">0</span>.to_le_bytes()
     }
+}
+
+<span class="kw">impl </span>PassBy <span class="kw">for </span>DomainId {
+    <span class="kw">type </span>PassBy = pass_by::Codec&lt;<span class="self">Self</span>&gt;;
 }
 
 <span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
@@ -1139,7 +1233,7 @@
     <span class="doccomment">/// The block hash corresponding to `domain_block_number`.
     </span><span class="kw">pub </span>domain_block_hash: DomainHash,
     <span class="doccomment">/// Extrinsic root field of the header of domain block referenced by this ER.
-    </span><span class="kw">pub </span>domain_block_extrinsic_root: DomainHash,
+    </span><span class="kw">pub </span>domain_block_extrinsic_root: H256,
     <span class="doccomment">/// The hash of the ER for the last domain block.
     </span><span class="kw">pub </span>parent_domain_block_receipt_hash: ReceiptHash,
     <span class="doccomment">/// A pointer to the consensus block index which contains all of the bundles that were used to derive and
@@ -1147,12 +1241,8 @@
     </span><span class="kw">pub </span>consensus_block_number: Number,
     <span class="doccomment">/// The block hash corresponding to `consensus_block_number`.
     </span><span class="kw">pub </span>consensus_block_hash: Hash,
-    <span class="doccomment">/// Potential bundles that are excluded from the domain block building.
-    </span><span class="kw">pub </span>invalid_bundles: Vec&lt;InvalidBundle&gt;,
-    <span class="doccomment">/// All `extrinsics_roots` for all bundles being executed by this block.
-    ///
-    /// Used to ensure these are contained within the state of the `execution_inbox`.
-    </span><span class="kw">pub </span>block_extrinsics_roots: Vec&lt;ExtrinsicsRoot&gt;,
+    <span class="doccomment">/// All the bundles that being included in the consensus block.
+    </span><span class="kw">pub </span>inboxed_bundles: Vec&lt;InboxedBundle&gt;,
     <span class="doccomment">/// The final state root for the current domain block reflected by this ER.
     ///
     /// Used for verifying storage proofs for domains.
@@ -1165,6 +1255,38 @@
     </span><span class="kw">pub </span>execution_trace_root: H256,
     <span class="doccomment">/// All SSC rewards for this ER to be shared across operators.
     </span><span class="kw">pub </span>total_rewards: Balance,
+}
+
+<span class="kw">impl</span>&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt;
+    ExecutionReceipt&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt;
+{
+    <span class="kw">pub fn </span>bundles_extrinsics_roots(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;<span class="kw-2">&amp;</span>ExtrinsicsRoot&gt; {
+        <span class="self">self</span>.inboxed_bundles
+            .iter()
+            .map(|b| <span class="kw-2">&amp;</span>b.extrinsics_root)
+            .collect()
+    }
+
+    <span class="kw">pub fn </span>valid_bundle_digests(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;H256&gt; {
+        <span class="self">self</span>.inboxed_bundles
+            .iter()
+            .filter_map(|b| <span class="kw">match </span>b.bundle {
+                BundleValidity::Valid(bundle_digest_hash) =&gt; <span class="prelude-val">Some</span>(bundle_digest_hash),
+                BundleValidity::Invalid(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+            })
+            .collect()
+    }
+
+    <span class="kw">pub fn </span>valid_bundle_indexes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;u32&gt; {
+        <span class="self">self</span>.inboxed_bundles
+            .iter()
+            .enumerate()
+            .filter_map(|(index, b)| <span class="kw">match </span>b.bundle {
+                BundleValidity::Valid(<span class="kw">_</span>) =&gt; <span class="prelude-val">Some</span>(index <span class="kw">as </span>u32),
+                BundleValidity::Invalid(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+            })
+            .collect()
+    }
 }
 
 <span class="kw">impl</span>&lt;
@@ -1180,16 +1302,15 @@
         BlakeTwo256::hash_of(<span class="self">self</span>)
     }
 
-    <span class="kw">pub fn </span>genesis(consensus_genesis_hash: Hash, genesis_state_root: DomainHash) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>genesis(genesis_state_root: DomainHash) -&gt; <span class="self">Self </span>{
         ExecutionReceipt {
             domain_block_number: Zero::zero(),
             domain_block_hash: Default::default(),
             domain_block_extrinsic_root: Default::default(),
             parent_domain_block_receipt_hash: Default::default(),
-            consensus_block_hash: consensus_genesis_hash,
+            consensus_block_hash: Default::default(),
             consensus_block_number: Zero::zero(),
-            invalid_bundles: Vec::new(),
-            block_extrinsics_roots: <span class="macro">sp_std::vec!</span>[],
+            inboxed_bundles: Vec::new(),
             final_state_root: genesis_state_root.clone(),
             execution_trace: <span class="macro">sp_std::vec!</span>[genesis_state_root],
             execution_trace_root: Default::default(),
@@ -1222,8 +1343,7 @@
             parent_domain_block_receipt_hash,
             consensus_block_number,
             consensus_block_hash,
-            invalid_bundles: Vec::new(),
-            block_extrinsics_roots: <span class="macro">sp_std::vec!</span>[Default::default()],
+            inboxed_bundles: <span class="macro">sp_std::vec!</span>[InboxedBundle::dummy(Default::default())],
             final_state_root: Default::default(),
             execution_trace,
             execution_trace_root,
@@ -1263,10 +1383,10 @@
     }
 
     <span class="doccomment">/// Computes the VRF hash.
-    </span><span class="kw">pub fn </span>vrf_hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Blake2b256Hash {
+    </span><span class="kw">pub fn </span>vrf_hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Blake3Hash {
         <span class="kw">let </span><span class="kw-2">mut </span>bytes = <span class="self">self</span>.vrf_signature.output.encode();
         bytes.append(<span class="kw-2">&amp;mut </span><span class="self">self</span>.vrf_signature.proof.encode());
-        blake2b_256_hash(<span class="kw-2">&amp;</span>bytes)
+        blake3_hash(<span class="kw-2">&amp;</span>bytes)
     }
 }
 
@@ -1289,22 +1409,42 @@
     }
 }
 
+<span class="doccomment">/// Type that represents an operator allow list for Domains.
+</span><span class="attr">#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq, Serialize, Deserialize)]
+</span><span class="kw">pub enum </span>OperatorAllowList&lt;AccountId: Ord&gt; {
+    <span class="doccomment">/// Anyone can operate for this domain.
+    </span>Anyone,
+    <span class="doccomment">/// Only the specific operators are allowed to operate the domain.
+    /// This essentially makes the domain permissioned.
+    </span>Operators(BTreeSet&lt;AccountId&gt;),
+}
+
+<span class="kw">impl</span>&lt;AccountId: Ord&gt; OperatorAllowList&lt;AccountId&gt; {
+    <span class="doccomment">/// Returns true if the allow list is either `Anyone` or the operator is part of the allowed operator list.
+    </span><span class="kw">pub fn </span>is_operator_allowed(<span class="kw-2">&amp;</span><span class="self">self</span>, operator: <span class="kw-2">&amp;</span>AccountId) -&gt; bool {
+        <span class="kw">match </span><span class="self">self </span>{
+            OperatorAllowList::Anyone =&gt; <span class="bool-val">true</span>,
+            OperatorAllowList::Operators(allowed_operators) =&gt; allowed_operators.contains(operator),
+        }
+    }
+}
+
 <span class="attr">#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq, Serialize, Deserialize)]
-</span><span class="kw">pub struct </span>GenesisDomain&lt;AccountId&gt; {
+</span><span class="kw">pub struct </span>GenesisDomain&lt;AccountId: Ord&gt; {
     <span class="comment">// Domain runtime items
-    </span><span class="kw">pub </span>runtime_name: Vec&lt;u8&gt;,
+    </span><span class="kw">pub </span>runtime_name: String,
     <span class="kw">pub </span>runtime_type: RuntimeType,
     <span class="kw">pub </span>runtime_version: RuntimeVersion,
-    <span class="kw">pub </span>code: Vec&lt;u8&gt;,
+    <span class="kw">pub </span>raw_genesis_storage: Vec&lt;u8&gt;,
 
     <span class="comment">// Domain config items
     </span><span class="kw">pub </span>owner_account_id: AccountId,
-    <span class="kw">pub </span>domain_name: Vec&lt;u8&gt;,
+    <span class="kw">pub </span>domain_name: String,
     <span class="kw">pub </span>max_block_size: u32,
     <span class="kw">pub </span>max_block_weight: Weight,
     <span class="kw">pub </span>bundle_slot_probability: (u64, u64),
     <span class="kw">pub </span>target_bundles_per_block: u32,
-    <span class="kw">pub </span>raw_genesis_config: Vec&lt;u8&gt;,
+    <span class="kw">pub </span>operator_allow_list: OperatorAllowList&lt;AccountId&gt;,
 
     <span class="comment">// Genesis operator
     </span><span class="kw">pub </span>signing_key: OperatorPublicKey,
@@ -1319,10 +1459,6 @@
 </span><span class="kw">pub enum </span>RuntimeType {
     <span class="attr">#[default]
     </span>Evm,
-}
-
-<span class="kw">impl </span>PassBy <span class="kw">for </span>RuntimeType {
-    <span class="kw">type </span>PassBy = pass_by::Codec&lt;<span class="self">Self</span>&gt;;
 }
 
 <span class="doccomment">/// Type representing the runtime ID.
@@ -1396,61 +1532,28 @@
     }
 }
 
-<span class="doccomment">/// `DomainInstanceData` is used to construct `RuntimeGenesisConfig` which will be further used
-/// to construct the genesis block
+<span class="doccomment">/// The storage key of the `SelfDomainId` storage item in the `pallet-domain-id`
+///
+/// Any change to the storage item name or the `pallet-domain-id` name used in the `construct_runtime`
+/// macro must be reflected here.
+</span><span class="kw">pub fn </span>self_domain_id_storage_key() -&gt; StorageKey {
+    StorageKey(
+        frame_support::storage::storage_prefix(
+            <span class="comment">// This is the name used for the `pallet-domain-id` in the `construct_runtime` macro
+            // i.e. `SelfDomainId: pallet_domain_id = 90`
+            </span><span class="string">&quot;SelfDomainId&quot;</span>.as_bytes(),
+            <span class="comment">// This is the storage item name used inside the `pallet-domain-id`
+            </span><span class="string">&quot;SelfDomainId&quot;</span>.as_bytes(),
+        )
+        .to_vec(),
+    )
+}
+
+<span class="doccomment">/// `DomainInstanceData` is used to construct the genesis storage of domain instance chain
 </span><span class="attr">#[derive(PartialEq, Eq, Clone, Encode, Decode, TypeInfo)]
 </span><span class="kw">pub struct </span>DomainInstanceData {
     <span class="kw">pub </span>runtime_type: RuntimeType,
-    <span class="kw">pub </span>runtime_code: Vec&lt;u8&gt;,
-    <span class="comment">// The genesis config of the domain, encoded in json format.
-    //
-    // NOTE: the WASM code in the `system-pallet` genesis config should be empty to avoid
-    // redundancy with the `runtime_code` field.
-    </span><span class="kw">pub </span>raw_genesis_config: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
-}
-
-<span class="kw">impl </span>PassBy <span class="kw">for </span>DomainInstanceData {
-    <span class="kw">type </span>PassBy = pass_by::Codec&lt;<span class="self">Self</span>&gt;;
-}
-
-<span class="attr">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
-</span><span class="kw">pub trait </span>GenerateGenesisStateRoot: Send + Sync {
-    <span class="doccomment">/// Returns the state root of genesis block built from the runtime genesis config on success.
-    </span><span class="kw">fn </span>generate_genesis_state_root(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        domain_id: DomainId,
-        domain_instance_data: DomainInstanceData,
-    ) -&gt; <span class="prelude-ty">Option</span>&lt;H256&gt;;
-}
-
-<span class="attr">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
-</span><span class="macro">sp_externalities::decl_extension! </span>{
-    <span class="doccomment">/// A domain genesis receipt extension.
-    </span><span class="kw">pub struct </span>GenesisReceiptExtension(std::sync::Arc&lt;<span class="kw">dyn </span>GenerateGenesisStateRoot&gt;);
-}
-
-<span class="attr">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
-</span><span class="kw">impl </span>GenesisReceiptExtension {
-    <span class="doccomment">/// Create a new instance of [`GenesisReceiptExtension`].
-    </span><span class="kw">pub fn </span>new(inner: std::sync::Arc&lt;<span class="kw">dyn </span>GenerateGenesisStateRoot&gt;) -&gt; <span class="self">Self </span>{
-        <span class="self">Self</span>(inner)
-    }
-}
-
-<span class="doccomment">/// Domain-related runtime interface
-</span><span class="attr">#[runtime_interface]
-</span><span class="kw">pub trait </span>Domain {
-    <span class="kw">fn </span>generate_genesis_state_root(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        domain_id: DomainId,
-        domain_instance_data: DomainInstanceData,
-    ) -&gt; <span class="prelude-ty">Option</span>&lt;H256&gt; {
-        <span class="kw">use </span>sp_externalities::ExternalitiesExt;
-
-        <span class="self">self</span>.extension::&lt;GenesisReceiptExtension&gt;()
-            .expect(<span class="string">&quot;No `GenesisReceiptExtension` associated for the current context!&quot;</span>)
-            .generate_genesis_state_root(domain_id, domain_instance_data)
-    }
+    <span class="kw">pub </span>raw_genesis: RawGenesis,
 }
 
 <span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, Clone)]
@@ -1480,40 +1583,101 @@
     Invalid(InvalidReceipt),
 }
 
-<span class="doccomment">/// Bundle invalidity type.
+<span class="doccomment">/// Bundle invalidity type
+///
+/// Each type contains the index of the first invalid extrinsic within the bundle
 </span><span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, Clone, PartialEq, Eq)]
 </span><span class="kw">pub enum </span>InvalidBundleType {
     <span class="doccomment">/// Failed to decode the opaque extrinsic.
-    </span>UndecodableTx,
+    </span>UndecodableTx(u32),
     <span class="doccomment">/// Transaction is out of the tx range.
-    </span>OutOfRangeTx,
+    </span>OutOfRangeTx(u32),
     <span class="doccomment">/// Transaction is illegal (unable to pay the fee, etc).
-    </span>IllegalTx,
-    <span class="doccomment">/// Receipt is invalid.
-    </span>InvalidReceipt(InvalidReceipt),
+    </span>IllegalTx(u32),
+    <span class="doccomment">/// Transaction is an invalid XDM
+    </span>InvalidXDM(u32),
 }
 
-<span class="doccomment">/// [`InvalidBundle`] represents a bundle that was originally included in the consensus
-/// block but subsequently excluded from the corresponding domain block by operator due
-/// to being flagged as invalid.
-</span><span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, Clone, PartialEq, Eq)]
-</span><span class="kw">pub struct </span>InvalidBundle {
-    <span class="doccomment">/// Index of this bundle in the original list of bundles in the consensus block.
-    </span><span class="kw">pub </span>bundle_index: u32,
-    <span class="doccomment">/// Specific type of invalidity.
-    </span><span class="kw">pub </span>invalid_bundle_type: InvalidBundleType,
+<span class="kw">impl </span>InvalidBundleType {
+    <span class="comment">// Return the checking order of the invalid type
+    </span><span class="kw">pub fn </span>checking_order(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u8 {
+        <span class="comment">// Use explicit number as the order instead of the enum discriminant
+        // to avoid chenging the order accidentally
+        </span><span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::UndecodableTx(<span class="kw">_</span>) =&gt; <span class="number">1</span>,
+            <span class="self">Self</span>::OutOfRangeTx(<span class="kw">_</span>) =&gt; <span class="number">2</span>,
+            <span class="self">Self</span>::IllegalTx(<span class="kw">_</span>) =&gt; <span class="number">3</span>,
+            <span class="self">Self</span>::InvalidXDM(<span class="kw">_</span>) =&gt; <span class="number">4</span>,
+        }
+    }
+
+    <span class="kw">pub fn </span>extrinsic_index(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::UndecodableTx(i) =&gt; <span class="kw-2">*</span>i,
+            <span class="self">Self</span>::OutOfRangeTx(i) =&gt; <span class="kw-2">*</span>i,
+            <span class="self">Self</span>::IllegalTx(i) =&gt; <span class="kw-2">*</span>i,
+            <span class="self">Self</span>::InvalidXDM(i) =&gt; <span class="kw-2">*</span>i,
+        }
+    }
 }
 
-<span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, Clone, PartialEq, Eq)]
-</span><span class="kw">pub enum </span>BundleValidity&lt;Extrinsic&gt; {
-    Valid(Vec&lt;Extrinsic&gt;),
-    Invalid(InvalidBundleType),
+<span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+</span><span class="kw">pub enum </span>BundleValidity {
+    <span class="comment">// The invalid bundle was originally included in the consensus block but subsequently
+    // excluded from execution as invalid and holds the `InvalidBundleType`
+    </span>Invalid(InvalidBundleType),
+    <span class="comment">// The valid bundle&#39;s hash of `Vec&lt;(tx_signer, tx_hash)&gt;` of all domain extrinsic being
+    // included in the bundle.
+    </span>Valid(H256),
 }
 
-<span class="doccomment">/// Empty extrinsics root
+<span class="doccomment">/// [`InboxedBundle`] represents a bundle that was successfully submitted to the consensus chain
+</span><span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+</span><span class="kw">pub struct </span>InboxedBundle {
+    <span class="kw">pub </span>bundle: BundleValidity,
+    <span class="kw">pub </span>extrinsics_root: ExtrinsicsRoot,
+}
+
+<span class="kw">impl </span>InboxedBundle {
+    <span class="kw">pub fn </span>valid(bundle_digest_hash: H256, extrinsics_root: ExtrinsicsRoot) -&gt; <span class="self">Self </span>{
+        InboxedBundle {
+            bundle: BundleValidity::Valid(bundle_digest_hash),
+            extrinsics_root,
+        }
+    }
+
+    <span class="kw">pub fn </span>invalid(
+        invalid_bundle_type: InvalidBundleType,
+        extrinsics_root: ExtrinsicsRoot,
+    ) -&gt; <span class="self">Self </span>{
+        InboxedBundle {
+            bundle: BundleValidity::Invalid(invalid_bundle_type),
+            extrinsics_root,
+        }
+    }
+
+    <span class="kw">pub fn </span>is_invalid(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>.bundle, BundleValidity::Invalid(<span class="kw">_</span>))
+    }
+
+    <span class="attr">#[cfg(any(feature = <span class="string">&quot;std&quot;</span>, feature = <span class="string">&quot;runtime-benchmarks&quot;</span>))]
+    </span><span class="kw">pub fn </span>dummy(extrinsics_root: ExtrinsicsRoot) -&gt; <span class="self">Self </span>{
+        InboxedBundle {
+            bundle: BundleValidity::Valid(H256::default()),
+            extrinsics_root,
+        }
+    }
+}
+
+<span class="doccomment">/// Empty extrinsics root.
 </span><span class="kw">pub const </span>EMPTY_EXTRINSIC_ROOT: ExtrinsicsRoot = ExtrinsicsRoot {
     <span class="number">0</span>: <span class="macro">hex!</span>(<span class="string">&quot;03170a2e7597b7b7e3d84c05391d139a62b157e78786d8c082f29dcf4c111314&quot;</span>),
 };
+
+<span class="doccomment">/// Zero operator signing key.
+</span><span class="kw">pub const </span>ZERO_OPERATOR_SIGNING_KEY: sr25519::Public = sr25519::Public(<span class="macro">hex!</span>(
+    <span class="string">&quot;0000000000000000000000000000000000000000000000000000000000000000&quot;
+</span>));
 
 <span class="macro">sp_api::decl_runtime_apis! </span>{
     <span class="doccomment">/// API necessary for domains pallet.

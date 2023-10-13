@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sc-proof-of-time/src/source.rs`."><title>source.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sc_proof_of_time" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../sc_proof_of_time/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sc-proof-of-time/src/source.rs`."><title>source.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sc_proof_of_time" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (d627cf07c 2023-10-10)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0689c575f077d64f.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../sc_proof_of_time/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -373,40 +373,64 @@
 <a href="#373" id="373">373</a>
 <a href="#374" id="374">374</a>
 <a href="#375" id="375">375</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::gossip::{GossipCheckpoints, PotGossipWorker};
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+</pre></div><pre class="rust"><code><span class="kw">pub mod </span>gossip;
+<span class="kw">mod </span>state;
+<span class="kw">mod </span>timekeeper;
+
+<span class="kw">use </span><span class="kw">crate</span>::source::gossip::{GossipProof, PotGossipWorker, ToGossipMessage};
+<span class="kw">use </span><span class="kw">crate</span>::source::state::{PotState, PotStateUpdateOutcome};
+<span class="kw">use </span><span class="kw">crate</span>::source::timekeeper::{run_timekeeper, TimekeeperProof};
 <span class="kw">use </span><span class="kw">crate</span>::verifier::PotVerifier;
-<span class="kw">use </span>atomic::Atomic;
-<span class="kw">use </span>derive_more::{Deref, DerefMut, From};
+<span class="kw">use </span>core_affinity::CoreId;
+<span class="kw">use </span>derive_more::{Deref, DerefMut};
 <span class="kw">use </span>futures::channel::mpsc;
-<span class="kw">use </span>futures::executor::block_on;
-<span class="kw">use </span>futures::{select, SinkExt, StreamExt};
-<span class="kw">use </span>sc_client_api::{BlockImportNotification, BlockchainEvents};
+<span class="kw">use </span>futures::{select, StreamExt};
+<span class="kw">use </span>sc_client_api::BlockchainEvents;
 <span class="kw">use </span>sc_network::PeerId;
 <span class="kw">use </span>sc_network_gossip::{Network <span class="kw">as </span>GossipNetwork, Syncing <span class="kw">as </span>GossipSyncing};
 <span class="kw">use </span>sp_api::{ApiError, ProvideRuntimeApi};
 <span class="kw">use </span>sp_blockchain::HeaderBackend;
+<span class="kw">use </span>sp_consensus::SyncOracle;
 <span class="kw">use </span>sp_consensus_slots::Slot;
-<span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
-</span><span class="kw">use </span>sp_consensus_subspace::digests::extract_pre_digest;
-<span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
-</span><span class="kw">use </span>sp_consensus_subspace::ChainConstants;
-<span class="kw">use </span>sp_consensus_subspace::{FarmerPublicKey, SubspaceApi <span class="kw">as </span>SubspaceRuntimeApi};
-<span class="kw">use </span>sp_runtime::traits::Block <span class="kw">as </span>BlockT;
-<span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
-</span><span class="kw">use </span>sp_runtime::traits::{Header, Zero};
+<span class="kw">use </span>sp_consensus_subspace::digests::{extract_pre_digest, extract_subspace_digest_items};
+<span class="kw">use </span>sp_consensus_subspace::{
+    ChainConstants, FarmerPublicKey, FarmerSignature, PotNextSlotInput,
+    SubspaceApi <span class="kw">as </span>SubspaceRuntimeApi,
+};
+<span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, Header <span class="kw">as </span>HeaderT, Zero};
+<span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span>std::marker::PhantomData;
-<span class="kw">use </span>std::num::NonZeroU32;
-<span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
-</span><span class="kw">use </span>std::sync::atomic::Ordering;
 <span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>std::thread;
-<span class="kw">use </span>subspace_core_primitives::{PotCheckpoints, PotSeed, SlotNumber};
-<span class="kw">use </span>subspace_proof_of_time::PotError;
-<span class="kw">use </span>tracing::{debug, error};
+<span class="kw">use </span>subspace_core_primitives::PotCheckpoints;
+<span class="kw">use </span>tracing::{debug, error, trace, warn};
 
 <span class="kw">const </span>LOCAL_PROOFS_CHANNEL_CAPACITY: usize = <span class="number">10</span>;
 <span class="kw">const </span>SLOTS_CHANNEL_CAPACITY: usize = <span class="number">10</span>;
 <span class="kw">const </span>GOSSIP_OUTGOING_CHANNEL_CAPACITY: usize = <span class="number">10</span>;
+<span class="kw">const </span>GOSSIP_INCOMING_CHANNEL_CAPACITY: usize = <span class="number">10</span>;
 
 <span class="doccomment">/// Proof of time slot information
 </span><span class="kw">pub struct </span>PotSlotInfo {
@@ -416,154 +440,147 @@
     </span><span class="kw">pub </span>checkpoints: PotCheckpoints,
 }
 
-<span class="doccomment">/// Proof of time slot information
-</span><span class="kw">struct </span>TimekeeperCheckpoints {
-    <span class="doccomment">/// Slot number
-    </span>slot: Slot,
-    <span class="doccomment">/// Proof of time seed
-    </span>seed: PotSeed,
-    <span class="doccomment">/// Iterations per slot
-    </span>slot_iterations: NonZeroU32,
-    <span class="doccomment">/// Proof of time checkpoints
-    </span>checkpoints: PotCheckpoints,
-}
-
 <span class="doccomment">/// Stream with proof of time slots
-</span><span class="attr">#[derive(Debug, Deref, DerefMut, From)]
+</span><span class="attr">#[derive(Debug, Deref, DerefMut)]
 </span><span class="kw">pub struct </span>PotSlotInfoStream(mpsc::Receiver&lt;PotSlotInfo&gt;);
 
-<span class="doccomment">/// Source of proofs of time.
+<span class="doccomment">/// Worker producing proofs of time.
 ///
 /// Depending on configuration may produce proofs of time locally, send/receive via gossip and keep
 /// up to day with blockchain reorgs.
 </span><span class="attr">#[derive(Debug)]
 #[must_use = <span class="string">&quot;Proof of time source doesn&#39;t do anything unless run() method is called&quot;</span>]
-</span><span class="kw">pub struct </span>PotSource&lt;Block, Client&gt; {
+</span><span class="kw">pub struct </span>PotSourceWorker&lt;Block, Client, SO&gt; {
     client: Arc&lt;Client&gt;,
-    <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
-    </span>chain_constants: ChainConstants,
-    timekeeper_checkpoints_receiver: mpsc::Receiver&lt;TimekeeperCheckpoints&gt;,
-    outgoing_messages_sender: mpsc::Sender&lt;GossipCheckpoints&gt;,
-    incoming_messages_receiver: mpsc::Receiver&lt;(PeerId, GossipCheckpoints)&gt;,
+    sync_oracle: SO,
+    chain_constants: ChainConstants,
+    timekeeper_proofs_receiver: mpsc::Receiver&lt;TimekeeperProof&gt;,
+    to_gossip_sender: mpsc::Sender&lt;ToGossipMessage&gt;,
+    from_gossip_receiver: mpsc::Receiver&lt;(PeerId, GossipProof)&gt;,
     slot_sender: mpsc::Sender&lt;PotSlotInfo&gt;,
-    <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
-    </span>current_slot_iterations: Arc&lt;Atomic&lt;NonZeroU32&gt;&gt;,
-    <span class="comment">// TODO: Make this shared with Timekeeper instead so it can follow latest parameters
-    //  automatically, this will implement Timekeeper &quot;reset&quot;
-    </span>next_slot_and_seed: (Slot, PotSeed),
+    state: Arc&lt;PotState&gt;,
     _block: PhantomData&lt;Block&gt;,
 }
 
-<span class="kw">impl</span>&lt;Block, Client&gt; PotSource&lt;Block, Client&gt;
+<span class="kw">impl</span>&lt;Block, Client, SO&gt; PotSourceWorker&lt;Block, Client, SO&gt;
 <span class="kw">where
     </span>Block: BlockT,
     Client: BlockchainEvents&lt;Block&gt; + HeaderBackend&lt;Block&gt; + ProvideRuntimeApi&lt;Block&gt;,
     Client::Api: SubspaceRuntimeApi&lt;Block, FarmerPublicKey&gt;,
+    SO: SyncOracle + Clone + Send + Sync + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">pub fn </span>new&lt;Network, GossipSync&gt;(
         is_timekeeper: bool,
+        timekeeper_cpu_cores: HashSet&lt;usize&gt;,
         client: Arc&lt;Client&gt;,
         pot_verifier: PotVerifier,
         network: Network,
         sync: Arc&lt;GossipSync&gt;,
+        sync_oracle: SO,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(<span class="self">Self</span>, PotGossipWorker&lt;Block&gt;, PotSlotInfoStream), ApiError&gt;
     <span class="kw">where
         </span>Network: GossipNetwork&lt;Block&gt; + Send + Sync + Clone + <span class="lifetime">&#39;static</span>,
         GossipSync: GossipSyncing&lt;Block&gt; + <span class="lifetime">&#39;static</span>,
     {
-        <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
-        </span><span class="kw">let </span>chain_constants;
-        <span class="kw">let </span>start_slot;
-        <span class="kw">let </span>start_seed;
-        <span class="kw">let </span>current_slot_iterations;
-        <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
-        </span>{
-            <span class="kw">let </span>best_hash = client.info().best_hash;
-            chain_constants = client.runtime_api().chain_constants(best_hash)<span class="question-mark">?</span>;
+        <span class="kw">let </span>best_hash = client.info().best_hash;
+        <span class="kw">let </span>runtime_api = client.runtime_api();
+        <span class="kw">let </span>chain_constants = runtime_api.chain_constants(best_hash)<span class="question-mark">?</span>;
 
-            <span class="kw">let </span>best_header = client.header(best_hash)<span class="question-mark">?</span>.ok_or_else(|| {
-                ApiError::UnknownBlock(<span class="macro">format!</span>(<span class="string">&quot;Parent block {best_hash} not found&quot;</span>))
-            })<span class="question-mark">?</span>;
-            <span class="kw">let </span>best_pre_digest = extract_pre_digest(<span class="kw-2">&amp;</span>best_header)
-                .map_err(|error| ApiError::Application(error.into()))<span class="question-mark">?</span>;
+        <span class="kw">let </span>best_header = client
+            .header(best_hash)<span class="question-mark">?
+            </span>.ok_or_else(|| ApiError::UnknownBlock(<span class="macro">format!</span>(<span class="string">&quot;Parent block {best_hash} not found&quot;</span>)))<span class="question-mark">?</span>;
+        <span class="kw">let </span>best_pre_digest = extract_pre_digest(<span class="kw-2">&amp;</span>best_header)
+            .map_err(|error| ApiError::Application(error.into()))<span class="question-mark">?</span>;
 
-            start_slot = <span class="kw">if </span>best_header.number().is_zero() {
-                Slot::from(<span class="number">1</span>)
-            } <span class="kw">else </span>{
-                <span class="comment">// Next slot after the best one seen
-                </span>best_pre_digest.slot() + chain_constants.block_authoring_delay() + Slot::from(<span class="number">1</span>)
-            };
-            <span class="comment">// TODO: Support parameters change
-            </span>start_seed = <span class="kw">if </span>best_header.number().is_zero() {
-                pot_verifier.genesis_seed()
-            } <span class="kw">else </span>{
-                best_pre_digest.pot_info().future_proof_of_time().seed()
-            };
-            <span class="comment">// TODO: Support parameters change
-            </span>current_slot_iterations = client
-                .runtime_api()
-                .pot_parameters(best_hash)<span class="question-mark">?
-                </span>.slot_iterations(start_slot);
-        }
-        <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
-        </span>{
-            start_slot = Slot::from(<span class="number">1</span>);
-            start_seed = pot_verifier.genesis_seed();
-            current_slot_iterations = NonZeroU32::new(<span class="number">100_000_000</span>).expect(<span class="string">&quot;Not zero; qed&quot;</span>);
-        }
+        <span class="kw">let </span>parent_slot = <span class="kw">if </span>best_header.number().is_zero() {
+            Slot::from(<span class="number">0</span>)
+        } <span class="kw">else </span>{
+            <span class="comment">// The best one seen
+            </span>best_pre_digest.slot() + chain_constants.block_authoring_delay()
+        };
 
-        <span class="kw">let </span>(timekeeper_checkpoints_sender, timekeeper_checkpoints_receiver) =
+        <span class="kw">let </span>pot_parameters = runtime_api.pot_parameters(best_hash)<span class="question-mark">?</span>;
+        <span class="kw">let </span>maybe_next_parameters_change = pot_parameters.next_parameters_change();
+
+        <span class="kw">let </span>pot_input = <span class="kw">if </span>best_header.number().is_zero() {
+            PotNextSlotInput {
+                slot: parent_slot + Slot::from(<span class="number">1</span>),
+                slot_iterations: pot_parameters.slot_iterations(),
+                seed: pot_verifier.genesis_seed(),
+            }
+        } <span class="kw">else </span>{
+            PotNextSlotInput::derive(
+                pot_parameters.slot_iterations(),
+                parent_slot,
+                best_pre_digest.pot_info().future_proof_of_time(),
+                <span class="kw-2">&amp;</span>maybe_next_parameters_change,
+            )
+        };
+
+        <span class="kw">let </span>state = Arc::new(PotState::new(
+            pot_input,
+            maybe_next_parameters_change,
+            pot_verifier.clone(),
+        ));
+
+        <span class="kw">let </span>(timekeeper_proofs_sender, timekeeper_proofs_receiver) =
             mpsc::channel(LOCAL_PROOFS_CHANNEL_CAPACITY);
         <span class="kw">let </span>(slot_sender, slot_receiver) = mpsc::channel(SLOTS_CHANNEL_CAPACITY);
         <span class="kw">if </span>is_timekeeper {
+            <span class="kw">let </span>state = Arc::clone(<span class="kw-2">&amp;</span>state);
             <span class="kw">let </span>pot_verifier = pot_verifier.clone();
 
             thread::Builder::new()
                 .name(<span class="string">&quot;timekeeper&quot;</span>.to_string())
                 .spawn(<span class="kw">move </span>|| {
-                    <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = run_timekeeper(
-                        start_seed,
-                        start_slot,
-                        current_slot_iterations,
-                        pot_verifier,
-                        timekeeper_checkpoints_sender,
-                    ) {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(core) = timekeeper_cpu_cores.into_iter().next() {
+                        <span class="kw">if </span>!core_affinity::set_for_current(CoreId { id: core }) {
+                            <span class="macro">warn!</span>(
+                                %core,
+                                <span class="string">&quot;Failed to set core affinity, timekeeper will run on random CPU \
+                                core&quot;</span>,
+                            );
+                        }
+                    }
+
+                    <span class="kw">if let </span><span class="prelude-val">Err</span>(error) =
+                        run_timekeeper(state, pot_verifier, timekeeper_proofs_sender)
+                    {
                         <span class="macro">error!</span>(%error, <span class="string">&quot;Timekeeper exited with an error&quot;</span>);
                     }
                 })
                 .expect(<span class="string">&quot;Thread creation must not panic&quot;</span>);
         }
 
-        <span class="kw">let </span>current_slot_iterations = Arc::new(Atomic::new(current_slot_iterations));
-
-        <span class="kw">let </span>(outgoing_messages_sender, outgoing_messages_receiver) =
+        <span class="kw">let </span>(to_gossip_sender, to_gossip_receiver) =
             mpsc::channel(GOSSIP_OUTGOING_CHANNEL_CAPACITY);
-        <span class="kw">let </span>(incoming_messages_sender, incoming_messages_receiver) =
-            mpsc::channel(GOSSIP_OUTGOING_CHANNEL_CAPACITY);
-        <span class="kw">let </span>gossip = PotGossipWorker::new(
-            outgoing_messages_receiver,
-            incoming_messages_sender,
+        <span class="kw">let </span>(from_gossip_sender, from_gossip_receiver) =
+            mpsc::channel(GOSSIP_INCOMING_CHANNEL_CAPACITY);
+        <span class="kw">let </span>gossip_worker = PotGossipWorker::new(
+            to_gossip_receiver,
+            from_gossip_sender,
             pot_verifier,
-            Arc::clone(<span class="kw-2">&amp;</span>current_slot_iterations),
+            Arc::clone(<span class="kw-2">&amp;</span>state),
             network,
             sync,
+            sync_oracle.clone(),
         );
 
-        <span class="kw">let </span>source = <span class="self">Self </span>{
+        <span class="kw">let </span>source_worker = <span class="self">Self </span>{
             client,
-            <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
-            </span>chain_constants,
-            timekeeper_checkpoints_receiver,
-            outgoing_messages_sender,
-            incoming_messages_receiver,
+            sync_oracle,
+            chain_constants,
+            timekeeper_proofs_receiver,
+            to_gossip_sender,
+            from_gossip_receiver,
             slot_sender,
-            <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
-            </span>current_slot_iterations,
-            next_slot_and_seed: (start_slot, start_seed),
+            state,
             _block: PhantomData,
         };
 
-        <span class="prelude-val">Ok</span>((source, gossip, PotSlotInfoStream(slot_receiver)))
+        <span class="kw">let </span>pot_slot_info_stream = PotSlotInfoStream(slot_receiver);
+
+        <span class="prelude-val">Ok</span>((source_worker, gossip_worker, pot_slot_info_stream))
     }
 
     <span class="doccomment">/// Run proof of time source
@@ -573,13 +590,13 @@
         <span class="kw">loop </span>{
             <span class="macro">select! </span>{
                 <span class="comment">// List of blocks that the client has finalized.
-                </span>timekeeper_checkpoints = <span class="self">self</span>.timekeeper_checkpoints_receiver.select_next_some() =&gt; {
-                    <span class="self">self</span>.handle_timekeeper_checkpoints(timekeeper_checkpoints).<span class="kw">await</span>;
+                </span>timekeeper_proof = <span class="self">self</span>.timekeeper_proofs_receiver.select_next_some() =&gt; {
+                    <span class="self">self</span>.handle_timekeeper_proof(timekeeper_proof);
                 }
                 <span class="comment">// List of blocks that the client has finalized.
-                </span>maybe_gossip_checkpoints = <span class="self">self</span>.incoming_messages_receiver.next() =&gt; {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>((sender, gossip_checkpoints)) = maybe_gossip_checkpoints {
-                        <span class="self">self</span>.handle_gossip_checkpoints(sender, gossip_checkpoints).<span class="kw">await</span>;
+                </span>maybe_gossip_proof = <span class="self">self</span>.from_gossip_receiver.next() =&gt; {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>((sender, gossip_proof)) = maybe_gossip_proof {
+                        <span class="self">self</span>.handle_gossip_proof(sender, gossip_proof);
                     } <span class="kw">else </span>{
                         <span class="macro">debug!</span>(<span class="string">&quot;Incoming gossip messages stream ended, exiting&quot;</span>);
                         <span class="kw">return</span>;
@@ -587,7 +604,14 @@
                 }
                 maybe_import_notification = import_notification_stream.next() =&gt; {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(import_notification) = maybe_import_notification {
-                        <span class="self">self</span>.handle_import_notification(import_notification).<span class="kw">await</span>;
+                        <span class="kw">if </span>!import_notification.is_new_best {
+                            <span class="comment">// Ignore blocks that don&#39;t extend the chain
+                            </span><span class="kw">continue</span>;
+                        }
+                        <span class="self">self</span>.handle_block_import_notification(
+                            import_notification.hash,
+                            <span class="kw-2">&amp;</span>import_notification.header,
+                        );
                     } <span class="kw">else </span>{
                         <span class="macro">debug!</span>(<span class="string">&quot;Import notifications stream ended, exiting&quot;</span>);
                         <span class="kw">return</span>;
@@ -597,155 +621,175 @@
         }
     }
 
-    <span class="kw">async fn </span>handle_timekeeper_checkpoints(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        timekeeper_checkpoints: TimekeeperCheckpoints,
-    ) {
-        <span class="kw">let </span>TimekeeperCheckpoints {
+    <span class="kw">fn </span>handle_timekeeper_proof(<span class="kw-2">&amp;mut </span><span class="self">self</span>, proof: TimekeeperProof) {
+        <span class="kw">let </span>TimekeeperProof {
+            slot,
             seed,
             slot_iterations,
-            slot,
             checkpoints,
-        } = timekeeper_checkpoints;
+        } = proof;
+
+        <span class="kw">if </span><span class="self">self</span>.sync_oracle.is_major_syncing() {
+            <span class="macro">trace!</span>(
+                <span class="question-mark">?</span>slot,
+                %seed,
+                %slot_iterations,
+                output = %checkpoints.output(),
+                <span class="string">&quot;Ignore timekeeper proof due to major syncing&quot;</span>,
+            );
+
+            <span class="kw">return</span>;
+        }
+
+        <span class="macro">debug!</span>(
+            <span class="question-mark">?</span>slot,
+            %seed,
+            %slot_iterations,
+            output = %checkpoints.output(),
+            <span class="string">&quot;Received timekeeper proof&quot;</span>,
+        );
 
         <span class="kw">if </span><span class="self">self
-            </span>.outgoing_messages_sender
-            .try_send(GossipCheckpoints {
+            </span>.to_gossip_sender
+            .try_send(ToGossipMessage::Proof(GossipProof {
                 slot,
                 seed,
                 slot_iterations,
                 checkpoints,
-            })
+            }))
             .is_err()
         {
-            <span class="macro">debug!</span>(%slot, <span class="string">&quot;Gossip is not able to keep-up with slot production&quot;</span>);
+            <span class="macro">debug!</span>(
+                %slot,
+                <span class="string">&quot;Gossip is not able to keep-up with slot production (timekeeper)&quot;</span>,
+            );
         }
 
-        <span class="comment">// It doesn&#39;t matter if receiver is dropped
-        </span><span class="kw">let _ </span>= <span class="self">self
-            </span>.slot_sender
-            .send(PotSlotInfo { slot, checkpoints })
-            .<span class="kw">await</span>;
-
-        <span class="self">self</span>.next_slot_and_seed = (slot + Slot::from(<span class="number">1</span>), checkpoints.output().seed());
+        <span class="comment">// We don&#39;t care if block production is too slow or block production is not enabled on this
+        // node at all
+        </span><span class="kw">let _ </span>= <span class="self">self</span>.slot_sender.try_send(PotSlotInfo { slot, checkpoints });
     }
 
     <span class="comment">// TODO: Follow both verified and unverified checkpoints to start secondary timekeeper ASAP in
     //  case verification succeeds
-    </span><span class="kw">async fn </span>handle_gossip_checkpoints(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        _sender: PeerId,
-        gossip_checkpoints: GossipCheckpoints,
-    ) {
-        <span class="kw">let </span>(next_slot, next_seed) = <span class="self">self</span>.next_slot_and_seed;
-        <span class="kw">if </span>gossip_checkpoints.slot == next_slot &amp;&amp; gossip_checkpoints.seed == next_seed {
-            <span class="comment">// It doesn&#39;t matter if receiver is dropped
-            </span><span class="kw">let _ </span>= <span class="self">self
-                </span>.slot_sender
-                .send(PotSlotInfo {
-                    slot: gossip_checkpoints.slot,
-                    checkpoints: gossip_checkpoints.checkpoints,
-                })
-                .<span class="kw">await</span>;
+    </span><span class="kw">fn </span>handle_gossip_proof(<span class="kw-2">&amp;mut </span><span class="self">self</span>, _sender: PeerId, proof: GossipProof) {
+        <span class="kw">let </span>expected_next_slot_input = PotNextSlotInput {
+            slot: proof.slot,
+            slot_iterations: proof.slot_iterations,
+            seed: proof.seed,
+        };
 
-            <span class="self">self</span>.next_slot_and_seed = (
-                gossip_checkpoints.slot + Slot::from(<span class="number">1</span>),
-                gossip_checkpoints.checkpoints.output().seed(),
-            );
+        <span class="kw">if let </span><span class="prelude-val">Ok</span>(next_slot_input) = <span class="self">self</span>.state.try_extend(
+            expected_next_slot_input,
+            proof.slot,
+            proof.checkpoints.output(),
+            <span class="prelude-val">None</span>,
+        ) {
+            <span class="comment">// We don&#39;t care if block production is too slow or block production is not enabled on
+            // this node at all
+            </span><span class="kw">let _ </span>= <span class="self">self</span>.slot_sender.try_send(PotSlotInfo {
+                slot: proof.slot,
+                checkpoints: proof.checkpoints,
+            });
+
+            <span class="kw">if </span><span class="self">self
+                </span>.to_gossip_sender
+                .try_send(ToGossipMessage::NextSlotInput(next_slot_input))
+                .is_err()
+            {
+                <span class="macro">debug!</span>(
+                    slot = %proof.slot,
+                    next_slot = %next_slot_input.slot,
+                    <span class="string">&quot;Gossip is not able to keep-up with slot production (gossip)&quot;</span>,
+                );
+            }
         }
     }
 
-    <span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
-    </span><span class="kw">async fn </span>handle_import_notification(
+    <span class="kw">fn </span>handle_block_import_notification(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        _import_notification: BlockImportNotification&lt;Block&gt;,
+        block_hash: Block::Hash,
+        header: <span class="kw-2">&amp;</span>Block::Header,
     ) {
-    }
-
-    <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
-    </span><span class="kw">async fn </span>handle_import_notification(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        import_notification: BlockImportNotification&lt;Block&gt;,
-    ) {
-        <span class="kw">let </span>pre_digest = <span class="kw">match </span>extract_pre_digest(<span class="kw-2">&amp;</span>import_notification.header) {
+        <span class="kw">let </span>subspace_digest_items = <span class="kw">match </span>extract_subspace_digest_items::&lt;
+            Block::Header,
+            FarmerPublicKey,
+            FarmerPublicKey,
+            FarmerSignature,
+        &gt;(header)
+        {
             <span class="prelude-val">Ok</span>(pre_digest) =&gt; pre_digest,
             <span class="prelude-val">Err</span>(error) =&gt; {
                 <span class="macro">error!</span>(
                     %error,
-                    block_number = %import_notification.header.number(),
-                    block_hash = %import_notification.hash,
-                    <span class="string">&quot;Failed to extract pre-digest from header&quot;
-                </span>);
-                <span class="kw">return</span>;
-            }
-        };
-        <span class="kw">let </span>pot_parameters = <span class="kw">match </span><span class="self">self
-            </span>.client
-            .runtime_api()
-            .pot_parameters(import_notification.hash)
-        {
-            <span class="prelude-val">Ok</span>(pot_parameters) =&gt; pot_parameters,
-            <span class="prelude-val">Err</span>(error) =&gt; {
-                <span class="macro">error!</span>(
-                    %error,
-                    block_number = %import_notification.header.number(),
-                    block_hash = %import_notification.hash,
-                    <span class="string">&quot;Failed to get proof of time parameters&quot;
+                    block_number = %header.number(),
+                    %block_hash,
+                    <span class="string">&quot;Failed to extract Subspace digest items from header&quot;
                 </span>);
                 <span class="kw">return</span>;
             }
         };
 
-        <span class="kw">let </span>next_slot =
-            pre_digest.slot() + <span class="self">self</span>.chain_constants.block_authoring_delay() + Slot::from(<span class="number">1</span>);
-        <span class="self">self</span>.current_slot_iterations
-            .store(pot_parameters.slot_iterations(next_slot), Ordering::Relaxed);
+        <span class="kw">let </span>best_slot =
+            subspace_digest_items.pre_digest.slot() + <span class="self">self</span>.chain_constants.block_authoring_delay();
+        <span class="kw">let </span>best_proof = subspace_digest_items
+            .pre_digest
+            .pot_info()
+            .future_proof_of_time();
 
-        <span class="comment">// In case block import is ahead of timekeeper and gossip, update `next_slot_and_seed`
-        </span><span class="kw">if </span>next_slot &gt;= <span class="self">self</span>.next_slot_and_seed.<span class="number">0 </span>{
-            <span class="comment">// TODO: Account for entropy injection here
-            </span><span class="self">self</span>.next_slot_and_seed = (
-                next_slot,
-                pre_digest.pot_info().future_proof_of_time().seed(),
-            );
+        <span class="comment">// This will do one of 3 things depending on circumstances:
+        // * if block import is ahead of timekeeper and gossip, it will update next slot input
+        // * if block import is on a different PoT chain, it will update next slot input to the
+        //   correct fork (reorg)
+        // * if block import is on the same PoT chain this will essentially do nothing
+        </span><span class="kw">match </span><span class="self">self</span>.state.update(
+            best_slot,
+            best_proof,
+            <span class="prelude-val">Some</span>(subspace_digest_items.pot_parameters_change),
+        ) {
+            PotStateUpdateOutcome::NoChange =&gt; {
+                <span class="macro">trace!</span>(
+                    %best_slot,
+                    <span class="string">&quot;Block import didn&#39;t result in proof of time chain changes&quot;</span>,
+                );
+            }
+            PotStateUpdateOutcome::Extension { from, to } =&gt; {
+                <span class="macro">warn!</span>(
+                    from_next_slot = %from.slot,
+                    to_next_slot = %to.slot,
+                    <span class="string">&quot;Proof of time chain was extended from block import&quot;</span>,
+                );
 
-            <span class="comment">// TODO: Try to get higher time slot using verifier, we are behind and need to catch up
-            //  and may have already received newer proofs via gossip
-        </span>}
-    }
-}
+                <span class="kw">if </span><span class="self">self
+                    </span>.to_gossip_sender
+                    .try_send(ToGossipMessage::NextSlotInput(to))
+                    .is_err()
+                {
+                    <span class="macro">debug!</span>(
+                        next_slot = %to.slot,
+                        <span class="string">&quot;Gossip is not able to keep-up with slot production (block import)&quot;</span>,
+                    );
+                }
+            }
+            PotStateUpdateOutcome::Reorg { from, to } =&gt; {
+                <span class="macro">warn!</span>(
+                    from_next_slot = %from.slot,
+                    to_next_slot = %to.slot,
+                    <span class="string">&quot;Proof of time chain reorg happened&quot;</span>,
+                );
 
-<span class="doccomment">/// Runs timekeeper, must be running on a fast dedicated CPU core
-</span><span class="kw">fn </span>run_timekeeper(
-    <span class="kw-2">mut </span>seed: PotSeed,
-    slot: Slot,
-    slot_iterations: NonZeroU32,
-    pot_verifier: PotVerifier,
-    <span class="kw-2">mut </span>proofs_sender: mpsc::Sender&lt;TimekeeperCheckpoints&gt;,
-) -&gt; <span class="prelude-ty">Result</span>&lt;(), PotError&gt; {
-    <span class="kw">let </span><span class="kw-2">mut </span>slot = SlotNumber::from(slot);
-    <span class="kw">loop </span>{
-        <span class="kw">let </span>checkpoints = subspace_proof_of_time::prove(seed, slot_iterations)<span class="question-mark">?</span>;
-
-        pot_verifier.inject_verified_checkpoints(seed, slot_iterations, checkpoints);
-
-        <span class="kw">let </span>slot_info = TimekeeperCheckpoints {
-            seed,
-            slot_iterations,
-            slot: Slot::from(slot),
-            checkpoints,
-        };
-
-        seed = checkpoints.output().seed();
-
-        <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = proofs_sender.try_send(slot_info) {
-            <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = block_on(proofs_sender.send(error.into_inner())) {
-                <span class="macro">debug!</span>(%error, <span class="string">&quot;Couldn&#39;t send checkpoints, channel is closed&quot;</span>);
-                <span class="kw">return </span><span class="prelude-val">Ok</span>(());
+                <span class="kw">if </span><span class="self">self
+                    </span>.to_gossip_sender
+                    .try_send(ToGossipMessage::NextSlotInput(to))
+                    .is_err()
+                {
+                    <span class="macro">debug!</span>(
+                        next_slot = %to.slot,
+                        <span class="string">&quot;Gossip is not able to keep-up with slot production (block import)&quot;</span>,
+                    );
+                }
             }
         }
-
-        slot += <span class="number">1</span>;
     }
 }
 </code></pre></div></section></main></body></html>

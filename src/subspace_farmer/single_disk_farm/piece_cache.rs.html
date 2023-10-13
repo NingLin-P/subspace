@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-farmer/src/single_disk_farm/piece_cache.rs`."><title>piece_cache.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="subspace_farmer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../subspace_farmer/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-farmer/src/single_disk_farm/piece_cache.rs`."><title>piece_cache.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="subspace_farmer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (d627cf07c 2023-10-10)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-0689c575f077d64f.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../subspace_farmer/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -222,15 +222,24 @@
 <a href="#222" id="222">222</a>
 <a href="#223" id="223">223</a>
 <a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
+<a href="#233" id="233">233</a>
+<a href="#234" id="234">234</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>derive_more::Display;
-<span class="kw">use </span>memmap2::{Mmap, MmapOptions};
 <span class="kw">use </span>std::fs::{File, OpenOptions};
 <span class="kw">use </span>std::path::Path;
 <span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>std::{fs, io, mem};
 <span class="kw">use </span>subspace_core_primitives::crypto::blake3_hash_list;
 <span class="kw">use </span>subspace_core_primitives::{Blake3Hash, Piece, PieceIndex};
-<span class="kw">use </span>subspace_farmer_components::file_ext::FileExt;
+<span class="kw">use </span>subspace_farmer_components::file_ext::{FileExt, OpenOptionsExt};
 <span class="kw">use </span>thiserror::Error;
 <span class="kw">use </span>tracing::{debug, info, warn};
 
@@ -267,8 +276,7 @@
 <span class="attr">#[derive(Debug)]
 </span><span class="kw">struct </span>Inner {
     file: File,
-    read_mmap: Mmap,
-    file_size: usize,
+    num_elements: usize,
 }
 
 <span class="doccomment">/// Piece cache stored on one disk
@@ -289,7 +297,10 @@
             .read(<span class="bool-val">true</span>)
             .write(<span class="bool-val">true</span>)
             .create(<span class="bool-val">true</span>)
+            .advise_random_access()
             .open(directory.join(<span class="self">Self</span>::FILE_NAME))<span class="question-mark">?</span>;
+
+        file.advise_random_access()<span class="question-mark">?</span>;
 
         <span class="kw">let </span>expected_size = <span class="self">Self</span>::element_size() * capacity;
         <span class="comment">// Allocating the whole file (`set_len` below can create a sparse file, which will cause
@@ -299,17 +310,10 @@
         <span class="comment">// Truncating file (if necessary)
         </span>file.set_len(expected_size <span class="kw">as </span>u64)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>read_mmap = <span class="kw">unsafe </span>{ MmapOptions::new().len(expected_size).map(<span class="kw-2">&amp;</span>file)<span class="question-mark">? </span>};
-        <span class="attr">#[cfg(unix)]
-        </span>{
-            read_mmap.advise(memmap2::Advice::Random)<span class="question-mark">?</span>;
-        }
-
         <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
             inner: Arc::new(Inner {
                 file,
-                read_mmap,
-                file_size: expected_size,
+                num_elements: expected_size / <span class="self">Self</span>::element_size(),
             }),
         })
     }
@@ -325,28 +329,33 @@
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>contents(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
     ) -&gt; <span class="kw">impl </span>ExactSizeIterator&lt;Item = (Offset, <span class="prelude-ty">Option</span>&lt;PieceIndex&gt;)&gt; + <span class="lifetime">&#39;_ </span>{
-        <span class="self">self</span>.inner
-            .read_mmap
-            .array_chunks::&lt;{ <span class="self">Self</span>::element_size() }&gt;()
-            .enumerate()
-            .map(|(offset, chunk)| {
-                <span class="kw">let </span>(piece_index_bytes, piece_bytes) = chunk.split_at(PieceIndex::SIZE);
-                <span class="kw">let </span>piece_index = PieceIndex::from_bytes(
-                    piece_index_bytes
-                        .try_into()
-                        .expect(<span class="string">&quot;Statically known to have correct size; qed&quot;</span>),
-                );
-                <span class="comment">// Piece index zero might mean we have piece index zero or just an empty space
-                </span><span class="kw">let </span>piece_index = <span class="kw">if </span>piece_index != PieceIndex::ZERO
-                    || piece_bytes.iter().any(|<span class="kw-2">&amp;</span>byte| byte != <span class="number">0</span>)
-                {
+        <span class="kw">let </span>file = <span class="kw-2">&amp;</span><span class="self">self</span>.inner.file;
+        <span class="kw">let </span><span class="kw-2">mut </span>element = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="self">Self</span>::element_size()];
+
+        (<span class="number">0</span>..<span class="self">self</span>.inner.num_elements).map(<span class="kw">move </span>|offset| {
+            <span class="kw">if let </span><span class="prelude-val">Err</span>(error) =
+                file.read_exact_at(<span class="kw-2">&amp;mut </span>element, (offset * <span class="self">Self</span>::element_size()) <span class="kw">as </span>u64)
+            {
+                <span class="macro">warn!</span>(%error, %offset, <span class="string">&quot;Failed to read cache element #1&quot;</span>);
+                <span class="kw">return </span>(Offset(offset), <span class="prelude-val">None</span>);
+            }
+
+            <span class="kw">let </span>(piece_index_bytes, piece_bytes) = element.split_at(PieceIndex::SIZE);
+            <span class="kw">let </span>piece_index = PieceIndex::from_bytes(
+                piece_index_bytes
+                    .try_into()
+                    .expect(<span class="string">&quot;Statically known to have correct size; qed&quot;</span>),
+            );
+            <span class="comment">// Piece index zero might mean we have piece index zero or just an empty space
+            </span><span class="kw">let </span>piece_index =
+                <span class="kw">if </span>piece_index != PieceIndex::ZERO || piece_bytes.iter().any(|<span class="kw-2">&amp;</span>byte| byte != <span class="number">0</span>) {
                     <span class="prelude-val">Some</span>(piece_index)
                 } <span class="kw">else </span>{
                     <span class="prelude-val">None
                 </span>};
 
-                (Offset(offset), piece_index)
-            })
+            (Offset(offset), piece_index)
+        })
     }
 
     <span class="doccomment">/// Store piece in cache at specified offset, replacing existing piece if there is any
@@ -360,27 +369,26 @@
         piece: <span class="kw-2">&amp;</span>Piece,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), DiskPieceCacheError&gt; {
         <span class="kw">let </span>Offset(offset) = offset;
-        <span class="kw">if </span>offset &gt;= <span class="self">self</span>.inner.file_size / <span class="self">Self</span>::element_size() {
+        <span class="kw">if </span>offset &gt;= <span class="self">self</span>.inner.num_elements {
             <span class="kw">return </span><span class="prelude-val">Err</span>(DiskPieceCacheError::OffsetOutsideOfRange {
                 provided: offset,
-                max: <span class="self">self</span>.inner.file_size / <span class="self">Self</span>::element_size() - <span class="number">1</span>,
+                max: <span class="self">self</span>.inner.num_elements - <span class="number">1</span>,
             });
         }
 
-        <span class="kw">let </span><span class="kw-2">mut </span>write_mmap = <span class="kw">unsafe </span>{
-            MmapOptions::new()
-                .offset((offset * <span class="self">Self</span>::element_size()) <span class="kw">as </span>u64)
-                .len(<span class="self">Self</span>::element_size())
-                .map_mut(<span class="kw-2">&amp;</span><span class="self">self</span>.inner.file)<span class="question-mark">?
-        </span>};
+        <span class="kw">let </span>element_offset = (offset * <span class="self">Self</span>::element_size()) <span class="kw">as </span>u64;
 
-        <span class="kw">let </span>(piece_index_bytes, remaining_bytes) = write_mmap.split_at_mut(PieceIndex::SIZE);
-        piece_index_bytes.copy_from_slice(<span class="kw-2">&amp;</span>piece_index.to_bytes());
-        <span class="kw">let </span>(piece_bytes, checksum) = remaining_bytes.split_at_mut(Piece::SIZE);
-        piece_bytes.copy_from_slice(piece.as_ref());
-        checksum.copy_from_slice(<span class="kw-2">&amp;</span>blake3_hash_list(<span class="kw-2">&amp;</span>[piece_index_bytes, piece.as_ref()]));
-
-        write_mmap.flush()<span class="question-mark">?</span>;
+        <span class="kw">let </span>piece_index_bytes = piece_index.to_bytes();
+        <span class="self">self</span>.inner
+            .file
+            .write_all_at(<span class="kw-2">&amp;</span>piece_index_bytes, element_offset)<span class="question-mark">?</span>;
+        <span class="self">self</span>.inner
+            .file
+            .write_all_at(piece.as_ref(), element_offset + PieceIndex::SIZE <span class="kw">as </span>u64)<span class="question-mark">?</span>;
+        <span class="self">self</span>.inner.file.write_all_at(
+            <span class="kw-2">&amp;</span>blake3_hash_list(<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>piece_index_bytes, piece.as_ref()]),
+            element_offset + PieceIndex::SIZE <span class="kw">as </span>u64 + Piece::SIZE <span class="kw">as </span>u64,
+        )<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(())
     }
@@ -393,16 +401,22 @@
     /// doesn&#39;t happen for the same piece being accessed!
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>read_piece_index(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: Offset) -&gt; <span class="prelude-ty">Option</span>&lt;PieceIndex&gt; {
         <span class="kw">let </span>Offset(offset) = offset;
-        <span class="kw">if </span>offset &gt;= <span class="self">self</span>.inner.file_size / <span class="self">Self</span>::element_size() {
+        <span class="kw">if </span>offset &gt;= <span class="self">self</span>.inner.num_elements {
             <span class="macro">warn!</span>(%offset, <span class="string">&quot;Trying to read piece out of range, this must be an implementation bug&quot;</span>);
             <span class="kw">return </span><span class="prelude-val">None</span>;
         }
 
-        <span class="prelude-val">Some</span>(PieceIndex::from_bytes(
-            <span class="self">self</span>.inner.read_mmap[<span class="self">Self</span>::element_size() * offset..][..PieceIndex::SIZE]
-                .try_into()
-                .expect(<span class="string">&quot;Statically guaranteed to be correct size; qed&quot;</span>),
-        ))
+        <span class="kw">let </span><span class="kw-2">mut </span>piece_index_bytes = [<span class="number">0</span>; PieceIndex::SIZE];
+
+        <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = <span class="self">self</span>.inner.file.read_exact_at(
+            <span class="kw-2">&amp;mut </span>piece_index_bytes,
+            (offset * <span class="self">Self</span>::element_size()) <span class="kw">as </span>u64,
+        ) {
+            <span class="macro">warn!</span>(%error, %offset, <span class="string">&quot;Failed to read cache piece index&quot;</span>);
+            <span class="kw">return </span><span class="prelude-val">None</span>;
+        }
+
+        <span class="prelude-val">Some</span>(PieceIndex::from_bytes(piece_index_bytes))
     }
 
     <span class="doccomment">/// Read piece from cache at specified offset.
@@ -413,14 +427,17 @@
     /// doesn&#39;t happen for the same piece being accessed!
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>read_piece(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: Offset) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Piece&gt;, DiskPieceCacheError&gt; {
         <span class="kw">let </span>Offset(offset) = offset;
-        <span class="kw">if </span>offset &gt;= <span class="self">self</span>.inner.file_size / <span class="self">Self</span>::element_size() {
+        <span class="kw">if </span>offset &gt;= <span class="self">self</span>.inner.num_elements {
             <span class="macro">warn!</span>(%offset, <span class="string">&quot;Trying to read piece out of range, this must be an implementation bug&quot;</span>);
             <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
         }
 
-        <span class="kw">let </span>piece_element_memory =
-            <span class="kw-2">&amp;</span><span class="self">self</span>.inner.read_mmap[offset * <span class="self">Self</span>::element_size()..][..<span class="self">Self</span>::element_size()];
-        <span class="kw">let </span>(piece_index_bytes, remaining_bytes) = piece_element_memory.split_at(PieceIndex::SIZE);
+        <span class="kw">let </span><span class="kw-2">mut </span>element = <span class="macro">vec!</span>[<span class="number">0</span>; <span class="self">Self</span>::element_size()];
+        <span class="self">self</span>.inner
+            .file
+            .read_exact_at(<span class="kw-2">&amp;mut </span>element, (offset * <span class="self">Self</span>::element_size()) <span class="kw">as </span>u64)<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>(piece_index_bytes, remaining_bytes) = element.split_at(PieceIndex::SIZE);
         <span class="kw">let </span>(piece_bytes, expected_checksum) = remaining_bytes.split_at(Piece::SIZE);
         <span class="kw">let </span><span class="kw-2">mut </span>piece = Piece::default();
         piece.copy_from_slice(piece_bytes);
@@ -442,6 +459,9 @@
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>wipe(directory: <span class="kw-2">&amp;</span>Path) -&gt; io::Result&lt;()&gt; {
         <span class="kw">let </span>piece_cache = directory.join(<span class="self">Self</span>::FILE_NAME);
+        <span class="kw">if </span>!piece_cache.exists() {
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(());
+        }
         <span class="macro">info!</span>(<span class="string">&quot;Deleting piece cache file at {}&quot;</span>, piece_cache.display());
         fs::remove_file(piece_cache)
     }

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sc-consensus-subspace-rpc/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sc_consensus_subspace_rpc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../sc_consensus_subspace_rpc/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sc-consensus-subspace-rpc/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sc_consensus_subspace_rpc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (d627cf07c 2023-10-10)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0689c575f077d64f.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../sc_consensus_subspace_rpc/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -835,39 +835,6 @@
 <a href="#835" id="835">835</a>
 <a href="#836" id="836">836</a>
 <a href="#837" id="837">837</a>
-<a href="#838" id="838">838</a>
-<a href="#839" id="839">839</a>
-<a href="#840" id="840">840</a>
-<a href="#841" id="841">841</a>
-<a href="#842" id="842">842</a>
-<a href="#843" id="843">843</a>
-<a href="#844" id="844">844</a>
-<a href="#845" id="845">845</a>
-<a href="#846" id="846">846</a>
-<a href="#847" id="847">847</a>
-<a href="#848" id="848">848</a>
-<a href="#849" id="849">849</a>
-<a href="#850" id="850">850</a>
-<a href="#851" id="851">851</a>
-<a href="#852" id="852">852</a>
-<a href="#853" id="853">853</a>
-<a href="#854" id="854">854</a>
-<a href="#855" id="855">855</a>
-<a href="#856" id="856">856</a>
-<a href="#857" id="857">857</a>
-<a href="#858" id="858">858</a>
-<a href="#859" id="859">859</a>
-<a href="#860" id="860">860</a>
-<a href="#861" id="861">861</a>
-<a href="#862" id="862">862</a>
-<a href="#863" id="863">863</a>
-<a href="#864" id="864">864</a>
-<a href="#865" id="865">865</a>
-<a href="#866" id="866">866</a>
-<a href="#867" id="867">867</a>
-<a href="#868" id="868">868</a>
-<a href="#869" id="869">869</a>
-<a href="#870" id="870">870</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2020-2021 Parity Technologies (UK) Ltd.
 // Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
@@ -889,7 +856,8 @@
 
 </span><span class="attr">#![feature(try_blocks)]
 
-</span><span class="kw">use </span>futures::{future, FutureExt, StreamExt};
+</span><span class="kw">use </span>futures::channel::mpsc;
+<span class="kw">use </span>futures::{future, FutureExt, StreamExt};
 <span class="kw">use </span>jsonrpsee::core::{async_trait, Error <span class="kw">as </span>JsonRpseeError, RpcResult};
 <span class="kw">use </span>jsonrpsee::proc_macros::rpc;
 <span class="kw">use </span>jsonrpsee::types::{SubscriptionEmptyError, SubscriptionResult};
@@ -922,7 +890,9 @@
 <span class="kw">use </span>std::time::Duration;
 <span class="kw">use </span>subspace_archiving::archiver::NewArchivedSegment;
 <span class="kw">use </span>subspace_core_primitives::crypto::kzg::Kzg;
-<span class="kw">use </span>subspace_core_primitives::{PieceIndex, SegmentHeader, SegmentIndex, SlotNumber, Solution};
+<span class="kw">use </span>subspace_core_primitives::{
+    PieceIndex, PublicKey, SegmentHeader, SegmentIndex, SlotNumber, Solution,
+};
 <span class="kw">use </span>subspace_farmer_components::FarmerProtocolInfo;
 <span class="kw">use </span>subspace_networking::libp2p::Multiaddr;
 <span class="kw">use </span>subspace_rpc_primitives::{
@@ -931,7 +901,9 @@
 };
 <span class="kw">use </span>tracing::{debug, error, warn};
 
-<span class="kw">const </span>SOLUTION_TIMEOUT: Duration = Duration::from_secs(<span class="number">2</span>);
+<span class="doccomment">/// This is essentially equal to expected number of votes per block, one more is added implicitly by
+/// the fact that channel sender exists
+</span><span class="kw">const </span>SOLUTION_SENDER_CHANNEL_CAPACITY: usize = <span class="number">9</span>;
 <span class="kw">const </span>REWARD_SIGNING_TIMEOUT: Duration = Duration::from_millis(<span class="number">500</span>);
 <span class="kw">const </span>NODE_SYNC_STATUS_CHECK_INTERVAL: Duration = Duration::from_secs(<span class="number">1</span>);
 
@@ -1071,8 +1043,9 @@
     new_slot_notification_stream: SubspaceNotificationStream&lt;NewSlotNotification&gt;,
     reward_signing_notification_stream: SubspaceNotificationStream&lt;RewardSigningNotification&gt;,
     archived_segment_notification_stream: SubspaceNotificationStream&lt;ArchivedSegmentNotification&gt;,
-    solution_response_senders:
-        Arc&lt;Mutex&lt;LruCache&lt;SlotNumber, Vec&lt;async_oneshot::Sender&lt;SolutionResponse&gt;&gt;&gt;&gt;&gt;,
+    <span class="attr">#[allow(clippy::type_complexity)]
+    </span>solution_response_senders:
+        Arc&lt;Mutex&lt;LruCache&lt;SlotNumber, mpsc::Sender&lt;Solution&lt;PublicKey, PublicKey&gt;&gt;&gt;&gt;&gt;,
     reward_signature_senders: Arc&lt;Mutex&lt;BlockSignatureSenders&gt;&gt;,
     dsn_bootstrap_nodes: Vec&lt;Multiaddr&gt;,
     segment_headers_store: SegmentHeadersStore&lt;AS&gt;,
@@ -1102,7 +1075,6 @@
     AS: AuxStore + Send + Sync + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Creates a new instance of the `SubspaceRpc` handler.
-    </span><span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
     </span><span class="kw">pub fn </span>new(config: SubspaceRpcConfig&lt;Client, SO, AS&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ApiError&gt; {
         <span class="kw">let </span>best_hash = config.client.info().best_hash;
         <span class="kw">let </span>runtime_api = config.client.runtime_api();
@@ -1112,33 +1084,6 @@
             .expect(<span class="string">&quot;Block authoring delay will never exceed usize on any platform; qed&quot;</span>);
         <span class="kw">let </span>solution_response_senders_capacity =
             NonZeroUsize::try_from(block_authoring_delay).unwrap_or(NonZeroUsize::MIN);
-
-        <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
-            client: config.client,
-            subscription_executor: config.subscription_executor,
-            new_slot_notification_stream: config.new_slot_notification_stream,
-            reward_signing_notification_stream: config.reward_signing_notification_stream,
-            archived_segment_notification_stream: config.archived_segment_notification_stream,
-            solution_response_senders: Arc::new(Mutex::new(LruCache::new(
-                solution_response_senders_capacity,
-            ))),
-            reward_signature_senders: Arc::default(),
-            dsn_bootstrap_nodes: config.dsn_bootstrap_nodes,
-            segment_headers_store: config.segment_headers_store,
-            cached_archived_segment: Arc::default(),
-            archived_segment_acknowledgement_senders: Arc::default(),
-            next_subscription_id: AtomicU64::default(),
-            sync_oracle: config.sync_oracle,
-            kzg: config.kzg,
-            deny_unsafe: config.deny_unsafe,
-            _block: PhantomData,
-        })
-    }
-
-    <span class="doccomment">/// Creates a new instance of the `SubspaceRpc` handler.
-    </span><span class="attr">#[cfg(not(feature = <span class="string">&quot;pot&quot;</span>))]
-    </span><span class="kw">pub fn </span>new(config: SubspaceRpcConfig&lt;Client, SO, AS&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, ApiError&gt; {
-        <span class="kw">let </span>solution_response_senders_capacity = NonZeroUsize::MIN;
 
         <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
             client: config.client,
@@ -1193,6 +1138,7 @@
             })<span class="question-mark">?</span>;
 
         <span class="kw">let </span>farmer_app_info: <span class="prelude-ty">Result</span>&lt;FarmerAppInfo, ApiError&gt; = <span class="kw">try </span>{
+            <span class="kw">let </span>slot_duration = runtime_api.slot_duration(best_hash)<span class="question-mark">?</span>;
             <span class="kw">let </span>chain_constants = runtime_api.chain_constants(best_hash)<span class="question-mark">?</span>;
             <span class="kw">let </span>protocol_info = FarmerProtocolInfo {
                 history_size: runtime_api.history_size(best_hash)<span class="question-mark">?</span>,
@@ -1205,6 +1151,9 @@
             FarmerAppInfo {
                 genesis_hash,
                 dsn_bootstrap_nodes: <span class="self">self</span>.dsn_bootstrap_nodes.clone(),
+                farming_timeout: slot_duration
+                    .as_duration()
+                    .mul_f64(SlotNumber::from(chain_constants.block_authoring_delay()) <span class="kw">as </span>f64),
                 protocol_info,
             }
         };
@@ -1218,19 +1167,12 @@
     <span class="kw">fn </span>submit_solution_response(<span class="kw-2">&amp;</span><span class="self">self</span>, solution_response: SolutionResponse) -&gt; RpcResult&lt;()&gt; {
         <span class="self">self</span>.deny_unsafe.check_if_safe()<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>solution_response_senders = <span class="self">self</span>.solution_response_senders.clone();
-
-        <span class="comment">// TODO: This doesn&#39;t track what client sent a solution, allowing some clients to send
-        //  multiple (https://github.com/paritytech/jsonrpsee/issues/452)
-
-        </span><span class="kw">let </span><span class="kw-2">mut </span>solution_response_senders = solution_response_senders.lock();
-
         <span class="kw">let </span>slot = solution_response.slot_number;
+        <span class="kw">let </span><span class="kw-2">mut </span>solution_response_senders = <span class="self">self</span>.solution_response_senders.lock();
 
         <span class="kw">let </span>success = solution_response_senders
             .peek_mut(<span class="kw-2">&amp;</span>slot)
-            .and_then(|senders| senders.pop())
-            .and_then(|<span class="kw-2">mut </span>sender| sender.send(solution_response).ok())
+            .and_then(|sender| sender.try_send(solution_response.solution).ok())
             .is_some();
 
         <span class="kw">if </span>!success {
@@ -1238,6 +1180,8 @@
                 %slot,
                 <span class="string">&quot;Solution was ignored, likely because farmer was too slow&quot;
             </span>);
+
+            <span class="kw">return </span><span class="prelude-val">Err</span>(JsonRpseeError::Custom(<span class="string">&quot;Solution was ignored&quot;</span>.to_string()));
         }
 
         <span class="prelude-val">Ok</span>(())
@@ -1248,98 +1192,88 @@
         <span class="kw">let </span>solution_response_senders = <span class="self">self</span>.solution_response_senders.clone();
         <span class="kw">let </span>allow_solutions = <span class="self">self</span>.deny_unsafe.check_if_safe().is_ok();
 
-        <span class="kw">let </span>stream =
-            <span class="self">self</span>.new_slot_notification_stream
-                .subscribe()
-                .map(<span class="kw">move </span>|new_slot_notification| {
-                    <span class="kw">let </span>NewSlotNotification {
-                        new_slot_info,
-                        <span class="kw-2">mut </span>solution_sender,
-                    } = new_slot_notification;
+        <span class="kw">let </span>handle_slot_notification = <span class="kw">move </span>|new_slot_notification| {
+            <span class="kw">let </span>NewSlotNotification {
+                new_slot_info,
+                <span class="kw-2">mut </span>solution_sender,
+            } = new_slot_notification;
 
-                    <span class="comment">// Only handle solution responses in case unsafe APIs are allowed
-                    </span><span class="kw">if </span>allow_solutions {
-                        <span class="kw">let </span>(response_sender, response_receiver) = async_oneshot::oneshot();
+            <span class="kw">let </span>slot_number = SlotNumber::from(new_slot_info.slot);
 
-                        <span class="comment">// Store solution sender so that we can retrieve it when solution comes from
-                        // the farmer
-                        </span>{
-                            <span class="kw">let </span><span class="kw-2">mut </span>solution_response_senders = solution_response_senders.lock();
+            <span class="comment">// Only handle solution responses in case unsafe APIs are allowed
+            </span><span class="kw">if </span>allow_solutions {
+                <span class="comment">// Store solution sender so that we can retrieve it when solution comes from
+                // the farmer
+                </span><span class="kw">let </span><span class="kw-2">mut </span>solution_response_senders = solution_response_senders.lock();
+                <span class="kw">if </span>solution_response_senders.peek(<span class="kw-2">&amp;</span>slot_number).is_none() {
+                    <span class="kw">let </span>(response_sender, <span class="kw-2">mut </span>response_receiver) =
+                        mpsc::channel(SOLUTION_SENDER_CHANNEL_CAPACITY);
 
-                            solution_response_senders
-                                .get_or_insert_mut(SlotNumber::from(new_slot_info.slot), Vec::new)
-                                .push(response_sender);
-                        }
+                    solution_response_senders.push(slot_number, response_sender);
 
-                        <span class="comment">// Wait for solutions and transform proposed proof of space solutions into
-                        // data structure `sc-consensus-subspace` expects
-                        </span><span class="kw">let </span>forward_solution_fut = <span class="kw">async move </span>{
-                            <span class="kw">if let </span><span class="prelude-val">Ok</span>(solution_response) = response_receiver.<span class="kw">await </span>{
-                                <span class="kw">for </span>solution <span class="kw">in </span>solution_response.solutions {
-                                    <span class="kw">let </span>public_key =
-                                        FarmerPublicKey::from_slice(solution.public_key.as_ref())
-                                            .expect(<span class="string">&quot;Always correct length; qed&quot;</span>);
-                                    <span class="kw">let </span>reward_address = FarmerPublicKey::from_slice(
-                                        solution.reward_address.as_ref(),
-                                    )
+                    <span class="comment">// Wait for solutions and transform proposed proof of space solutions
+                    // into data structure `sc-consensus-subspace` expects
+                    </span><span class="kw">let </span>forward_solution_fut = <span class="kw">async move </span>{
+                        <span class="kw">while let </span><span class="prelude-val">Some</span>(solution) = response_receiver.next().<span class="kw">await </span>{
+                            <span class="kw">let </span>public_key =
+                                FarmerPublicKey::from_slice(solution.public_key.as_ref())
+                                    .expect(<span class="string">&quot;Always correct length; qed&quot;</span>);
+                            <span class="kw">let </span>reward_address =
+                                FarmerPublicKey::from_slice(solution.reward_address.as_ref())
                                     .expect(<span class="string">&quot;Always correct length; qed&quot;</span>);
 
-                                    <span class="kw">let </span>sector_index = solution.sector_index;
+                            <span class="kw">let </span>sector_index = solution.sector_index;
 
-                                    <span class="kw">let </span>solution = Solution {
-                                        public_key: public_key.clone(),
-                                        reward_address,
-                                        sector_index,
-                                        history_size: solution.history_size,
-                                        piece_offset: solution.piece_offset,
-                                        record_commitment: solution.record_commitment,
-                                        record_witness: solution.record_witness,
-                                        chunk: solution.chunk,
-                                        chunk_witness: solution.chunk_witness,
-                                        audit_chunk_offset: solution.audit_chunk_offset,
-                                        proof_of_space: solution.proof_of_space,
-                                    };
+                            <span class="kw">let </span>solution = Solution {
+                                public_key: public_key.clone(),
+                                reward_address,
+                                sector_index,
+                                history_size: solution.history_size,
+                                piece_offset: solution.piece_offset,
+                                record_commitment: solution.record_commitment,
+                                record_witness: solution.record_witness,
+                                chunk: solution.chunk,
+                                chunk_witness: solution.chunk_witness,
+                                audit_chunk_offset: solution.audit_chunk_offset,
+                                proof_of_space: solution.proof_of_space,
+                            };
 
-                                    <span class="kw">if </span>solution_sender.try_send(solution).is_err() {
-                                        <span class="macro">warn!</span>(
-                                            slot = %solution_response.slot_number,
-                                            %sector_index,
-                                            %public_key,
-                                            <span class="string">&quot;Solution receiver is closed, likely because farmer \
-                                            was too slow&quot;
-                                        </span>);
-                                    }
-                                }
+                            <span class="kw">if </span>solution_sender.try_send(solution).is_err() {
+                                <span class="macro">warn!</span>(
+                                    slot = %slot_number,
+                                    %sector_index,
+                                    %public_key,
+                                    <span class="string">&quot;Solution receiver is closed, likely because farmer was too \
+                                    slow&quot;
+                                </span>);
                             }
-                        };
+                        }
+                    };
 
-                        <span class="comment">// Run above future with timeout
-                        </span>executor.spawn(
-                            <span class="string">&quot;subspace-slot-info-forward&quot;</span>,
-                            <span class="prelude-val">Some</span>(<span class="string">&quot;rpc&quot;</span>),
-                            future::select(
-                                futures_timer::Delay::new(SOLUTION_TIMEOUT),
-                                Box::pin(forward_solution_fut),
-                            )
-                            .map(|<span class="kw">_</span>| ())
-                            .boxed(),
-                        );
-                    }
+                    executor.spawn(
+                        <span class="string">&quot;subspace-slot-info-forward&quot;</span>,
+                        <span class="prelude-val">Some</span>(<span class="string">&quot;rpc&quot;</span>),
+                        Box::pin(forward_solution_fut),
+                    );
+                }
+            }
 
-                    <span class="kw">let </span>slot_number = new_slot_info.slot.into();
+            <span class="kw">let </span>global_challenge = new_slot_info
+                .global_randomness
+                .derive_global_challenge(slot_number);
 
-                    <span class="kw">let </span>global_challenge = new_slot_info
-                        .global_randomness
-                        .derive_global_challenge(slot_number);
-
-                    <span class="comment">// This will be sent to the farmer
-                    </span>SlotInfo {
-                        slot_number,
-                        global_challenge,
-                        solution_range: new_slot_info.solution_range,
-                        voting_solution_range: new_slot_info.voting_solution_range,
-                    }
-                });
+            <span class="comment">// This will be sent to the farmer
+            </span>SlotInfo {
+                slot_number,
+                global_challenge,
+                solution_range: new_slot_info.solution_range,
+                voting_solution_range: new_slot_info.voting_solution_range,
+            }
+        };
+        <span class="kw">let </span>stream = <span class="self">self
+            </span>.new_slot_notification_stream
+            .subscribe()
+            .map(handle_slot_notification);
 
         <span class="kw">let </span>fut = <span class="kw">async move </span>{
             sink.pipe_from_stream(stream).<span class="kw">await</span>;

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `test/subspace-test-service/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_test_service" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0-nightly (399b06823 2023-07-20)" data-channel="nightly" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-6d2c9675f3d09c26.css" data-theme-dark-css="dark-45ceb8f2e522f4d1.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-6d2c9675f3d09c26.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-45ceb8f2e522f4d1.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_test_service/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `test/subspace-test-service/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_test_service" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (d627cf07c 2023-10-10)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0689c575f077d64f.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_test_service/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -964,6 +964,41 @@
 <a href="#964" id="964">964</a>
 <a href="#965" id="965">965</a>
 <a href="#966" id="966">966</a>
+<a href="#967" id="967">967</a>
+<a href="#968" id="968">968</a>
+<a href="#969" id="969">969</a>
+<a href="#970" id="970">970</a>
+<a href="#971" id="971">971</a>
+<a href="#972" id="972">972</a>
+<a href="#973" id="973">973</a>
+<a href="#974" id="974">974</a>
+<a href="#975" id="975">975</a>
+<a href="#976" id="976">976</a>
+<a href="#977" id="977">977</a>
+<a href="#978" id="978">978</a>
+<a href="#979" id="979">979</a>
+<a href="#980" id="980">980</a>
+<a href="#981" id="981">981</a>
+<a href="#982" id="982">982</a>
+<a href="#983" id="983">983</a>
+<a href="#984" id="984">984</a>
+<a href="#985" id="985">985</a>
+<a href="#986" id="986">986</a>
+<a href="#987" id="987">987</a>
+<a href="#988" id="988">988</a>
+<a href="#989" id="989">989</a>
+<a href="#990" id="990">990</a>
+<a href="#991" id="991">991</a>
+<a href="#992" id="992">992</a>
+<a href="#993" id="993">993</a>
+<a href="#994" id="994">994</a>
+<a href="#995" id="995">995</a>
+<a href="#996" id="996">996</a>
+<a href="#997" id="997">997</a>
+<a href="#998" id="998">998</a>
+<a href="#999" id="999">999</a>
+<a href="#1000" id="1000">1000</a>
+<a href="#1001" id="1001">1001</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -986,18 +1021,21 @@
 
 </span><span class="kw">use </span>codec::{Decode, Encode};
 <span class="kw">use </span>cross_domain_message_gossip::GossipWorkerBuilder;
+<span class="kw">use </span>domain_runtime_primitives::opaque::Block <span class="kw">as </span>DomainBlock;
 <span class="kw">use </span>domain_runtime_primitives::BlockNumber <span class="kw">as </span>DomainNumber;
 <span class="kw">use </span>futures::channel::mpsc;
 <span class="kw">use </span>futures::{select, FutureExt, StreamExt};
 <span class="kw">use </span>jsonrpsee::RpcModule;
 <span class="kw">use </span>parking_lot::Mutex;
 <span class="kw">use </span>sc_block_builder::BlockBuilderProvider;
-<span class="kw">use </span>sc_client_api::execution_extensions::{ExecutionStrategies, ExtensionsFactory};
-<span class="kw">use </span>sc_client_api::{backend, ExecutorProvider};
+<span class="kw">use </span>sc_client_api::execution_extensions::ExtensionsFactory;
+<span class="kw">use </span>sc_client_api::ExecutorProvider;
 <span class="kw">use </span>sc_consensus::block_import::{
     BlockCheckParams, BlockImportParams, ForkChoiceStrategy, ImportResult,
 };
-<span class="kw">use </span>sc_consensus::{BasicQueue, BlockImport, StateAction, Verifier <span class="kw">as </span>VerifierT};
+<span class="kw">use </span>sc_consensus::{
+    BasicQueue, BlockImport, SharedBlockImport, StateAction, Verifier <span class="kw">as </span>VerifierT,
+};
 <span class="kw">use </span>sc_consensus_fraud_proof::FraudProofBlockImport;
 <span class="kw">use </span>sc_executor::NativeElseWasmExecutor;
 <span class="kw">use </span>sc_network::config::{NetworkConfiguration, TransportConfig};
@@ -1013,18 +1051,17 @@
 <span class="kw">use </span>sc_transaction_pool::error::Error <span class="kw">as </span>PoolError;
 <span class="kw">use </span>sc_transaction_pool_api::TransactionSource;
 <span class="kw">use </span>sc_utils::mpsc::{tracing_unbounded, TracingUnboundedReceiver, TracingUnboundedSender};
-<span class="kw">use </span>sp_api::{ApiExt, HashT, HeaderT, ProvideRuntimeApi, TransactionFor};
+<span class="kw">use </span>sp_api::{ApiExt, HashT, HeaderT, ProvideRuntimeApi};
 <span class="kw">use </span>sp_application_crypto::UncheckedFrom;
 <span class="kw">use </span>sp_blockchain::HeaderBackend;
 <span class="kw">use </span>sp_consensus::{BlockOrigin, Error <span class="kw">as </span>ConsensusError};
 <span class="kw">use </span>sp_consensus_slots::Slot;
-<span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
-</span><span class="kw">use </span>sp_consensus_subspace::digests::PreDigestPotInfo;
-<span class="kw">use </span>sp_consensus_subspace::digests::{CompatibleDigestItem, PreDigest};
+<span class="kw">use </span>sp_consensus_subspace::digests::{CompatibleDigestItem, PreDigest, PreDigestPotInfo};
 <span class="kw">use </span>sp_consensus_subspace::FarmerPublicKey;
-<span class="kw">use </span>sp_core::traits::SpawnEssentialNamed;
+<span class="kw">use </span>sp_core::traits::{CodeExecutor, SpawnEssentialNamed};
 <span class="kw">use </span>sp_core::H256;
-<span class="kw">use </span>sp_domains::{GenerateGenesisStateRoot, GenesisReceiptExtension, OpaqueBundle};
+<span class="kw">use </span>sp_domains::{DomainsApi, OpaqueBundle};
+<span class="kw">use </span>sp_domains_fraud_proof::{FraudProofExtension, FraudProofHostFunctionsImpl};
 <span class="kw">use </span>sp_externalities::Extensions;
 <span class="kw">use </span>sp_inherents::{InherentData, InherentDataProvider};
 <span class="kw">use </span>sp_keyring::Sr25519Keyring;
@@ -1040,7 +1077,6 @@
 <span class="kw">use </span>subspace_fraud_proof::invalid_state_transition_proof::InvalidStateTransitionProofVerifier;
 <span class="kw">use </span>subspace_fraud_proof::invalid_transaction_proof::InvalidTransactionProofVerifier;
 <span class="kw">use </span>subspace_fraud_proof::verifier_api::VerifierClient;
-<span class="kw">use </span>subspace_node::domain::DomainGenesisBlockBuilder;
 <span class="kw">use </span>subspace_runtime_primitives::opaque::Block;
 <span class="kw">use </span>subspace_runtime_primitives::{AccountId, Balance, Hash};
 <span class="kw">use </span>subspace_service::tx_pre_validator::ConsensusChainTxPreValidator;
@@ -1110,14 +1146,6 @@
             instantiation_strategy: WasmtimeInstantiationStrategy::PoolingCopyOnWrite,
         },
         wasm_runtime_overrides: Default::default(),
-        <span class="comment">// NOTE: we enforce the use of the native runtime to make the errors more debuggable
-        </span>execution_strategies: ExecutionStrategies {
-            syncing: sc_client_api::ExecutionStrategy::NativeWhenPossible,
-            importing: sc_client_api::ExecutionStrategy::NativeWhenPossible,
-            block_construction: sc_client_api::ExecutionStrategy::NativeWhenPossible,
-            offchain_worker: sc_client_api::ExecutionStrategy::NativeWhenPossible,
-            other: sc_client_api::ExecutionStrategy::NativeWhenPossible,
-        },
         rpc_addr: <span class="prelude-val">None</span>,
         rpc_max_request_size: <span class="number">0</span>,
         rpc_max_response_size: <span class="number">0</span>,
@@ -1145,28 +1173,51 @@
     }
 }
 
-<span class="kw">type </span>StorageChanges = sp_api::StorageChanges&lt;backend::StateBackendFor&lt;Backend, Block&gt;, Block&gt;;
+<span class="kw">type </span>StorageChanges = sp_api::StorageChanges&lt;Block&gt;;
 
 <span class="kw">type </span>TxPreValidator = ConsensusChainTxPreValidator&lt;Block, Client, FraudProofVerifier&gt;;
 
-<span class="kw">struct </span>MockExtensionsFactory(Arc&lt;<span class="kw">dyn </span>GenerateGenesisStateRoot&gt;);
+<span class="kw">struct </span>MockExtensionsFactory&lt;Client, DomainBlock, Executor&gt; {
+    consensus_client: Arc&lt;Client&gt;,
+    executor: Arc&lt;Executor&gt;,
+    _phantom: PhantomData&lt;DomainBlock&gt;,
+}
 
-<span class="kw">impl</span>&lt;Block&gt; ExtensionsFactory&lt;Block&gt; <span class="kw">for </span>MockExtensionsFactory
+<span class="kw">impl</span>&lt;Client, DomainBlock, Executor&gt; MockExtensionsFactory&lt;Client, DomainBlock, Executor&gt; {
+    <span class="kw">fn </span>new(consensus_client: Arc&lt;Client&gt;, executor: Arc&lt;Executor&gt;) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            consensus_client,
+            executor,
+            _phantom: Default::default(),
+        }
+    }
+}
+
+<span class="kw">impl</span>&lt;Block, Client, DomainBlock, Executor&gt; ExtensionsFactory&lt;Block&gt;
+    <span class="kw">for </span>MockExtensionsFactory&lt;Client, DomainBlock, Executor&gt;
 <span class="kw">where
     </span>Block: BlockT,
+    Block::Hash: From&lt;H256&gt;,
+    DomainBlock: BlockT,
+    Client: HeaderBackend&lt;Block&gt; + ProvideRuntimeApi&lt;Block&gt; + <span class="lifetime">&#39;static</span>,
+    Client::Api: DomainsApi&lt;Block, NumberFor&lt;DomainBlock&gt;, DomainBlock::Hash&gt;,
+    Executor: CodeExecutor,
 {
     <span class="kw">fn </span>extensions_for(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         _block_hash: Block::Hash,
         _block_number: NumberFor&lt;Block&gt;,
-        _capabilities: sp_core::offchain::Capabilities,
     ) -&gt; Extensions {
         <span class="kw">let </span><span class="kw-2">mut </span>exts = Extensions::new();
-        exts.register(GenesisReceiptExtension::new(<span class="self">self</span>.<span class="number">0</span>.clone()));
+        exts.register(FraudProofExtension::new(Arc::new(
+            FraudProofHostFunctionsImpl::&lt;<span class="kw">_</span>, <span class="kw">_</span>, DomainBlock, Executor&gt;::new(
+                <span class="self">self</span>.consensus_client.clone(),
+                <span class="self">self</span>.executor.clone(),
+            ),
+        )));
         exts
     }
 }
-
 <span class="doccomment">/// A mock Subspace consensus node instance used for testing.
 </span><span class="kw">pub struct </span>MockConsensusNode {
     <span class="doccomment">/// `TaskManager`&#39;s instance.
@@ -1193,8 +1244,10 @@
     </span>next_slot: u64,
     <span class="doccomment">/// The slot notification subscribers
     </span><span class="attr">#[allow(clippy::type_complexity)]
-    </span>new_slot_notification_subscribers:
-        Vec&lt;TracingUnboundedSender&lt;(Slot, Randomness, <span class="prelude-ty">Option</span>&lt;mpsc::Sender&lt;()&gt;&gt;)&gt;&gt;,
+    </span>new_slot_notification_subscribers: Vec&lt;TracingUnboundedSender&lt;(Slot, Randomness)&gt;&gt;,
+    <span class="doccomment">/// The acknowledgement sender subscribers
+    </span><span class="attr">#[allow(clippy::type_complexity)]
+    </span>acknowledgement_sender_subscribers: Vec&lt;TracingUnboundedSender&lt;mpsc::Sender&lt;()&gt;&gt;&gt;,
     <span class="doccomment">/// Block import pipeline
     </span><span class="attr">#[allow(clippy::type_complexity)]
     </span>block_import: MockBlockImport&lt;
@@ -1236,13 +1289,13 @@
             sc_service::new_full_parts::&lt;Block, RuntimeApi, <span class="kw">_</span>&gt;(<span class="kw-2">&amp;</span>config, <span class="prelude-val">None</span>, executor.clone())
                 .expect(<span class="string">&quot;Fail to new full parts&quot;</span>);
 
+        <span class="kw">let </span>client = Arc::new(client);
         client
             .execution_extensions()
-            .set_extensions_factory(MockExtensionsFactory(Arc::new(
-                DomainGenesisBlockBuilder::new(backend.clone(), executor.clone()),
-            )));
-
-        <span class="kw">let </span>client = Arc::new(client);
+            .set_extensions_factory(MockExtensionsFactory::&lt;<span class="kw">_</span>, DomainBlock, <span class="kw">_</span>&gt;::new(
+                client.clone(),
+                Arc::new(executor.clone()),
+            ));
 
         <span class="kw">let </span>select_chain = sc_consensus::LongestChain::new(backend.clone());
 
@@ -1334,6 +1387,7 @@
             network_starter: <span class="prelude-val">Some</span>(network_starter),
             next_slot: <span class="number">1</span>,
             new_slot_notification_subscribers: Vec::new(),
+            acknowledgement_sender_subscribers: Vec::new(),
             block_import,
             xdm_gossip_worker_builder: <span class="prelude-val">Some</span>(GossipWorkerBuilder::new()),
             mock_solution,
@@ -1395,33 +1449,11 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         slot: Slot,
     ) -&gt; <span class="prelude-ty">Option</span>&lt;OpaqueBundle&lt;NumberFor&lt;Block&gt;, Hash, DomainNumber, H256, Balance&gt;&gt; {
-        <span class="kw">let </span>(slot_acknowledgement_sender, <span class="kw-2">mut </span>slot_acknowledgement_receiver) = mpsc::channel(<span class="number">0</span>);
+        <span class="kw">let </span>value = (slot, Randomness::from(Hash::random().to_fixed_bytes()));
+        <span class="self">self</span>.new_slot_notification_subscribers
+            .retain(|subscriber| subscriber.unbounded_send(value).is_ok());
 
-        <span class="comment">// Must drop `slot_acknowledgement_sender` after the notification otherwise the receiver
-        // will block forever as there is still a sender not closed.
-        </span>{
-            <span class="kw">let </span>value = (
-                slot,
-                Randomness::from(Hash::random().to_fixed_bytes()),
-                <span class="prelude-val">Some</span>(slot_acknowledgement_sender),
-            );
-            <span class="self">self</span>.new_slot_notification_subscribers
-                .retain(|subscriber| subscriber.unbounded_send(value.clone()).is_ok());
-        }
-
-        <span class="comment">// Wait for all the acknowledgements to progress and proactively drop closed subscribers.
-        </span><span class="kw">loop </span>{
-            <span class="macro">select! </span>{
-                res = slot_acknowledgement_receiver.next() =&gt; <span class="kw">if </span>res.is_none() {
-                    <span class="kw">break</span>;
-                },
-                <span class="comment">// TODO: Workaround for https://github.com/smol-rs/async-channel/issues/23, remove once fix is released
-                </span><span class="kw">_ </span>= futures_timer::Delay::new(time::Duration::from_millis(<span class="number">500</span>)).fuse() =&gt; {
-                    <span class="self">self</span>.new_slot_notification_subscribers.retain(|subscriber| !subscriber.is_closed());
-                }
-            }
-        }
-
+        <span class="self">self</span>.confirm_acknowledgement().<span class="kw">await</span>;
         <span class="self">self</span>.get_bundle_from_tx_pool(slot.into())
     }
 
@@ -1440,12 +1472,52 @@
     }
 
     <span class="doccomment">/// Subscribe the new slot notification
-    </span><span class="kw">pub fn </span>new_slot_notification_stream(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-    ) -&gt; TracingUnboundedReceiver&lt;(Slot, Randomness, <span class="prelude-ty">Option</span>&lt;mpsc::Sender&lt;()&gt;&gt;)&gt; {
+    </span><span class="kw">pub fn </span>new_slot_notification_stream(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; TracingUnboundedReceiver&lt;(Slot, Randomness)&gt; {
         <span class="kw">let </span>(tx, rx) = tracing_unbounded(<span class="string">&quot;subspace_new_slot_notification_stream&quot;</span>, <span class="number">100</span>);
         <span class="self">self</span>.new_slot_notification_subscribers.push(tx);
         rx
+    }
+
+    <span class="doccomment">/// Subscribe the acknowledgement sender stream
+    </span><span class="kw">pub fn </span>new_acknowledgement_sender_stream(
+        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+    ) -&gt; TracingUnboundedReceiver&lt;mpsc::Sender&lt;()&gt;&gt; {
+        <span class="kw">let </span>(tx, rx) = tracing_unbounded(<span class="string">&quot;subspace_acknowledgement_sender_stream&quot;</span>, <span class="number">100</span>);
+        <span class="self">self</span>.acknowledgement_sender_subscribers.push(tx);
+        rx
+    }
+
+    <span class="doccomment">/// Wait for all the acknowledgements before return
+    ///
+    /// It is used to wait for the acknowledgement of the domain worker to ensure it have
+    /// finish all the previous tasks before return
+    </span><span class="kw">pub async fn </span>confirm_acknowledgement(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">let </span>(acknowledgement_sender, <span class="kw-2">mut </span>acknowledgement_receiver) = mpsc::channel(<span class="number">0</span>);
+
+        <span class="comment">// Must drop `acknowledgement_sender` after the notification otherwise the receiver
+        // will block forever as there is still a sender not closed.
+        </span>{
+            <span class="self">self</span>.acknowledgement_sender_subscribers
+                .retain(|subscriber| {
+                    subscriber
+                        .unbounded_send(acknowledgement_sender.clone())
+                        .is_ok()
+                });
+            drop(acknowledgement_sender);
+        }
+
+        <span class="comment">// Wait for all the acknowledgements to progress and proactively drop closed subscribers.
+        </span><span class="kw">loop </span>{
+            <span class="macro">select! </span>{
+                res = acknowledgement_receiver.next() =&gt; <span class="kw">if </span>res.is_none() {
+                    <span class="kw">break</span>;
+                },
+                <span class="comment">// TODO: Workaround for https://github.com/smol-rs/async-channel/issues/23, remove once fix is released
+                </span><span class="kw">_ </span>= futures_timer::Delay::new(time::Duration::from_millis(<span class="number">500</span>)).fuse() =&gt; {
+                    <span class="self">self</span>.acknowledgement_sender_subscribers.retain(|subscriber| !subscriber.is_closed());
+                }
+            }
+        }
     }
 
     <span class="doccomment">/// Subscribe the block importing notification
@@ -1567,8 +1639,7 @@
         <span class="kw">let </span>pre_digest: PreDigest&lt;FarmerPublicKey, AccountId&gt; = PreDigest::V0 {
             slot,
             solution: <span class="self">self</span>.mock_solution.clone(),
-            <span class="attr">#[cfg(feature = <span class="string">&quot;pot&quot;</span>)]
-            </span>pot_info: PreDigestPotInfo::V0 {
+            pot_info: PreDigestPotInfo::V0 {
                 proof_of_time: Default::default(),
                 future_proof_of_time: Default::default(),
             },
@@ -1586,6 +1657,7 @@
         extrinsics: Vec&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(Block, StorageChanges), Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
         <span class="kw">let </span>digest = <span class="self">self</span>.mock_subspace_digest(slot);
+
         <span class="kw">let </span>inherent_data = <span class="self">Self</span>::mock_inherent_data(slot).<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="kw">let </span><span class="kw-2">mut </span>block_builder = <span class="self">self</span>.client.new_block_at(parent_hash, digest, <span class="bool-val">false</span>)<span class="question-mark">?</span>;
@@ -1661,7 +1733,7 @@
 
         log_new_block(<span class="kw-2">&amp;</span>block, block_timer.elapsed().as_millis());
 
-        <span class="kw">match </span><span class="self">self</span>.import_block(block, <span class="prelude-val">Some</span>(storage_changes)).<span class="kw">await </span>{
+        <span class="kw">let </span>res = <span class="kw">match </span><span class="self">self</span>.import_block(block, <span class="prelude-val">Some</span>(storage_changes)).<span class="kw">await </span>{
             <span class="prelude-val">Ok</span>(hash) =&gt; {
                 <span class="comment">// Remove the tx of the imported block from the tx pool incase re-include them
                 // in the future block by accident.
@@ -1669,7 +1741,9 @@
                 <span class="prelude-val">Ok</span>(hash)
             }
             err =&gt; err,
-        }
+        };
+        <span class="self">self</span>.confirm_acknowledgement().<span class="kw">await</span>;
+        res
     }
 
     <span class="doccomment">/// Produce a new block on top of the current best block, with the extrinsics collected from
@@ -1723,14 +1797,13 @@
 <span class="kw">fn </span>mock_import_queue&lt;Block: BlockT, I&gt;(
     block_import: I,
     spawner: <span class="kw-2">&amp;</span><span class="kw">impl </span>SpawnEssentialNamed,
-) -&gt; BasicQueue&lt;Block, I::Transaction&gt;
+) -&gt; BasicQueue&lt;Block&gt;
 <span class="kw">where
     </span>I: BlockImport&lt;Block, Error = ConsensusError&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
-    I::Transaction: Send,
 {
     BasicQueue::new(
         MockVerifier::default(),
-        Box::new(block_import),
+        SharedBlockImport::new(block_import),
         <span class="prelude-val">None</span>,
         spawner,
         <span class="prelude-val">None</span>,
@@ -1755,9 +1828,9 @@
     </span>Block: BlockT,
 {
     <span class="kw">async fn </span>verify(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        block_params: BlockImportParams&lt;Block, ()&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;BlockImportParams&lt;Block, ()&gt;, String&gt; {
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        block_params: BlockImportParams&lt;Block&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;BlockImportParams&lt;Block&gt;, String&gt; {
         <span class="prelude-val">Ok</span>(block_params)
     }
 }
@@ -1809,19 +1882,16 @@
 </span><span class="kw">impl</span>&lt;Inner, Client, Block&gt; BlockImport&lt;Block&gt; <span class="kw">for </span>MockBlockImport&lt;Inner, Client, Block&gt;
 <span class="kw">where
     </span>Block: BlockT,
-    Inner: BlockImport&lt;Block, Transaction = TransactionFor&lt;Client, Block&gt;, Error = ConsensusError&gt;
-        + Send
-        + Sync,
+    Inner: BlockImport&lt;Block, Error = ConsensusError&gt; + Send + Sync,
     Inner::Error: Into&lt;ConsensusError&gt;,
     Client: ProvideRuntimeApi&lt;Block&gt; + HeaderBackend&lt;Block&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
     Client::Api: ApiExt&lt;Block&gt;,
 {
     <span class="kw">type </span>Error = ConsensusError;
-    <span class="kw">type </span>Transaction = TransactionFor&lt;Client, Block&gt;;
 
     <span class="kw">async fn </span>import_block(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        <span class="kw-2">mut </span>block: BlockImportParams&lt;Block, <span class="self">Self</span>::Transaction&gt;,
+        <span class="kw-2">mut </span>block: BlockImportParams&lt;Block&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ImportResult, <span class="self">Self</span>::Error&gt; {
         <span class="kw">let </span>block_number = <span class="kw-2">*</span>block.header.number();
         block.fork_choice = <span class="prelude-val">Some</span>(ForkChoiceStrategy::LongestChain);
@@ -1867,7 +1937,7 @@
     }
 
     <span class="kw">async fn </span>check_block(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         block: BlockCheckParams&lt;Block&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;ImportResult, <span class="self">Self</span>::Error&gt; {
         <span class="self">self</span>.inner.check_block(block).<span class="kw">await</span>.map_err(Into::into)
@@ -1883,7 +1953,7 @@
             <span class="kw">async </span>{
                 <span class="kw">let </span>domain_fut = {
                     <span class="kw">let </span><span class="kw-2">mut </span>futs: Vec&lt;std::pin::Pin&lt;Box&lt;<span class="kw">dyn </span>futures::Future&lt;Output = ()&gt;&gt;&gt;&gt; = Vec::new();
-                    futs.push(Box::pin(<span class="macro-nonterminal">$operator_node</span>.wait_for_blocks(<span class="number">1</span>)));
+                    futs.push(Box::pin(<span class="macro-nonterminal">$operator_node</span>.wait_for_blocks(<span class="macro-nonterminal">$count</span>)));
                     $( futs.push( Box::pin( <span class="macro-nonterminal">$domain_node</span>.wait_for_blocks(<span class="macro-nonterminal">$count</span>) ) ); )*
                     futures::future::join_all(futs)
                 };
