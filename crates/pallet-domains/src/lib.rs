@@ -1264,7 +1264,7 @@ mod pallet {
             match call {
                 Call::submit_bundle { opaque_bundle } => {
                     if let Err(e) = Self::validate_bundle(opaque_bundle) {
-                        log::debug!(
+                        log::info!(
                             target: "runtime::domains",
                             "Bad bundle {:?}, error: {e:?}", opaque_bundle.domain_id(),
                         );
@@ -1286,7 +1286,7 @@ mod pallet {
                 }
                 Call::submit_fraud_proof { fraud_proof } => {
                     if let Err(e) = Self::validate_fraud_proof(fraud_proof) {
-                        log::debug!(
+                        log::info!(
                             target: "runtime::domains",
                             "Bad fraud proof {:?}, error: {e:?}", fraud_proof.domain_id(),
                         );
