@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/pallet-domains/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pallet_domains" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (d627cf07c 2023-10-10)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0689c575f077d64f.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../pallet_domains/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/pallet-domains/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-deb46770fd761b69.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pallet_domains" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (42b1224e9 2023-10-15)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1805,6 +1805,69 @@
 <a href="#1805" id="1805">1805</a>
 <a href="#1806" id="1806">1806</a>
 <a href="#1807" id="1807">1807</a>
+<a href="#1808" id="1808">1808</a>
+<a href="#1809" id="1809">1809</a>
+<a href="#1810" id="1810">1810</a>
+<a href="#1811" id="1811">1811</a>
+<a href="#1812" id="1812">1812</a>
+<a href="#1813" id="1813">1813</a>
+<a href="#1814" id="1814">1814</a>
+<a href="#1815" id="1815">1815</a>
+<a href="#1816" id="1816">1816</a>
+<a href="#1817" id="1817">1817</a>
+<a href="#1818" id="1818">1818</a>
+<a href="#1819" id="1819">1819</a>
+<a href="#1820" id="1820">1820</a>
+<a href="#1821" id="1821">1821</a>
+<a href="#1822" id="1822">1822</a>
+<a href="#1823" id="1823">1823</a>
+<a href="#1824" id="1824">1824</a>
+<a href="#1825" id="1825">1825</a>
+<a href="#1826" id="1826">1826</a>
+<a href="#1827" id="1827">1827</a>
+<a href="#1828" id="1828">1828</a>
+<a href="#1829" id="1829">1829</a>
+<a href="#1830" id="1830">1830</a>
+<a href="#1831" id="1831">1831</a>
+<a href="#1832" id="1832">1832</a>
+<a href="#1833" id="1833">1833</a>
+<a href="#1834" id="1834">1834</a>
+<a href="#1835" id="1835">1835</a>
+<a href="#1836" id="1836">1836</a>
+<a href="#1837" id="1837">1837</a>
+<a href="#1838" id="1838">1838</a>
+<a href="#1839" id="1839">1839</a>
+<a href="#1840" id="1840">1840</a>
+<a href="#1841" id="1841">1841</a>
+<a href="#1842" id="1842">1842</a>
+<a href="#1843" id="1843">1843</a>
+<a href="#1844" id="1844">1844</a>
+<a href="#1845" id="1845">1845</a>
+<a href="#1846" id="1846">1846</a>
+<a href="#1847" id="1847">1847</a>
+<a href="#1848" id="1848">1848</a>
+<a href="#1849" id="1849">1849</a>
+<a href="#1850" id="1850">1850</a>
+<a href="#1851" id="1851">1851</a>
+<a href="#1852" id="1852">1852</a>
+<a href="#1853" id="1853">1853</a>
+<a href="#1854" id="1854">1854</a>
+<a href="#1855" id="1855">1855</a>
+<a href="#1856" id="1856">1856</a>
+<a href="#1857" id="1857">1857</a>
+<a href="#1858" id="1858">1858</a>
+<a href="#1859" id="1859">1859</a>
+<a href="#1860" id="1860">1860</a>
+<a href="#1861" id="1861">1861</a>
+<a href="#1862" id="1862">1862</a>
+<a href="#1863" id="1863">1863</a>
+<a href="#1864" id="1864">1864</a>
+<a href="#1865" id="1865">1865</a>
+<a href="#1866" id="1866">1866</a>
+<a href="#1867" id="1867">1867</a>
+<a href="#1868" id="1868">1868</a>
+<a href="#1869" id="1869">1869</a>
+<a href="#1870" id="1870">1870</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
@@ -1824,6 +1887,7 @@
 
 </span><span class="attr">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 #![feature(array_windows)]
+#![feature(associated_type_bounds)]
 
 #[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
 </span><span class="kw">mod </span>benchmarking;
@@ -1852,19 +1916,22 @@
 <span class="kw">use </span>scale_info::TypeInfo;
 <span class="kw">use </span>sp_core::H256;
 <span class="kw">use </span>sp_domains::bundle_producer_election::{is_below_threshold, BundleProducerElectionParams};
-<span class="kw">use </span>sp_domains::fraud_proof::{FraudProof, InvalidTotalRewardsProof};
+<span class="kw">use </span>sp_domains::fraud_proof::{FraudProof, InvalidDomainBlockHashProof, InvalidTotalRewardsProof};
 <span class="kw">use </span>sp_domains::verification::verify_invalid_total_rewards_fraud_proof;
 <span class="kw">use </span>sp_domains::{
     DomainBlockLimit, DomainId, DomainInstanceData, ExecutionReceipt, OpaqueBundle, OperatorId,
-    OperatorPublicKey, ProofOfElection, RuntimeId, DOMAIN_EXTRINSICS_SHUFFLING_SEED_SUBJECT,
-    EMPTY_EXTRINSIC_ROOT,
+    OperatorPublicKey, ProofOfElection, ReceiptHash, RuntimeId,
+    DOMAIN_EXTRINSICS_SHUFFLING_SEED_SUBJECT, EMPTY_EXTRINSIC_ROOT,
 };
 <span class="kw">use </span>sp_domains_fraud_proof::fraud_proof_runtime_interface::get_fraud_proof_verification_info;
-<span class="kw">use </span>sp_domains_fraud_proof::verification::verify_invalid_domain_extrinsics_root_fraud_proof;
+<span class="kw">use </span>sp_domains_fraud_proof::verification::{
+    verify_invalid_domain_block_hash_fraud_proof,
+    verify_invalid_domain_extrinsics_root_fraud_proof, verify_invalid_state_transition_fraud_proof,
+};
 <span class="kw">use </span>sp_domains_fraud_proof::{
     FraudProofVerificationInfoRequest, FraudProofVerificationInfoResponse,
 };
-<span class="kw">use </span>sp_runtime::traits::{BlakeTwo256, CheckedSub, Hash, One, Zero};
+<span class="kw">use </span>sp_runtime::traits::{BlakeTwo256, CheckedSub, Hash, Header, One, Zero};
 <span class="kw">use </span>sp_runtime::{RuntimeAppPublic, SaturatedConversion, Saturating};
 <span class="kw">use </span>sp_std::boxed::Box;
 <span class="kw">use </span>sp_std::collections::btree_map::BTreeMap;
@@ -1889,7 +1956,7 @@
 <span class="kw">pub type </span>ExecutionReceiptOf&lt;T&gt; = ExecutionReceipt&lt;
     BlockNumberFor&lt;T&gt;,
     &lt;T <span class="kw">as </span>frame_system::Config&gt;::Hash,
-    &lt;T <span class="kw">as </span>Config&gt;::DomainNumber,
+    DomainBlockNumberFor&lt;T&gt;,
     &lt;T <span class="kw">as </span>Config&gt;::DomainHash,
     BalanceOf&lt;T&gt;,
 &gt;;
@@ -1897,7 +1964,7 @@
 <span class="kw">pub type </span>OpaqueBundleOf&lt;T&gt; = OpaqueBundle&lt;
     BlockNumberFor&lt;T&gt;,
     &lt;T <span class="kw">as </span>frame_system::Config&gt;::Hash,
-    &lt;T <span class="kw">as </span>Config&gt;::DomainNumber,
+    DomainBlockNumberFor&lt;T&gt;,
     &lt;T <span class="kw">as </span>Config&gt;::DomainHash,
     BalanceOf&lt;T&gt;,
 &gt;;
@@ -1909,12 +1976,15 @@
     total_domain_stake: Balance,
 }
 
+<span class="kw">pub type </span>DomainBlockNumberFor&lt;T&gt; = &lt;&lt;T <span class="kw">as </span>Config&gt;::DomainHeader <span class="kw">as </span>Header&gt;::Number;
+<span class="kw">pub type </span>DomainHashingFor&lt;T&gt; = &lt;&lt;T <span class="kw">as </span>Config&gt;::DomainHeader <span class="kw">as </span>Header&gt;::Hashing;
+
 <span class="attr">#[frame_support::pallet]
 </span><span class="kw">mod </span>pallet {
     <span class="attr">#![allow(clippy::large_enum_variant)]
 
     </span><span class="kw">use </span><span class="kw">crate</span>::block_tree::{
-        execution_receipt_type, process_execution_receipt, DomainBlock, Error <span class="kw">as </span>BlockTreeError,
+        execution_receipt_type, process_execution_receipt, BlockTreeNode, Error <span class="kw">as </span>BlockTreeError,
         ReceiptType,
     };
     <span class="kw">use </span><span class="kw">crate</span>::domain_registry::{
@@ -1941,7 +2011,8 @@
     };
     <span class="kw">use </span><span class="kw">crate</span>::weights::WeightInfo;
     <span class="kw">use crate</span>::{
-        BalanceOf, ElectionVerificationParams, HoldIdentifier, NominatorId, OpaqueBundleOf,
+        BalanceOf, DomainBlockNumberFor, ElectionVerificationParams, HoldIdentifier, NominatorId,
+        OpaqueBundleOf,
     };
     <span class="kw">use </span>alloc::string::String;
     <span class="kw">use </span>codec::FullCodec;
@@ -1959,7 +2030,7 @@
         ReceiptHash, RuntimeId, RuntimeType,
     };
     <span class="kw">use </span>sp_runtime::traits::{
-        AtLeast32BitUnsigned, BlockNumberProvider, Bounded, CheckEqual, CheckedAdd, Hash,
+        AtLeast32BitUnsigned, BlockNumberProvider, CheckEqual, CheckedAdd, Header <span class="kw">as </span>HeaderT,
         MaybeDisplay, One, SimpleBitOps, Zero,
     };
     <span class="kw">use </span>sp_runtime::SaturatedConversion;
@@ -1972,25 +2043,13 @@
     <span class="kw">use </span>subspace_core_primitives::U256;
 
     <span class="attr">#[pallet::config]
-    </span><span class="kw">pub trait </span>Config: frame_system::Config {
+    </span><span class="kw">pub trait </span>Config: frame_system::Config&lt;Hash: Into&lt;H256&gt;&gt; {
         <span class="kw">type </span>RuntimeEvent: From&lt;Event&lt;<span class="self">Self</span>&gt;&gt; + IsType&lt;&lt;<span class="self">Self </span><span class="kw">as </span>frame_system::Config&gt;::RuntimeEvent&gt;;
 
-        <span class="doccomment">/// Domain block number type.
-        </span><span class="kw">type </span>DomainNumber: Parameter
-            + Member
-            + MaybeSerializeDeserialize
-            + Debug
-            + MaybeDisplay
-            + AtLeast32BitUnsigned
-            + Default
-            + Bounded
-            + Copy
-            + sp_std::hash::Hash
-            + sp_std::str::FromStr
-            + MaxEncodedLen
-            + TypeInfo;
-
-        <span class="doccomment">/// Domain block hash type.
+        <span class="comment">// TODO: `DomainHash` can be derived from `DomainHeader`, it is still needed just for
+        // converting `DomainHash` to/from `H256` without encode/decode, remove it once we found
+        // other ways to do this.
+        </span><span class="doccomment">/// Domain block hash type.
         </span><span class="kw">type </span>DomainHash: Parameter
             + Member
             + MaybeSerializeDeserialize
@@ -2008,8 +2067,8 @@
             + Into&lt;H256&gt;
             + From&lt;H256&gt;;
 
-        <span class="doccomment">/// The domain hashing algorithm.
-        </span><span class="kw">type </span>DomainHashing: Hash&lt;Output = <span class="self">Self</span>::DomainHash&gt; + TypeInfo;
+        <span class="doccomment">/// The domain header type.
+        </span><span class="kw">type </span>DomainHeader: HeaderT&lt;Hash = <span class="self">Self</span>::DomainHash&gt;;
 
         <span class="doccomment">/// Same with `pallet_subspace::Config::ConfirmationDepthK`.
         </span><span class="attr">#[pallet::constant]
@@ -2042,7 +2101,7 @@
 
         <span class="doccomment">/// The block tree pruning depth.
         </span><span class="attr">#[pallet::constant]
-        </span><span class="kw">type </span>BlockTreePruningDepth: Get&lt;<span class="self">Self</span>::DomainNumber&gt;;
+        </span><span class="kw">type </span>BlockTreePruningDepth: Get&lt;DomainBlockNumberFor&lt;<span class="self">Self</span>&gt;&gt;;
 
         <span class="doccomment">/// The maximum block size limit for all domain.
         </span><span class="attr">#[pallet::constant]
@@ -2081,11 +2140,11 @@
 
         <span class="doccomment">/// Minimum number of blocks after which any finalized withdrawals are released to nominators.
         </span><span class="attr">#[pallet::constant]
-        </span><span class="kw">type </span>StakeWithdrawalLockingPeriod: Get&lt;<span class="self">Self</span>::DomainNumber&gt;;
+        </span><span class="kw">type </span>StakeWithdrawalLockingPeriod: Get&lt;DomainBlockNumberFor&lt;<span class="self">Self</span>&gt;&gt;;
 
         <span class="doccomment">/// Domain epoch transition interval
         </span><span class="attr">#[pallet::constant]
-        </span><span class="kw">type </span>StakeEpochDuration: Get&lt;<span class="self">Self</span>::DomainNumber&gt;;
+        </span><span class="kw">type </span>StakeEpochDuration: Get&lt;DomainBlockNumberFor&lt;<span class="self">Self</span>&gt;&gt;;
 
         <span class="doccomment">/// Treasury account.
         </span><span class="attr">#[pallet::constant]
@@ -2094,6 +2153,10 @@
         <span class="doccomment">/// The maximum number of pending staking operation that can perform upon epoch transition.
         </span><span class="attr">#[pallet::constant]
         </span><span class="kw">type </span>MaxPendingStakingOperation: Get&lt;u32&gt;;
+
+        <span class="doccomment">/// The maximum number of nominators for given operator.
+        </span><span class="attr">#[pallet::constant]
+        </span><span class="kw">type </span>MaxNominators: Get&lt;u32&gt;;
 
         <span class="doccomment">/// Randomness source.
         </span><span class="kw">type </span>Randomness: RandomnessT&lt;<span class="self">Self</span>::Hash, BlockNumberFor&lt;<span class="self">Self</span>&gt;&gt;;
@@ -2160,6 +2223,16 @@
         OptionQuery,
     &gt;;
 
+    <span class="doccomment">/// Tracks the nominator count under given operator.
+    /// This storage is necessary since CountedStorageNMap does not support prefix key count, so
+    /// cannot use that storage type for `Nominators` storage.
+    /// Note: The count is incremented for new nominators and decremented when the nominator withdraws
+    /// all the stake.
+    /// Since Operator themselves are first nominator, they are not counted.
+    </span><span class="attr">#[pallet::storage]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>NominatorCount&lt;T: Config&gt; =
+        StorageMap&lt;<span class="kw">_</span>, Identity, OperatorId, u32, ValueQuery&gt;;
+
     <span class="doccomment">/// Deposits initiated a nominator under this operator.
     /// Will be stored temporarily until the current epoch is complete.
     /// Once, epoch is complete, these deposits are staked beginning next epoch.
@@ -2209,7 +2282,7 @@
         Identity,
         OperatorId,
         Identity,
-        T::DomainNumber,
+        DomainBlockNumberFor&lt;T&gt;,
         Vec&lt;PendingNominatorUnlock&lt;NominatorId&lt;T&gt;, BalanceOf&lt;T&gt;&gt;&gt;,
         OptionQuery,
     &gt;;
@@ -2217,8 +2290,13 @@
     <span class="doccomment">/// A list of operators that are either unregistering or one more of the nominators
     /// are withdrawing some staked funds.
     </span><span class="attr">#[pallet::storage]
-    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>PendingUnlocks&lt;T: Config&gt; =
-        StorageMap&lt;<span class="kw">_</span>, Identity, (DomainId, T::DomainNumber), BTreeSet&lt;OperatorId&gt;, OptionQuery&gt;;
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>PendingUnlocks&lt;T: Config&gt; = StorageMap&lt;
+        <span class="kw">_</span>,
+        Identity,
+        (DomainId, DomainBlockNumberFor&lt;T&gt;),
+        BTreeSet&lt;OperatorId&gt;,
+        OptionQuery,
+    &gt;;
 
     <span class="doccomment">/// A list operators who were slashed during the current epoch associated with the domain.
     /// When the epoch for a given domain is complete, operator total stake is moved to treasury and
@@ -2252,26 +2330,32 @@
         OptionQuery,
     &gt;;
 
-    <span class="doccomment">/// The domain block tree, map (`domain_id`, `domain_block_number`) to the hash of a domain blocks,
-    /// which can be used get the domain block in `DomainBlocks`
+    <span class="doccomment">/// The domain block tree, map (`domain_id`, `domain_block_number`) to the hash of ER,
+    /// which can be used get the block tree node in `BlockTreeNodes`
     </span><span class="attr">#[pallet::storage]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>BlockTree&lt;T: Config&gt; = StorageDoubleMap&lt;
         <span class="kw">_</span>,
         Identity,
         DomainId,
         Identity,
-        T::DomainNumber,
+        DomainBlockNumberFor&lt;T&gt;,
         BTreeSet&lt;ReceiptHash&gt;,
         ValueQuery,
     &gt;;
 
-    <span class="doccomment">/// Mapping of domain block hash to domain block
+    <span class="doccomment">/// Mapping of block tree node hash to the node, each node represent a domain block
     </span><span class="attr">#[pallet::storage]
-    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>DomainBlocks&lt;T: Config&gt; = StorageMap&lt;
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>BlockTreeNodes&lt;T: Config&gt; = StorageMap&lt;
         <span class="kw">_</span>,
         Identity,
         ReceiptHash,
-        DomainBlock&lt;BlockNumberFor&lt;T&gt;, T::Hash, T::DomainNumber, T::DomainHash, BalanceOf&lt;T&gt;&gt;,
+        BlockTreeNode&lt;
+            BlockNumberFor&lt;T&gt;,
+            T::Hash,
+            DomainBlockNumberFor&lt;T&gt;,
+            T::DomainHash,
+            BalanceOf&lt;T&gt;,
+        &gt;,
         OptionQuery,
     &gt;;
 
@@ -2285,7 +2369,7 @@
     <span class="doccomment">/// The head receipt number of each domain
     </span><span class="attr">#[pallet::storage]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>HeadReceiptNumber&lt;T: Config&gt; =
-        StorageMap&lt;<span class="kw">_</span>, Identity, DomainId, T::DomainNumber, ValueQuery&gt;;
+        StorageMap&lt;<span class="kw">_</span>, Identity, DomainId, DomainBlockNumberFor&lt;T&gt;, ValueQuery&gt;;
 
     <span class="doccomment">/// State root mapped again each domain (block, hash)
     /// This acts as an index for other protocols like XDM to fetch state roots faster.
@@ -2293,7 +2377,7 @@
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>StateRoots&lt;T: Config&gt; = StorageMap&lt;
         <span class="kw">_</span>,
         Identity,
-        (DomainId, T::DomainNumber, T::DomainHash),
+        (DomainId, DomainBlockNumberFor&lt;T&gt;, T::DomainHash),
         T::DomainHash,
         OptionQuery,
     &gt;;
@@ -2320,7 +2404,7 @@
         <span class="kw">_</span>,
         (
             NMapKey&lt;Identity, DomainId&gt;,
-            NMapKey&lt;Identity, T::DomainNumber&gt;,
+            NMapKey&lt;Identity, DomainBlockNumberFor&lt;T&gt;&gt;,
             NMapKey&lt;Identity, BlockNumberFor&lt;T&gt;&gt;,
         ),
         Vec&lt;BundleDigest&gt;,
@@ -2340,7 +2424,7 @@
     /// domain block, also used as a mapping of consensus block number to domain block number.
     </span><span class="attr">#[pallet::storage]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>HeadDomainNumber&lt;T: Config&gt; =
-        StorageMap&lt;<span class="kw">_</span>, Identity, DomainId, T::DomainNumber, ValueQuery&gt;;
+        StorageMap&lt;<span class="kw">_</span>, Identity, DomainId, DomainBlockNumberFor&lt;T&gt;, ValueQuery&gt;;
 
     <span class="doccomment">/// A temporary storage to hold any previous epoch details for a given domain
     /// if the epoch transitioned in this block so that all the submitted bundles
@@ -2394,14 +2478,20 @@
         </span>DescendantsOfFraudulentERNotPruned,
         <span class="doccomment">/// Invalid fraud proof since total rewards are not mismatched.
         </span>InvalidTotalRewardsFraudProof(sp_domains::verification::VerificationError),
+        <span class="doccomment">/// Invalid domain block hash fraud proof.
+        </span>InvalidDomainBlockHashFraudProof(sp_domains::verification::VerificationError),
         <span class="doccomment">/// Invalid domain extrinsic fraud proof
         </span>InvalidExtrinsicRootFraudProof(sp_domains::verification::VerificationError),
+        <span class="doccomment">/// Invalid state transition fraud proof
+        </span>InvalidStateTransitionFraudProof,
         <span class="doccomment">/// Failed to get block randomness.
         </span>FailedToGetBlockRandomness,
         <span class="doccomment">/// Failed to get domain timestamp extrinsic.
         </span>FailedToGetDomainTimestampExtrinsic,
         <span class="doccomment">/// Received invalid Verification info from host function.
         </span>ReceivedInvalidVerificationInfo,
+        <span class="doccomment">/// Parent receipt not found.
+        </span>ParentReceiptNotFound,
     }
 
     <span class="kw">impl</span>&lt;T&gt; From&lt;FraudProofError&gt; <span class="kw">for </span>Error&lt;T&gt; {
@@ -2512,7 +2602,7 @@
         },
         FraudProofProcessed {
             domain_id: DomainId,
-            new_head_receipt_number: <span class="prelude-ty">Option</span>&lt;T::DomainNumber&gt;,
+            new_head_receipt_number: <span class="prelude-ty">Option</span>&lt;DomainBlockNumberFor&lt;T&gt;&gt;,
         },
         DomainOperatorAllowListUpdated {
             domain_id: DomainId,
@@ -2678,10 +2768,10 @@
             <span class="comment">// Prune the bad ER and all of its descendants from the block tree. ER are pruning
             // with BFS order from lower height to higher height.
             </span><span class="kw">while let </span><span class="prelude-val">Some</span>(receipt_hash) = receipt_to_remove.pop() {
-                <span class="kw">let </span>DomainBlock {
+                <span class="kw">let </span>BlockTreeNode {
                     execution_receipt,
                     operator_ids,
-                } = DomainBlocks::&lt;T&gt;::take(receipt_hash)
+                } = BlockTreeNodes::&lt;T&gt;::take(receipt_hash)
                     .ok_or::&lt;Error&lt;T&gt;&gt;(FraudProofError::BadReceiptNotFound.into())<span class="question-mark">?</span>;
 
                 BlockTree::&lt;T&gt;::mutate_exists(
@@ -3120,13 +3210,13 @@
             .and_then(|<span class="kw-2">mut </span>runtime_object| runtime_object.raw_genesis.take_runtime_code())
     }
 
-    <span class="kw">pub fn </span>domain_best_number(domain_id: DomainId) -&gt; <span class="prelude-ty">Option</span>&lt;T::DomainNumber&gt; {
+    <span class="kw">pub fn </span>domain_best_number(domain_id: DomainId) -&gt; <span class="prelude-ty">Option</span>&lt;DomainBlockNumberFor&lt;T&gt;&gt; {
         <span class="prelude-val">Some</span>(HeadDomainNumber::&lt;T&gt;::get(domain_id))
     }
 
     <span class="kw">pub fn </span>domain_state_root(
         domain_id: DomainId,
-        domain_block_number: T::DomainNumber,
+        domain_block_number: DomainBlockNumberFor&lt;T&gt;,
         domain_block_hash: T::DomainHash,
     ) -&gt; <span class="prelude-ty">Option</span>&lt;T::DomainHash&gt; {
         StateRoots::&lt;T&gt;::get((domain_id, domain_block_number, domain_block_hash))
@@ -3154,9 +3244,9 @@
     }
 
     <span class="kw">pub fn </span>genesis_state_root(domain_id: DomainId) -&gt; <span class="prelude-ty">Option</span>&lt;H256&gt; {
-        BlockTree::&lt;T&gt;::get(domain_id, T::DomainNumber::zero())
+        BlockTree::&lt;T&gt;::get(domain_id, DomainBlockNumberFor::&lt;T&gt;::zero())
             .first()
-            .and_then(DomainBlocks::&lt;T&gt;::get)
+            .and_then(BlockTreeNodes::&lt;T&gt;::get)
             .map(|block| block.execution_receipt.final_state_root.into())
     }
 
@@ -3309,7 +3399,7 @@
     <span class="kw">fn </span>validate_fraud_proof(
         fraud_proof: <span class="kw-2">&amp;</span>FraudProof&lt;BlockNumberFor&lt;T&gt;, T::Hash&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), FraudProofError&gt; {
-        <span class="kw">let </span>bad_receipt = DomainBlocks::&lt;T&gt;::get(fraud_proof.bad_receipt_hash())
+        <span class="kw">let </span>bad_receipt = BlockTreeNodes::&lt;T&gt;::get(fraud_proof.bad_receipt_hash())
             .ok_or(FraudProofError::BadReceiptNotFound)<span class="question-mark">?
             </span>.execution_receipt;
 
@@ -3322,12 +3412,31 @@
             FraudProof::InvalidTotalRewards(InvalidTotalRewardsProof { storage_proof, .. }) =&gt; {
                 verify_invalid_total_rewards_fraud_proof::&lt;
                     T::Block,
-                    T::DomainNumber,
+                    DomainBlockNumberFor&lt;T&gt;,
                     T::DomainHash,
                     BalanceOf&lt;T&gt;,
                     T::Hashing,
                 &gt;(bad_receipt, storage_proof)
                 .map_err(FraudProofError::InvalidTotalRewardsFraudProof)<span class="question-mark">?</span>;
+            }
+            FraudProof::InvalidDomainBlockHash(InvalidDomainBlockHashProof {
+                digest_storage_proof,
+                ..
+            }) =&gt; {
+                <span class="kw">let </span>parent_receipt =
+                    BlockTreeNodes::&lt;T&gt;::get(bad_receipt.parent_domain_block_receipt_hash)
+                        .ok_or(FraudProofError::ParentReceiptNotFound)<span class="question-mark">?
+                        </span>.execution_receipt;
+                verify_invalid_domain_block_hash_fraud_proof::&lt;
+                    T::Block,
+                    BalanceOf&lt;T&gt;,
+                    T::DomainHeader,
+                &gt;(
+                    bad_receipt,
+                    digest_storage_proof.clone(),
+                    parent_receipt.domain_block_hash,
+                )
+                .map_err(FraudProofError::InvalidDomainBlockHashFraudProof)<span class="question-mark">?</span>;
             }
             FraudProof::InvalidExtrinsicsRoot(proof) =&gt; {
                 <span class="kw">let </span>consensus_block_hash = bad_receipt.consensus_block_hash;
@@ -3357,11 +3466,11 @@
 
                 verify_invalid_domain_extrinsics_root_fraud_proof::&lt;
                     T::Block,
-                    T::DomainNumber,
+                    DomainBlockNumberFor&lt;T&gt;,
                     T::DomainHash,
                     BalanceOf&lt;T&gt;,
                     T::Hashing,
-                    T::DomainHashing,
+                    DomainHashingFor&lt;T&gt;,
                 &gt;(
                     bad_receipt,
                     proof,
@@ -3369,6 +3478,19 @@
                     domain_timestamp_extrinsic,
                 )
                 .map_err(FraudProofError::InvalidExtrinsicRootFraudProof)<span class="question-mark">?</span>;
+            }
+            FraudProof::InvalidStateTransition(proof) =&gt; {
+                <span class="kw">let </span>bad_receipt_parent =
+                    BlockTreeNodes::&lt;T&gt;::get(bad_receipt.parent_domain_block_receipt_hash)
+                        .ok_or(FraudProofError::ParentReceiptNotFound)<span class="question-mark">?
+                        </span>.execution_receipt;
+
+                verify_invalid_state_transition_fraud_proof::&lt;
+                    T::Block,
+                    T::DomainHeader,
+                    BalanceOf&lt;T&gt;,
+                &gt;(bad_receipt, bad_receipt_parent, proof)
+                .map_err(|<span class="kw">_</span>| FraudProofError::InvalidStateTransitionFraudProof)<span class="question-mark">?</span>;
             }
             <span class="kw">_ </span>=&gt; {}
         }
@@ -3476,17 +3598,17 @@
     }
 
     <span class="doccomment">/// Returns the best execution chain number.
-    </span><span class="kw">pub fn </span>head_receipt_number(domain_id: DomainId) -&gt; T::DomainNumber {
+    </span><span class="kw">pub fn </span>head_receipt_number(domain_id: DomainId) -&gt; DomainBlockNumberFor&lt;T&gt; {
         HeadReceiptNumber::&lt;T&gt;::get(domain_id)
     }
 
     <span class="doccomment">/// Returns the block number of oldest execution receipt.
-    </span><span class="kw">pub fn </span>oldest_receipt_number(domain_id: DomainId) -&gt; T::DomainNumber {
+    </span><span class="kw">pub fn </span>oldest_receipt_number(domain_id: DomainId) -&gt; DomainBlockNumberFor&lt;T&gt; {
         <span class="self">Self</span>::head_receipt_number(domain_id).saturating_sub(<span class="self">Self</span>::block_tree_pruning_depth())
     }
 
     <span class="doccomment">/// Returns the block tree pruning depth.
-    </span><span class="kw">pub fn </span>block_tree_pruning_depth() -&gt; T::DomainNumber {
+    </span><span class="kw">pub fn </span>block_tree_pruning_depth() -&gt; DomainBlockNumberFor&lt;T&gt; {
         T::BlockTreePruningDepth::get()
     }
 
@@ -3517,7 +3639,7 @@
     <span class="doccomment">/// Returns if there are any ERs in the challenge period that have non empty extrinsics.
     /// Note that Genesis ER is also considered special and hence non empty
     </span><span class="kw">pub fn </span>non_empty_er_exists(domain_id: DomainId) -&gt; bool {
-        <span class="kw">if </span>BlockTree::&lt;T&gt;::contains_key(domain_id, T::DomainNumber::zero()) {
+        <span class="kw">if </span>BlockTree::&lt;T&gt;::contains_key(domain_id, DomainBlockNumberFor::&lt;T&gt;::zero()) {
             <span class="kw">return </span><span class="bool-val">true</span>;
         }
 
@@ -3545,6 +3667,10 @@
         <span class="kw">let </span>seed = DOMAIN_EXTRINSICS_SHUFFLING_SEED_SUBJECT;
         <span class="kw">let </span>(randomness, <span class="kw">_</span>) = T::Randomness::random(seed);
         randomness
+    }
+
+    <span class="kw">pub fn </span>execution_receipt(receipt_hash: ReceiptHash) -&gt; <span class="prelude-ty">Option</span>&lt;ExecutionReceiptOf&lt;T&gt;&gt; {
+        BlockTreeNodes::&lt;T&gt;::get(receipt_hash).map(|db| db.execution_receipt)
     }
 }
 

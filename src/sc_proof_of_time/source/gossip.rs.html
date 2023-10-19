@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sc-proof-of-time/src/source/gossip.rs`."><title>gossip.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="sc_proof_of_time" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (d627cf07c 2023-10-10)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-0689c575f077d64f.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../sc_proof_of_time/index.html"><img class="rust-logo" src="../../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sc-proof-of-time/src/source/gossip.rs`."><title>gossip.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-deb46770fd761b69.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="sc_proof_of_time" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (42b1224e9 2023-10-15)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -633,6 +633,7 @@
 <a href="#633" id="633">633</a>
 <a href="#634" id="634">634</a>
 <a href="#635" id="635">635</a>
+<a href="#636" id="636">636</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! PoT gossip functionality.
 
 </span><span class="kw">use </span><span class="kw">crate</span>::source::state::PotState;
@@ -659,7 +660,6 @@
 <span class="kw">use </span>std::num::{NonZeroU32, NonZeroUsize};
 <span class="kw">use </span>std::sync::{atomic, Arc};
 <span class="kw">use </span>subspace_core_primitives::{PotCheckpoints, PotSeed, SlotNumber};
-<span class="kw">use </span>tokio::runtime::Handle;
 <span class="kw">use </span>tracing::{debug, error, trace, warn};
 
 <span class="doccomment">/// How many slots can proof be before it is too far
@@ -915,11 +915,11 @@
             }
         }
 
-        <span class="kw">if </span><span class="self">self
-            </span>.pot_verifier
-            .verify_checkpoints(proof.seed, proof.slot_iterations, <span class="kw-2">&amp;</span>proof.checkpoints)
-            .<span class="kw">await
-        </span>{
+        <span class="kw">if </span><span class="self">self</span>.pot_verifier.verify_checkpoints(
+            proof.seed,
+            proof.slot_iterations,
+            <span class="kw-2">&amp;</span>proof.checkpoints,
+        ) {
             <span class="macro">debug!</span>(%sender, slot = %proof.slot, <span class="string">&quot;Full verification succeeded&quot;</span>);
 
             <span class="self">self</span>.engine
@@ -1020,27 +1020,26 @@
         }
 
         <span class="comment">// Avoid blocking gossip for too long
-        </span><span class="kw">let </span>handle = Handle::current();
-        rayon::spawn({
+        </span>rayon::spawn({
             <span class="kw">let </span>engine = Arc::clone(<span class="kw-2">&amp;</span><span class="self">self</span>.engine);
             <span class="kw">let </span>pot_verifier = <span class="self">self</span>.pot_verifier.clone();
             <span class="kw">let </span>from_gossip_sender = <span class="self">self</span>.from_gossip_sender.clone();
             <span class="kw">let </span>topic = <span class="self">self</span>.topic;
 
             <span class="kw">move </span>|| {
-                handle.block_on(<span class="self">Self</span>::handle_potentially_matching_proofs(
+                <span class="self">Self</span>::handle_potentially_matching_proofs(
                     next_slot_input,
                     potentially_matching_proofs,
                     engine,
                     <span class="kw-2">&amp;</span>pot_verifier,
                     from_gossip_sender,
                     topic,
-                ));
+                );
             }
         });
     }
 
-    <span class="kw">async fn </span>handle_potentially_matching_proofs(
+    <span class="kw">fn </span>handle_potentially_matching_proofs(
         next_slot_input: PotNextSlotInput,
         potentially_matching_proofs: Vec&lt;(GossipProof, Vec&lt;PeerId&gt;)&gt;,
         engine: Arc&lt;Mutex&lt;GossipEngine&lt;Block&gt;&gt;&gt;,
@@ -1060,10 +1059,11 @@
 
             <span class="comment">// Verify all proofs
             </span><span class="kw">for </span>(proof, _senders) <span class="kw">in </span><span class="kw-2">&amp;</span>potentially_matching_proofs {
-                <span class="kw">if </span>pot_verifier
-                    .verify_checkpoints(proof.seed, proof.slot_iterations, <span class="kw-2">&amp;</span>proof.checkpoints)
-                    .<span class="kw">await
-                </span>{
+                <span class="kw">if </span>pot_verifier.verify_checkpoints(
+                    proof.seed,
+                    proof.slot_iterations,
+                    <span class="kw-2">&amp;</span>proof.checkpoints,
+                ) {
                     correct_proof.replace(<span class="kw-2">*</span>proof);
                     <span class="kw">break</span>;
                 }
@@ -1103,15 +1103,17 @@
                     }
                     sent = <span class="bool-val">true</span>;
 
-                    <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = from_gossip_sender.send((sender, proof)).<span class="kw">await </span>{
+                    engine.lock().gossip_message(topic, proof.encode(), <span class="bool-val">false</span>);
+
+                    <span class="kw">if let </span><span class="prelude-val">Err</span>(error) =
+                        futures::executor::block_on(from_gossip_sender.send((sender, proof)))
+                    {
                         <span class="macro">warn!</span>(
                             %error,
                             slot = %proof.slot,
                             <span class="string">&quot;Failed to send future proof&quot;</span>,
                         );
                     }
-
-                    engine.lock().gossip_message(topic, proof.encode(), <span class="bool-val">false</span>);
                 }
             } <span class="kw">else </span>{
                 <span class="kw">let </span>engine = engine.lock();

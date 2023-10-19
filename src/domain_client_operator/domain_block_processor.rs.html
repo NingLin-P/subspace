@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `domains/client/domain-operator/src/domain_block_processor.rs`."><title>domain_block_processor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="domain_client_operator" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (d627cf07c 2023-10-10)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0689c575f077d64f.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../domain_client_operator/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `domains/client/domain-operator/src/domain_block_processor.rs`."><title>domain_block_processor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-deb46770fd761b69.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="domain_client_operator" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (42b1224e9 2023-10-15)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1199,6 +1199,38 @@
 <a href="#1199" id="1199">1199</a>
 <a href="#1200" id="1200">1200</a>
 <a href="#1201" id="1201">1201</a>
+<a href="#1202" id="1202">1202</a>
+<a href="#1203" id="1203">1203</a>
+<a href="#1204" id="1204">1204</a>
+<a href="#1205" id="1205">1205</a>
+<a href="#1206" id="1206">1206</a>
+<a href="#1207" id="1207">1207</a>
+<a href="#1208" id="1208">1208</a>
+<a href="#1209" id="1209">1209</a>
+<a href="#1210" id="1210">1210</a>
+<a href="#1211" id="1211">1211</a>
+<a href="#1212" id="1212">1212</a>
+<a href="#1213" id="1213">1213</a>
+<a href="#1214" id="1214">1214</a>
+<a href="#1215" id="1215">1215</a>
+<a href="#1216" id="1216">1216</a>
+<a href="#1217" id="1217">1217</a>
+<a href="#1218" id="1218">1218</a>
+<a href="#1219" id="1219">1219</a>
+<a href="#1220" id="1220">1220</a>
+<a href="#1221" id="1221">1221</a>
+<a href="#1222" id="1222">1222</a>
+<a href="#1223" id="1223">1223</a>
+<a href="#1224" id="1224">1224</a>
+<a href="#1225" id="1225">1225</a>
+<a href="#1226" id="1226">1226</a>
+<a href="#1227" id="1227">1227</a>
+<a href="#1228" id="1228">1228</a>
+<a href="#1229" id="1229">1229</a>
+<a href="#1230" id="1230">1230</a>
+<a href="#1231" id="1231">1231</a>
+<a href="#1232" id="1232">1232</a>
+<a href="#1233" id="1233">1233</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::aux_schema::{BundleMismatchType, ReceiptMismatchInfo};
 <span class="kw">use </span><span class="kw">crate</span>::fraud_proof::{find_trace_mismatch, FraudProofGenerator};
 <span class="kw">use </span><span class="kw">crate</span>::parent_chain::ParentChainInterface;
@@ -1472,7 +1504,7 @@
         (consensus_block_hash, consensus_block_number): (CBlock::Hash, NumberFor&lt;CBlock&gt;),
         (parent_hash, parent_number): (Block::Hash, NumberFor&lt;Block&gt;),
         preprocess_result: PreprocessResult&lt;Block&gt;,
-        digests: Digest,
+        inherent_digests: Digest,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;DomainBlockResult&lt;Block, CBlock&gt;, sp_blockchain::Error&gt; {
         <span class="kw">let </span>PreprocessResult {
             extrinsics,
@@ -1495,7 +1527,13 @@
             header_number,
             header_hash,
         } = <span class="self">self
-            </span>.build_and_import_block(parent_hash, parent_number, extrinsics, fork_choice, digests)
+            </span>.build_and_import_block(
+                parent_hash,
+                parent_number,
+                extrinsics,
+                fork_choice,
+                inherent_digests,
+            )
             .<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="macro">tracing::debug!</span>(
@@ -1553,7 +1591,11 @@
                     <span class="string">&quot;Domain block header for #{genesis_hash:?} not found&quot;</span>,
                 ))
             })<span class="question-mark">?</span>;
-            ExecutionReceipt::genesis(<span class="kw-2">*</span>genesis_header.state_root())
+            ExecutionReceipt::genesis(
+                <span class="kw-2">*</span>genesis_header.state_root(),
+                (<span class="kw-2">*</span>genesis_header.extrinsics_root()).into(),
+                genesis_hash,
+            )
         } <span class="kw">else </span>{
             <span class="kw">crate</span>::load_execution_receipt_by_domain_hash::&lt;Block, CBlock, <span class="kw">_</span>&gt;(
                 <span class="kw-2">&amp;*</span><span class="self">self</span>.client,
@@ -1593,14 +1635,14 @@
         parent_number: NumberFor&lt;Block&gt;,
         extrinsics: Vec&lt;Block::Extrinsic&gt;,
         fork_choice: ForkChoiceStrategy,
-        digests: Digest,
+        inherent_digests: Digest,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;DomainBlockBuildResult&lt;Block&gt;, sp_blockchain::Error&gt; {
         <span class="kw">let </span>block_builder = BlockBuilder::new(
             <span class="kw-2">&amp;*</span><span class="self">self</span>.client,
             parent_hash,
             parent_number,
             RecordProof::No,
-            digests,
+            inherent_digests,
             <span class="kw-2">&amp;*</span><span class="self">self</span>.backend,
             extrinsics,
         )<span class="question-mark">?</span>;
@@ -1906,7 +1948,7 @@
             </span>.parent_chain
             .extract_fraud_proofs(parent_chain_block_hash, extrinsics)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.check_receipts(receipts, fraud_proofs)<span class="question-mark">?</span>;
+        <span class="self">self</span>.check_receipts(parent_chain_block_hash, receipts, fraud_proofs)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(())
     }
@@ -1937,6 +1979,7 @@
 
     <span class="kw">fn </span>check_receipts(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
+        parent_chain_block_hash: ParentChainBlock::Hash,
         receipts: Vec&lt;ExecutionReceiptFor&lt;Block, ParentChainBlock&gt;&gt;,
         fraud_proofs: Vec&lt;FraudProof&lt;NumberFor&lt;ParentChainBlock&gt;, ParentChainBlock::Hash&gt;&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), sp_blockchain::Error&gt; {
@@ -2009,33 +2052,42 @@
                     },
                 ));
             }
+
+            <span class="kw">if </span>execution_receipt.domain_block_hash != local_receipt.domain_block_hash {
+                bad_receipts_to_write.push((
+                    execution_receipt.consensus_block_number,
+                    execution_receipt.hash(),
+                    ReceiptMismatchInfo::DomainBlockHash {
+                        consensus_block_hash,
+                    },
+                ));
+            }
         }
 
-        <span class="kw">let </span>bad_receipts_to_delete = fraud_proofs
-            .into_iter()
-            .filter_map(|fraud_proof| {
-                <span class="kw">match </span>fraud_proof {
-                    FraudProof::InvalidStateTransition(fraud_proof) =&gt; {
-                        <span class="kw">let </span>bad_receipt_number = fraud_proof.parent_number + <span class="number">1</span>;
-                        <span class="kw">let </span>bad_receipt_hash = fraud_proof.bad_receipt_hash;
-
-                        <span class="comment">// In order to not delete a receipt which was just inserted, accumulate the write&amp;delete operations
-                        // in case the bad receipt and corresponding fraud proof are included in the same block.
-                        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(index) = bad_receipts_to_write
-                            .iter()
-                            .map(|(<span class="kw">_</span>, receipt_hash, <span class="kw">_</span>)| receipt_hash)
-                            .position(|v| <span class="kw-2">*</span>v == bad_receipt_hash)
-                        {
-                            bad_receipts_to_write.swap_remove(index);
-                            <span class="prelude-val">None
-                        </span>} <span class="kw">else </span>{
-                            <span class="prelude-val">Some</span>((bad_receipt_number, bad_receipt_hash))
-                        }
-                    }
-                    <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+        <span class="comment">// Use the `parent_chain_parent_hash` to get the `bad_receipt` because fraud proof already pruned the bad
+        // receipt in `parent_chain_block_hash`
+        </span><span class="kw">let </span>parent_chain_parent_hash = <span class="self">self</span>.parent_chain.parent_hash(parent_chain_block_hash)<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>bad_receipts_to_delete = <span class="macro">vec!</span>[];
+        <span class="kw">for </span>fraud_proof <span class="kw">in </span>fraud_proofs {
+            <span class="kw">let </span>bad_receipt_hash = fraud_proof.bad_receipt_hash();
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(bad_receipt) = <span class="self">self
+                </span>.parent_chain
+                .execution_receipt(parent_chain_parent_hash, bad_receipt_hash)<span class="question-mark">?
+            </span>{
+                <span class="comment">// In order to not delete a receipt which was just inserted, accumulate the write&amp;delete operations
+                // in case the bad receipt and corresponding fraud proof are included in the same block.
+                </span><span class="kw">if let </span><span class="prelude-val">Some</span>(index) = bad_receipts_to_write
+                    .iter()
+                    .map(|(<span class="kw">_</span>, receipt_hash, <span class="kw">_</span>)| receipt_hash)
+                    .position(|v| <span class="kw-2">*</span>v == bad_receipt_hash)
+                {
+                    bad_receipts_to_write.swap_remove(index);
+                } <span class="kw">else </span>{
+                    bad_receipts_to_delete
+                        .push((bad_receipt.consensus_block_number, bad_receipt_hash));
                 }
-            })
-            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+            }
+        }
 
         <span class="kw">for </span>(bad_receipt_number, bad_receipt_hash, mismatch_info) <span class="kw">in </span>bad_receipts_to_write {
             <span class="kw">crate</span>::aux_schema::write_bad_receipt::&lt;<span class="kw">_</span>, ParentChainBlock&gt;(
@@ -2047,7 +2099,7 @@
         }
 
         <span class="kw">for </span>(bad_receipt_number, bad_receipt_hash) <span class="kw">in </span>bad_receipts_to_delete {
-            <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = <span class="kw">crate</span>::aux_schema::delete_bad_receipt(
+            <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = <span class="kw">crate</span>::aux_schema::delete_bad_receipt::&lt;<span class="kw">_</span>, ParentChainBlock&gt;(
                 <span class="kw-2">&amp;*</span><span class="self">self</span>.client,
                 bad_receipt_number,
                 bad_receipt_hash,
@@ -2116,6 +2168,18 @@
                     .map_err(|err| {
                         sp_blockchain::Error::Application(Box::from(<span class="macro">format!</span>(
                             <span class="string">&quot;Failed to generate invalid block rewards fraud proof: {err}&quot;
+                        </span>)))
+                    })<span class="question-mark">?</span>,
+                ReceiptMismatchInfo::DomainBlockHash { .. } =&gt; <span class="self">self
+                    </span>.fraud_proof_generator
+                    .generate_invalid_domain_block_hash_proof::&lt;ParentChainBlock&gt;(
+                        <span class="self">self</span>.domain_id,
+                        <span class="kw-2">&amp;</span>local_receipt,
+                        bad_receipt_hash,
+                    )
+                    .map_err(|err| {
+                        sp_blockchain::Error::Application(Box::from(<span class="macro">format!</span>(
+                            <span class="string">&quot;Failed to generate invalid domain block hash fraud proof: {err}&quot;
                         </span>)))
                     })<span class="question-mark">?</span>,
                 ReceiptMismatchInfo::Bundles {

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-fraud-proof/src/invalid_transaction_proof.rs`."><title>invalid_transaction_proof.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_fraud_proof" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (d627cf07c 2023-10-10)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0689c575f077d64f.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../subspace_fraud_proof/index.html"><img class="rust-logo" src="../../static.files/rust-logo-151179464ae7ed46.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-fraud-proof/src/invalid_transaction_proof.rs`."><title>invalid_transaction_proof.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-deb46770fd761b69.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_fraud_proof" data-themes="" data-resource-suffix="" data-rustdoc-version="1.75.0-nightly (42b1224e9 2023-10-15)" data-channel="nightly" data-search-js="search-8fbf244ebcf71464.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-5f34af1a0ee6bacd.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -233,6 +233,20 @@
 <a href="#233" id="233">233</a>
 <a href="#234" id="234">234</a>
 <a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
+<a href="#238" id="238">238</a>
+<a href="#239" id="239">239</a>
+<a href="#240" id="240">240</a>
+<a href="#241" id="241">241</a>
+<a href="#242" id="242">242</a>
+<a href="#243" id="243">243</a>
+<a href="#244" id="244">244</a>
+<a href="#245" id="245">245</a>
+<a href="#246" id="246">246</a>
+<a href="#247" id="247">247</a>
+<a href="#248" id="248">248</a>
+<a href="#249" id="249">249</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Invalid transaction proof.
 
 </span><span class="kw">use </span><span class="kw">crate</span>::domain_runtime_code::retrieve_domain_runtime_code;
@@ -242,6 +256,7 @@
 <span class="kw">use </span>domain_runtime_primitives::opaque::Block;
 <span class="kw">use </span>domain_runtime_primitives::{DomainCoreApi, Hash};
 <span class="kw">use </span>sc_client_api::StorageProof;
+<span class="kw">use </span>sc_executor::RuntimeVersionOf;
 <span class="kw">use </span>sp_api::ProvideRuntimeApi;
 <span class="kw">use </span>sp_blockchain::HeaderBackend;
 <span class="kw">use </span>sp_core::traits::CodeExecutor;
@@ -280,6 +295,7 @@
 }
 
 <span class="kw">fn </span>create_runtime_api_light&lt;Exec&gt;(
+    domain_block_number: u32,
     storage_proof: StorageProof,
     state_root: <span class="kw-2">&amp;</span>Hash,
     executor: Arc&lt;Exec&gt;,
@@ -287,24 +303,32 @@
     extrinsic: OpaqueExtrinsic,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;RuntimeApiLight&lt;Exec&gt;, VerificationError&gt;
 <span class="kw">where
-    </span>Exec: CodeExecutor,
+    </span>Exec: CodeExecutor + RuntimeVersionOf,
 {
     <span class="kw">let </span><span class="kw-2">mut </span>runtime_api_light = RuntimeApiLight::new(executor, wasm_bundle);
 
     <span class="kw">let </span>sender = &lt;RuntimeApiLight&lt;Exec&gt; <span class="kw">as </span>DomainCoreApi&lt;Block&gt;&gt;::extract_signer(
         <span class="kw-2">&amp;</span>runtime_api_light,
         Default::default(),
-        <span class="macro">vec!</span>[extrinsic],
+        <span class="macro">vec!</span>[extrinsic.clone()],
     )<span class="question-mark">?
     </span>.into_iter()
     .next()
     .and_then(|(maybe_signer, <span class="kw">_</span>)| maybe_signer)
     .ok_or(VerificationError::SignerNotFound)<span class="question-mark">?</span>;
 
+    <span class="kw">let </span>maybe_era = &lt;RuntimeApiLight&lt;Exec&gt; <span class="kw">as </span>DomainCoreApi&lt;Block&gt;&gt;::extrinsic_era(
+        <span class="kw-2">&amp;</span>runtime_api_light,
+        Default::default(),
+        <span class="kw-2">&amp;</span>extrinsic,
+    )<span class="question-mark">?</span>;
+
     <span class="kw">let </span>storage_keys = &lt;RuntimeApiLight&lt;Exec&gt; <span class="kw">as </span>DomainCoreApi&lt;Block&gt;&gt;::storage_keys_for_verifying_transaction_validity(
         <span class="kw-2">&amp;</span>runtime_api_light,
         Default::default(),
-        sender
+        sender,
+        domain_block_number,
+        maybe_era
     )<span class="question-mark">?
     </span>.map_err(|e| {
         sp_api::ApiError::Application(Box::from(<span class="macro">format!</span>(
@@ -342,7 +366,7 @@
     CClient: HeaderBackend&lt;CBlock&gt; + ProvideRuntimeApi&lt;CBlock&gt; + Send + Sync,
     CClient::Api: DomainsApi&lt;CBlock, domain_runtime_primitives::BlockNumber, Hash&gt;,
     VerifierClient: VerifierApi,
-    Exec: CodeExecutor + <span class="lifetime">&#39;static</span>,
+    Exec: CodeExecutor + RuntimeVersionOf + <span class="lifetime">&#39;static</span>,
 {
     <span class="doccomment">/// Constructs a new instance of [`InvalidTransactionProofVerifier`].
     </span><span class="kw">pub fn </span>new(
@@ -387,7 +411,7 @@
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), VerificationError&gt; {
         <span class="kw">let </span>InvalidTransactionProof {
             domain_id,
-            block_number,
+            domain_block_number,
             domain_block_hash,
             invalid_extrinsic,
             storage_proof,
@@ -398,7 +422,7 @@
         // - Bundle is valid and is produced by a legit executor.
         // - Bundle author, who will be slashed, can be extracted in runtime.
 
-        </span><span class="kw">let </span>header = <span class="self">self</span>.fetch_consensus_block_header(<span class="kw-2">*</span>domain_id, <span class="kw-2">*</span>block_number)<span class="question-mark">?</span>;
+        </span><span class="kw">let </span>header = <span class="self">self</span>.fetch_consensus_block_header(<span class="kw-2">*</span>domain_id, <span class="kw-2">*</span>domain_block_number)<span class="question-mark">?</span>;
         <span class="kw">let </span>consensus_parent_hash = <span class="kw-2">*</span>header.parent_hash();
 
         <span class="kw">let </span>domain_runtime_code = retrieve_domain_runtime_code(
@@ -413,15 +437,18 @@
         // verifiable way.
         </span><span class="kw">let </span>extrinsic = OpaqueExtrinsic::from_bytes(invalid_extrinsic)<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>state_root =
-            <span class="self">self</span>.verifier_client
-                .state_root(<span class="kw-2">*</span>domain_id, <span class="kw-2">*</span>block_number, <span class="kw-2">*</span>domain_block_hash)<span class="question-mark">?</span>;
+        <span class="kw">let </span>state_root = <span class="self">self</span>.verifier_client.state_root(
+            <span class="kw-2">*</span>domain_id,
+            <span class="kw-2">*</span>domain_block_number,
+            <span class="kw-2">*</span>domain_block_hash,
+        )<span class="question-mark">?</span>;
 
         <span class="kw">let </span>runtime_api_light = create_runtime_api_light(
+            <span class="kw-2">*</span>domain_block_number,
             storage_proof.clone(),
             <span class="kw-2">&amp;</span>state_root,
             <span class="self">self</span>.executor.clone(),
-            domain_runtime_code.wasm_bundle.into(),
+            domain_runtime_code.<span class="number">0</span>.into(),
             extrinsic.clone(),
         )<span class="question-mark">?</span>;
 
@@ -430,6 +457,7 @@
                 <span class="kw-2">&amp;</span>runtime_api_light,
                 Default::default(), <span class="comment">// Unused for stateless runtime api.
                 </span><span class="kw-2">&amp;</span>extrinsic,
+                <span class="kw-2">*</span>domain_block_number,
                 <span class="kw-2">*</span>domain_block_hash,
             )<span class="question-mark">?</span>;
 
@@ -459,7 +487,7 @@
     Client: HeaderBackend&lt;CBlock&gt; + ProvideRuntimeApi&lt;CBlock&gt; + Send + Sync,
     Client::Api: DomainsApi&lt;CBlock, domain_runtime_primitives::BlockNumber, Hash&gt;,
     VerifierClient: VerifierApi,
-    Exec: CodeExecutor + <span class="lifetime">&#39;static</span>,
+    Exec: CodeExecutor + RuntimeVersionOf + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">fn </span>verify_invalid_transaction_proof(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
