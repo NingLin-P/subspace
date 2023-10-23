@@ -558,6 +558,7 @@ pub(crate) fn do_slash_operators<T: Config, Iter: Iterator<Item = OperatorId>>(
     operator_ids: Iter,
 ) -> Result<(), Error> {
     for operator_id in operator_ids {
+        log::info!("do_slash_operators operator_id {operator_id:?}");
         Operators::<T>::try_mutate(operator_id, |maybe_operator| {
             let operator = maybe_operator.as_mut().ok_or(Error::UnknownOperator)?;
             let mut pending_slashes =

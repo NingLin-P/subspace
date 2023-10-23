@@ -294,6 +294,7 @@ where
                     valid_extrinsics.extend(extrinsics);
                 }
                 BundleValidity::Invalid(invalid_bundle_type) => {
+                    tracing::info!("Invalid bundle due to invalid_bundle_type {invalid_bundle_type:?}, bundle header {:?}, bundle {} extrinsics", bundle.sealed_header, bundle.extrinsics.len());
                     inboxed_bundles
                         .push(InboxedBundle::invalid(invalid_bundle_type, extrinsic_root));
                 }
