@@ -203,7 +203,7 @@ where
             {
                 tracing::warn!(
                     ?domain_best_number,
-                    "Skipping bundle production on slot {slot}"
+                    "Skipping empty bundle production on slot {slot}"
                 );
                 return Ok(None);
             }
