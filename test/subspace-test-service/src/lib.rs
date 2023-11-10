@@ -465,6 +465,7 @@ impl MockConsensusNode {
                 .retain(|subscriber| {
                     subscriber
                         .unbounded_send(acknowledgement_sender.clone())
+                        .and_then(|_| subscriber.unbounded_send(acknowledgement_sender.clone()))
                         .is_ok()
                 });
             drop(acknowledgement_sender);
@@ -575,29 +576,11 @@ impl MockConsensusNode {
         &self,
         parent_number: NumberFor<Block>,
     ) -> Vec<<Block as BlockT>::Extrinsic> {
-        let mut t1 = self.transaction_pool.ready_at(parent_number).fuse();
-        let mut t2 = futures_timer::Delay::new(time::Duration::from_micros(100)).fuse();
-        let pending_iterator = select! {
-            res = t1 => res,
-            _ = t2 => {
-                tracing::warn!(
-                    "Timeout fired waiting for transaction pool at #{}, proceeding with production.",
-                    parent_number,
-                );
-                self.transaction_pool.ready()
-            }
-        };
-        let pushing_duration = time::Duration::from_micros(500);
-        let start = time::Instant::now();
-        let mut extrinsics = Vec::new();
-        for pending_tx in pending_iterator {
-            if start.elapsed() >= pushing_duration {
-                break;
-            }
-            let pending_tx_data = pending_tx.data().clone();
-            extrinsics.push(pending_tx_data);
-        }
-        extrinsics
+        self.transaction_pool
+            .ready_at(parent_number)
+            .await
+            .map(|pending_tx| pending_tx.data().clone())
+            .collect()
     }
 
     async fn mock_inherent_data(slot: Slot) -> Result<InherentData, Box<dyn Error>> {

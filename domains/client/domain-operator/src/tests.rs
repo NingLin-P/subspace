@@ -118,7 +118,7 @@ async fn test_domain_block_production() {
     .build_evm_node(Role::Authority, GENESIS_DOMAIN_ID, &mut ferdie)
     .await;
 
-    for i in 0..50 {
+    for i in 0..1000 {
         let (tx, slot) = if i % 2 == 0 {
             // Produce bundle and include it in the primary block hence produce a domain block
             let (slot, _) = ferdie.produce_slot_and_wait_for_bundle_submission().await;
@@ -134,8 +134,8 @@ async fn test_domain_block_production() {
             .unwrap();
     }
     // Domain block only produced when there is bundle contains in the primary block
-    assert_eq!(ferdie.client.info().best_number, 50);
-    assert_eq!(alice.client.info().best_number, 25);
+    assert_eq!(ferdie.client.info().best_number, 1000);
+    assert_eq!(alice.client.info().best_number, 500);
 
     let consensus_block_hash = ferdie.client.info().best_hash;
     let domain_block_number = alice.client.info().best_number;
