@@ -1218,20 +1218,6 @@
 <a href="#1218" id="1218">1218</a>
 <a href="#1219" id="1219">1219</a>
 <a href="#1220" id="1220">1220</a>
-<a href="#1221" id="1221">1221</a>
-<a href="#1222" id="1222">1222</a>
-<a href="#1223" id="1223">1223</a>
-<a href="#1224" id="1224">1224</a>
-<a href="#1225" id="1225">1225</a>
-<a href="#1226" id="1226">1226</a>
-<a href="#1227" id="1227">1227</a>
-<a href="#1228" id="1228">1228</a>
-<a href="#1229" id="1229">1229</a>
-<a href="#1230" id="1230">1230</a>
-<a href="#1231" id="1231">1231</a>
-<a href="#1232" id="1232">1232</a>
-<a href="#1233" id="1233">1233</a>
-<a href="#1234" id="1234">1234</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -1254,7 +1240,6 @@
 </span><span class="attr">#![recursion_limit = <span class="string">&quot;256&quot;</span>]
 
 </span><span class="kw">mod </span>domains;
-<span class="kw">mod </span>feed_processor;
 <span class="kw">mod </span>fees;
 <span class="kw">mod </span>object_mapping;
 <span class="kw">mod </span>signed_extensions;
@@ -1263,14 +1248,12 @@
 </span><span class="attr">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
 </span><span class="macro">include!</span>(<span class="macro">concat!</span>(<span class="macro">env!</span>(<span class="string">&quot;OUT_DIR&quot;</span>), <span class="string">&quot;/wasm_binary.rs&quot;</span>));
 
-<span class="kw">use </span><span class="kw">crate</span>::feed_processor::feed_processor;
-<span class="kw">pub use </span><span class="kw">crate</span>::feed_processor::FeedProcessorKind;
 <span class="kw">use </span><span class="kw">crate</span>::fees::{OnChargeTransaction, TransactionByteFee};
 <span class="kw">use </span><span class="kw">crate</span>::object_mapping::extract_block_object_mapping;
 <span class="kw">use </span><span class="kw">crate</span>::signed_extensions::{CheckStorageAccess, DisablePallets};
 <span class="kw">use </span>codec::{Decode, Encode, MaxEncodedLen};
-<span class="kw">use </span>core::mem;
 <span class="kw">use </span>core::num::NonZeroU64;
+<span class="kw">use </span>domain_runtime_primitives::opaque::Header <span class="kw">as </span>DomainHeader;
 <span class="kw">use </span>domain_runtime_primitives::{
     BlockNumber <span class="kw">as </span>DomainNumber, Hash <span class="kw">as </span>DomainHash, MultiAccountId, TryConvertBack,
 };
@@ -1281,7 +1264,6 @@
 <span class="kw">use </span>frame_support::{construct_runtime, parameter_types, PalletId};
 <span class="kw">use </span>frame_system::limits::{BlockLength, BlockWeights};
 <span class="kw">use </span>frame_system::EnsureNever;
-<span class="kw">use </span>pallet_feeds::feed_processor::FeedProcessor;
 <span class="kw">pub use </span>pallet_subspace::AllowAuthoringBy;
 <span class="kw">use </span>pallet_transporter::EndpointHandler;
 <span class="kw">use </span>scale_info::TypeInfo;
@@ -1296,9 +1278,10 @@
 <span class="kw">use </span>sp_core::{OpaqueMetadata, H256};
 <span class="kw">use </span>sp_domains::bundle_producer_election::BundleProducerElectionParams;
 <span class="kw">use </span>sp_domains::{
-    DomainId, DomainInstanceData, DomainsHoldIdentifier, ExecutionReceipt, OperatorId,
-    OperatorPublicKey, ReceiptHash, StakingHoldIdentifier,
+    DomainId, DomainInstanceData, DomainsHoldIdentifier, ExecutionReceiptFor, OpaqueBundle,
+    OperatorId, OperatorPublicKey, StakingHoldIdentifier,
 };
+<span class="kw">use </span>sp_domains_fraud_proof::fraud_proof::FraudProof;
 <span class="kw">use </span>sp_messenger::endpoint::{Endpoint, EndpointHandler <span class="kw">as </span>EndpointHandlerT, EndpointId};
 <span class="kw">use </span>sp_messenger::messages::{
     BlockInfo, BlockMessagesWithStorageKey, ChainId, CrossDomainMessage,
@@ -1315,7 +1298,6 @@
 </span><span class="kw">use </span>sp_version::NativeVersion;
 <span class="kw">use </span>sp_version::RuntimeVersion;
 <span class="kw">use </span>static_assertions::const_assert;
-<span class="kw">use </span>subspace_core_primitives::crypto::Scalar;
 <span class="kw">use </span>subspace_core_primitives::objects::BlockObjectMapping;
 <span class="kw">use </span>subspace_core_primitives::{
     HistorySize, Piece, Randomness, Record, SegmentCommitment, SegmentHeader, SegmentIndex,
@@ -1323,7 +1305,7 @@
 };
 <span class="kw">use </span>subspace_runtime_primitives::{
     AccountId, Balance, BlockNumber, FindBlockRewardAddress, Hash, Moment, Nonce, Signature,
-    MIN_REPLICATION_FACTOR, SHANNON, SSC, STORAGE_FEES_ESCROW_BLOCK_REWARD,
+    SlowAdjustingFeeUpdate, MIN_REPLICATION_FACTOR, SHANNON, SSC, STORAGE_FEES_ESCROW_BLOCK_REWARD,
     STORAGE_FEES_ESCROW_BLOCK_TAX,
 };
 
@@ -1342,10 +1324,10 @@
     spec_name: <span class="macro">create_runtime_str!</span>(<span class="string">&quot;subspace&quot;</span>),
     impl_name: <span class="macro">create_runtime_str!</span>(<span class="string">&quot;subspace&quot;</span>),
     authoring_version: <span class="number">0</span>,
-    spec_version: <span class="number">2</span>,
+    spec_version: <span class="number">1</span>,
     impl_version: <span class="number">0</span>,
     apis: RUNTIME_API_VERSIONS,
-    transaction_version: <span class="number">0</span>,
+    transaction_version: <span class="number">1</span>,
     state_version: <span class="number">0</span>,
 };
 
@@ -1446,17 +1428,13 @@
 
 <span class="doccomment">/// Computes the following:
 /// ```
-/// MAX * slot_probability / audit_chunks_per_chunk / (pieces_in_sector * chunks / s_buckets)
-///     / sectors
+/// MAX * slot_probability / (pieces_in_sector * chunks / s_buckets) / sectors
 /// ```
 </span><span class="kw">const fn </span>sectors_to_solution_range(sectors: u64) -&gt; SolutionRange {
-    <span class="kw">let </span>audit_chunks_per_chunk = Scalar::FULL_BYTES / mem::size_of::&lt;SolutionRange&gt;();
     <span class="kw">let </span>solution_range = SolutionRange::MAX
         <span class="comment">// Account for slot probability
         </span>/ SLOT_PROBABILITY.<span class="number">1 </span>* SLOT_PROBABILITY.<span class="number">0
-        </span><span class="comment">// We&#39;re auditing one chunk in each sector, account for how many audit chunks each chunk has
-        </span>/ audit_chunks_per_chunk <span class="kw">as </span>u64
-        <span class="comment">// Now take sector size and probability of hitting occupied s-bucket in sector into account
+        </span><span class="comment">// Now take sector size and probability of hitting occupied s-bucket in sector into account
         </span>/ (MAX_PIECES_IN_SECTOR <span class="kw">as </span>u64 * Record::NUM_CHUNKS <span class="kw">as </span>u64 / Record::NUM_S_BUCKETS <span class="kw">as </span>u64);
 
     <span class="comment">// Take number of sectors into account
@@ -1465,17 +1443,13 @@
 
 <span class="doccomment">/// Computes the following:
 /// ```
-/// MAX * slot_probability / audit_chunks_per_chunk / (pieces_in_sector * chunks / s_buckets)
-///     / solution_range
+/// MAX * slot_probability / (pieces_in_sector * chunks / s_buckets) / solution_range
 /// ```
 </span><span class="kw">const fn </span>solution_range_to_sectors(solution_range: SolutionRange) -&gt; u64 {
-    <span class="kw">let </span>audit_chunks_per_chunk = Scalar::FULL_BYTES / mem::size_of::&lt;SolutionRange&gt;();
     <span class="kw">let </span>sectors = SolutionRange::MAX
         <span class="comment">// Account for slot probability
         </span>/ SLOT_PROBABILITY.<span class="number">1 </span>* SLOT_PROBABILITY.<span class="number">0
-        </span><span class="comment">// We&#39;re auditing one chunk in each sector, account for how many audit chunks each chunk has
-        </span>/ audit_chunks_per_chunk <span class="kw">as </span>u64
-        <span class="comment">// Now take sector size and probability of hitting occupied s-bucket in sector into account
+        </span><span class="comment">// Now take sector size and probability of hitting occupied s-bucket in sector into account
         </span>/ (MAX_PIECES_IN_SECTOR <span class="kw">as </span>u64 * Record::NUM_CHUNKS <span class="kw">as </span>u64 / Record::NUM_S_BUCKETS <span class="kw">as </span>u64);
 
     <span class="comment">// Take solution range into account
@@ -1720,7 +1694,7 @@
     <span class="kw">type </span>OperationalFeeMultiplier = ConstU8&lt;<span class="number">5</span>&gt;;
     <span class="kw">type </span>WeightToFee = IdentityFee&lt;Balance&gt;;
     <span class="kw">type </span>LengthToFee = ConstantMultiplier&lt;Balance, TransactionByteFee&gt;;
-    <span class="kw">type </span>FeeMultiplierUpdate = ();
+    <span class="kw">type </span>FeeMultiplierUpdate = SlowAdjustingFeeUpdate&lt;Runtime&gt;;
 }
 
 <span class="kw">impl </span>pallet_utility::Config <span class="kw">for </span>Runtime {
@@ -1850,7 +1824,9 @@
     </span><span class="kw">pub const </span>StakeEpochDuration: DomainNumber = <span class="number">100</span>;
     <span class="kw">pub </span>TreasuryAccount: AccountId = PalletId(<span class="kw-2">*</span><span class="string">b&quot;treasury&quot;</span>).into_account_truncating();
     <span class="kw">pub const </span>MaxPendingStakingOperation: u32 = <span class="number">100</span>;
-    <span class="kw">pub const </span>MaxNominators: u32 = <span class="number">100</span>;
+    <span class="comment">// TODO: reset `MaxNominators` back to `100` once the gemini-3g chain spec is created
+    </span><span class="kw">pub const </span>MaxNominators: u32 = <span class="number">0</span>;
+    <span class="kw">pub </span>SudoId: AccountId = Sudo::key().expect(<span class="string">&quot;Sudo account must exist&quot;</span>);
 }
 
 <span class="kw">impl </span>pallet_domains::Config <span class="kw">for </span>Runtime {
@@ -1878,14 +1854,7 @@
     <span class="kw">type </span>MaxPendingStakingOperation = MaxPendingStakingOperation;
     <span class="kw">type </span>MaxNominators = MaxNominators;
     <span class="kw">type </span>Randomness = Subspace;
-}
-
-<span class="kw">pub struct </span>StakingOnReward;
-
-<span class="kw">impl </span>pallet_rewards::OnReward&lt;AccountId, Balance&gt; <span class="kw">for </span>StakingOnReward {
-    <span class="kw">fn </span>on_reward(account: AccountId, reward: Balance) {
-        Domains::on_block_reward(account, reward);
-    }
+    <span class="kw">type </span>SudoId = SudoId;
 }
 
 <span class="macro">parameter_types! </span>{
@@ -1901,35 +1870,7 @@
     <span class="kw">type </span>FindBlockRewardAddress = Subspace;
     <span class="kw">type </span>FindVotingRewardAddresses = Subspace;
     <span class="kw">type </span>WeightInfo = ();
-    <span class="kw">type </span>OnReward = StakingOnReward;
-}
-
-<span class="kw">pub type </span>FeedId = u64;
-
-<span class="macro">parameter_types! </span>{
-    <span class="comment">// Limit maximum number of feeds per account
-    </span><span class="kw">pub const </span>MaxFeeds: u32 = <span class="number">100</span>;
-}
-
-<span class="kw">impl </span>pallet_feeds::Config <span class="kw">for </span>Runtime {
-    <span class="kw">type </span>RuntimeEvent = RuntimeEvent;
-    <span class="kw">type </span>FeedId = FeedId;
-    <span class="kw">type </span>FeedProcessorKind = FeedProcessorKind;
-    <span class="kw">type </span>MaxFeeds = MaxFeeds;
-
-    <span class="kw">fn </span>feed_processor(
-        feed_processor_kind: <span class="self">Self</span>::FeedProcessorKind,
-    ) -&gt; Box&lt;<span class="kw">dyn </span>FeedProcessor&lt;<span class="self">Self</span>::FeedId&gt;&gt; {
-        feed_processor(feed_processor_kind)
-    }
-}
-
-<span class="kw">impl </span>pallet_grandpa_finality_verifier::Config <span class="kw">for </span>Runtime {
-    <span class="kw">type </span>ChainId = FeedId;
-}
-
-<span class="kw">impl </span>pallet_object_store::Config <span class="kw">for </span>Runtime {
-    <span class="kw">type </span>RuntimeEvent = RuntimeEvent;
+    <span class="kw">type </span>OnReward = ();
 }
 
 <span class="kw">impl </span>pallet_runtime_configs::Config <span class="kw">for </span>Runtime {
@@ -1965,9 +1906,6 @@
         TransactionPayment: pallet_transaction_payment = <span class="number">7</span>,
         Utility: pallet_utility = <span class="number">8</span>,
 
-        Feeds: pallet_feeds = <span class="number">9</span>,
-        GrandpaFinalityVerifier: pallet_grandpa_finality_verifier = <span class="number">10</span>,
-        ObjectStore: pallet_object_store = <span class="number">11</span>,
         Domains: pallet_domains = <span class="number">12</span>,
         RuntimeConfigs: pallet_runtime_configs = <span class="number">14</span>,
 
@@ -2154,7 +2092,8 @@
         }
 
         <span class="kw">fn </span>validated_object_call_hashes() -&gt; Vec&lt;Hash&gt; {
-            Feeds::successful_puts()
+            <span class="comment">// No pallets produce objects right now
+            </span>Vec::new()
         }
     }
 
@@ -2246,17 +2185,10 @@
         }
     }
 
-    <span class="kw">impl </span>sp_domains::transaction::PreValidationObjectApi&lt;Block, DomainNumber, DomainHash, &gt; <span class="kw">for </span>Runtime {
-        <span class="kw">fn </span>extract_pre_validation_object(
-            extrinsic: &lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic,
-        ) -&gt; sp_domains::transaction::PreValidationObject&lt;Block, DomainNumber, DomainHash&gt; {
-            <span class="kw">crate</span>::domains::extract_pre_validation_object(extrinsic)
-        }
-    }
-
-    <span class="kw">impl </span>sp_domains::DomainsApi&lt;Block, DomainNumber, DomainHash&gt; <span class="kw">for </span>Runtime {
+    <span class="attr">#[api_version(<span class="number">2</span>)]
+    </span><span class="kw">impl </span>sp_domains::DomainsApi&lt;Block, DomainHeader&gt; <span class="kw">for </span>Runtime {
         <span class="kw">fn </span>submit_bundle_unsigned(
-            opaque_bundle: sp_domains::OpaqueBundle&lt;NumberFor&lt;Block&gt;, &lt;Block <span class="kw">as </span>BlockT&gt;::Hash, DomainNumber, DomainHash, Balance&gt;,
+            opaque_bundle: sp_domains::OpaqueBundle&lt;NumberFor&lt;Block&gt;, &lt;Block <span class="kw">as </span>BlockT&gt;::Hash, DomainHeader, Balance&gt;,
         ) {
             Domains::submit_bundle_unsigned(opaque_bundle)
         }
@@ -2264,8 +2196,24 @@
         <span class="kw">fn </span>extract_successful_bundles(
             domain_id: DomainId,
             extrinsics: Vec&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;,
-        ) -&gt; sp_domains::OpaqueBundles&lt;Block, DomainNumber, DomainHash, Balance&gt; {
+        ) -&gt; sp_domains::OpaqueBundles&lt;Block, DomainHeader, Balance&gt; {
             <span class="kw">crate</span>::domains::extract_successful_bundles(domain_id, extrinsics)
+        }
+
+        <span class="kw">fn </span>extract_bundle(
+            extrinsic: &lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic
+        ) -&gt; <span class="prelude-ty">Option</span>&lt;OpaqueBundle&lt;NumberFor&lt;Block&gt;, &lt;Block <span class="kw">as </span>BlockT&gt;::Hash, DomainHeader, Balance&gt;&gt; {
+            <span class="kw">crate</span>::domains::extract_bundle(extrinsic)
+        }
+
+        <span class="kw">fn </span>extract_receipts(
+            domain_id: DomainId,
+            extrinsics: Vec&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;,
+        ) -&gt; Vec&lt;ExecutionReceiptFor&lt;DomainHeader, Block, Balance&gt;&gt; {
+            <span class="kw">crate</span>::domains::extract_successful_bundles(domain_id, extrinsics)
+                .into_iter()
+                .map(|bundle| bundle.into_receipt())
+                .collect()
         }
 
         <span class="kw">fn </span>extrinsics_shuffling_seed() -&gt; Randomness {
@@ -2296,15 +2244,15 @@
             Domains::genesis_state_root(domain_id)
         }
 
-        <span class="kw">fn </span>head_receipt_number(domain_id: DomainId) -&gt; NumberFor&lt;Block&gt; {
+        <span class="kw">fn </span>head_receipt_number(domain_id: DomainId) -&gt; DomainNumber {
             Domains::head_receipt_number(domain_id)
         }
 
-        <span class="kw">fn </span>oldest_receipt_number(domain_id: DomainId) -&gt; NumberFor&lt;Block&gt; {
+        <span class="kw">fn </span>oldest_receipt_number(domain_id: DomainId) -&gt; DomainNumber {
             Domains::oldest_receipt_number(domain_id)
         }
 
-        <span class="kw">fn </span>block_tree_pruning_depth() -&gt; NumberFor&lt;Block&gt; {
+        <span class="kw">fn </span>block_tree_pruning_depth() -&gt; DomainNumber {
             Domains::block_tree_pruning_depth()
         }
 
@@ -2324,7 +2272,7 @@
             Domains::domain_state_root(domain_id, number, hash)
         }
 
-        <span class="kw">fn </span>execution_receipt(receipt_hash: ReceiptHash) -&gt; <span class="prelude-ty">Option</span>&lt;ExecutionReceipt&lt;NumberFor&lt;Block&gt;, &lt;Block <span class="kw">as </span>BlockT&gt;::Hash, DomainNumber, DomainHash, Balance&gt;&gt; {
+        <span class="kw">fn </span>execution_receipt(receipt_hash: DomainHash) -&gt; <span class="prelude-ty">Option</span>&lt;ExecutionReceiptFor&lt;DomainHeader, Block, Balance&gt;&gt; {
             Domains::execution_receipt(receipt_hash)
         }
     }
@@ -2424,6 +2372,19 @@
         }
     }
 
+    <span class="kw">impl </span>sp_domains_fraud_proof::FraudProofApi&lt;Block, DomainHeader&gt; <span class="kw">for </span>Runtime {
+        <span class="kw">fn </span>submit_fraud_proof_unsigned(fraud_proof: FraudProof&lt;NumberFor&lt;Block&gt;, &lt;Block <span class="kw">as </span>BlockT&gt;::Hash, DomainHeader&gt;) {
+            Domains::submit_fraud_proof_unsigned(fraud_proof)
+        }
+
+        <span class="kw">fn </span>extract_fraud_proofs(
+            domain_id: DomainId,
+            extrinsics: Vec&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;,
+        ) -&gt; Vec&lt;FraudProof&lt;NumberFor&lt;Block&gt;, &lt;Block <span class="kw">as </span>BlockT&gt;::Hash, DomainHeader&gt;&gt; {
+            <span class="kw">crate</span>::domains::extract_fraud_proofs(domain_id, extrinsics)
+        }
+    }
+
     <span class="attr">#[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
     </span><span class="kw">impl </span>frame_benchmarking::Benchmark&lt;Block&gt; <span class="kw">for </span>Runtime {
         <span class="kw">fn </span>benchmark_metadata(extra: bool) -&gt; (
@@ -2464,6 +2425,17 @@
 
             <span class="prelude-val">Ok</span>(batches)
         }
+    }
+}
+
+<span class="attr">#[cfg(test)]
+</span><span class="kw">mod </span>tests {
+    <span class="kw">use crate</span>::{Runtime, SubspaceBlockWeights <span class="kw">as </span>BlockWeights};
+    <span class="kw">use </span>subspace_runtime_primitives::tests_utils::FeeMultiplierUtils;
+
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>multiplier_can_grow_from_zero() {
+        FeeMultiplierUtils::&lt;Runtime, BlockWeights&gt;::multiplier_can_grow_from_zero()
     }
 }
 </code></pre></div></section></main></body></html>

@@ -270,17 +270,6 @@
 <a href="#270" id="270">270</a>
 <a href="#271" id="271">271</a>
 <a href="#272" id="272">272</a>
-<a href="#273" id="273">273</a>
-<a href="#274" id="274">274</a>
-<a href="#275" id="275">275</a>
-<a href="#276" id="276">276</a>
-<a href="#277" id="277">277</a>
-<a href="#278" id="278">278</a>
-<a href="#279" id="279">279</a>
-<a href="#280" id="280">280</a>
-<a href="#281" id="281">281</a>
-<a href="#282" id="282">282</a>
-<a href="#283" id="283">283</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -305,7 +294,7 @@
 <span class="kw">pub mod </span>domain_chain_spec;
 
 <span class="kw">use </span>futures::executor::block_on;
-<span class="kw">use </span>futures::{FutureExt, StreamExt};
+<span class="kw">use </span>futures::StreamExt;
 <span class="kw">use </span>sc_client_api::{BlockBackend, HeaderBackend};
 <span class="kw">use </span>sc_consensus_subspace::archiver::encode_block;
 <span class="kw">use </span>sc_consensus_subspace::notification::SubspaceNotificationStream;
@@ -328,7 +317,6 @@
 <span class="kw">use </span>subspace_farmer_components::FarmerProtocolInfo;
 <span class="kw">use </span>subspace_proof_of_space::{Table, TableGenerator};
 <span class="kw">use </span>subspace_runtime_primitives::opaque::Block;
-<span class="kw">use </span>subspace_service::tx_pre_validator::ConsensusChainTxPreValidator;
 <span class="kw">use </span>subspace_service::{FullClient, NewFull};
 <span class="kw">use </span>zeroize::Zeroizing;
 
@@ -359,14 +347,8 @@
 <span class="doccomment">/// The backend type being used by the test service.
 </span><span class="kw">pub type </span>Backend = sc_service::TFullBackend&lt;Block&gt;;
 
-<span class="doccomment">/// The fraud proof verifier being used the test service.
-</span><span class="kw">pub type </span>FraudProofVerifier =
-    subspace_service::FraudProofVerifier&lt;subspace_test_runtime::RuntimeApi, TestExecutorDispatch&gt;;
-
-<span class="kw">type </span>TxPreValidator = ConsensusChainTxPreValidator&lt;Block, Client, FraudProofVerifier&gt;;
-
 <span class="doccomment">/// Run a farmer.
-</span><span class="kw">pub fn </span>start_farmer&lt;PosTable&gt;(new_full: <span class="kw-2">&amp;</span>NewFull&lt;Client, TxPreValidator&gt;)
+</span><span class="kw">pub fn </span>start_farmer&lt;PosTable&gt;(new_full: <span class="kw-2">&amp;</span>NewFull&lt;Client&gt;)
 <span class="kw">where
     </span>PosTable: Table,
 {
@@ -485,12 +467,8 @@
                 .into_solutions(<span class="kw-2">&amp;</span>public_key, <span class="kw-2">&amp;</span>kzg, <span class="kw-2">&amp;</span>erasure_coding, |seed: <span class="kw-2">&amp;</span>PosSeed| {
                     table_generator.generate_parallel(seed)
                 })
-                .now_or_never()
-                .expect(<span class="string">&quot;Implementation of the sector is synchronous here; qed&quot;</span>)
                 .unwrap()
                 .next()
-                .now_or_never()
-                .expect(<span class="string">&quot;Implementation of the sector is synchronous here; qed&quot;</span>)
                 .expect(<span class="string">&quot;With max solution range there must be a solution; qed&quot;</span>)
                 .unwrap();
             <span class="comment">// Lazy conversion to a different type of public key and reward address
@@ -549,7 +527,7 @@
         sector_index,
         piece_getter: <span class="kw-2">&amp;</span>archived_segment.pieces,
         piece_getter_retry_policy: PieceGetterRetryPolicy::default(),
-        farmer_protocol_info: <span class="kw-2">&amp;</span>farmer_protocol_info,
+        farmer_protocol_info,
         kzg: <span class="kw-2">&amp;</span>kzg,
         erasure_coding,
         pieces_in_sector,

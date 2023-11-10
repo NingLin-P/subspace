@@ -785,8 +785,6 @@
 <a href="#785" id="785">785</a>
 <a href="#786" id="786">786</a>
 <a href="#787" id="787">787</a>
-<a href="#788" id="788">788</a>
-<a href="#789" id="789">789</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2019-2021 Parity Technologies (UK) Ltd.
 // Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
@@ -805,10 +803,7 @@
 // along with this program. If not, see &lt;https://www.gnu.org/licenses/&gt;.
 
 </span><span class="kw">use </span><span class="kw">crate</span>::archiver::SegmentHeadersStore;
-<span class="kw">use crate</span>::{
-    BlockImportingNotification, NewSlotInfo, NewSlotNotification, RewardSigningNotification,
-    SubspaceLink,
-};
+<span class="kw">use crate</span>::{NewSlotInfo, NewSlotNotification, RewardSigningNotification, SubspaceLink};
 <span class="kw">use </span>futures::channel::mpsc;
 <span class="kw">use </span>futures::{StreamExt, TryFutureExt};
 <span class="kw">use </span>log::{debug, error, info, warn};
@@ -1318,29 +1313,30 @@
                         .<span class="kw">await</span>;
                     }
                 }
+                <span class="prelude-val">Err</span>(error @ subspace_verification::Error::OutsideSolutionRange { .. }) =&gt; {
+                    <span class="comment">// Solution range might have just adjusted, but when farmer was auditing they
+                    // didn&#39;t know about this, so downgrade warning to debug message
+                    </span><span class="kw">if </span>runtime_api
+                        .solution_ranges(parent_hash)
+                        .ok()
+                        .and_then(|solution_ranges| solution_ranges.next)
+                        .is_some()
+                    {
+                        <span class="macro">debug!</span>(
+                            target: <span class="string">&quot;subspace&quot;</span>,
+                            <span class="string">&quot;Invalid solution received for slot {slot}: {error:?}&quot;</span>,
+                        );
+                    } <span class="kw">else </span>{
+                        <span class="macro">warn!</span>(
+                            target: <span class="string">&quot;subspace&quot;</span>,
+                            <span class="string">&quot;Invalid solution received for slot {slot}: {error:?}&quot;</span>,
+                        );
+                    }
+                }
                 <span class="prelude-val">Err</span>(error) =&gt; {
                     <span class="macro">warn!</span>(target: <span class="string">&quot;subspace&quot;</span>, <span class="string">&quot;Invalid solution received for slot {slot}: {error:?}&quot;</span>);
                 }
             }
-        }
-
-        <span class="comment">// TODO: This is a workaround for potential root cause of
-        //  https://github.com/subspace/subspace/issues/871, also being discussed in
-        //  https://substrate.stackexchange.com/questions/7886/is-block-creation-guaranteed-to-be-running-after-parent-block-is-fully-imported
-        </span><span class="kw">if </span>maybe_pre_digest.is_some() {
-            <span class="kw">let </span>block_number = <span class="kw-2">*</span>parent_header.number() + One::one();
-            <span class="kw">let </span>(acknowledgement_sender, <span class="kw-2">mut </span>acknowledgement_receiver) = mpsc::channel(<span class="number">0</span>);
-
-            <span class="self">self</span>.subspace_link
-                .block_importing_notification_sender
-                .notify(<span class="kw">move </span>|| BlockImportingNotification {
-                    block_number,
-                    acknowledgement_sender,
-                });
-
-            <span class="kw">while </span>(acknowledgement_receiver.next().<span class="kw">await</span>).is_some() {
-                <span class="comment">// Wait for all the acknowledgements to finish.
-            </span>}
         }
 
         maybe_pre_digest.map(|pre_digest| (pre_digest, pot_justification))

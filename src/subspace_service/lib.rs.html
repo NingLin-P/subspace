@@ -1069,50 +1069,6 @@
 <a href="#1069" id="1069">1069</a>
 <a href="#1070" id="1070">1070</a>
 <a href="#1071" id="1071">1071</a>
-<a href="#1072" id="1072">1072</a>
-<a href="#1073" id="1073">1073</a>
-<a href="#1074" id="1074">1074</a>
-<a href="#1075" id="1075">1075</a>
-<a href="#1076" id="1076">1076</a>
-<a href="#1077" id="1077">1077</a>
-<a href="#1078" id="1078">1078</a>
-<a href="#1079" id="1079">1079</a>
-<a href="#1080" id="1080">1080</a>
-<a href="#1081" id="1081">1081</a>
-<a href="#1082" id="1082">1082</a>
-<a href="#1083" id="1083">1083</a>
-<a href="#1084" id="1084">1084</a>
-<a href="#1085" id="1085">1085</a>
-<a href="#1086" id="1086">1086</a>
-<a href="#1087" id="1087">1087</a>
-<a href="#1088" id="1088">1088</a>
-<a href="#1089" id="1089">1089</a>
-<a href="#1090" id="1090">1090</a>
-<a href="#1091" id="1091">1091</a>
-<a href="#1092" id="1092">1092</a>
-<a href="#1093" id="1093">1093</a>
-<a href="#1094" id="1094">1094</a>
-<a href="#1095" id="1095">1095</a>
-<a href="#1096" id="1096">1096</a>
-<a href="#1097" id="1097">1097</a>
-<a href="#1098" id="1098">1098</a>
-<a href="#1099" id="1099">1099</a>
-<a href="#1100" id="1100">1100</a>
-<a href="#1101" id="1101">1101</a>
-<a href="#1102" id="1102">1102</a>
-<a href="#1103" id="1103">1103</a>
-<a href="#1104" id="1104">1104</a>
-<a href="#1105" id="1105">1105</a>
-<a href="#1106" id="1106">1106</a>
-<a href="#1107" id="1107">1107</a>
-<a href="#1108" id="1108">1108</a>
-<a href="#1109" id="1109">1109</a>
-<a href="#1110" id="1110">1110</a>
-<a href="#1111" id="1111">1111</a>
-<a href="#1112" id="1112">1112</a>
-<a href="#1113" id="1113">1113</a>
-<a href="#1114" id="1114">1114</a>
-<a href="#1115" id="1115">1115</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -1143,15 +1099,14 @@
 <span class="kw">mod </span>metrics;
 <span class="kw">pub mod </span>rpc;
 <span class="kw">mod </span>sync_from_dsn;
-<span class="kw">pub mod </span>tx_pre_validator;
+<span class="kw">pub mod </span>transaction_pool;
 
 <span class="kw">use </span><span class="kw">crate</span>::dsn::{create_dsn_instance, DsnConfigurationError};
 <span class="kw">use </span><span class="kw">crate</span>::metrics::NodeMetrics;
-<span class="kw">use </span><span class="kw">crate</span>::tx_pre_validator::ConsensusChainTxPreValidator;
+<span class="kw">use </span><span class="kw">crate</span>::transaction_pool::FullPool;
 <span class="kw">use </span>core::sync::atomic::{AtomicU32, Ordering};
 <span class="kw">use </span>cross_domain_message_gossip::cdm_gossip_peers_set_config;
-<span class="kw">use </span>domain_runtime_primitives::opaque::Block <span class="kw">as </span>DomainBlock;
-<span class="kw">use </span>domain_runtime_primitives::{BlockNumber <span class="kw">as </span>DomainNumber, Hash <span class="kw">as </span>DomainHash};
+<span class="kw">use </span>domain_runtime_primitives::opaque::{Block <span class="kw">as </span>DomainBlock, Header <span class="kw">as </span>DomainHeader};
 <span class="kw">pub use </span>dsn::DsnConfig;
 <span class="kw">use </span>frame_system_rpc_runtime_api::AccountNonceApi;
 <span class="kw">use </span>futures::channel::oneshot;
@@ -1162,7 +1117,9 @@
 <span class="kw">use </span>prometheus_client::registry::Registry;
 <span class="kw">use </span>sc_basic_authorship::ProposerFactory;
 <span class="kw">use </span>sc_client_api::execution_extensions::ExtensionsFactory;
-<span class="kw">use </span>sc_client_api::{Backend, BlockBackend, BlockchainEvents, ExecutorProvider, HeaderBackend};
+<span class="kw">use </span>sc_client_api::{
+    AuxStore, Backend, BlockBackend, BlockchainEvents, ExecutorProvider, HeaderBackend,
+};
 <span class="kw">use </span>sc_consensus::{BasicQueue, DefaultImportQueue, ImportQueue, SharedBlockImport};
 <span class="kw">use </span>sc_consensus_slots::SlotProportion;
 <span class="kw">use </span>sc_consensus_subspace::archiver::{create_subspace_archiver, SegmentHeadersStore};
@@ -1194,9 +1151,8 @@
 };
 <span class="kw">use </span>sp_core::traits::{CodeExecutor, SpawnEssentialNamed};
 <span class="kw">use </span>sp_core::H256;
-<span class="kw">use </span>sp_domains::transaction::PreValidationObjectApi;
-<span class="kw">use </span>sp_domains::DomainsApi;
-<span class="kw">use </span>sp_domains_fraud_proof::{FraudProofExtension, FraudProofHostFunctionsImpl};
+<span class="kw">use </span>sp_domains::{BundleProducerElectionApi, DomainsApi};
+<span class="kw">use </span>sp_domains_fraud_proof::{FraudProofApi, FraudProofExtension, FraudProofHostFunctionsImpl};
 <span class="kw">use </span>sp_externalities::Extensions;
 <span class="kw">use </span>sp_objects::ObjectsApi;
 <span class="kw">use </span>sp_offchain::OffchainWorkerApi;
@@ -1211,15 +1167,13 @@
 <span class="kw">use </span>std::time::Duration;
 <span class="kw">use </span>subspace_core_primitives::crypto::kzg::{embedded_kzg_settings, Kzg};
 <span class="kw">use </span>subspace_core_primitives::{PotSeed, REWARD_SIGNING_CONTEXT};
-<span class="kw">use </span>subspace_fraud_proof::verifier_api::VerifierClient;
 <span class="kw">use </span>subspace_metrics::{start_prometheus_metrics_server, RegistryAdapter};
 <span class="kw">use </span>subspace_networking::libp2p::multiaddr::Protocol;
 <span class="kw">use </span>subspace_networking::libp2p::Multiaddr;
 <span class="kw">use </span>subspace_networking::Node;
 <span class="kw">use </span>subspace_proof_of_space::Table;
 <span class="kw">use </span>subspace_runtime_primitives::opaque::Block;
-<span class="kw">use </span>subspace_runtime_primitives::{AccountId, Balance, Hash, Nonce};
-<span class="kw">use </span>subspace_transaction_pool::{FullPool, PreValidateTransaction};
+<span class="kw">use </span>subspace_runtime_primitives::{AccountId, Balance, Nonce};
 <span class="kw">use </span>tracing::{debug, error, info, Instrument};
 
 <span class="comment">// There are multiple places where it is assumed that node is running on 64-bit system, refuse to
@@ -1278,20 +1232,6 @@
 <span class="kw">pub type </span>FullBackend = sc_service::TFullBackend&lt;Block&gt;;
 <span class="kw">pub type </span>FullSelectChain = sc_consensus::LongestChain&lt;FullBackend, Block&gt;;
 
-<span class="kw">pub type </span>InvalidTransactionProofVerifier&lt;RuntimeApi, ExecutorDispatch&gt; =
-    subspace_fraud_proof::invalid_transaction_proof::InvalidTransactionProofVerifier&lt;
-        Block,
-        FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
-        Hash,
-        NativeElseWasmExecutor&lt;ExecutorDispatch&gt;,
-        VerifierClient&lt;FullClient&lt;RuntimeApi, ExecutorDispatch&gt;, Block&gt;,
-    &gt;;
-
-<span class="kw">pub type </span>FraudProofVerifier&lt;RuntimeApi, ExecutorDispatch&gt; = subspace_fraud_proof::ProofVerifier&lt;
-    Block,
-    InvalidTransactionProofVerifier&lt;RuntimeApi, ExecutorDispatch&gt;,
-&gt;;
-
 <span class="doccomment">/// Subspace networking instantiation variant
 </span><span class="attr">#[derive(Debug)]
 #[allow(clippy::large_enum_variant)]
@@ -1348,10 +1288,16 @@
     Block: BlockT,
     Block::Hash: From&lt;H256&gt;,
     DomainBlock: BlockT,
-    DomainBlock::Hash: From&lt;H256&gt;,
-    Client: HeaderBackend&lt;Block&gt; + ProvideRuntimeApi&lt;Block&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
+    DomainBlock::Hash: Into&lt;H256&gt; + From&lt;H256&gt;,
+    Client: BlockBackend&lt;Block&gt;
+        + HeaderBackend&lt;Block&gt;
+        + ProvideRuntimeApi&lt;Block&gt;
+        + Send
+        + Sync
+        + <span class="lifetime">&#39;static</span>,
     Client::Api: SubspaceApi&lt;Block, FarmerPublicKey&gt;
-        + DomainsApi&lt;Block, NumberFor&lt;DomainBlock&gt;, DomainBlock::Hash&gt;,
+        + DomainsApi&lt;Block, DomainBlock::Header&gt;
+        + BundleProducerElectionApi&lt;Block, Balance&gt;,
     ExecutorDispatch: CodeExecutor + sc_executor::RuntimeVersionOf,
 {
     <span class="kw">fn </span>extensions_for(
@@ -1507,15 +1453,7 @@
     FullBackend,
     FullSelectChain,
     DefaultImportQueue&lt;Block&gt;,
-    FullPool&lt;
-        Block,
-        FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
-        ConsensusChainTxPreValidator&lt;
-            Block,
-            FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
-            FraudProofVerifier&lt;RuntimeApi, ExecutorDispatch&gt;,
-        &gt;,
-    &gt;,
+    FullPool&lt;FullClient&lt;RuntimeApi, ExecutorDispatch&gt;, Block, DomainHeader&gt;,
     OtherPartialComponents&lt;RuntimeApi, ExecutorDispatch&gt;,
 &gt;;
 
@@ -1538,9 +1476,10 @@
         + SessionKeys&lt;Block&gt;
         + TaggedTransactionQueue&lt;Block&gt;
         + SubspaceApi&lt;Block, FarmerPublicKey&gt;
-        + DomainsApi&lt;Block, DomainNumber, DomainHash&gt;
-        + ObjectsApi&lt;Block&gt;
-        + PreValidationObjectApi&lt;Block, DomainNumber, DomainHash&gt;,
+        + DomainsApi&lt;Block, DomainHeader&gt;
+        + FraudProofApi&lt;Block, DomainHeader&gt;
+        + BundleProducerElectionApi&lt;Block, Balance&gt;
+        + ObjectsApi&lt;Block&gt;,
     ExecutorDispatch: NativeExecutionDispatch + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">let </span>telemetry = config
@@ -1593,27 +1532,6 @@
 
     <span class="kw">let </span>select_chain = sc_consensus::LongestChain::new(backend.clone());
 
-    <span class="kw">let </span>invalid_transaction_proof_verifier = InvalidTransactionProofVerifier::new(
-        client.clone(),
-        executor.clone(),
-        VerifierClient::new(client.clone()),
-    );
-
-    <span class="kw">let </span>proof_verifier =
-        subspace_fraud_proof::ProofVerifier::new(Arc::new(invalid_transaction_proof_verifier));
-
-    <span class="kw">let </span>tx_pre_validator = ConsensusChainTxPreValidator::new(
-        client.clone(),
-        Box::new(task_manager.spawn_handle()),
-        proof_verifier.clone(),
-    );
-    <span class="kw">let </span>transaction_pool = subspace_transaction_pool::new_full(
-        config,
-        <span class="kw-2">&amp;</span>task_manager,
-        client.clone(),
-        tx_pre_validator,
-    );
-
     <span class="kw">let </span>segment_headers_store = SegmentHeadersStore::new(client.clone())
         .map_err(|error| ServiceError::Application(error.into()))<span class="question-mark">?</span>;
 
@@ -1660,18 +1578,18 @@
         pot_verifier.clone(),
     )<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>slot_duration = subspace_link.slot_duration();
     <span class="kw">let </span>sync_target_block_number = Arc::new(AtomicU32::new(<span class="number">0</span>));
-    <span class="kw">let </span>verifier = SubspaceVerifier::&lt;PosTable, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>&gt;::new(SubspaceVerifierOptions {
+    <span class="kw">let </span>transaction_pool = <span class="kw">crate</span>::transaction_pool::new_full(
+        config,
+        <span class="kw-2">&amp;</span>task_manager,
+        client.clone(),
+        sync_target_block_number.clone(),
+    )<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>verifier = SubspaceVerifier::&lt;PosTable, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>&gt;::new(SubspaceVerifierOptions {
         client: client.clone(),
         kzg,
         select_chain: select_chain.clone(),
-        <span class="comment">// TODO: Remove use current best slot known from PoT verifier in PoT case
-        </span>slot_now: <span class="kw">move </span>|| {
-            <span class="kw">let </span>timestamp = sp_timestamp::InherentDataProvider::from_system_time();
-
-            Slot::from_timestamp(<span class="kw-2">*</span>timestamp, slot_duration)
-        },
         telemetry: telemetry.as_ref().map(|x| x.handle()),
         offchain_tx_pool_factory: OffchainTransactionPoolFactory::new(transaction_pool.clone()),
         reward_signing_context: schnorrkel::context::signing_context(REWARD_SIGNING_CONTEXT),
@@ -1711,18 +1629,19 @@
 }
 
 <span class="doccomment">/// Full node along with some other components.
-</span><span class="kw">pub struct </span>NewFull&lt;Client, TxPreValidator&gt;
+</span><span class="kw">pub struct </span>NewFull&lt;Client&gt;
 <span class="kw">where
     </span>Client: ProvideRuntimeApi&lt;Block&gt;
+        + AuxStore
         + BlockBackend&lt;Block&gt;
         + BlockIdTo&lt;Block&gt;
         + HeaderBackend&lt;Block&gt;
         + HeaderMetadata&lt;Block, Error = sp_blockchain::Error&gt;
         + <span class="lifetime">&#39;static</span>,
     Client::Api: TaggedTransactionQueue&lt;Block&gt;
-        + DomainsApi&lt;Block, DomainNumber, DomainHash&gt;
-        + PreValidationObjectApi&lt;Block, DomainNumber, DomainHash&gt;,
-    TxPreValidator: PreValidateTransaction&lt;Block = Block&gt; + Send + Sync + Clone + <span class="lifetime">&#39;static</span>,
+        + DomainsApi&lt;Block, DomainHeader&gt;
+        + FraudProofApi&lt;Block, DomainHeader&gt;
+        + SubspaceApi&lt;Block, FarmerPublicKey&gt;,
 {
     <span class="doccomment">/// Task manager.
     </span><span class="kw">pub </span>task_manager: TaskManager,
@@ -1751,17 +1670,10 @@
     <span class="doccomment">/// Network starter.
     </span><span class="kw">pub </span>network_starter: NetworkStarter,
     <span class="doccomment">/// Transaction pool.
-    </span><span class="kw">pub </span>transaction_pool: Arc&lt;FullPool&lt;Block, Client, TxPreValidator&gt;&gt;,
+    </span><span class="kw">pub </span>transaction_pool: Arc&lt;FullPool&lt;Client, Block, DomainHeader&gt;&gt;,
 }
 
-<span class="kw">type </span>FullNode&lt;RuntimeApi, ExecutorDispatch&gt; = NewFull&lt;
-    FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
-    ConsensusChainTxPreValidator&lt;
-        Block,
-        FullClient&lt;RuntimeApi, ExecutorDispatch&gt;,
-        FraudProofVerifier&lt;RuntimeApi, ExecutorDispatch&gt;,
-    &gt;,
-&gt;;
+<span class="kw">type </span>FullNode&lt;RuntimeApi, ExecutorDispatch&gt; = NewFull&lt;FullClient&lt;RuntimeApi, ExecutorDispatch&gt;&gt;;
 
 <span class="doccomment">/// Builds a new service for a full client.
 </span><span class="kw">pub async fn </span>new_full&lt;PosTable, RuntimeApi, ExecutorDispatch&gt;(
@@ -1785,9 +1697,9 @@
         + TaggedTransactionQueue&lt;Block&gt;
         + TransactionPaymentApi&lt;Block, Balance&gt;
         + SubspaceApi&lt;Block, FarmerPublicKey&gt;
-        + DomainsApi&lt;Block, DomainNumber, DomainHash&gt;
-        + ObjectsApi&lt;Block&gt;
-        + PreValidationObjectApi&lt;Block, DomainNumber, DomainHash&gt;,
+        + DomainsApi&lt;Block, DomainHeader&gt;
+        + FraudProofApi&lt;Block, DomainHeader&gt;
+        + ObjectsApi&lt;Block&gt;,
     ExecutorDispatch: NativeExecutionDispatch + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">let </span>PartialComponents {

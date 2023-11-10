@@ -895,6 +895,112 @@
 <a href="#895" id="895">895</a>
 <a href="#896" id="896">896</a>
 <a href="#897" id="897">897</a>
+<a href="#898" id="898">898</a>
+<a href="#899" id="899">899</a>
+<a href="#900" id="900">900</a>
+<a href="#901" id="901">901</a>
+<a href="#902" id="902">902</a>
+<a href="#903" id="903">903</a>
+<a href="#904" id="904">904</a>
+<a href="#905" id="905">905</a>
+<a href="#906" id="906">906</a>
+<a href="#907" id="907">907</a>
+<a href="#908" id="908">908</a>
+<a href="#909" id="909">909</a>
+<a href="#910" id="910">910</a>
+<a href="#911" id="911">911</a>
+<a href="#912" id="912">912</a>
+<a href="#913" id="913">913</a>
+<a href="#914" id="914">914</a>
+<a href="#915" id="915">915</a>
+<a href="#916" id="916">916</a>
+<a href="#917" id="917">917</a>
+<a href="#918" id="918">918</a>
+<a href="#919" id="919">919</a>
+<a href="#920" id="920">920</a>
+<a href="#921" id="921">921</a>
+<a href="#922" id="922">922</a>
+<a href="#923" id="923">923</a>
+<a href="#924" id="924">924</a>
+<a href="#925" id="925">925</a>
+<a href="#926" id="926">926</a>
+<a href="#927" id="927">927</a>
+<a href="#928" id="928">928</a>
+<a href="#929" id="929">929</a>
+<a href="#930" id="930">930</a>
+<a href="#931" id="931">931</a>
+<a href="#932" id="932">932</a>
+<a href="#933" id="933">933</a>
+<a href="#934" id="934">934</a>
+<a href="#935" id="935">935</a>
+<a href="#936" id="936">936</a>
+<a href="#937" id="937">937</a>
+<a href="#938" id="938">938</a>
+<a href="#939" id="939">939</a>
+<a href="#940" id="940">940</a>
+<a href="#941" id="941">941</a>
+<a href="#942" id="942">942</a>
+<a href="#943" id="943">943</a>
+<a href="#944" id="944">944</a>
+<a href="#945" id="945">945</a>
+<a href="#946" id="946">946</a>
+<a href="#947" id="947">947</a>
+<a href="#948" id="948">948</a>
+<a href="#949" id="949">949</a>
+<a href="#950" id="950">950</a>
+<a href="#951" id="951">951</a>
+<a href="#952" id="952">952</a>
+<a href="#953" id="953">953</a>
+<a href="#954" id="954">954</a>
+<a href="#955" id="955">955</a>
+<a href="#956" id="956">956</a>
+<a href="#957" id="957">957</a>
+<a href="#958" id="958">958</a>
+<a href="#959" id="959">959</a>
+<a href="#960" id="960">960</a>
+<a href="#961" id="961">961</a>
+<a href="#962" id="962">962</a>
+<a href="#963" id="963">963</a>
+<a href="#964" id="964">964</a>
+<a href="#965" id="965">965</a>
+<a href="#966" id="966">966</a>
+<a href="#967" id="967">967</a>
+<a href="#968" id="968">968</a>
+<a href="#969" id="969">969</a>
+<a href="#970" id="970">970</a>
+<a href="#971" id="971">971</a>
+<a href="#972" id="972">972</a>
+<a href="#973" id="973">973</a>
+<a href="#974" id="974">974</a>
+<a href="#975" id="975">975</a>
+<a href="#976" id="976">976</a>
+<a href="#977" id="977">977</a>
+<a href="#978" id="978">978</a>
+<a href="#979" id="979">979</a>
+<a href="#980" id="980">980</a>
+<a href="#981" id="981">981</a>
+<a href="#982" id="982">982</a>
+<a href="#983" id="983">983</a>
+<a href="#984" id="984">984</a>
+<a href="#985" id="985">985</a>
+<a href="#986" id="986">986</a>
+<a href="#987" id="987">987</a>
+<a href="#988" id="988">988</a>
+<a href="#989" id="989">989</a>
+<a href="#990" id="990">990</a>
+<a href="#991" id="991">991</a>
+<a href="#992" id="992">992</a>
+<a href="#993" id="993">993</a>
+<a href="#994" id="994">994</a>
+<a href="#995" id="995">995</a>
+<a href="#996" id="996">996</a>
+<a href="#997" id="997">997</a>
+<a href="#998" id="998">998</a>
+<a href="#999" id="999">999</a>
+<a href="#1000" id="1000">1000</a>
+<a href="#1001" id="1001">1001</a>
+<a href="#1002" id="1002">1002</a>
+<a href="#1003" id="1003">1003</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
@@ -915,20 +1021,19 @@
 </span><span class="attr">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 
 </span><span class="kw">pub mod </span>bundle_producer_election;
-<span class="kw">pub mod </span>fraud_proof;
+<span class="kw">pub mod </span>extrinsics;
 <span class="kw">pub mod </span>merkle_tree;
+<span class="kw">pub mod </span>proof_provider_and_verifier;
 <span class="kw">pub mod </span>storage;
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests;
-<span class="kw">pub mod </span>transaction;
-<span class="kw">pub mod </span>valued_trie_root;
-<span class="kw">pub mod </span>verification;
+<span class="kw">pub mod </span>valued_trie;
 
 <span class="kw">extern crate </span>alloc;
 
 <span class="kw">use </span><span class="kw">crate</span>::storage::{RawGenesis, StorageKey};
 <span class="kw">use </span>alloc::string::String;
-<span class="kw">use </span>bundle_producer_election::{BundleProducerElectionParams, VrfProofError};
+<span class="kw">use </span>bundle_producer_election::{BundleProducerElectionParams, ProofOfElectionError};
 <span class="kw">use </span>hexlit::hex;
 <span class="kw">use </span>parity_scale_codec::{Decode, Encode, MaxEncodedLen};
 <span class="kw">use </span>scale_info::TypeInfo;
@@ -948,7 +1053,9 @@
 <span class="kw">use </span>sp_runtime_interface::pass_by;
 <span class="kw">use </span>sp_runtime_interface::pass_by::PassBy;
 <span class="kw">use </span>sp_std::collections::btree_set::BTreeSet;
+<span class="kw">use </span>sp_std::fmt::{Display, Formatter};
 <span class="kw">use </span>sp_std::vec::Vec;
+<span class="kw">use </span>sp_trie::TrieLayout;
 <span class="kw">use </span>sp_weights::Weight;
 <span class="kw">use </span>subspace_core_primitives::crypto::blake3_hash;
 <span class="kw">use </span>subspace_core_primitives::{bidirectional_distance, Blake3Hash, Randomness, U256};
@@ -990,11 +1097,15 @@
 /// Derived from the Balance and can&#39;t be smaller than u128.
 </span><span class="kw">pub type </span>StakeWeight = u128;
 
-<span class="doccomment">/// The hash of a execution receipt.
-</span><span class="kw">pub type </span>ReceiptHash = H256;
-
-<span class="doccomment">/// The Merkle root of all extrinsics included in a bundle.
+<span class="doccomment">/// The Trie root of all extrinsics included in a bundle.
 </span><span class="kw">pub type </span>ExtrinsicsRoot = H256;
+
+<span class="doccomment">/// Type alias for Header Hashing.
+</span><span class="kw">pub type </span>HeaderHashingFor&lt;Header&gt; = &lt;Header <span class="kw">as </span>HeaderT&gt;::Hashing;
+<span class="doccomment">/// Type alias for Header number.
+</span><span class="kw">pub type </span>HeaderNumberFor&lt;Header&gt; = &lt;Header <span class="kw">as </span>HeaderT&gt;::Number;
+<span class="doccomment">/// Type alias for Header hash.
+</span><span class="kw">pub type </span>HeaderHashFor&lt;Header&gt; = &lt;Header <span class="kw">as </span>HeaderT&gt;::Hash;
 
 <span class="doccomment">/// Unique identifier of a domain.
 </span><span class="attr">#[derive(
@@ -1064,17 +1175,29 @@
     }
 }
 
+<span class="kw">impl </span>Display <span class="kw">for </span>DomainId {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; core::fmt::Result {
+        <span class="self">self</span>.<span class="number">0</span>.fmt(f)
+    }
+}
+
 <span class="kw">impl </span>PassBy <span class="kw">for </span>DomainId {
     <span class="kw">type </span>PassBy = pass_by::Codec&lt;<span class="self">Self</span>&gt;;
 }
 
 <span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
-</span><span class="kw">pub struct </span>BundleHeader&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt; {
+</span><span class="kw">pub struct </span>BundleHeader&lt;Number, Hash, DomainHeader: HeaderT, Balance&gt; {
     <span class="doccomment">/// Proof of bundle producer election.
-    </span><span class="kw">pub </span>proof_of_election: ProofOfElection,
+    </span><span class="kw">pub </span>proof_of_election: ProofOfElection&lt;Hash&gt;,
     <span class="doccomment">/// Execution receipt that should extend the receipt chain or add confirmations
     /// to the head receipt.
-    </span><span class="kw">pub </span>receipt: ExecutionReceipt&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt;,
+    </span><span class="kw">pub </span>receipt: ExecutionReceipt&lt;
+        Number,
+        Hash,
+        HeaderNumberFor&lt;DomainHeader&gt;,
+        HeaderHashFor&lt;DomainHeader&gt;,
+        Balance,
+    &gt;,
     <span class="doccomment">/// The size of the bundle body in bytes.
     ///
     /// Used to calculate the storage cost.
@@ -1084,46 +1207,46 @@
     /// Used to prevent overloading the bundle with compute.
     </span><span class="kw">pub </span>estimated_bundle_weight: Weight,
     <span class="doccomment">/// The Merkle root of all new extrinsics included in this bundle.
-    </span><span class="kw">pub </span>bundle_extrinsics_root: ExtrinsicsRoot,
+    </span><span class="kw">pub </span>bundle_extrinsics_root: HeaderHashFor&lt;DomainHeader&gt;,
 }
 
-<span class="kw">impl</span>&lt;Number: Encode, Hash: Encode, DomainNumber: Encode, DomainHash: Encode, Balance: Encode&gt;
-    BundleHeader&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt;
+<span class="kw">impl</span>&lt;Number: Encode, Hash: Encode, DomainHeader: HeaderT, Balance: Encode&gt;
+    BundleHeader&lt;Number, Hash, DomainHeader, Balance&gt;
 {
     <span class="doccomment">/// Returns the hash of this header.
-    </span><span class="kw">pub fn </span>hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; H256 {
-        BlakeTwo256::hash_of(<span class="self">self</span>)
+    </span><span class="kw">pub fn </span>hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HeaderHashFor&lt;DomainHeader&gt; {
+        HeaderHashingFor::&lt;DomainHeader&gt;::hash_of(<span class="self">self</span>)
     }
 }
 
 <span class="doccomment">/// Header of bundle.
 </span><span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
-</span><span class="kw">pub struct </span>SealedBundleHeader&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt; {
+</span><span class="kw">pub struct </span>SealedBundleHeader&lt;Number, Hash, DomainHeader: HeaderT, Balance&gt; {
     <span class="doccomment">/// Unsealed header.
-    </span><span class="kw">pub </span>header: BundleHeader&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt;,
+    </span><span class="kw">pub </span>header: BundleHeader&lt;Number, Hash, DomainHeader, Balance&gt;,
     <span class="doccomment">/// Signature of the bundle.
     </span><span class="kw">pub </span>signature: OperatorSignature,
 }
 
-<span class="kw">impl</span>&lt;Number: Encode, Hash: Encode, DomainNumber: Encode, DomainHash: Encode, Balance: Encode&gt;
-    SealedBundleHeader&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt;
+<span class="kw">impl</span>&lt;Number: Encode, Hash: Encode, DomainHeader: HeaderT, Balance: Encode&gt;
+    SealedBundleHeader&lt;Number, Hash, DomainHeader, Balance&gt;
 {
     <span class="doccomment">/// Constructs a new instance of [`SealedBundleHeader`].
     </span><span class="kw">pub fn </span>new(
-        header: BundleHeader&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt;,
+        header: BundleHeader&lt;Number, Hash, DomainHeader, Balance&gt;,
         signature: OperatorSignature,
     ) -&gt; <span class="self">Self </span>{
         <span class="self">Self </span>{ header, signature }
     }
 
     <span class="doccomment">/// Returns the hash of the inner unsealed header.
-    </span><span class="kw">pub fn </span>pre_hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; H256 {
+    </span><span class="kw">pub fn </span>pre_hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HeaderHashFor&lt;DomainHeader&gt; {
         <span class="self">self</span>.header.hash()
     }
 
     <span class="doccomment">/// Returns the hash of this header.
-    </span><span class="kw">pub fn </span>hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; H256 {
-        BlakeTwo256::hash_of(<span class="self">self</span>)
+    </span><span class="kw">pub fn </span>hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HeaderHashFor&lt;DomainHeader&gt; {
+        HeaderHashingFor::&lt;DomainHeader&gt;::hash_of(<span class="self">self</span>)
     }
 
     <span class="kw">pub fn </span>slot_number(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
@@ -1133,21 +1256,15 @@
 
 <span class="doccomment">/// Domain bundle.
 </span><span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
-</span><span class="kw">pub struct </span>Bundle&lt;Extrinsic, Number, Hash, DomainNumber, DomainHash, Balance&gt; {
+</span><span class="kw">pub struct </span>Bundle&lt;Extrinsic, Number, Hash, DomainHeader: HeaderT, Balance&gt; {
     <span class="doccomment">/// Sealed bundle header.
-    </span><span class="kw">pub </span>sealed_header: SealedBundleHeader&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt;,
+    </span><span class="kw">pub </span>sealed_header: SealedBundleHeader&lt;Number, Hash, DomainHeader, Balance&gt;,
     <span class="doccomment">/// The accompanying extrinsics.
     </span><span class="kw">pub </span>extrinsics: Vec&lt;Extrinsic&gt;,
 }
 
-<span class="kw">impl</span>&lt;
-        Extrinsic: Encode,
-        Number: Encode,
-        Hash: Encode,
-        DomainNumber: Encode,
-        DomainHash: Encode,
-        Balance: Encode,
-    &gt; Bundle&lt;Extrinsic, Number, Hash, DomainNumber, DomainHash, Balance&gt;
+<span class="kw">impl</span>&lt;Extrinsic: Encode, Number: Encode, Hash: Encode, DomainHeader: HeaderT, Balance: Encode&gt;
+    Bundle&lt;Extrinsic, Number, Hash, DomainHeader, Balance&gt;
 {
     <span class="doccomment">/// Returns the hash of this bundle.
     </span><span class="kw">pub fn </span>hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; H256 {
@@ -1160,7 +1277,7 @@
     }
 
     <span class="doccomment">/// Return the `bundle_extrinsics_root`
-    </span><span class="kw">pub fn </span>extrinsics_root(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ExtrinsicsRoot {
+    </span><span class="kw">pub fn </span>extrinsics_root(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HeaderHashFor&lt;DomainHeader&gt; {
         <span class="self">self</span>.sealed_header.header.bundle_extrinsics_root
     }
 
@@ -1170,31 +1287,45 @@
     }
 
     <span class="doccomment">/// Return a reference of the execution receipt.
-    </span><span class="kw">pub fn </span>receipt(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>ExecutionReceipt&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt; {
+    </span><span class="kw">pub fn </span>receipt(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+    ) -&gt; <span class="kw-2">&amp;</span>ExecutionReceipt&lt;
+        Number,
+        Hash,
+        HeaderNumberFor&lt;DomainHeader&gt;,
+        HeaderHashFor&lt;DomainHeader&gt;,
+        Balance,
+    &gt; {
         <span class="kw-2">&amp;</span><span class="self">self</span>.sealed_header.header.receipt
     }
 
     <span class="doccomment">/// Consumes [`Bundle`] to extract the execution receipt.
-    </span><span class="kw">pub fn </span>into_receipt(<span class="self">self</span>) -&gt; ExecutionReceipt&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt; {
+    </span><span class="kw">pub fn </span>into_receipt(
+        <span class="self">self</span>,
+    ) -&gt; ExecutionReceipt&lt;
+        Number,
+        Hash,
+        HeaderNumberFor&lt;DomainHeader&gt;,
+        HeaderHashFor&lt;DomainHeader&gt;,
+        Balance,
+    &gt; {
         <span class="self">self</span>.sealed_header.header.receipt
     }
 }
 
 <span class="doccomment">/// Bundle with opaque extrinsics.
-</span><span class="kw">pub type </span>OpaqueBundle&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt; =
-    Bundle&lt;OpaqueExtrinsic, Number, Hash, DomainNumber, DomainHash, Balance&gt;;
+</span><span class="kw">pub type </span>OpaqueBundle&lt;Number, Hash, DomainHeader, Balance&gt; =
+    Bundle&lt;OpaqueExtrinsic, Number, Hash, DomainHeader, Balance&gt;;
 
 <span class="doccomment">/// List of [`OpaqueBundle`].
-</span><span class="kw">pub type </span>OpaqueBundles&lt;Block, DomainNumber, DomainHash, Balance&gt; =
-    Vec&lt;OpaqueBundle&lt;NumberFor&lt;Block&gt;, &lt;Block <span class="kw">as </span>BlockT&gt;::Hash, DomainNumber, DomainHash, Balance&gt;&gt;;
+</span><span class="kw">pub type </span>OpaqueBundles&lt;Block, DomainHeader, Balance&gt; =
+    Vec&lt;OpaqueBundle&lt;NumberFor&lt;Block&gt;, &lt;Block <span class="kw">as </span>BlockT&gt;::Hash, DomainHeader, Balance&gt;&gt;;
 
-<span class="kw">impl</span>&lt;Extrinsic: Encode, Number, Hash, DomainNumber, DomainHash, Balance&gt;
-    Bundle&lt;Extrinsic, Number, Hash, DomainNumber, DomainHash, Balance&gt;
+<span class="kw">impl</span>&lt;Extrinsic: Encode, Number, Hash, DomainHeader: HeaderT, Balance&gt;
+    Bundle&lt;Extrinsic, Number, Hash, DomainHeader, Balance&gt;
 {
     <span class="doccomment">/// Convert a bundle with generic extrinsic to a bundle with opaque extrinsic.
-    </span><span class="kw">pub fn </span>into_opaque_bundle(
-        <span class="self">self</span>,
-    ) -&gt; OpaqueBundle&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt; {
+    </span><span class="kw">pub fn </span>into_opaque_bundle(<span class="self">self</span>) -&gt; OpaqueBundle&lt;Number, Hash, DomainHeader, Balance&gt; {
         <span class="kw">let </span>Bundle {
             sealed_header,
             extrinsics,
@@ -1216,15 +1347,20 @@
 <span class="attr">#[cfg(any(feature = <span class="string">&quot;std&quot;</span>, feature = <span class="string">&quot;runtime-benchmarks&quot;</span>))]
 </span><span class="kw">pub fn </span>dummy_opaque_bundle&lt;
     Number: Encode,
-    Hash: Encode,
-    DomainNumber: Encode,
-    DomainHash: Encode,
+    Hash: Default + Encode,
+    DomainHeader: HeaderT,
     Balance: Encode,
 &gt;(
     domain_id: DomainId,
     operator_id: OperatorId,
-    receipt: ExecutionReceipt&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt;,
-) -&gt; OpaqueBundle&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt; {
+    receipt: ExecutionReceipt&lt;
+        Number,
+        Hash,
+        HeaderNumberFor&lt;DomainHeader&gt;,
+        HeaderHashFor&lt;DomainHeader&gt;,
+        Balance,
+    &gt;,
+) -&gt; OpaqueBundle&lt;Number, Hash, DomainHeader, Balance&gt; {
     <span class="kw">use </span>sp_core::crypto::UncheckedFrom;
 
     <span class="kw">let </span>header = BundleHeader {
@@ -1244,11 +1380,11 @@
 
 <span class="doccomment">/// A digest of the bundle
 </span><span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
-</span><span class="kw">pub struct </span>BundleDigest {
+</span><span class="kw">pub struct </span>BundleDigest&lt;Hash&gt; {
     <span class="doccomment">/// The hash of the bundle header
-    </span><span class="kw">pub </span>header_hash: H256,
+    </span><span class="kw">pub </span>header_hash: Hash,
     <span class="doccomment">/// The Merkle root of all new extrinsics included in this bundle.
-    </span><span class="kw">pub </span>extrinsics_root: ExtrinsicsRoot,
+    </span><span class="kw">pub </span>extrinsics_root: Hash,
 }
 
 <span class="doccomment">/// Receipt of a domain block execution.
@@ -1259,16 +1395,16 @@
     <span class="doccomment">/// The block hash corresponding to `domain_block_number`.
     </span><span class="kw">pub </span>domain_block_hash: DomainHash,
     <span class="doccomment">/// Extrinsic root field of the header of domain block referenced by this ER.
-    </span><span class="kw">pub </span>domain_block_extrinsic_root: H256,
+    </span><span class="kw">pub </span>domain_block_extrinsic_root: DomainHash,
     <span class="doccomment">/// The hash of the ER for the last domain block.
-    </span><span class="kw">pub </span>parent_domain_block_receipt_hash: ReceiptHash,
+    </span><span class="kw">pub </span>parent_domain_block_receipt_hash: DomainHash,
     <span class="doccomment">/// A pointer to the consensus block index which contains all of the bundles that were used to derive and
     /// order all extrinsics executed by the current domain block for this ER.
     </span><span class="kw">pub </span>consensus_block_number: Number,
     <span class="doccomment">/// The block hash corresponding to `consensus_block_number`.
     </span><span class="kw">pub </span>consensus_block_hash: Hash,
     <span class="doccomment">/// All the bundles that being included in the consensus block.
-    </span><span class="kw">pub </span>inboxed_bundles: Vec&lt;InboxedBundle&gt;,
+    </span><span class="kw">pub </span>inboxed_bundles: Vec&lt;InboxedBundle&lt;DomainHash&gt;&gt;,
     <span class="doccomment">/// The final state root for the current domain block reflected by this ER.
     ///
     /// Used for verifying storage proofs for domains.
@@ -1286,14 +1422,27 @@
 <span class="kw">impl</span>&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt;
     ExecutionReceipt&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt;
 {
-    <span class="kw">pub fn </span>bundles_extrinsics_roots(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;<span class="kw-2">&amp;</span>ExtrinsicsRoot&gt; {
+    <span class="kw">pub fn </span>bundles_extrinsics_roots(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;<span class="kw-2">&amp;</span>DomainHash&gt; {
         <span class="self">self</span>.inboxed_bundles
             .iter()
             .map(|b| <span class="kw-2">&amp;</span>b.extrinsics_root)
             .collect()
     }
 
-    <span class="kw">pub fn </span>valid_bundle_digests(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;H256&gt; {
+    <span class="kw">pub fn </span>valid_bundle_digest_at(<span class="kw-2">&amp;</span><span class="self">self</span>, index: usize) -&gt; <span class="prelude-ty">Option</span>&lt;DomainHash&gt;
+    <span class="kw">where
+        </span>DomainHash: Copy,
+    {
+        <span class="kw">match </span><span class="self">self</span>.inboxed_bundles.get(index).map(|ib| <span class="kw-2">&amp;</span>ib.bundle) {
+            <span class="prelude-val">Some</span>(BundleValidity::Valid(bundle_digest_hash)) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span>bundle_digest_hash),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+        }
+    }
+
+    <span class="kw">pub fn </span>valid_bundle_digests(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;DomainHash&gt;
+    <span class="kw">where
+        </span>DomainHash: Copy,
+    {
         <span class="self">self</span>.inboxed_bundles
             .iter()
             .filter_map(|b| <span class="kw">match </span>b.bundle {
@@ -1324,13 +1473,13 @@
     &gt; ExecutionReceipt&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt;
 {
     <span class="doccomment">/// Returns the hash of this execution receipt.
-    </span><span class="kw">pub fn </span>hash(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ReceiptHash {
-        BlakeTwo256::hash_of(<span class="self">self</span>)
+    </span><span class="kw">pub fn </span>hash&lt;DomainHashing: HashT&lt;Output = DomainHash&gt;&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; DomainHash {
+        DomainHashing::hash_of(<span class="self">self</span>)
     }
 
     <span class="kw">pub fn </span>genesis(
         genesis_state_root: DomainHash,
-        genesis_extrinsic_root: H256,
+        genesis_extrinsic_root: DomainHash,
         genesis_domain_block_hash: DomainHash,
     ) -&gt; <span class="self">Self </span>{
         ExecutionReceipt {
@@ -1349,12 +1498,15 @@
     }
 
     <span class="attr">#[cfg(any(feature = <span class="string">&quot;std&quot;</span>, feature = <span class="string">&quot;runtime-benchmarks&quot;</span>))]
-    </span><span class="kw">pub fn </span>dummy(
+    </span><span class="kw">pub fn </span>dummy&lt;DomainHashing&gt;(
         consensus_block_number: Number,
         consensus_block_hash: Hash,
         domain_block_number: DomainNumber,
-        parent_domain_block_receipt_hash: ReceiptHash,
-    ) -&gt; ExecutionReceipt&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt; {
+        parent_domain_block_receipt_hash: DomainHash,
+    ) -&gt; ExecutionReceipt&lt;Number, Hash, DomainNumber, DomainHash, Balance&gt;
+    <span class="kw">where
+        </span>DomainHashing: HashT&lt;Output = DomainHash&gt;,
+    {
         <span class="kw">let </span>execution_trace = <span class="macro">sp_std::vec!</span>[Default::default(), Default::default()];
         <span class="kw">let </span>execution_trace_root = {
             <span class="kw">let </span>trace: Vec&lt;[u8; <span class="number">32</span>]&gt; = execution_trace
@@ -1383,7 +1535,7 @@
 }
 
 <span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
-</span><span class="kw">pub struct </span>ProofOfElection {
+</span><span class="kw">pub struct </span>ProofOfElection&lt;CHash&gt; {
     <span class="doccomment">/// Domain id.
     </span><span class="kw">pub </span>domain_id: DomainId,
     <span class="doccomment">/// The slot number.
@@ -1394,13 +1546,18 @@
     </span><span class="kw">pub </span>vrf_signature: VrfSignature,
     <span class="doccomment">/// Operator index in the OperatorRegistry.
     </span><span class="kw">pub </span>operator_id: OperatorId,
+    <span class="doccomment">/// Consensus block hash at which proof of election was derived.
+    </span><span class="comment">// TODO: skipping encode/decode this field becasue it is mismatch with the struct
+    // on the Gemini-3g runtime, remove `#[codec(skip)]` before new network
+    </span><span class="attr">#[codec(skip)]
+    </span><span class="kw">pub </span>consensus_block_hash: CHash,
 }
 
-<span class="kw">impl </span>ProofOfElection {
+<span class="kw">impl</span>&lt;CHash&gt; ProofOfElection&lt;CHash&gt; {
     <span class="kw">pub fn </span>verify_vrf_signature(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         operator_signing_key: <span class="kw-2">&amp;</span>OperatorPublicKey,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), VrfProofError&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), ProofOfElectionError&gt; {
         <span class="kw">let </span>global_challenge = <span class="self">self
             </span>.global_randomness
             .derive_global_challenge(<span class="self">self</span>.slot_number);
@@ -1420,7 +1577,7 @@
     }
 }
 
-<span class="kw">impl </span>ProofOfElection {
+<span class="kw">impl</span>&lt;CHash: Default&gt; ProofOfElection&lt;CHash&gt; {
     <span class="attr">#[cfg(any(feature = <span class="string">&quot;std&quot;</span>, feature = <span class="string">&quot;runtime-benchmarks&quot;</span>))]
     </span><span class="kw">pub fn </span>dummy(domain_id: DomainId, operator_id: OperatorId) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>output_bytes = <span class="macro">sp_std::vec!</span>[<span class="number">0u8</span>; VrfOutput::max_encoded_len()];
@@ -1435,6 +1592,7 @@
             global_randomness: Randomness::default(),
             vrf_signature,
             operator_id,
+            consensus_block_hash: Default::default(),
         }
     }
 }
@@ -1626,18 +1784,21 @@
     </span>IllegalTx(u32),
     <span class="doccomment">/// Transaction is an invalid XDM
     </span>InvalidXDM(u32),
+    <span class="doccomment">/// Transaction is an inherent extrinsic.
+    </span>InherentExtrinsic(u32),
 }
 
 <span class="kw">impl </span>InvalidBundleType {
     <span class="comment">// Return the checking order of the invalid type
     </span><span class="kw">pub fn </span>checking_order(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u8 {
         <span class="comment">// Use explicit number as the order instead of the enum discriminant
-        // to avoid chenging the order accidentally
+        // to avoid changing the order accidentally
         </span><span class="kw">match </span><span class="self">self </span>{
             <span class="self">Self</span>::UndecodableTx(<span class="kw">_</span>) =&gt; <span class="number">1</span>,
             <span class="self">Self</span>::OutOfRangeTx(<span class="kw">_</span>) =&gt; <span class="number">2</span>,
             <span class="self">Self</span>::IllegalTx(<span class="kw">_</span>) =&gt; <span class="number">3</span>,
             <span class="self">Self</span>::InvalidXDM(<span class="kw">_</span>) =&gt; <span class="number">4</span>,
+            <span class="self">Self</span>::InherentExtrinsic(<span class="kw">_</span>) =&gt; <span class="number">5</span>,
         }
     }
 
@@ -1647,39 +1808,39 @@
             <span class="self">Self</span>::OutOfRangeTx(i) =&gt; <span class="kw-2">*</span>i,
             <span class="self">Self</span>::IllegalTx(i) =&gt; <span class="kw-2">*</span>i,
             <span class="self">Self</span>::InvalidXDM(i) =&gt; <span class="kw-2">*</span>i,
+            <span class="self">Self</span>::InherentExtrinsic(i) =&gt; <span class="kw-2">*</span>i,
         }
     }
 }
 
 <span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
-</span><span class="kw">pub enum </span>BundleValidity {
+</span><span class="kw">pub enum </span>BundleValidity&lt;Hash&gt; {
     <span class="comment">// The invalid bundle was originally included in the consensus block but subsequently
     // excluded from execution as invalid and holds the `InvalidBundleType`
     </span>Invalid(InvalidBundleType),
     <span class="comment">// The valid bundle&#39;s hash of `Vec&lt;(tx_signer, tx_hash)&gt;` of all domain extrinsic being
     // included in the bundle.
-    </span>Valid(H256),
+    // TODO remove this and use host function to fetch above mentioned data
+    </span>Valid(Hash),
 }
 
 <span class="doccomment">/// [`InboxedBundle`] represents a bundle that was successfully submitted to the consensus chain
 </span><span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
-</span><span class="kw">pub struct </span>InboxedBundle {
-    <span class="kw">pub </span>bundle: BundleValidity,
-    <span class="kw">pub </span>extrinsics_root: ExtrinsicsRoot,
+</span><span class="kw">pub struct </span>InboxedBundle&lt;Hash&gt; {
+    <span class="kw">pub </span>bundle: BundleValidity&lt;Hash&gt;,
+    <span class="comment">// TODO remove this as the root is already present in the `ExecutionInbox` storage
+    </span><span class="kw">pub </span>extrinsics_root: Hash,
 }
 
-<span class="kw">impl </span>InboxedBundle {
-    <span class="kw">pub fn </span>valid(bundle_digest_hash: H256, extrinsics_root: ExtrinsicsRoot) -&gt; <span class="self">Self </span>{
+<span class="kw">impl</span>&lt;Hash&gt; InboxedBundle&lt;Hash&gt; {
+    <span class="kw">pub fn </span>valid(bundle_digest_hash: Hash, extrinsics_root: Hash) -&gt; <span class="self">Self </span>{
         InboxedBundle {
             bundle: BundleValidity::Valid(bundle_digest_hash),
             extrinsics_root,
         }
     }
 
-    <span class="kw">pub fn </span>invalid(
-        invalid_bundle_type: InvalidBundleType,
-        extrinsics_root: ExtrinsicsRoot,
-    ) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>invalid(invalid_bundle_type: InvalidBundleType, extrinsics_root: Hash) -&gt; <span class="self">Self </span>{
         InboxedBundle {
             bundle: BundleValidity::Invalid(invalid_bundle_type),
             extrinsics_root,
@@ -1691,9 +1852,12 @@
     }
 
     <span class="attr">#[cfg(any(feature = <span class="string">&quot;std&quot;</span>, feature = <span class="string">&quot;runtime-benchmarks&quot;</span>))]
-    </span><span class="kw">pub fn </span>dummy(extrinsics_root: ExtrinsicsRoot) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub fn </span>dummy(extrinsics_root: Hash) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>Hash: Default,
+    {
         InboxedBundle {
-            bundle: BundleValidity::Valid(H256::default()),
+            bundle: BundleValidity::Valid(Hash::default()),
             extrinsics_root,
         }
     }
@@ -1727,17 +1891,63 @@
     domain_header.hash()
 }
 
+<span class="doccomment">/// Represents the extrinsic either as full data or hash of the data.
+</span><span class="attr">#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+</span><span class="kw">pub enum </span>ExtrinsicDigest {
+    <span class="doccomment">/// Actual extrinsic data that is inlined since it is less than 33 bytes.
+    </span>Data(Vec&lt;u8&gt;),
+    <span class="doccomment">/// Extrinsic Hash.
+    </span>Hash(H256),
+}
+
+<span class="kw">impl </span>ExtrinsicDigest {
+    <span class="kw">pub fn </span>new&lt;Layout: TrieLayout&gt;(ext: Vec&lt;u8&gt;) -&gt; <span class="self">Self
+    </span><span class="kw">where
+        </span>Layout::Hash: HashT,
+        &lt;Layout::Hash <span class="kw">as </span>HashT&gt;::Output: Into&lt;H256&gt;,
+    {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(threshold) = Layout::MAX_INLINE_VALUE {
+            <span class="kw">if </span>ext.len() &gt;= threshold <span class="kw">as </span>usize {
+                ExtrinsicDigest::Hash(Layout::Hash::hash(<span class="kw-2">&amp;</span>ext).into())
+            } <span class="kw">else </span>{
+                ExtrinsicDigest::Data(ext)
+            }
+        } <span class="kw">else </span>{
+            ExtrinsicDigest::Data(ext)
+        }
+    }
+}
+
+<span class="kw">pub type </span>ExecutionReceiptFor&lt;DomainHeader, CBlock, Balance&gt; = ExecutionReceipt&lt;
+    NumberFor&lt;CBlock&gt;,
+    &lt;CBlock <span class="kw">as </span>BlockT&gt;::Hash,
+    &lt;DomainHeader <span class="kw">as </span>HeaderT&gt;::Number,
+    &lt;DomainHeader <span class="kw">as </span>HeaderT&gt;::Hash,
+    Balance,
+&gt;;
+
 <span class="macro">sp_api::decl_runtime_apis! </span>{
     <span class="doccomment">/// API necessary for domains pallet.
-    </span><span class="kw">pub trait </span>DomainsApi&lt;DomainNumber: Encode + Decode, DomainHash: Encode + Decode&gt; {
+    </span><span class="kw">pub trait </span>DomainsApi&lt;DomainHeader: HeaderT&gt; {
         <span class="doccomment">/// Submits the transaction bundle via an unsigned extrinsic.
-        </span><span class="kw">fn </span>submit_bundle_unsigned(opaque_bundle: OpaqueBundle&lt;NumberFor&lt;Block&gt;, Block::Hash, DomainNumber, DomainHash, Balance&gt;);
+        </span><span class="kw">fn </span>submit_bundle_unsigned(opaque_bundle: OpaqueBundle&lt;NumberFor&lt;Block&gt;, Block::Hash, DomainHeader, Balance&gt;);
 
         <span class="doccomment">/// Extract the bundles stored successfully from the given extrinsics.
         </span><span class="kw">fn </span>extract_successful_bundles(
             domain_id: DomainId,
             extrinsics: Vec&lt;Block::Extrinsic&gt;,
-        ) -&gt; OpaqueBundles&lt;Block, DomainNumber, DomainHash, Balance&gt;;
+        ) -&gt; OpaqueBundles&lt;Block, DomainHeader, Balance&gt;;
+
+        <span class="doccomment">/// Extract bundle from the extrinsic if the extrinsic is `submit_bundle`.
+        </span><span class="attr">#[api_version(<span class="number">2</span>)]
+        </span><span class="kw">fn </span>extract_bundle(extrinsic: Block::Extrinsic) -&gt; <span class="prelude-ty">Option</span>&lt;OpaqueBundle&lt;NumberFor&lt;Block&gt;, Block::Hash, DomainHeader, Balance&gt;&gt;;
+
+        <span class="doccomment">/// Extract the execution receipt stored successfully from the given extrinsics.
+        </span><span class="attr">#[api_version(<span class="number">2</span>)]
+        </span><span class="kw">fn </span>extract_receipts(
+            domain_id: DomainId,
+            extrinsics: Vec&lt;Block::Extrinsic&gt;,
+        ) -&gt; Vec&lt;ExecutionReceiptFor&lt;DomainHeader, Block, Balance&gt;&gt;;
 
         <span class="doccomment">/// Generates a randomness seed for extrinsics shuffling.
         </span><span class="kw">fn </span>extrinsics_shuffling_seed() -&gt; Randomness;
@@ -1761,13 +1971,13 @@
         </span><span class="kw">fn </span>genesis_state_root(domain_id: DomainId) -&gt; <span class="prelude-ty">Option</span>&lt;H256&gt;;
 
         <span class="doccomment">/// Returns the best execution chain number.
-        </span><span class="kw">fn </span>head_receipt_number(domain_id: DomainId) -&gt; NumberFor&lt;Block&gt;;
+        </span><span class="kw">fn </span>head_receipt_number(domain_id: DomainId) -&gt; HeaderNumberFor&lt;DomainHeader&gt;;
 
         <span class="doccomment">/// Returns the block number of oldest execution receipt.
-        </span><span class="kw">fn </span>oldest_receipt_number(domain_id: DomainId) -&gt; NumberFor&lt;Block&gt;;
+        </span><span class="kw">fn </span>oldest_receipt_number(domain_id: DomainId) -&gt; HeaderNumberFor&lt;DomainHeader&gt;;
 
         <span class="doccomment">/// Returns the block tree pruning depth.
-        </span><span class="kw">fn </span>block_tree_pruning_depth() -&gt; NumberFor&lt;Block&gt;;
+        </span><span class="kw">fn </span>block_tree_pruning_depth() -&gt; HeaderNumberFor&lt;DomainHeader&gt;;
 
         <span class="doccomment">/// Returns the domain block limit of the given domain.
         </span><span class="kw">fn </span>domain_block_limit(domain_id: DomainId) -&gt; <span class="prelude-ty">Option</span>&lt;DomainBlockLimit&gt;;
@@ -1776,14 +1986,16 @@
         </span><span class="kw">fn </span>non_empty_er_exists(domain_id: DomainId) -&gt; bool;
 
         <span class="doccomment">/// Returns the current best number of the domain.
-        </span><span class="kw">fn </span>domain_best_number(domain_id: DomainId) -&gt; <span class="prelude-ty">Option</span>&lt;DomainNumber&gt;;
+        </span><span class="kw">fn </span>domain_best_number(domain_id: DomainId) -&gt; <span class="prelude-ty">Option</span>&lt;HeaderNumberFor&lt;DomainHeader&gt;&gt;;
 
         <span class="doccomment">/// Returns the chain state root at the given block.
-        </span><span class="kw">fn </span>domain_state_root(domain_id: DomainId, number: DomainNumber, hash: DomainHash) -&gt; <span class="prelude-ty">Option</span>&lt;DomainHash&gt;;
+        </span><span class="kw">fn </span>domain_state_root(
+            domain_id: DomainId,
+            number: HeaderNumberFor&lt;DomainHeader&gt;,
+            hash: HeaderHashFor&lt;DomainHeader&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;HeaderHashFor&lt;DomainHeader&gt;&gt;;
 
         <span class="doccomment">/// Returns the execution receipt
-        </span><span class="attr">#[allow(clippy::type_complexity)]
-        </span><span class="kw">fn </span>execution_receipt(receipt_hash: ReceiptHash) -&gt; <span class="prelude-ty">Option</span>&lt;ExecutionReceipt&lt;NumberFor&lt;Block&gt;, Block::Hash, DomainNumber, DomainHash, Balance&gt;&gt;;
+        </span><span class="kw">fn </span>execution_receipt(receipt_hash: HeaderHashFor&lt;DomainHeader&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;ExecutionReceiptFor&lt;DomainHeader, Block, Balance&gt;&gt;;
     }
 
     <span class="kw">pub trait </span>BundleProducerElectionApi&lt;Balance: Encode + Decode&gt; {

@@ -233,15 +233,13 @@
 <a href="#233" id="233">233</a>
 <a href="#234" id="234">234</a>
 <a href="#235" id="235">235</a>
-<a href="#236" id="236">236</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::bundle_processor::BundleProcessor;
 <span class="kw">use </span><span class="kw">crate</span>::domain_block_processor::{DomainBlockProcessor, ReceiptsChecker};
 <span class="kw">use </span><span class="kw">crate</span>::domain_bundle_producer::DomainBundleProducer;
 <span class="kw">use </span><span class="kw">crate</span>::domain_bundle_proposer::DomainBundleProposer;
 <span class="kw">use </span><span class="kw">crate</span>::fraud_proof::FraudProofGenerator;
-<span class="kw">use </span><span class="kw">crate</span>::parent_chain::DomainParentChain;
 <span class="kw">use crate</span>::{DomainImportNotifications, NewSlotNotification, OperatorParams};
-<span class="kw">use </span>domain_runtime_primitives::{DomainCoreApi, InherentExtrinsicApi};
+<span class="kw">use </span>domain_runtime_primitives::DomainCoreApi;
 <span class="kw">use </span>futures::channel::mpsc;
 <span class="kw">use </span>futures::{FutureExt, Stream};
 <span class="kw">use </span>sc_client_api::{
@@ -253,8 +251,10 @@
 <span class="kw">use </span>sp_core::traits::{CodeExecutor, SpawnEssentialNamed};
 <span class="kw">use </span>sp_core::H256;
 <span class="kw">use </span>sp_domains::{BundleProducerElectionApi, DomainsApi};
+<span class="kw">use </span>sp_domains_fraud_proof::FraudProofApi;
 <span class="kw">use </span>sp_messenger::MessengerApi;
 <span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, NumberFor};
+<span class="kw">use </span>sp_transaction_pool::runtime_api::TaggedTransactionQueue;
 <span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>subspace_runtime_primitives::Balance;
 
@@ -296,10 +296,10 @@
     Operator&lt;Block, CBlock, Client, CClient, TransactionPool, Backend, E&gt;
 <span class="kw">where
     </span>Block: BlockT,
+    Block::Hash: Into&lt;H256&gt;,
     CBlock: BlockT,
     NumberFor&lt;CBlock&gt;: From&lt;NumberFor&lt;Block&gt;&gt; + Into&lt;NumberFor&lt;Block&gt;&gt;,
     CBlock::Hash: From&lt;Block::Hash&gt;,
-    Block::Hash: Into&lt;H256&gt;,
     Client: HeaderBackend&lt;Block&gt;
         + BlockBackend&lt;Block&gt;
         + AuxStore
@@ -308,10 +308,10 @@
         + Finalizer&lt;Block, Backend&gt;
         + <span class="lifetime">&#39;static</span>,
     Client::Api: DomainCoreApi&lt;Block&gt;
-        + InherentExtrinsicApi&lt;Block&gt;
         + MessengerApi&lt;Block, NumberFor&lt;Block&gt;&gt;
         + sp_block_builder::BlockBuilder&lt;Block&gt;
-        + sp_api::ApiExt&lt;Block&gt;,
+        + sp_api::ApiExt&lt;Block&gt;
+        + TaggedTransactionQueue&lt;Block&gt;,
     CClient: HeaderBackend&lt;CBlock&gt;
         + HeaderMetadata&lt;CBlock, Error = sp_blockchain::Error&gt;
         + BlockBackend&lt;CBlock&gt;
@@ -321,9 +321,10 @@
         + Send
         + Sync
         + <span class="lifetime">&#39;static</span>,
-    CClient::Api: DomainsApi&lt;CBlock, NumberFor&lt;Block&gt;, Block::Hash&gt;
+    CClient::Api: DomainsApi&lt;CBlock, Block::Header&gt;
         + MessengerApi&lt;CBlock, NumberFor&lt;CBlock&gt;&gt;
-        + BundleProducerElectionApi&lt;CBlock, Balance&gt;,
+        + BundleProducerElectionApi&lt;CBlock, Balance&gt;
+        + FraudProofApi&lt;CBlock, Block::Header&gt;,
     Backend: sc_client_api::Backend&lt;Block&gt; + Send + Sync + <span class="lifetime">&#39;static</span>,
     TransactionPool: sc_transaction_pool_api::TransactionPool&lt;Block = Block&gt; + <span class="lifetime">&#39;static</span>,
     E: CodeExecutor,
@@ -351,10 +352,8 @@
         NSNS: Stream&lt;Item = NewSlotNotification&gt; + Send + <span class="lifetime">&#39;static</span>,
         ASS: Stream&lt;Item = mpsc::Sender&lt;()&gt;&gt; + Send + <span class="lifetime">&#39;static</span>,
     {
-        <span class="kw">let </span>parent_chain =
-            DomainParentChain::new(params.domain_id, params.consensus_client.clone());
-
         <span class="kw">let </span>domain_bundle_proposer = DomainBundleProposer::new(
+            params.domain_id,
             params.client.clone(),
             params.consensus_client.clone(),
             params.transaction_pool.clone(),
@@ -364,10 +363,10 @@
             params.domain_id,
             params.consensus_client.clone(),
             params.client.clone(),
-            parent_chain.clone(),
             domain_bundle_proposer,
             params.bundle_sender,
             params.keystore.clone(),
+            params.skip_empty_bundle_production,
         );
 
         <span class="kw">let </span>fraud_proof_generator = FraudProofGenerator::new(
@@ -393,9 +392,8 @@
             client: params.client.clone(),
             consensus_client: params.consensus_client.clone(),
             fraud_proof_generator: fraud_proof_generator.clone(),
-            parent_chain,
             consensus_network_sync_oracle: params.consensus_network_sync_oracle,
-            _phantom: std::marker::PhantomData,
+            consensus_offchain_tx_pool_factory: params.consensus_offchain_tx_pool_factory.clone(),
         };
 
         <span class="kw">let </span>bundle_processor = BundleProcessor::new(

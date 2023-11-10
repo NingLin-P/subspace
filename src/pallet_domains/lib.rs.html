@@ -1868,6 +1868,17 @@
 <a href="#1868" id="1868">1868</a>
 <a href="#1869" id="1869">1869</a>
 <a href="#1870" id="1870">1870</a>
+<a href="#1871" id="1871">1871</a>
+<a href="#1872" id="1872">1872</a>
+<a href="#1873" id="1873">1873</a>
+<a href="#1874" id="1874">1874</a>
+<a href="#1875" id="1875">1875</a>
+<a href="#1876" id="1876">1876</a>
+<a href="#1877" id="1877">1877</a>
+<a href="#1878" id="1878">1878</a>
+<a href="#1879" id="1879">1879</a>
+<a href="#1880" id="1880">1880</a>
+<a href="#1881" id="1881">1881</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
@@ -1905,7 +1916,7 @@
 <span class="kw">extern crate </span>alloc;
 
 <span class="kw">use </span><span class="kw">crate</span>::block_tree::verify_execution_receipt;
-<span class="kw">use </span><span class="kw">crate</span>::staking::{do_nominate_operator, Operator, OperatorStatus};
+<span class="kw">use </span><span class="kw">crate</span>::staking::OperatorStatus;
 <span class="kw">use </span>codec::{Decode, Encode};
 <span class="kw">use </span>frame_support::ensure;
 <span class="kw">use </span>frame_support::traits::fungible::{Inspect, InspectHold};
@@ -1915,28 +1926,27 @@
 <span class="kw">pub use </span>pallet::<span class="kw-2">*</span>;
 <span class="kw">use </span>scale_info::TypeInfo;
 <span class="kw">use </span>sp_core::H256;
-<span class="kw">use </span>sp_domains::bundle_producer_election::{is_below_threshold, BundleProducerElectionParams};
-<span class="kw">use </span>sp_domains::fraud_proof::{FraudProof, InvalidDomainBlockHashProof, InvalidTotalRewardsProof};
-<span class="kw">use </span>sp_domains::verification::verify_invalid_total_rewards_fraud_proof;
+<span class="kw">use </span>sp_domains::bundle_producer_election::BundleProducerElectionParams;
 <span class="kw">use </span>sp_domains::{
     DomainBlockLimit, DomainId, DomainInstanceData, ExecutionReceipt, OpaqueBundle, OperatorId,
-    OperatorPublicKey, ProofOfElection, ReceiptHash, RuntimeId,
-    DOMAIN_EXTRINSICS_SHUFFLING_SEED_SUBJECT, EMPTY_EXTRINSIC_ROOT,
+    OperatorPublicKey, RuntimeId, DOMAIN_EXTRINSICS_SHUFFLING_SEED_SUBJECT, EMPTY_EXTRINSIC_ROOT,
 };
-<span class="kw">use </span>sp_domains_fraud_proof::fraud_proof_runtime_interface::get_fraud_proof_verification_info;
+<span class="kw">use </span>sp_domains_fraud_proof::fraud_proof::{
+    FraudProof, InvalidDomainBlockHashProof, InvalidTotalRewardsProof,
+};
 <span class="kw">use </span>sp_domains_fraud_proof::verification::{
+    verify_bundle_equivocation_fraud_proof, verify_invalid_bundles_fraud_proof,
     verify_invalid_domain_block_hash_fraud_proof,
     verify_invalid_domain_extrinsics_root_fraud_proof, verify_invalid_state_transition_fraud_proof,
+    verify_invalid_total_rewards_fraud_proof, verify_valid_bundle_fraud_proof,
 };
-<span class="kw">use </span>sp_domains_fraud_proof::{
-    FraudProofVerificationInfoRequest, FraudProofVerificationInfoResponse,
-};
-<span class="kw">use </span>sp_runtime::traits::{BlakeTwo256, CheckedSub, Hash, Header, One, Zero};
+<span class="kw">use </span>sp_runtime::traits::{CheckedSub, Hash, Header, One, Zero};
 <span class="kw">use </span>sp_runtime::{RuntimeAppPublic, SaturatedConversion, Saturating};
 <span class="kw">use </span>sp_std::boxed::Box;
 <span class="kw">use </span>sp_std::collections::btree_map::BTreeMap;
 <span class="kw">use </span>sp_std::vec::Vec;
 <span class="kw">use </span>subspace_core_primitives::U256;
+<span class="kw">use </span>subspace_runtime_primitives::Balance;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>BalanceOf&lt;T&gt; =
     &lt;&lt;T <span class="kw">as </span>Config&gt;::Currency <span class="kw">as </span>Inspect&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId&gt;&gt;::Balance;
@@ -1964,8 +1974,7 @@
 <span class="kw">pub type </span>OpaqueBundleOf&lt;T&gt; = OpaqueBundle&lt;
     BlockNumberFor&lt;T&gt;,
     &lt;T <span class="kw">as </span>frame_system::Config&gt;::Hash,
-    DomainBlockNumberFor&lt;T&gt;,
-    &lt;T <span class="kw">as </span>Config&gt;::DomainHash,
+    &lt;T <span class="kw">as </span>Config&gt;::DomainHeader,
     BalanceOf&lt;T&gt;,
 &gt;;
 
@@ -1978,6 +1987,7 @@
 
 <span class="kw">pub type </span>DomainBlockNumberFor&lt;T&gt; = &lt;&lt;T <span class="kw">as </span>Config&gt;::DomainHeader <span class="kw">as </span>Header&gt;::Number;
 <span class="kw">pub type </span>DomainHashingFor&lt;T&gt; = &lt;&lt;T <span class="kw">as </span>Config&gt;::DomainHeader <span class="kw">as </span>Header&gt;::Hashing;
+<span class="kw">pub type </span>ReceiptHashFor&lt;T&gt; = &lt;&lt;T <span class="kw">as </span>Config&gt;::DomainHeader <span class="kw">as </span>Header&gt;::Hash;
 
 <span class="attr">#[frame_support::pallet]
 </span><span class="kw">mod </span>pallet {
@@ -1999,9 +2009,9 @@
     <span class="attr">#[cfg(not(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>))]
     </span><span class="kw">use </span><span class="kw">crate</span>::staking::do_reward_operators;
     <span class="kw">use </span><span class="kw">crate</span>::staking::{
-        do_auto_stake_block_rewards, do_deregister_operator, do_nominate_operator,
-        do_register_operator, do_slash_operators, do_switch_operator_domain, do_withdraw_stake,
-        Error <span class="kw">as </span>StakingError, Nominator, Operator, OperatorConfig, StakingSummary, Withdraw,
+        do_deregister_operator, do_nominate_operator, do_register_operator, do_slash_operators,
+        do_switch_operator_domain, do_withdraw_stake, Error <span class="kw">as </span>StakingError, Nominator, Operator,
+        OperatorConfig, StakingSummary, Withdraw,
     };
     <span class="attr">#[cfg(not(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>))]
     </span><span class="kw">use </span><span class="kw">crate</span>::staking_epoch::do_unlock_pending_withdrawals;
@@ -2012,7 +2022,7 @@
     <span class="kw">use </span><span class="kw">crate</span>::weights::WeightInfo;
     <span class="kw">use crate</span>::{
         BalanceOf, DomainBlockNumberFor, ElectionVerificationParams, HoldIdentifier, NominatorId,
-        OpaqueBundleOf,
+        OpaqueBundleOf, ReceiptHashFor,
     };
     <span class="kw">use </span>alloc::string::String;
     <span class="kw">use </span>codec::FullCodec;
@@ -2023,17 +2033,18 @@
     <span class="kw">use </span>frame_support::{Identity, PalletError};
     <span class="kw">use </span>frame_system::pallet_prelude::<span class="kw-2">*</span>;
     <span class="kw">use </span>sp_core::H256;
-    <span class="kw">use </span>sp_domains::fraud_proof::FraudProof;
-    <span class="kw">use </span>sp_domains::transaction::InvalidTransactionCode;
+    <span class="kw">use </span>sp_domains::bundle_producer_election::ProofOfElectionError;
     <span class="kw">use </span>sp_domains::{
         BundleDigest, DomainId, EpochIndex, GenesisDomain, OperatorAllowList, OperatorId,
-        ReceiptHash, RuntimeId, RuntimeType,
+        RuntimeId, RuntimeType,
     };
+    <span class="kw">use </span>sp_domains_fraud_proof::fraud_proof::FraudProof;
+    <span class="kw">use </span>sp_domains_fraud_proof::InvalidTransactionCode;
     <span class="kw">use </span>sp_runtime::traits::{
         AtLeast32BitUnsigned, BlockNumberProvider, CheckEqual, CheckedAdd, Header <span class="kw">as </span>HeaderT,
         MaybeDisplay, One, SimpleBitOps, Zero,
     };
-    <span class="kw">use </span>sp_runtime::SaturatedConversion;
+    <span class="kw">use </span>sp_runtime::{SaturatedConversion, Saturating};
     <span class="kw">use </span>sp_std::boxed::Box;
     <span class="kw">use </span>sp_std::collections::btree_map::BTreeMap;
     <span class="kw">use </span>sp_std::collections::btree_set::BTreeSet;
@@ -2160,6 +2171,10 @@
 
         <span class="doccomment">/// Randomness source.
         </span><span class="kw">type </span>Randomness: RandomnessT&lt;<span class="self">Self</span>::Hash, BlockNumberFor&lt;<span class="self">Self</span>&gt;&gt;;
+
+        <span class="doccomment">/// The sudo account id
+        </span><span class="attr">#[pallet::constant]
+        </span><span class="kw">type </span>SudoId: Get&lt;<span class="self">Self</span>::AccountId&gt;;
     }
 
     <span class="attr">#[pallet::pallet]
@@ -2169,6 +2184,11 @@
     <span class="doccomment">/// Bundles submitted successfully in current block.
     </span><span class="attr">#[pallet::storage]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>SuccessfulBundles&lt;T&gt; = StorageMap&lt;<span class="kw">_</span>, Identity, DomainId, Vec&lt;H256&gt;, ValueQuery&gt;;
+
+    <span class="doccomment">/// Fraud proofs submitted successfully in current block.
+    </span><span class="attr">#[pallet::storage]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>SuccessfulFraudProofs&lt;T: Config&gt; =
+        StorageMap&lt;<span class="kw">_</span>, Identity, DomainId, Vec&lt;T::DomainHash&gt;, ValueQuery&gt;;
 
     <span class="doccomment">/// Stores the next runtime id.
     </span><span class="attr">#[pallet::storage]
@@ -2326,7 +2346,7 @@
         <span class="kw">_</span>,
         Identity,
         DomainId,
-        DomainObject&lt;BlockNumberFor&lt;T&gt;, T::AccountId&gt;,
+        DomainObject&lt;BlockNumberFor&lt;T&gt;, ReceiptHashFor&lt;T&gt;, T::AccountId&gt;,
         OptionQuery,
     &gt;;
 
@@ -2339,8 +2359,8 @@
         DomainId,
         Identity,
         DomainBlockNumberFor&lt;T&gt;,
-        BTreeSet&lt;ReceiptHash&gt;,
-        ValueQuery,
+        ReceiptHashFor&lt;T&gt;,
+        OptionQuery,
     &gt;;
 
     <span class="doccomment">/// Mapping of block tree node hash to the node, each node represent a domain block
@@ -2348,7 +2368,7 @@
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>BlockTreeNodes&lt;T: Config&gt; = StorageMap&lt;
         <span class="kw">_</span>,
         Identity,
-        ReceiptHash,
+        ReceiptHashFor&lt;T&gt;,
         BlockTreeNode&lt;
             BlockNumberFor&lt;T&gt;,
             T::Hash,
@@ -2359,17 +2379,17 @@
         OptionQuery,
     &gt;;
 
-    <span class="comment">// Mapping of the parent ER to all its immediate descendants ER
-    // TODO: remove this mapping once https://github.com/subspace/subspace/issues/1731 is implemented
-    // by then every parent ER should only have one immediate descendants ER
-    </span><span class="attr">#[pallet::storage]
-    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>DomainBlockDescendants&lt;T: Config&gt; =
-        StorageMap&lt;<span class="kw">_</span>, Identity, ReceiptHash, BTreeSet&lt;ReceiptHash&gt;, ValueQuery&gt;;
-
     <span class="doccomment">/// The head receipt number of each domain
     </span><span class="attr">#[pallet::storage]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>HeadReceiptNumber&lt;T: Config&gt; =
         StorageMap&lt;<span class="kw">_</span>, Identity, DomainId, DomainBlockNumberFor&lt;T&gt;, ValueQuery&gt;;
+
+    <span class="doccomment">/// Whether the head receipt have extended in the current consensus block
+    ///
+    /// Temporary storage only exist during block execution
+    </span><span class="attr">#[pallet::storage]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>HeadReceiptExtended&lt;T: Config&gt; =
+        StorageMap&lt;<span class="kw">_</span>, Identity, DomainId, bool, ValueQuery&gt;;
 
     <span class="doccomment">/// State root mapped again each domain (block, hash)
     /// This acts as an index for other protocols like XDM to fetch state roots faster.
@@ -2407,7 +2427,7 @@
             NMapKey&lt;Identity, DomainBlockNumberFor&lt;T&gt;&gt;,
             NMapKey&lt;Identity, BlockNumberFor&lt;T&gt;&gt;,
         ),
-        Vec&lt;BundleDigest&gt;,
+        Vec&lt;BundleDigest&lt;T::DomainHash&gt;&gt;,
         ValueQuery,
     &gt;;
 
@@ -2416,7 +2436,7 @@
     /// slash malicious operator who have submitted invalid bundle.
     </span><span class="attr">#[pallet::storage]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>InboxedBundleAuthor&lt;T: Config&gt; =
-        StorageMap&lt;<span class="kw">_</span>, Identity, H256, OperatorId, OptionQuery&gt;;
+        StorageMap&lt;<span class="kw">_</span>, Identity, T::DomainHash, OperatorId, OptionQuery&gt;;
 
     <span class="doccomment">/// The block number of the best domain block, increase by one when the first bundle of the domain is
     /// successfully submitted to current consensus block, which mean a new domain block with this block
@@ -2434,12 +2454,6 @@
     </span><span class="attr">#[pallet::storage]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>LastEpochStakingDistribution&lt;T: Config&gt; =
         StorageMap&lt;<span class="kw">_</span>, Identity, DomainId, ElectionVerificationParams&lt;BalanceOf&lt;T&gt;&gt;, OptionQuery&gt;;
-
-    <span class="doccomment">/// A preferred Operator for a given Farmer, enabling automatic staking of block rewards.
-    /// For the auto-staking to succeed, the Farmer must also be a Nominator of the preferred Operator.
-    </span><span class="attr">#[pallet::storage]
-    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>PreferredOperator&lt;T: Config&gt; =
-        StorageMap&lt;<span class="kw">_</span>, Identity, NominatorId&lt;T&gt;, OperatorId, OptionQuery&gt;;
 
     <span class="attr">#[derive(TypeInfo, Encode, Decode, PalletError, Debug, PartialEq)]
     </span><span class="kw">pub enum </span>BundleError {
@@ -2469,7 +2483,7 @@
 
     <span class="attr">#[derive(TypeInfo, Encode, Decode, PalletError, Debug, PartialEq)]
     </span><span class="kw">pub enum </span>FraudProofError {
-        <span class="doccomment">/// The targetted bad receipt not found which may already pruned by other
+        <span class="doccomment">/// The targeted bad receipt not found which may already pruned by other
         /// fraud proof or the fraud proof is submitted to the wrong fork.
         </span>BadReceiptNotFound,
         <span class="doccomment">/// The genesis receipt is unchallengeable.
@@ -2477,21 +2491,25 @@
         <span class="doccomment">/// The descendants of the fraudulent ER is not pruned
         </span>DescendantsOfFraudulentERNotPruned,
         <span class="doccomment">/// Invalid fraud proof since total rewards are not mismatched.
-        </span>InvalidTotalRewardsFraudProof(sp_domains::verification::VerificationError),
+        </span>InvalidTotalRewardsFraudProof,
         <span class="doccomment">/// Invalid domain block hash fraud proof.
-        </span>InvalidDomainBlockHashFraudProof(sp_domains::verification::VerificationError),
+        </span>InvalidDomainBlockHashFraudProof,
         <span class="doccomment">/// Invalid domain extrinsic fraud proof
-        </span>InvalidExtrinsicRootFraudProof(sp_domains::verification::VerificationError),
+        </span>InvalidExtrinsicRootFraudProof,
         <span class="doccomment">/// Invalid state transition fraud proof
         </span>InvalidStateTransitionFraudProof,
-        <span class="doccomment">/// Failed to get block randomness.
-        </span>FailedToGetBlockRandomness,
-        <span class="doccomment">/// Failed to get domain timestamp extrinsic.
-        </span>FailedToGetDomainTimestampExtrinsic,
-        <span class="doccomment">/// Received invalid Verification info from host function.
-        </span>ReceivedInvalidVerificationInfo,
         <span class="doccomment">/// Parent receipt not found.
         </span>ParentReceiptNotFound,
+        <span class="doccomment">/// Invalid bundles fraud proof
+        </span>InvalidBundleFraudProof,
+        <span class="doccomment">/// Bad/Invalid valid bundle fraud proof
+        </span>BadValidBundleFraudProof,
+        <span class="doccomment">/// Missing operator.
+        </span>MissingOperator,
+        <span class="doccomment">/// Unexpected fraud proof.
+        </span>UnexpectedFraudProof,
+        <span class="doccomment">/// Bad/Invalid bundle equivocation fraud proof.
+        </span>BadBundleEquivocationFraudProof,
     }
 
     <span class="kw">impl</span>&lt;T&gt; From&lt;FraudProofError&gt; <span class="kw">for </span>Error&lt;T&gt; {
@@ -2527,6 +2545,15 @@
     <span class="kw">impl</span>&lt;T&gt; From&lt;BlockTreeError&gt; <span class="kw">for </span>Error&lt;T&gt; {
         <span class="kw">fn </span>from(err: BlockTreeError) -&gt; <span class="self">Self </span>{
             Error::BlockTree(err)
+        }
+    }
+
+    <span class="kw">impl </span>From&lt;ProofOfElectionError&gt; <span class="kw">for </span>BundleError {
+        <span class="kw">fn </span>from(err: ProofOfElectionError) -&gt; <span class="self">Self </span>{
+            <span class="kw">match </span>err {
+                ProofOfElectionError::BadVrfProof =&gt; <span class="self">Self</span>::BadVrfSignature,
+                ProofOfElectionError::ThresholdUnsatisfied =&gt; <span class="self">Self</span>::ThresholdUnsatisfied,
+            }
         }
     }
 
@@ -2653,11 +2680,6 @@
             <span class="kw">let </span>receipt = opaque_bundle.into_receipt();
 
             <span class="kw">match </span>execution_receipt_type::&lt;T&gt;(domain_id, <span class="kw-2">&amp;</span>receipt) {
-                <span class="comment">// The stale receipt should not be further processed, but we still track them for purposes
-                // of measuring the bundle production rate.
-                </span>ReceiptType::Stale =&gt; {
-                    <span class="kw">return </span><span class="prelude-val">Ok</span>(());
-                }
                 ReceiptType::Rejected(rejected_receipt_type) =&gt; {
                     <span class="kw">return </span><span class="prelude-val">Err</span>(Error::&lt;T&gt;::BlockTree(rejected_receipt_type.into()).into());
                 }
@@ -2754,85 +2776,75 @@
         </span><span class="attr">#[pallet::weight((Weight::from_all(<span class="number">10_000</span>), Pays::No))]
         </span><span class="kw">pub fn </span>submit_fraud_proof(
             origin: OriginFor&lt;T&gt;,
-            fraud_proof: Box&lt;FraudProof&lt;BlockNumberFor&lt;T&gt;, T::Hash&gt;&gt;,
+            fraud_proof: Box&lt;FraudProof&lt;BlockNumberFor&lt;T&gt;, T::Hash, T::DomainHeader&gt;&gt;,
         ) -&gt; DispatchResult {
             ensure_none(origin)<span class="question-mark">?</span>;
 
             <span class="macro">log::trace!</span>(target: <span class="string">&quot;runtime::domains&quot;</span>, <span class="string">&quot;Processing fraud proof: {fraud_proof:?}&quot;</span>);
-
+            <span class="kw">let </span><span class="kw-2">mut </span>operators_to_slash = BTreeSet::new();
             <span class="kw">let </span>domain_id = fraud_proof.domain_id();
-            <span class="kw">let </span><span class="kw-2">mut </span>receipt_to_remove = <span class="macro">vec!</span>[fraud_proof.bad_receipt_hash()];
-            <span class="kw">let </span><span class="kw-2">mut </span>operator_to_slash = BTreeSet::new();
-            <span class="kw">let </span><span class="kw-2">mut </span>next_head_receipt_number = <span class="prelude-val">None</span>;
 
-            <span class="comment">// Prune the bad ER and all of its descendants from the block tree. ER are pruning
-            // with BFS order from lower height to higher height.
-            </span><span class="kw">while let </span><span class="prelude-val">Some</span>(receipt_hash) = receipt_to_remove.pop() {
-                <span class="kw">let </span>BlockTreeNode {
-                    execution_receipt,
-                    operator_ids,
-                } = BlockTreeNodes::&lt;T&gt;::take(receipt_hash)
-                    .ok_or::&lt;Error&lt;T&gt;&gt;(FraudProofError::BadReceiptNotFound.into())<span class="question-mark">?</span>;
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(bad_receipt_hash) = fraud_proof.targeted_bad_receipt_hash() {
+                <span class="kw">let </span>head_receipt_number = HeadReceiptNumber::&lt;T&gt;::get(domain_id);
+                <span class="kw">let </span>bad_receipt_number = BlockTreeNodes::&lt;T&gt;::get(bad_receipt_hash)
+                    .ok_or::&lt;Error&lt;T&gt;&gt;(FraudProofError::BadReceiptNotFound.into())<span class="question-mark">?
+                    </span>.execution_receipt
+                    .domain_block_number;
+                <span class="comment">// The `head_receipt_number` must greater than or equal to any existing receipt, including
+                // the bad receipt, otherwise the fraud proof should be rejected due to `BadReceiptNotFound`,
+                // double check here to make it more robust.
+                </span><span class="macro">ensure!</span>(
+                    head_receipt_number &gt;= bad_receipt_number,
+                    Error::&lt;T&gt;::from(FraudProofError::BadReceiptNotFound),
+                );
 
-                BlockTree::&lt;T&gt;::mutate_exists(
+                <span class="comment">// Starting from the head receipt, prune all ER between [bad_receipt_number..head_receipt_number]
+                </span><span class="kw">let </span><span class="kw-2">mut </span>to_prune = head_receipt_number;
+
+                <span class="kw">while </span>to_prune &gt;= bad_receipt_number {
+                    <span class="kw">let </span>receipt_hash = BlockTree::&lt;T&gt;::take(domain_id, to_prune)
+                        .ok_or::&lt;Error&lt;T&gt;&gt;(FraudProofError::BadReceiptNotFound.into())<span class="question-mark">?</span>;
+
+                    <span class="kw">let </span>BlockTreeNode {
+                        execution_receipt,
+                        operator_ids,
+                    } = BlockTreeNodes::&lt;T&gt;::take(receipt_hash)
+                        .ok_or::&lt;Error&lt;T&gt;&gt;(FraudProofError::BadReceiptNotFound.into())<span class="question-mark">?</span>;
+
+                    <span class="kw">let _ </span>= StateRoots::&lt;T&gt;::take((
+                        domain_id,
+                        execution_receipt.domain_block_number,
+                        execution_receipt.domain_block_hash,
+                    ));
+
+                    <span class="comment">// NOTE: the operator id will be deduplicated since we are using `BTreeSet`
+                    </span>operator_ids.into_iter().for_each(|id| {
+                        operators_to_slash.insert(id);
+                    });
+
+                    to_prune -= One::one();
+                }
+
+                <span class="comment">// Update the head receipt number to `bad_receipt_number - 1`
+                </span><span class="kw">let </span>new_head_receipt_number = bad_receipt_number.saturating_sub(One::one());
+                HeadReceiptNumber::&lt;T&gt;::insert(domain_id, new_head_receipt_number);
+
+                <span class="self">Self</span>::deposit_event(Event::FraudProofProcessed {
                     domain_id,
-                    execution_receipt.domain_block_number,
-                    |maybe_er_hashes| {
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>(er_hashes) = maybe_er_hashes {
-                            <span class="comment">// Remove ER hash from the set, remove the whole set if it is empty.
-                            </span>er_hashes.remove(<span class="kw-2">&amp;</span>receipt_hash);
-                            <span class="kw">if </span>er_hashes.is_empty() {
-                                maybe_er_hashes.take();
-                            }
-                            <span class="comment">// If all the ER at `domain_block_number` are pruned then any ER that derive from domain
-                            // block with height &gt; `domain_block_number` must also be pruned since their parent ER
-                            // are pruned thus we can reset the new head receipt number to `domain_block_number - 1`.
-                            </span><span class="kw">if </span>maybe_er_hashes.is_none() &amp;&amp; next_head_receipt_number.is_none() {
-                                next_head_receipt_number
-                                    .replace(execution_receipt.domain_block_number - One::one());
-                            } <span class="kw">else if </span>maybe_er_hashes.is_some()
-                                &amp;&amp; next_head_receipt_number.is_some()
-                            {
-                                <span class="comment">// `next_head_receipt_number` is `Some` means all the ER at prior height are pruned
-                                // thus the descendants must also be pruned
-                                </span><span class="kw">return </span><span class="prelude-val">Err</span>::&lt;(), Error&lt;T&gt;&gt;(
-                                    FraudProofError::DescendantsOfFraudulentERNotPruned.into(),
-                                );
-                            }
-                        }
-                        <span class="prelude-val">Ok</span>(())
-                    },
-                )<span class="question-mark">?</span>;
-
-                <span class="kw">_ </span>= StateRoots::&lt;T&gt;::take((
+                    new_head_receipt_number: <span class="prelude-val">Some</span>(new_head_receipt_number),
+                });
+            } <span class="kw">else if let </span><span class="prelude-val">Some</span>(targeted_bad_operator) = fraud_proof.targeted_bad_operator() {
+                operators_to_slash.insert(targeted_bad_operator);
+                <span class="self">Self</span>::deposit_event(Event::FraudProofProcessed {
                     domain_id,
-                    execution_receipt.domain_block_number,
-                    execution_receipt.domain_block_hash,
-                ));
-
-                <span class="comment">// Add all the immediate descendants of the pruned ER to the `receipt_to_remove` list
-                </span>DomainBlockDescendants::&lt;T&gt;::take(receipt_hash)
-                    .into_iter()
-                    .for_each(|descendant| receipt_to_remove.push(descendant));
-
-                <span class="comment">// NOTE: the operator id will be deduplicated since we are using `BTreeSet`
-                </span>operator_ids.into_iter().for_each(|id| {
-                    operator_to_slash.insert(id);
+                    new_head_receipt_number: <span class="prelude-val">None</span>,
                 });
             }
 
-            <span class="comment">// Update the head receipt number
-            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(next_head_receipt_number) = next_head_receipt_number {
-                HeadReceiptNumber::&lt;T&gt;::insert(domain_id, next_head_receipt_number);
-            }
+            <span class="comment">// Slash bad operators
+            </span>do_slash_operators::&lt;T, <span class="kw">_</span>&gt;(operators_to_slash.into_iter()).map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
 
-            <span class="comment">// Slash operator who have submitted the pruned fraudulent ER
-            </span>do_slash_operators::&lt;T, <span class="kw">_</span>&gt;(operator_to_slash.into_iter()).map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
-
-            <span class="self">Self</span>::deposit_event(Event::FraudProofProcessed {
-                domain_id,
-                new_head_receipt_number: next_head_receipt_number,
-            });
+            SuccessfulFraudProofs::&lt;T&gt;::append(domain_id, fraud_proof.hash());
 
             <span class="prelude-val">Ok</span>(())
         }
@@ -2944,7 +2956,9 @@
             origin: OriginFor&lt;T&gt;,
             domain_config: DomainConfig&lt;T::AccountId&gt;,
         ) -&gt; DispatchResult {
-            <span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
+            ensure_root(origin)<span class="question-mark">?</span>;
+
+            <span class="kw">let </span>who = T::SudoId::get();
 
             <span class="kw">let </span>created_at = frame_system::Pallet::&lt;T&gt;::current_block_number();
 
@@ -3010,24 +3024,6 @@
             <span class="prelude-val">Ok</span>(())
         }
 
-        <span class="attr">#[pallet::call_index(<span class="number">10</span>)]
-        #[pallet::weight(T::WeightInfo::auto_stake_block_rewards())]
-        </span><span class="kw">pub fn </span>auto_stake_block_rewards(
-            origin: OriginFor&lt;T&gt;,
-            operator_id: OperatorId,
-        ) -&gt; DispatchResult {
-            <span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
-
-            do_auto_stake_block_rewards::&lt;T&gt;(who.clone(), operator_id).map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
-
-            <span class="self">Self</span>::deposit_event(Event::PreferredOperator {
-                operator_id,
-                nominator_id: who,
-            });
-
-            <span class="prelude-val">Ok</span>(())
-        }
-
         <span class="doccomment">/// Extrinsic to update domain&#39;s operator allow list.
         /// Note:
         /// - If the previous allowed list is set to specific operators and new allow list is set
@@ -3035,7 +3031,7 @@
         /// - If the previous allowed list is set to `Anyone` or specific operators and the new
         ///   allow list is set to specific operators, then all the registered not allowed operators
         ///   will continue to operate until they de-register themselves.
-        </span><span class="attr">#[pallet::call_index(<span class="number">12</span>)]
+        </span><span class="attr">#[pallet::call_index(<span class="number">10</span>)]
         #[pallet::weight(Weight::from_all(<span class="number">10_000</span>))]
         </span><span class="kw">pub fn </span>update_domain_operator_allow_list(
             origin: OriginFor&lt;T&gt;,
@@ -3125,11 +3121,14 @@
                 ConsensusBlockHash::&lt;T&gt;::insert(domain_id, parent_number, parent_hash);
             }
 
+            <span class="kw">let _ </span>= SuccessfulFraudProofs::&lt;T&gt;::clear(u32::MAX, <span class="prelude-val">None</span>);
+
             Weight::zero()
         }
 
         <span class="kw">fn </span>on_finalize(<span class="kw">_</span>: BlockNumberFor&lt;T&gt;) {
             <span class="kw">let _ </span>= LastEpochStakingDistribution::&lt;T&gt;::clear(u32::MAX, <span class="prelude-val">None</span>);
+            <span class="kw">let _ </span>= HeadReceiptExtended::&lt;T&gt;::clear(u32::MAX, <span class="prelude-val">None</span>);
         }
     }
 
@@ -3161,10 +3160,25 @@
             <span class="kw">match </span>call {
                 Call::submit_bundle { opaque_bundle } =&gt; {
                     <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = <span class="self">Self</span>::validate_bundle(opaque_bundle) {
-                        <span class="macro">log::debug!</span>(
-                            target: <span class="string">&quot;runtime::domains&quot;</span>,
-                            <span class="string">&quot;Bad bundle {:?}, error: {e:?}&quot;</span>, opaque_bundle.domain_id(),
-                        );
+                        <span class="kw">match </span>e {
+                            <span class="comment">// These errors are common due to networking delay or chain re-org,
+                            // using a lower log level to avoid the noise.
+                            </span>BundleError::Receipt(BlockTreeError::InFutureReceipt)
+                            | BundleError::Receipt(BlockTreeError::StaleReceipt)
+                            | BundleError::Receipt(BlockTreeError::NewBranchReceipt)
+                            | BundleError::Receipt(BlockTreeError::BuiltOnUnknownConsensusBlock) =&gt; {
+                                <span class="macro">log::debug!</span>(
+                                    target: <span class="string">&quot;runtime::domains&quot;</span>,
+                                    <span class="string">&quot;Bad bundle {:?}, error: {e:?}&quot;</span>, opaque_bundle.domain_id(),
+                                );
+                            }
+                            <span class="kw">_ </span>=&gt; {
+                                <span class="macro">log::warn!</span>(
+                                    target: <span class="string">&quot;runtime::domains&quot;</span>,
+                                    <span class="string">&quot;Bad bundle {:?}, error: {e:?}&quot;</span>, opaque_bundle.domain_id(),
+                                );
+                            }
+                        }
                         <span class="kw">if let </span>BundleError::Receipt(<span class="kw">_</span>) = e {
                             <span class="kw">return </span>InvalidTransactionCode::ExecutionReceipt.into();
                         } <span class="kw">else </span>{
@@ -3183,7 +3197,7 @@
                 }
                 Call::submit_fraud_proof { fraud_proof } =&gt; {
                     <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = <span class="self">Self</span>::validate_fraud_proof(fraud_proof) {
-                        <span class="macro">log::debug!</span>(
+                        <span class="macro">log::warn!</span>(
                             target: <span class="string">&quot;runtime::domains&quot;</span>,
                             <span class="string">&quot;Bad fraud proof {:?}, error: {e:?}&quot;</span>, fraud_proof.domain_id(),
                         );
@@ -3203,6 +3217,10 @@
 <span class="kw">impl</span>&lt;T: Config&gt; Pallet&lt;T&gt; {
     <span class="kw">pub fn </span>successful_bundles(domain_id: DomainId) -&gt; Vec&lt;H256&gt; {
         SuccessfulBundles::&lt;T&gt;::get(domain_id)
+    }
+
+    <span class="kw">pub fn </span>successful_fraud_proofs(domain_id: DomainId) -&gt; Vec&lt;T::DomainHash&gt; {
+        SuccessfulFraudProofs::&lt;T&gt;::get(domain_id)
     }
 
     <span class="kw">pub fn </span>domain_runtime_code(domain_id: DomainId) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; {
@@ -3245,7 +3263,6 @@
 
     <span class="kw">pub fn </span>genesis_state_root(domain_id: DomainId) -&gt; <span class="prelude-ty">Option</span>&lt;H256&gt; {
         BlockTree::&lt;T&gt;::get(domain_id, DomainBlockNumberFor::&lt;T&gt;::zero())
-            .first()
             .and_then(BlockTreeNodes::&lt;T&gt;::get)
             .map(|block| block.execution_receipt.final_state_root.into())
     }
@@ -3308,7 +3325,7 @@
     }
 
     <span class="kw">fn </span>check_extrinsics_root(opaque_bundle: <span class="kw-2">&amp;</span>OpaqueBundleOf&lt;T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), BundleError&gt; {
-        <span class="kw">let </span>expected_extrinsics_root = BlakeTwo256::ordered_trie_root(
+        <span class="kw">let </span>expected_extrinsics_root = &lt;T::DomainHeader <span class="kw">as </span>Header&gt;::Hashing::ordered_trie_root(
             opaque_bundle
                 .extrinsics
                 .iter()
@@ -3320,33 +3337,6 @@
             expected_extrinsics_root == opaque_bundle.extrinsics_root(),
             BundleError::InvalidExtrinsicRoot
         );
-        <span class="prelude-val">Ok</span>(())
-    }
-
-    <span class="kw">fn </span>check_proof_of_election(
-        domain_id: DomainId,
-        operator_id: OperatorId,
-        operator: Operator&lt;BalanceOf&lt;T&gt;, T::Share&gt;,
-        bundle_slot_probability: (u64, u64),
-        proof_of_election: <span class="kw-2">&amp;</span>ProofOfElection,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), BundleError&gt; {
-        proof_of_election
-            .verify_vrf_signature(<span class="kw-2">&amp;</span>operator.signing_key)
-            .map_err(|<span class="kw">_</span>| BundleError::BadVrfSignature)<span class="question-mark">?</span>;
-
-        <span class="kw">let </span>(operator_stake, total_domain_stake) =
-            <span class="self">Self</span>::fetch_operator_stake_info(domain_id, <span class="kw-2">&amp;</span>operator_id)<span class="question-mark">?</span>;
-
-        <span class="kw">let </span>threshold = sp_domains::bundle_producer_election::calculate_threshold(
-            operator_stake.saturated_into(),
-            total_domain_stake.saturated_into(),
-            bundle_slot_probability,
-        );
-
-        <span class="kw">if </span>!is_below_threshold(<span class="kw-2">&amp;</span>proof_of_election.vrf_signature.output, threshold) {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(BundleError::ThresholdUnsatisfied);
-        }
-
         <span class="prelude-val">Ok</span>(())
     }
 
@@ -3382,12 +3372,15 @@
         <span class="self">Self</span>::check_extrinsics_root(opaque_bundle)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>proof_of_election = <span class="kw-2">&amp;</span>sealed_header.header.proof_of_election;
-        <span class="self">Self</span>::check_proof_of_election(
-            domain_id,
-            operator_id,
-            operator,
+        <span class="kw">let </span>(operator_stake, total_domain_stake) =
+            <span class="self">Self</span>::fetch_operator_stake_info(domain_id, <span class="kw-2">&amp;</span>operator_id)<span class="question-mark">?</span>;
+
+        sp_domains::bundle_producer_election::check_proof_of_election(
+            <span class="kw-2">&amp;</span>operator.signing_key,
             domain_config.bundle_slot_probability,
             proof_of_election,
+            operator_stake.saturated_into(),
+            total_domain_stake.saturated_into(),
         )<span class="question-mark">?</span>;
 
         <span class="kw">let </span>receipt = <span class="kw-2">&amp;</span>sealed_header.header.receipt;
@@ -3397,102 +3390,146 @@
     }
 
     <span class="kw">fn </span>validate_fraud_proof(
-        fraud_proof: <span class="kw-2">&amp;</span>FraudProof&lt;BlockNumberFor&lt;T&gt;, T::Hash&gt;,
+        fraud_proof: <span class="kw-2">&amp;</span>FraudProof&lt;BlockNumberFor&lt;T&gt;, T::Hash, T::DomainHeader&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), FraudProofError&gt; {
-        <span class="kw">let </span>bad_receipt = BlockTreeNodes::&lt;T&gt;::get(fraud_proof.bad_receipt_hash())
-            .ok_or(FraudProofError::BadReceiptNotFound)<span class="question-mark">?
-            </span>.execution_receipt;
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(bad_receipt_hash) = fraud_proof.targeted_bad_receipt_hash() {
+            <span class="kw">let </span>bad_receipt = BlockTreeNodes::&lt;T&gt;::get(bad_receipt_hash)
+                .ok_or(FraudProofError::BadReceiptNotFound)<span class="question-mark">?
+                </span>.execution_receipt;
 
-        <span class="macro">ensure!</span>(
-            !bad_receipt.domain_block_number.is_zero(),
-            FraudProofError::ChallengingGenesisReceipt
-        );
+            <span class="macro">ensure!</span>(
+                !bad_receipt.domain_block_number.is_zero(),
+                FraudProofError::ChallengingGenesisReceipt
+            );
 
-        <span class="kw">match </span>fraud_proof {
-            FraudProof::InvalidTotalRewards(InvalidTotalRewardsProof { storage_proof, .. }) =&gt; {
-                verify_invalid_total_rewards_fraud_proof::&lt;
+            <span class="kw">match </span>fraud_proof {
+                FraudProof::InvalidTotalRewards(InvalidTotalRewardsProof {
+                    storage_proof, ..
+                }) =&gt; {
+                    verify_invalid_total_rewards_fraud_proof::&lt;
+                        T::Block,
+                        DomainBlockNumberFor&lt;T&gt;,
+                        T::DomainHash,
+                        BalanceOf&lt;T&gt;,
+                        DomainHashingFor&lt;T&gt;,
+                    &gt;(bad_receipt, storage_proof)
+                    .map_err(|err| {
+                        <span class="macro">log::error!</span>(
+                            target: <span class="string">&quot;runtime::domains&quot;</span>,
+                            <span class="string">&quot;Total rewards proof verification failed: {err:?}&quot;
+                        </span>);
+                        FraudProofError::InvalidTotalRewardsFraudProof
+                    })<span class="question-mark">?</span>;
+                }
+                FraudProof::InvalidDomainBlockHash(InvalidDomainBlockHashProof {
+                    digest_storage_proof,
+                    ..
+                }) =&gt; {
+                    <span class="kw">let </span>parent_receipt =
+                        BlockTreeNodes::&lt;T&gt;::get(bad_receipt.parent_domain_block_receipt_hash)
+                            .ok_or(FraudProofError::ParentReceiptNotFound)<span class="question-mark">?
+                            </span>.execution_receipt;
+                    verify_invalid_domain_block_hash_fraud_proof::&lt;
+                        T::Block,
+                        BalanceOf&lt;T&gt;,
+                        T::DomainHeader,
+                    &gt;(
+                        bad_receipt,
+                        digest_storage_proof.clone(),
+                        parent_receipt.domain_block_hash,
+                    )
+                    .map_err(|err| {
+                        <span class="macro">log::error!</span>(
+                            target: <span class="string">&quot;runtime::domains&quot;</span>,
+                            <span class="string">&quot;Invalid Domain block hash proof verification failed: {err:?}&quot;
+                        </span>);
+                        FraudProofError::InvalidDomainBlockHashFraudProof
+                    })<span class="question-mark">?</span>;
+                }
+                FraudProof::InvalidExtrinsicsRoot(proof) =&gt; {
+                    verify_invalid_domain_extrinsics_root_fraud_proof::&lt;
+                        T::Block,
+                        BalanceOf&lt;T&gt;,
+                        T::Hashing,
+                        T::DomainHeader,
+                    &gt;(bad_receipt, proof)
+                    .map_err(|err| {
+                        <span class="macro">log::error!</span>(
+                            target: <span class="string">&quot;runtime::domains&quot;</span>,
+                            <span class="string">&quot;Invalid Domain extrinsic root proof verification failed: {err:?}&quot;
+                        </span>);
+                        FraudProofError::InvalidExtrinsicRootFraudProof
+                    })<span class="question-mark">?</span>;
+                }
+                FraudProof::InvalidStateTransition(proof) =&gt; {
+                    <span class="kw">let </span>bad_receipt_parent =
+                        BlockTreeNodes::&lt;T&gt;::get(bad_receipt.parent_domain_block_receipt_hash)
+                            .ok_or(FraudProofError::ParentReceiptNotFound)<span class="question-mark">?
+                            </span>.execution_receipt;
+
+                    verify_invalid_state_transition_fraud_proof::&lt;
+                        T::Block,
+                        T::DomainHeader,
+                        BalanceOf&lt;T&gt;,
+                    &gt;(bad_receipt, bad_receipt_parent, proof)
+                    .map_err(|err| {
+                        <span class="macro">log::error!</span>(
+                            target: <span class="string">&quot;runtime::domains&quot;</span>,
+                            <span class="string">&quot;Invalid State transition proof verification failed: {err:?}&quot;
+                        </span>);
+                        FraudProofError::InvalidStateTransitionFraudProof
+                    })<span class="question-mark">?</span>;
+                }
+                FraudProof::InvalidBundles(invalid_bundles_fraud_proof) =&gt; {
+                    verify_invalid_bundles_fraud_proof::&lt;T::Block, T::DomainHeader, BalanceOf&lt;T&gt;&gt;(
+                        bad_receipt,
+                        invalid_bundles_fraud_proof,
+                    )
+                    .map_err(|err| {
+                        <span class="macro">log::error!</span>(
+                            target: <span class="string">&quot;runtime::domains&quot;</span>,
+                            <span class="string">&quot;Invalid Bundle proof verification failed: {err:?}&quot;
+                        </span>);
+                        FraudProofError::InvalidBundleFraudProof
+                    })<span class="question-mark">?</span>;
+                }
+                FraudProof::ValidBundle(proof) =&gt; verify_valid_bundle_fraud_proof::&lt;
                     T::Block,
                     DomainBlockNumberFor&lt;T&gt;,
                     T::DomainHash,
                     BalanceOf&lt;T&gt;,
-                    T::Hashing,
-                &gt;(bad_receipt, storage_proof)
-                .map_err(FraudProofError::InvalidTotalRewardsFraudProof)<span class="question-mark">?</span>;
+                &gt;(bad_receipt, proof)
+                .map_err(|err| {
+                    <span class="macro">log::error!</span>(
+                        target: <span class="string">&quot;runtime::domains&quot;</span>,
+                        <span class="string">&quot;Valid bundle proof verification failed: {err:?}&quot;
+                    </span>);
+                    FraudProofError::BadValidBundleFraudProof
+                })<span class="question-mark">?</span>,
+                <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(FraudProofError::UnexpectedFraudProof),
             }
-            FraudProof::InvalidDomainBlockHash(InvalidDomainBlockHashProof {
-                digest_storage_proof,
-                ..
-            }) =&gt; {
-                <span class="kw">let </span>parent_receipt =
-                    BlockTreeNodes::&lt;T&gt;::get(bad_receipt.parent_domain_block_receipt_hash)
-                        .ok_or(FraudProofError::ParentReceiptNotFound)<span class="question-mark">?
-                        </span>.execution_receipt;
-                verify_invalid_domain_block_hash_fraud_proof::&lt;
-                    T::Block,
-                    BalanceOf&lt;T&gt;,
-                    T::DomainHeader,
-                &gt;(
-                    bad_receipt,
-                    digest_storage_proof.clone(),
-                    parent_receipt.domain_block_hash,
-                )
-                .map_err(FraudProofError::InvalidDomainBlockHashFraudProof)<span class="question-mark">?</span>;
-            }
-            FraudProof::InvalidExtrinsicsRoot(proof) =&gt; {
-                <span class="kw">let </span>consensus_block_hash = bad_receipt.consensus_block_hash;
-                <span class="kw">let </span>block_randomness = <span class="kw">match </span>get_fraud_proof_verification_info(
-                    H256::from_slice(consensus_block_hash.as_ref()),
-                    FraudProofVerificationInfoRequest::BlockRandomness,
-                )
-                .ok_or(FraudProofError::FailedToGetBlockRandomness)<span class="question-mark">?
-                </span>{
-                    FraudProofVerificationInfoResponse::BlockRandomness(randomness) =&gt; {
-                        <span class="prelude-val">Ok</span>(randomness)
-                    }
-                    <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(FraudProofError::ReceivedInvalidVerificationInfo),
-                }<span class="question-mark">?</span>;
+        } <span class="kw">else if let </span><span class="prelude-val">Some</span>(bad_operator_id) = fraud_proof.targeted_bad_operator() {
+            <span class="kw">let </span>operator =
+                Operators::&lt;T&gt;::get(bad_operator_id).ok_or(FraudProofError::MissingOperator)<span class="question-mark">?</span>;
+            <span class="kw">match </span>fraud_proof {
+                FraudProof::BundleEquivocation(proof) =&gt; {
+                    <span class="kw">let </span>operator_signing_key = operator.signing_key;
+                    verify_bundle_equivocation_fraud_proof::&lt;T::Block, T::DomainHeader, Balance&gt;(
+                        <span class="kw-2">&amp;</span>operator_signing_key,
+                        <span class="kw-2">&amp;</span>proof.first_header,
+                        <span class="kw-2">&amp;</span>proof.second_header,
+                    )
+                    .map_err(|err| {
+                        <span class="macro">log::error!</span>(
+                            target: <span class="string">&quot;runtime::domains&quot;</span>,
+                            <span class="string">&quot;Bundle equivocation proof verification failed: {err:?}&quot;
+                        </span>);
+                        FraudProofError::BadBundleEquivocationFraudProof
+                    })<span class="question-mark">?</span>;
+                }
 
-                <span class="kw">let </span>domain_timestamp_extrinsic = <span class="kw">match </span>get_fraud_proof_verification_info(
-                    H256::from_slice(consensus_block_hash.as_ref()),
-                    FraudProofVerificationInfoRequest::DomainTimestampExtrinsic(proof.domain_id),
-                )
-                .ok_or(FraudProofError::FailedToGetDomainTimestampExtrinsic)<span class="question-mark">?
-                </span>{
-                    FraudProofVerificationInfoResponse::DomainTimestampExtrinsic(
-                        domain_timestamp_extrinsic,
-                    ) =&gt; <span class="prelude-val">Ok</span>(domain_timestamp_extrinsic),
-                    <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(FraudProofError::ReceivedInvalidVerificationInfo),
-                }<span class="question-mark">?</span>;
-
-                verify_invalid_domain_extrinsics_root_fraud_proof::&lt;
-                    T::Block,
-                    DomainBlockNumberFor&lt;T&gt;,
-                    T::DomainHash,
-                    BalanceOf&lt;T&gt;,
-                    T::Hashing,
-                    DomainHashingFor&lt;T&gt;,
-                &gt;(
-                    bad_receipt,
-                    proof,
-                    block_randomness,
-                    domain_timestamp_extrinsic,
-                )
-                .map_err(FraudProofError::InvalidExtrinsicRootFraudProof)<span class="question-mark">?</span>;
+                <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(FraudProofError::UnexpectedFraudProof),
             }
-            FraudProof::InvalidStateTransition(proof) =&gt; {
-                <span class="kw">let </span>bad_receipt_parent =
-                    BlockTreeNodes::&lt;T&gt;::get(bad_receipt.parent_domain_block_receipt_hash)
-                        .ok_or(FraudProofError::ParentReceiptNotFound)<span class="question-mark">?
-                        </span>.execution_receipt;
-
-                verify_invalid_state_transition_fraud_proof::&lt;
-                    T::Block,
-                    T::DomainHeader,
-                    BalanceOf&lt;T&gt;,
-                &gt;(bad_receipt, bad_receipt_parent, proof)
-                .map_err(|<span class="kw">_</span>| FraudProofError::InvalidStateTransitionFraudProof)<span class="question-mark">?</span>;
-            }
-            <span class="kw">_ </span>=&gt; {}
         }
 
         <span class="prelude-val">Ok</span>(())
@@ -3516,8 +3553,7 @@
         <span class="kw">let </span>operator_stake = domain_stake_summary
             .current_operators
             .get(operator_id)
-            .ok_or(BundleError::BadOperator)
-            .unwrap();
+            .ok_or(BundleError::BadOperator)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>((<span class="kw-2">*</span>operator_stake, domain_stake_summary.current_total_stake))
     }
 
@@ -3620,22 +3656,6 @@
         })
     }
 
-    <span class="doccomment">/// Increase the nomination stake by `reward` to the preferred operator of `who`.
-    /// Preference is removed if the nomination fails.
-    </span><span class="kw">pub fn </span>on_block_reward(who: NominatorId&lt;T&gt;, reward: BalanceOf&lt;T&gt;) {
-        PreferredOperator::&lt;T&gt;::mutate_exists(who.clone(), |maybe_preferred_operator_id| {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(operator_id) = maybe_preferred_operator_id {
-                <span class="kw">if let </span><span class="prelude-val">Err</span>(err) = do_nominate_operator::&lt;T&gt;(<span class="kw-2">*</span>operator_id, who, reward) {
-                    <span class="macro">log::trace!</span>(
-                        target: <span class="string">&quot;runtime::domains&quot;</span>,
-                        <span class="string">&quot;Failed to stake the reward amount to preferred operator: {err:?}. Removing preference.&quot;
-                    </span>);
-                    maybe_preferred_operator_id.take();
-                }
-            }
-        });
-    }
-
     <span class="doccomment">/// Returns if there are any ERs in the challenge period that have non empty extrinsics.
     /// Note that Genesis ER is also considered special and hence non empty
     </span><span class="kw">pub fn </span>non_empty_er_exists(domain_id: DomainId) -&gt; bool {
@@ -3652,7 +3672,7 @@
             <span class="kw">if </span>!ExecutionInbox::&lt;T&gt;::iter_prefix_values((domain_id, to_check)).all(|digests| {
                 digests
                     .iter()
-                    .all(|digest| digest.extrinsics_root == EMPTY_EXTRINSIC_ROOT)
+                    .all(|digest| digest.extrinsics_root == EMPTY_EXTRINSIC_ROOT.into())
             }) {
                 <span class="kw">return </span><span class="bool-val">true</span>;
             }
@@ -3669,7 +3689,7 @@
         randomness
     }
 
-    <span class="kw">pub fn </span>execution_receipt(receipt_hash: ReceiptHash) -&gt; <span class="prelude-ty">Option</span>&lt;ExecutionReceiptOf&lt;T&gt;&gt; {
+    <span class="kw">pub fn </span>execution_receipt(receipt_hash: ReceiptHashFor&lt;T&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;ExecutionReceiptOf&lt;T&gt;&gt; {
         BlockTreeNodes::&lt;T&gt;::get(receipt_hash).map(|db| db.execution_receipt)
     }
 }
@@ -3699,7 +3719,9 @@
     }
 
     <span class="doccomment">/// Submits an unsigned extrinsic [`Call::submit_fraud_proof`].
-    </span><span class="kw">pub fn </span>submit_fraud_proof_unsigned(fraud_proof: FraudProof&lt;BlockNumberFor&lt;T&gt;, T::Hash&gt;) {
+    </span><span class="kw">pub fn </span>submit_fraud_proof_unsigned(
+        fraud_proof: FraudProof&lt;BlockNumberFor&lt;T&gt;, T::Hash, T::DomainHeader&gt;,
+    ) {
         <span class="kw">let </span>call = Call::submit_fraud_proof {
             fraud_proof: Box::new(fraud_proof),
         };

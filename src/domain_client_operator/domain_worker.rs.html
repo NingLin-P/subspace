@@ -162,10 +162,6 @@
 <a href="#162" id="162">162</a>
 <a href="#163" id="163">163</a>
 <a href="#164" id="164">164</a>
-<a href="#165" id="165">165</a>
-<a href="#166" id="166">166</a>
-<a href="#167" id="167">167</a>
-<a href="#168" id="168">168</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Shared domain worker functions.
 
 </span><span class="kw">use </span><span class="kw">crate</span>::utils::{BlockInfo, OperatorSlotInfo};
@@ -183,13 +179,8 @@
 <span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>subspace_runtime_primitives::Balance;
 
-<span class="kw">type </span>OpaqueBundleFor&lt;Block, CBlock&gt; = OpaqueBundle&lt;
-    NumberFor&lt;CBlock&gt;,
-    &lt;CBlock <span class="kw">as </span>BlockT&gt;::Hash,
-    NumberFor&lt;Block&gt;,
-    &lt;Block <span class="kw">as </span>BlockT&gt;::Hash,
-    Balance,
-&gt;;
+<span class="kw">type </span>OpaqueBundleFor&lt;Block, CBlock&gt; =
+    OpaqueBundle&lt;NumberFor&lt;CBlock&gt;, &lt;CBlock <span class="kw">as </span>BlockT&gt;::Hash, &lt;Block <span class="kw">as </span>BlockT&gt;::Header, Balance&gt;;
 
 <span class="doccomment">/// Throttle the consensus block import notification based on the `consensus_block_import_throttling_buffer_size`
 /// to pause the consensus block import in case the consensus chain runs much faster than the domain.
@@ -217,7 +208,7 @@
         + ProvideRuntimeApi&lt;CBlock&gt;
         + BlockchainEvents&lt;CBlock&gt;
         + <span class="lifetime">&#39;static</span>,
-    CClient::Api: DomainsApi&lt;CBlock, NumberFor&lt;Block&gt;, Block::Hash&gt;,
+    CClient::Api: DomainsApi&lt;CBlock, Block::Header&gt;,
     BlocksImporting: Stream&lt;Item = (NumberFor&lt;CBlock&gt;, mpsc::Sender&lt;()&gt;)&gt; + Unpin + Send + <span class="lifetime">&#39;static</span>,
     BlocksImported: Stream&lt;Item = BlockImportNotification&lt;CBlock&gt;&gt; + Unpin + Send + <span class="lifetime">&#39;static</span>,
 {
@@ -270,7 +261,8 @@
                         <span class="kw">let _ </span>= block_info_sender.feed(<span class="prelude-val">Some</span>(block_info)).<span class="kw">await</span>;
                     }
                     maybe_block_importing = blocks_importing.next() =&gt; {
-                        <span class="kw">let </span>(_block_number, <span class="kw-2">mut </span>acknowledgement_sender) =
+                        <span class="comment">// TODO: remove the `block_number` from the notification since it is not used
+                        </span><span class="kw">let </span>(_block_number, <span class="kw-2">mut </span>acknowledgement_sender) =
                             <span class="kw">match </span>maybe_block_importing {
                                 <span class="prelude-val">Some</span>(block_importing) =&gt; block_importing,
                                 <span class="prelude-val">None </span>=&gt; {
@@ -300,7 +292,7 @@
     </span>Block: BlockT,
     CBlock: BlockT,
     CClient: HeaderBackend&lt;CBlock&gt; + ProvideRuntimeApi&lt;CBlock&gt;,
-    CClient::Api: DomainsApi&lt;CBlock, NumberFor&lt;Block&gt;, Block::Hash&gt;,
+    CClient::Api: DomainsApi&lt;CBlock, Block::Header&gt;,
     BundlerFn: Fn(
             HashAndNumber&lt;CBlock&gt;,
             OperatorSlotInfo,
