@@ -22,7 +22,7 @@ use codec::{Decode, Encode};
 use cross_domain_message_gossip::GossipWorkerBuilder;
 use domain_runtime_primitives::opaque::{Block as DomainBlock, Header as DomainHeader};
 use futures::channel::mpsc;
-use futures::{select, FutureExt, StreamExt};
+use futures::StreamExt;
 use jsonrpsee::RpcModule;
 use parking_lot::Mutex;
 use sc_block_builder::BlockBuilderProvider;
@@ -46,7 +46,7 @@ use sc_service::{
 };
 use sc_transaction_pool::error::Error as PoolError;
 use sc_transaction_pool_api::{InPoolTransaction, TransactionPool, TransactionSource};
-use sc_utils::mpsc::{tracing_unbounded, TracingUnboundedReceiver, TracingUnboundedSender};
+// use sc_utils::mpsc::{tracing_unbounded, TracingUnboundedReceiver, TracingUnboundedSender};
 use sp_api::{ApiExt, HashT, HeaderT, ProvideRuntimeApi};
 use sp_application_crypto::UncheckedFrom;
 use sp_blockchain::HeaderBackend;
@@ -236,10 +236,10 @@ pub struct MockConsensusNode {
     next_slot: u64,
     /// The slot notification subscribers
     #[allow(clippy::type_complexity)]
-    new_slot_notification_subscribers: Vec<TracingUnboundedSender<(Slot, Randomness)>>,
+    new_slot_notification_subscribers: Vec<mpsc::UnboundedSender<(Slot, Randomness)>>,
     /// The acknowledgement sender subscribers
     #[allow(clippy::type_complexity)]
-    acknowledgement_sender_subscribers: Vec<TracingUnboundedSender<mpsc::Sender<()>>>,
+    acknowledgement_sender_subscribers: Vec<mpsc::UnboundedSender<mpsc::Sender<()>>>,
     /// Block import pipeline
     #[allow(clippy::type_complexity)]
     block_import: MockBlockImport<Client, Block>,
@@ -436,8 +436,8 @@ impl MockConsensusNode {
     }
 
     /// Subscribe the new slot notification
-    pub fn new_slot_notification_stream(&mut self) -> TracingUnboundedReceiver<(Slot, Randomness)> {
-        let (tx, rx) = tracing_unbounded("subspace_new_slot_notification_stream", 100);
+    pub fn new_slot_notification_stream(&mut self) -> mpsc::UnboundedReceiver<(Slot, Randomness)> {
+        let (tx, rx) = mpsc::unbounded();
         self.new_slot_notification_subscribers.push(tx);
         rx
     }
@@ -445,8 +445,8 @@ impl MockConsensusNode {
     /// Subscribe the acknowledgement sender stream
     pub fn new_acknowledgement_sender_stream(
         &mut self,
-    ) -> TracingUnboundedReceiver<mpsc::Sender<()>> {
-        let (tx, rx) = tracing_unbounded("subspace_acknowledgement_sender_stream", 100);
+    ) -> mpsc::UnboundedReceiver<mpsc::Sender<()>> {
+        let (tx, rx) = mpsc::unbounded();
         self.acknowledgement_sender_subscribers.push(tx);
         rx
     }
@@ -465,7 +465,6 @@ impl MockConsensusNode {
                 .retain(|subscriber| {
                     subscriber
                         .unbounded_send(acknowledgement_sender.clone())
-                        .and_then(|_| subscriber.unbounded_send(acknowledgement_sender.clone()))
                         .is_ok()
                 });
             drop(acknowledgement_sender);
@@ -503,7 +502,7 @@ impl MockConsensusNode {
     /// Subscribe the block importing notification
     pub fn block_importing_notification_stream(
         &mut self,
-    ) -> TracingUnboundedReceiver<(NumberFor<Block>, mpsc::Sender<()>)> {
+    ) -> mpsc::UnboundedReceiver<(NumberFor<Block>, mpsc::Sender<()>)> {
         self.block_import.block_importing_notification_stream()
     }
 
@@ -803,7 +802,7 @@ where
 struct MockBlockImport<Client, Block: BlockT> {
     inner: Arc<Client>,
     block_importing_notification_subscribers:
-        Arc<Mutex<Vec<TracingUnboundedSender<(NumberFor<Block>, mpsc::Sender<()>)>>>>,
+        Arc<Mutex<Vec<mpsc::UnboundedSender<(NumberFor<Block>, mpsc::Sender<()>)>>>>,
 }
 
 impl<Client, Block: BlockT> MockBlockImport<Client, Block> {
@@ -817,8 +816,8 @@ impl<Client, Block: BlockT> MockBlockImport<Client, Block> {
     // Subscribe the block importing notification
     fn block_importing_notification_stream(
         &mut self,
-    ) -> TracingUnboundedReceiver<(NumberFor<Block>, mpsc::Sender<()>)> {
-        let (tx, rx) = tracing_unbounded("subspace_new_slot_notification_stream", 100);
+    ) -> mpsc::UnboundedReceiver<(NumberFor<Block>, mpsc::Sender<()>)> {
+        let (tx, rx) = mpsc::unbounded();
         self.block_importing_notification_subscribers
             .lock()
             .push(tx);
