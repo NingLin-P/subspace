@@ -244,7 +244,7 @@ pub struct MockConsensusNode {
     new_slot_notification_subscribers: Vec<TracingUnboundedSender<(Slot, Randomness)>>,
     /// The acknowledgement sender subscribers
     #[allow(clippy::type_complexity)]
-    acknowledgement_sender_subscribers: Vec<TracingUnboundedSender<mpsc::Sender<()>>>,
+    acknowledgement_sender_subscribers: Vec<TracingUnboundedSender<(String, mpsc::Sender<()>)>>,
     /// Block import pipeline
     #[allow(clippy::type_complexity)]
     block_import: MockBlockImport<Client, Block>,
@@ -422,7 +422,8 @@ impl MockConsensusNode {
         self.new_slot_notification_subscribers
             .retain(|subscriber| subscriber.unbounded_send(value).is_ok());
 
-        self.confirm_acknowledgement().await;
+        self.confirm_acknowledgement(format!("New slot {slot:?}"))
+            .await;
         self.get_bundle_from_tx_pool(slot.into())
     }
 
@@ -450,7 +451,7 @@ impl MockConsensusNode {
     /// Subscribe the acknowledgement sender stream
     pub fn new_acknowledgement_sender_stream(
         &mut self,
-    ) -> TracingUnboundedReceiver<mpsc::Sender<()>> {
+    ) -> TracingUnboundedReceiver<(String, mpsc::Sender<()>)> {
         let (tx, rx) = tracing_unbounded("subspace_acknowledgement_sender_stream", 100);
         self.acknowledgement_sender_subscribers.push(tx);
         rx
@@ -460,7 +461,7 @@ impl MockConsensusNode {
     ///
     /// It is used to wait for the acknowledgement of the domain worker to ensure it have
     /// finish all the previous tasks before return
-    pub async fn confirm_acknowledgement(&mut self) {
+    pub async fn confirm_acknowledgement(&mut self, tag: String) {
         let (acknowledgement_sender, mut acknowledgement_receiver) = mpsc::channel(0);
 
         // Must drop `acknowledgement_sender` after the notification otherwise the receiver
@@ -469,7 +470,7 @@ impl MockConsensusNode {
             self.acknowledgement_sender_subscribers
                 .retain(|subscriber| {
                     subscriber
-                        .unbounded_send(acknowledgement_sender.clone())
+                        .unbounded_send((tag.clone(), acknowledgement_sender.clone()))
                         .is_ok()
                 });
             drop(acknowledgement_sender);
@@ -482,7 +483,7 @@ impl MockConsensusNode {
     }
 
     /// Wait for the operator finish processing the consensus block before return
-    pub async fn confirm_block_import_processed(&mut self) {
+    pub async fn confirm_block_import_processed(&mut self, tag: String) {
         // Send one more notification to ensure the previous consensus block import notificaion
         // have received by the operator
         let (acknowledgement_sender, mut acknowledgement_receiver) = mpsc::channel(0);
@@ -501,7 +502,7 @@ impl MockConsensusNode {
         }
 
         // Ensure the operator finish processing the consensus block
-        self.confirm_acknowledgement().await;
+        self.confirm_acknowledgement(tag).await;
     }
 
     /// Subscribe the block importing notification
@@ -770,7 +771,8 @@ impl MockConsensusNode {
             }
             err => err,
         };
-        self.confirm_block_import_processed().await;
+        self.confirm_block_import_processed(format!("Import block #{}", parent_number + 1))
+            .await;
         res
     }
 

@@ -118,7 +118,7 @@ where
         IBNS: Stream<Item = (NumberFor<CBlock>, mpsc::Sender<()>)> + Send + 'static,
         CIBNS: Stream<Item = BlockImportNotification<CBlock>> + Send + 'static,
         NSNS: Stream<Item = NewSlotNotification> + Send + 'static,
-        ASS: Stream<Item = mpsc::Sender<()>> + Send + 'static,
+        ASS: Stream<Item = (String, mpsc::Sender<()>)> + Send + 'static,
     {
         let domain_bundle_proposer = DomainBundleProposer::new(
             params.domain_id,

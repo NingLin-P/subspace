@@ -159,7 +159,7 @@ pub struct OperatorParams<
     IBNS: Stream<Item = (NumberFor<CBlock>, mpsc::Sender<()>)> + Send + 'static,
     CIBNS: Stream<Item = BlockImportNotification<CBlock>> + Send + 'static,
     NSNS: Stream<Item = NewSlotNotification> + Send + 'static,
-    ASS: Stream<Item = mpsc::Sender<()>> + Send + 'static,
+    ASS: Stream<Item = (String, mpsc::Sender<()>)> + Send + 'static,
 {
     pub domain_id: DomainId,
     pub domain_created_at: NumberFor<CBlock>,
