@@ -233,6 +233,10 @@
 <a href="#233" id="233">233</a>
 <a href="#234" id="234">234</a>
 <a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
+<a href="#238" id="238">238</a>
+<a href="#239" id="239">239</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::bundle_processor::BundleProcessor;
 <span class="kw">use </span><span class="kw">crate</span>::domain_block_processor::{DomainBlockProcessor, ReceiptsChecker};
 <span class="kw">use </span><span class="kw">crate</span>::domain_bundle_producer::DomainBundleProducer;
@@ -252,6 +256,7 @@
 <span class="kw">use </span>sp_core::H256;
 <span class="kw">use </span>sp_domains::{BundleProducerElectionApi, DomainsApi};
 <span class="kw">use </span>sp_domains_fraud_proof::FraudProofApi;
+<span class="kw">use </span>sp_keystore::KeystorePtr;
 <span class="kw">use </span>sp_messenger::MessengerApi;
 <span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, NumberFor};
 <span class="kw">use </span>sp_transaction_pool::runtime_api::TaggedTransactionQueue;
@@ -266,11 +271,12 @@
 {
     consensus_client: Arc&lt;CClient&gt;,
     client: Arc&lt;Client&gt;,
-    transaction_pool: Arc&lt;TransactionPool&gt;,
+    <span class="kw">pub </span>transaction_pool: Arc&lt;TransactionPool&gt;,
     backend: Arc&lt;Backend&gt;,
     fraud_proof_generator: FraudProofGenerator&lt;Block, CBlock, Client, CClient, Backend, E&gt;,
     bundle_processor: BundleProcessor&lt;Block, CBlock, Client, CClient, Backend, E&gt;,
     domain_block_processor: DomainBlockProcessor&lt;Block, CBlock, Client, CClient, Backend&gt;,
+    <span class="kw">pub </span>keystore: KeystorePtr,
 }
 
 <span class="kw">impl</span>&lt;Block, CBlock, Client, CClient, TransactionPool, Backend, E&gt; Clone
@@ -288,6 +294,7 @@
             fraud_proof_generator: <span class="self">self</span>.fraud_proof_generator.clone(),
             bundle_processor: <span class="self">self</span>.bundle_processor.clone(),
             domain_block_processor: <span class="self">self</span>.domain_block_processor.clone(),
+            keystore: <span class="self">self</span>.keystore.clone(),
         }
     }
 }
@@ -385,6 +392,7 @@
             domain_confirmation_depth: params.domain_confirmation_depth,
             block_import: params.block_import,
             import_notification_sinks: Default::default(),
+            consensus_network_sync_oracle: params.consensus_network_sync_oracle.clone(),
         };
 
         <span class="kw">let </span>receipts_checker = ReceiptsChecker {
@@ -401,7 +409,6 @@
             params.consensus_client.clone(),
             params.client.clone(),
             params.backend.clone(),
-            params.keystore,
             receipts_checker,
             domain_block_processor.clone(),
         );
@@ -413,7 +420,7 @@
                 spawn_essential.clone(),
                 params.consensus_client.clone(),
                 params.consensus_offchain_tx_pool_factory.clone(),
-                params.is_authority,
+                params.maybe_operator_id,
                 bundle_producer,
                 bundle_processor.clone(),
                 params.operator_streams,
@@ -429,6 +436,7 @@
             fraud_proof_generator,
             bundle_processor,
             domain_block_processor,
+            keystore: params.keystore,
         })
     }
 

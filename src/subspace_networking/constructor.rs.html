@@ -571,25 +571,48 @@
 <a href="#571" id="571">571</a>
 <a href="#572" id="572">572</a>
 <a href="#573" id="573">573</a>
+<a href="#574" id="574">574</a>
+<a href="#575" id="575">575</a>
+<a href="#576" id="576">576</a>
+<a href="#577" id="577">577</a>
+<a href="#578" id="578">578</a>
+<a href="#579" id="579">579</a>
+<a href="#580" id="580">580</a>
+<a href="#581" id="581">581</a>
+<a href="#582" id="582">582</a>
+<a href="#583" id="583">583</a>
+<a href="#584" id="584">584</a>
+<a href="#585" id="585">585</a>
+<a href="#586" id="586">586</a>
+<a href="#587" id="587">587</a>
+<a href="#588" id="588">588</a>
+<a href="#589" id="589">589</a>
+<a href="#590" id="590">590</a>
+<a href="#591" id="591">591</a>
+<a href="#592" id="592">592</a>
+<a href="#593" id="593">593</a>
+<a href="#594" id="594">594</a>
+<a href="#595" id="595">595</a>
+<a href="#596" id="596">596</a>
+<a href="#597" id="597">597</a>
+<a href="#598" id="598">598</a>
+<a href="#599" id="599">599</a>
+<a href="#600" id="600">600</a>
 </pre></div><pre class="rust"><code><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>temporary_bans;
 <span class="kw">mod </span>transport;
 
-<span class="kw">use </span><span class="kw">crate</span>::behavior::persistent_parameters::{
-    NetworkingParametersRegistry, StubNetworkingParametersManager,
-};
+<span class="kw">use </span><span class="kw">crate</span>::behavior::persistent_parameters::{KnownPeersRegistry, StubNetworkingParametersManager};
 <span class="kw">use </span><span class="kw">crate</span>::behavior::{Behavior, BehaviorConfig};
 <span class="kw">use </span><span class="kw">crate</span>::constructor::temporary_bans::TemporaryBans;
 <span class="kw">use </span><span class="kw">crate</span>::constructor::transport::build_transport;
 <span class="kw">use </span><span class="kw">crate</span>::node::Node;
 <span class="kw">use </span><span class="kw">crate</span>::node_runner::{NodeRunner, NodeRunnerConfig};
-<span class="kw">use </span><span class="kw">crate</span>::protocols::connected_peers::Config <span class="kw">as </span>ConnectedPeersConfig;
-<span class="kw">use </span><span class="kw">crate</span>::protocols::peer_info::PeerInfoProvider;
+<span class="kw">use </span><span class="kw">crate</span>::protocols::autonat_wrapper::Config <span class="kw">as </span>AutonatWrapperConfig;
 <span class="kw">use </span><span class="kw">crate</span>::protocols::request_response::request_response_factory::RequestHandler;
 <span class="kw">use </span><span class="kw">crate</span>::protocols::reserved_peers::Config <span class="kw">as </span>ReservedPeersConfig;
 <span class="kw">use </span><span class="kw">crate</span>::shared::Shared;
 <span class="kw">use </span><span class="kw">crate</span>::utils::rate_limiter::RateLimiter;
-<span class="kw">use </span><span class="kw">crate</span>::utils::strip_peer_id;
-<span class="kw">use crate</span>::{PeerInfo, PeerInfoConfig};
+<span class="kw">use </span><span class="kw">crate</span>::utils::{strip_peer_id, SubspaceMetrics};
 <span class="kw">use </span>backoff::{ExponentialBackoff, SystemClock};
 <span class="kw">use </span>futures::channel::mpsc;
 <span class="kw">use </span>libp2p::autonat::Config <span class="kw">as </span>AutonatConfig;
@@ -601,15 +624,15 @@
 <span class="kw">use </span>libp2p::identify::Config <span class="kw">as </span>IdentifyConfig;
 <span class="kw">use </span>libp2p::kad::store::RecordStore;
 <span class="kw">use </span>libp2p::kad::{
-    store, KademliaBucketInserts, KademliaConfig, KademliaStoreInserts, Mode, ProviderRecord,
-    Record, RecordKey,
+    store, BucketInserts, Config <span class="kw">as </span>KademliaConfig, Mode, ProviderRecord, Record, RecordKey,
+    StoreInserts,
 };
 <span class="kw">use </span>libp2p::metrics::Metrics;
 <span class="kw">use </span>libp2p::multiaddr::Protocol;
-<span class="kw">use </span>libp2p::swarm::SwarmBuilder;
 <span class="kw">use </span>libp2p::yamux::Config <span class="kw">as </span>YamuxConfig;
-<span class="kw">use </span>libp2p::{identity, Multiaddr, PeerId, StreamProtocol, TransportError};
+<span class="kw">use </span>libp2p::{identity, Multiaddr, PeerId, StreamProtocol, SwarmBuilder, TransportError};
 <span class="kw">use </span>parking_lot::Mutex;
+<span class="kw">use </span>prometheus_client::registry::Registry;
 <span class="kw">use </span>std::borrow::Cow;
 <span class="kw">use </span>std::iter::Empty;
 <span class="kw">use </span>std::num::NonZeroUsize;
@@ -621,20 +644,15 @@
 <span class="kw">use </span>thiserror::Error;
 <span class="kw">use </span>tracing::{debug, error, info};
 
-<span class="doccomment">/// Defines whether connection should be maintained permanently.
-</span><span class="kw">pub type </span>ConnectedPeersHandler = Arc&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>PeerInfo) -&gt; bool + Send + Sync + <span class="lifetime">&#39;static</span>&gt;;
-
 <span class="kw">const </span>DEFAULT_NETWORK_PROTOCOL_VERSION: <span class="kw-2">&amp;</span>str = <span class="string">&quot;dev&quot;</span>;
 <span class="kw">const </span>KADEMLIA_PROTOCOL: <span class="kw-2">&amp;</span>str = <span class="string">&quot;/subspace/kad/0.1.0&quot;</span>;
 <span class="kw">const </span>GOSSIPSUB_PROTOCOL_PREFIX: <span class="kw-2">&amp;</span>str = <span class="string">&quot;subspace/gossipsub&quot;</span>;
-<span class="kw">const </span>RESERVED_PEERS_PROTOCOL_NAME: <span class="kw-2">&amp;</span>str = <span class="string">&quot;/subspace/reserved-peers/1.0.0&quot;</span>;
-<span class="kw">const </span>PEER_INFO_PROTOCOL_NAME: <span class="kw-2">&amp;</span>str = <span class="string">&quot;/subspace/peer-info/1.0.0&quot;</span>;
-<span class="kw">const </span>GENERAL_CONNECTED_PEERS_PROTOCOL_LOG_TARGET: <span class="kw-2">&amp;</span>str = <span class="string">&quot;general-connected-peers&quot;</span>;
-<span class="kw">const </span>SPECIAL_CONNECTED_PEERS_PROTOCOL_LOG_TARGET: <span class="kw-2">&amp;</span>str = <span class="string">&quot;special-connected-peers&quot;</span>;
 
-<span class="comment">// Defines max_negotiating_inbound_streams constant for the swarm.
-// It must be set for large plots.
+<span class="doccomment">/// Defines max_negotiating_inbound_streams constant for the swarm.
+/// It must be set for large plots.
 </span><span class="kw">const </span>SWARM_MAX_NEGOTIATING_INBOUND_STREAMS: usize = <span class="number">100000</span>;
+<span class="doccomment">/// How long will connection be allowed to be open without any usage
+</span><span class="kw">const </span>IDLE_CONNECTION_TIMEOUT: Duration = Duration::from_secs(<span class="number">10</span>);
 <span class="doccomment">/// The default maximum established incoming connection number for the swarm.
 </span><span class="kw">const </span>SWARM_MAX_ESTABLISHED_INCOMING_CONNECTIONS: u32 = <span class="number">100</span>;
 <span class="doccomment">/// The default maximum established incoming connection number for the swarm.
@@ -643,12 +661,10 @@
 </span><span class="kw">const </span>SWARM_MAX_PENDING_INCOMING_CONNECTIONS: u32 = <span class="number">80</span>;
 <span class="doccomment">/// The default maximum pending incoming connection number for the swarm.
 </span><span class="kw">const </span>SWARM_MAX_PENDING_OUTGOING_CONNECTIONS: u32 = <span class="number">80</span>;
-<span class="comment">// The default maximum connection number to be maintained for the swarm.
-</span><span class="kw">const </span>SWARM_TARGET_CONNECTION_NUMBER: u32 = <span class="number">30</span>;
 <span class="kw">const </span>KADEMLIA_QUERY_TIMEOUT: Duration = Duration::from_secs(<span class="number">40</span>);
 <span class="kw">const </span>SWARM_MAX_ESTABLISHED_CONNECTIONS_PER_PEER: <span class="prelude-ty">Option</span>&lt;u32&gt; = <span class="prelude-val">Some</span>(<span class="number">3</span>);
 <span class="comment">// TODO: Consider moving this constant to configuration or removing `Toggle` wrapper when we find a
-// use-case for gossipsub protocol.
+//  use-case for gossipsub protocol.
 </span><span class="kw">const </span>ENABLE_GOSSIP_PROTOCOL: bool = <span class="bool-val">false</span>;
 
 <span class="kw">const </span>TEMPORARY_BANS_CACHE_SIZE: NonZeroUsize = NonZeroUsize::new(<span class="number">10_000</span>).expect(<span class="string">&quot;Not zero; qed&quot;</span>);
@@ -674,16 +690,28 @@
 
 <span class="doccomment">/// Max confidence for autonat protocol. Could affect Kademlia mode change.
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>AUTONAT_MAX_CONFIDENCE: usize = <span class="number">3</span>;
+<span class="doccomment">/// We set a very long pause before autonat initialization (Duration::Max panics).
+</span><span class="kw">const </span>AUTONAT_SERVER_PROBE_DELAY: Duration = Duration::from_secs(<span class="number">3600 </span>* <span class="number">24 </span>* <span class="number">365</span>);
 
 <span class="doccomment">/// Defines Kademlia mode
+</span><span class="attr">#[derive(Clone, Debug)]
 </span><span class="kw">pub enum </span>KademliaMode {
     <span class="doccomment">/// The Kademlia mode is static for the duration of the application.
     </span>Static(Mode),
     <span class="doccomment">/// Kademlia mode will be changed using Autonat protocol when max confidence reached.
-    </span>Dynamic {
-        <span class="doccomment">/// Defines initial Kademlia mode.
-        </span>initial_mode: Mode,
-    },
+    </span>Dynamic,
+}
+
+<span class="kw">impl </span>KademliaMode {
+    <span class="doccomment">/// Returns true if the mode is Dynamic.
+    </span><span class="kw">pub fn </span>is_dynamic(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="self">Self</span>::Dynamic)
+    }
+
+    <span class="doccomment">/// Returns true if the mode is Static.
+    </span><span class="kw">pub fn </span>is_static(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="macro">matches!</span>(<span class="self">self</span>, <span class="self">Self</span>::Static(..))
+    }
 }
 
 <span class="doccomment">/// Trait to be implemented on providers of local records
@@ -784,8 +812,8 @@
     </span><span class="kw">pub </span>allow_non_global_addresses_in_dht: bool,
     <span class="doccomment">/// How frequently should random queries be done using Kademlia DHT to populate routing table.
     </span><span class="kw">pub </span>initial_random_query_interval: Duration,
-    <span class="doccomment">/// A reference to the `NetworkingParametersRegistry` implementation (optional).
-    </span><span class="kw">pub </span>networking_parameters_registry: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>NetworkingParametersRegistry&gt;&gt;,
+    <span class="doccomment">/// A reference to the `NetworkingParametersRegistry` implementation.
+    </span><span class="kw">pub </span>networking_parameters_registry: Box&lt;<span class="kw">dyn </span>KnownPeersRegistry&gt;,
     <span class="doccomment">/// The configuration for the `RequestResponsesBehaviour` protocol.
     </span><span class="kw">pub </span>request_response_protocols: Vec&lt;Box&lt;<span class="kw">dyn </span>RequestHandler&gt;&gt;,
     <span class="doccomment">/// Defines set of peers with a permanent connection (and reconnection if necessary).
@@ -802,22 +830,12 @@
     </span><span class="kw">pub </span>temporary_bans_cache_size: NonZeroUsize,
     <span class="doccomment">/// Backoff policy for temporary banning of unreachable peers.
     </span><span class="kw">pub </span>temporary_ban_backoff: ExponentialBackoff,
-    <span class="doccomment">/// Optional external prometheus metrics. None will disable metrics gathering.
-    </span><span class="kw">pub </span>metrics: <span class="prelude-ty">Option</span>&lt;Metrics&gt;,
+    <span class="doccomment">/// Optional libp2p prometheus metrics. None will disable metrics gathering.
+    </span><span class="kw">pub </span>libp2p_metrics: <span class="prelude-ty">Option</span>&lt;Metrics&gt;,
+    <span class="doccomment">/// Internal prometheus metrics. None will disable metrics gathering.
+    </span><span class="kw">pub </span>metrics: <span class="prelude-ty">Option</span>&lt;SubspaceMetrics&gt;,
     <span class="doccomment">/// Defines protocol version for the network peers. Affects network partition.
     </span><span class="kw">pub </span>protocol_version: String,
-    <span class="doccomment">/// Specifies a source for peer information. None disables the protocol.
-    </span><span class="kw">pub </span>peer_info_provider: <span class="prelude-ty">Option</span>&lt;PeerInfoProvider&gt;,
-    <span class="doccomment">/// Defines whether we maintain a persistent connection for common peers.
-    /// None disables the protocol.
-    </span><span class="kw">pub </span>general_connected_peers_handler: <span class="prelude-ty">Option</span>&lt;ConnectedPeersHandler&gt;,
-    <span class="doccomment">/// Defines whether we maintain a persistent connection for special peers.
-    /// None disables the protocol.
-    </span><span class="kw">pub </span>special_connected_peers_handler: <span class="prelude-ty">Option</span>&lt;ConnectedPeersHandler&gt;,
-    <span class="doccomment">/// Defines target total (in and out) connection number that should be maintained for general peers.
-    </span><span class="kw">pub </span>general_target_connections: u32,
-    <span class="doccomment">/// Defines target total (in and out) connection number that should be maintained for special peers.
-    </span><span class="kw">pub </span>special_target_connections: u32,
     <span class="doccomment">/// Addresses to bootstrap Kademlia network
     </span><span class="kw">pub </span>bootstrap_addresses: Vec&lt;Multiaddr&gt;,
     <span class="doccomment">/// Kademlia mode. The default value is set to Static(Client). The peer won&#39;t add its address
@@ -827,8 +845,6 @@
     <span class="doccomment">/// Known external addresses to the local peer. The addresses will be added on the swarm start
     /// and enable peer to notify others about its reachable address.
     </span><span class="kw">pub </span>external_addresses: Vec&lt;Multiaddr&gt;,
-    <span class="doccomment">/// Enable autonat protocol. Helps detecting whether we&#39;re behind the firewall.
-    </span><span class="kw">pub </span>enable_autonat: bool,
     <span class="doccomment">/// Defines whether we should run blocking Kademlia bootstrap() operation before other requests.
     </span><span class="kw">pub </span>disable_bootstrap_on_start: bool,
 }
@@ -849,7 +865,7 @@
             DEFAULT_NETWORK_PROTOCOL_VERSION.to_string(),
             keypair,
             (),
-            <span class="prelude-val">Some</span>(PeerInfoProvider::new_client()),
+            <span class="prelude-val">None</span>,
         )
     }
 }
@@ -863,8 +879,17 @@
         protocol_version: String,
         keypair: identity::Keypair,
         local_records_provider: LocalRecordProvider,
-        peer_info_provider: <span class="prelude-ty">Option</span>&lt;PeerInfoProvider&gt;,
+        prometheus_registry: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>Registry&gt;,
     ) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>(libp2p_metrics, metrics) = prometheus_registry
+            .map(|registry| {
+                (
+                    <span class="prelude-val">Some</span>(Metrics::new(registry)),
+                    <span class="prelude-val">Some</span>(SubspaceMetrics::new(registry)),
+                )
+            })
+            .unwrap_or((<span class="prelude-val">None</span>, <span class="prelude-val">None</span>));
+
         <span class="kw">let </span><span class="kw-2">mut </span>kademlia = KademliaConfig::default();
         kademlia
             .set_query_timeout(KADEMLIA_QUERY_TIMEOUT)
@@ -874,8 +899,8 @@
             .expect(<span class="string">&quot;Manual protocol name creation.&quot;</span>)])
             .disjoint_query_paths(<span class="bool-val">true</span>)
             .set_max_packet_size(<span class="number">2 </span>* Piece::SIZE)
-            .set_kbucket_inserts(KademliaBucketInserts::Manual)
-            .set_record_filtering(KademliaStoreInserts::FilterBoth)
+            .set_kbucket_inserts(BucketInserts::Manual)
+            .set_record_filtering(StoreInserts::FilterBoth)
             <span class="comment">// We don&#39;t use records and providers publication.
             </span>.set_provider_record_ttl(<span class="prelude-val">None</span>)
             .set_provider_publication_interval(<span class="prelude-val">None</span>)
@@ -902,7 +927,7 @@
                 .expect(<span class="string">&quot;Default config for gossipsub is always correct; qed&quot;</span>)
         });
 
-        <span class="kw">let </span>protocol_version = <span class="macro">format!</span>(<span class="string">&quot;/subspace/{}&quot;</span>, protocol_version);
+        <span class="kw">let </span>protocol_version = <span class="macro">format!</span>(<span class="string">&quot;/subspace/2/{}&quot;</span>, protocol_version);
         <span class="kw">let </span>identify = IdentifyConfig::new(protocol_version.clone(), keypair.public());
 
         <span class="kw">let </span>temporary_ban_backoff = ExponentialBackoff {
@@ -927,7 +952,7 @@
             local_records_provider,
             allow_non_global_addresses_in_dht: <span class="bool-val">false</span>,
             initial_random_query_interval: Duration::from_secs(<span class="number">1</span>),
-            networking_parameters_registry: <span class="prelude-val">None</span>,
+            networking_parameters_registry: StubNetworkingParametersManager.boxed(),
             request_response_protocols: Vec::new(),
             yamux_config,
             reserved_peers: Vec::new(),
@@ -937,18 +962,12 @@
             max_pending_outgoing_connections: SWARM_MAX_PENDING_OUTGOING_CONNECTIONS,
             temporary_bans_cache_size: TEMPORARY_BANS_CACHE_SIZE,
             temporary_ban_backoff,
-            metrics: <span class="prelude-val">None</span>,
+            libp2p_metrics,
+            metrics,
             protocol_version,
-            peer_info_provider,
-            <span class="comment">// we don&#39;t need to keep additional connections by default
-            </span>general_connected_peers_handler: <span class="prelude-val">None</span>,
-            special_connected_peers_handler: <span class="prelude-val">None</span>,
-            general_target_connections: SWARM_TARGET_CONNECTION_NUMBER,
-            special_target_connections: SWARM_TARGET_CONNECTION_NUMBER,
             bootstrap_addresses: Vec::new(),
             kademlia_mode: KademliaMode::Static(Mode::Client),
             external_addresses: Vec::new(),
-            enable_autonat: <span class="bool-val">true</span>,
             disable_bootstrap_on_start: <span class="bool-val">false</span>,
         }
     }
@@ -963,6 +982,11 @@
     <span class="doccomment">/// I/O error.
     </span><span class="attr">#[error(<span class="string">&quot;I/O error: {0}&quot;</span>)]
     </span>Io(<span class="attr">#[from] </span>io::Error),
+    <span class="doccomment">/// Transport creation error.
+    </span><span class="attr">#[error(<span class="string">&quot;Transport creation error: {0}&quot;</span>)]
+    </span><span class="comment">// TODO: Restore `#[from] TransportError` once https://github.com/libp2p/rust-libp2p/issues/4824
+    //  is resolved
+    </span>TransportCreationError(Box&lt;<span class="kw">dyn </span>std::error::Error + Send + Sync&gt;),
     <span class="doccomment">/// Transport error when attempting to listen on multiaddr.
     </span><span class="attr">#[error(<span class="string">&quot;Transport error when attempting to listen on multiaddr: {0}&quot;</span>)]
     </span>TransportError(<span class="attr">#[from] </span>TransportError&lt;io::Error&gt;),
@@ -1002,32 +1026,15 @@
         max_pending_outgoing_connections,
         temporary_bans_cache_size,
         temporary_ban_backoff,
+        libp2p_metrics,
         metrics,
         protocol_version,
-        peer_info_provider,
-        general_connected_peers_handler: general_connection_decision_handler,
-        special_connected_peers_handler: special_connection_decision_handler,
-        general_target_connections,
-        special_target_connections,
         bootstrap_addresses,
         kademlia_mode,
         external_addresses,
-        enable_autonat,
         disable_bootstrap_on_start,
     } = config;
     <span class="kw">let </span>local_peer_id = peer_id(<span class="kw-2">&amp;</span>keypair);
-
-    <span class="kw">let </span>temporary_bans = Arc::new(Mutex::new(TemporaryBans::new(
-        temporary_bans_cache_size,
-        temporary_ban_backoff,
-    )));
-    <span class="kw">let </span>transport = build_transport(
-        allow_non_global_addresses_in_dht,
-        <span class="kw-2">&amp;</span>keypair,
-        Arc::clone(<span class="kw-2">&amp;</span>temporary_bans),
-        timeout,
-        yamux_config,
-    )<span class="question-mark">?</span>;
 
     <span class="macro">info!</span>(
         %allow_non_global_addresses_in_dht,
@@ -1045,7 +1052,20 @@
 
     <span class="macro">debug!</span>(<span class="question-mark">?</span>connection_limits, <span class="string">&quot;DSN connection limits set.&quot;</span>);
 
-    <span class="kw">let </span>behaviour = Behavior::new(BehaviorConfig {
+    <span class="kw">let </span>autonat_boot_delay = <span class="kw">if </span>kademlia_mode.is_static() || !external_addresses.is_empty() {
+        AUTONAT_SERVER_PROBE_DELAY
+    } <span class="kw">else </span>{
+        AutonatConfig::default().boot_delay
+    };
+
+    <span class="macro">debug!</span>(
+        <span class="question-mark">?</span>autonat_boot_delay,
+        <span class="question-mark">?</span>kademlia_mode,
+        <span class="question-mark">?</span>external_addresses,
+        <span class="string">&quot;Autonat boot delay set.&quot;
+    </span>);
+
+    <span class="kw">let </span><span class="kw-2">mut </span>behaviour = Behavior::new(BehaviorConfig {
         peer_id: local_peer_id,
         identify,
         kademlia,
@@ -1055,36 +1075,60 @@
         connection_limits,
         reserved_peers: ReservedPeersConfig {
             reserved_peers: reserved_peers.clone(),
-            protocol_name: RESERVED_PEERS_PROTOCOL_NAME,
             dialing_interval: DIALING_INTERVAL_IN_SECS,
         },
-        peer_info_config: PeerInfoConfig::new(PEER_INFO_PROTOCOL_NAME),
-        peer_info_provider,
-        general_connected_peers_config: general_connection_decision_handler.as_ref().map(|<span class="kw">_</span>| {
-            ConnectedPeersConfig {
-                log_target: GENERAL_CONNECTED_PEERS_PROTOCOL_LOG_TARGET,
-                target_connected_peers: general_target_connections,
-                ..ConnectedPeersConfig::default()
-            }
-        }),
-        special_connected_peers_config: special_connection_decision_handler.as_ref().map(|<span class="kw">_</span>| {
-            ConnectedPeersConfig {
-                log_target: SPECIAL_CONNECTED_PEERS_PROTOCOL_LOG_TARGET,
-                target_connected_peers: special_target_connections,
-                ..ConnectedPeersConfig::default()
-            }
-        }),
-        autonat: enable_autonat.then(|| AutonatConfig {
-            use_connected: <span class="bool-val">true</span>,
-            only_global_ips: !config.allow_non_global_addresses_in_dht,
-            confidence_max: AUTONAT_MAX_CONFIDENCE,
-            ..Default::default()
-        }),
+        autonat: AutonatWrapperConfig {
+            inner_config: AutonatConfig {
+                use_connected: <span class="bool-val">true</span>,
+                only_global_ips: !config.allow_non_global_addresses_in_dht,
+                confidence_max: AUTONAT_MAX_CONFIDENCE,
+                boot_delay: autonat_boot_delay,
+                ..Default::default()
+            },
+            local_peer_id,
+            servers: bootstrap_addresses.clone(),
+        },
     });
 
-    <span class="kw">let </span><span class="kw-2">mut </span>swarm = SwarmBuilder::with_tokio_executor(transport, behaviour, local_peer_id)
-        .max_negotiating_inbound_streams(SWARM_MAX_NEGOTIATING_INBOUND_STREAMS)
+    <span class="kw">match </span>(kademlia_mode, external_addresses.is_empty()) {
+        (KademliaMode::Static(mode), <span class="kw">_</span>) =&gt; {
+            behaviour.kademlia.set_mode(<span class="prelude-val">Some</span>(mode));
+        }
+        (KademliaMode::Dynamic, <span class="bool-val">false</span>) =&gt; {
+            behaviour.kademlia.set_mode(<span class="prelude-val">Some</span>(Mode::Server));
+        }
+        <span class="kw">_ </span>=&gt; {
+            <span class="comment">// Autonat will figure it out
+        </span>}
+    };
+
+    <span class="kw">let </span>temporary_bans = Arc::new(Mutex::new(TemporaryBans::new(
+        temporary_bans_cache_size,
+        temporary_ban_backoff,
+    )));
+
+    <span class="kw">let </span><span class="kw-2">mut </span>swarm = SwarmBuilder::with_existing_identity(keypair)
+        .with_tokio()
+        .with_other_transport(|keypair| {
+            <span class="prelude-val">Ok</span>(build_transport(
+                allow_non_global_addresses_in_dht,
+                keypair,
+                Arc::clone(<span class="kw-2">&amp;</span>temporary_bans),
+                timeout,
+                yamux_config,
+            )<span class="question-mark">?</span>)
+        })
+        .map_err(|error| CreationError::TransportCreationError(error.into()))<span class="question-mark">?
+        </span>.with_behaviour(<span class="kw">move </span>|_keypair| <span class="prelude-val">Ok</span>(behaviour))
+        .expect(<span class="string">&quot;Not fallible; qed&quot;</span>)
+        .with_swarm_config(|config| {
+            config
+                .with_max_negotiating_inbound_streams(SWARM_MAX_NEGOTIATING_INBOUND_STREAMS)
+                .with_idle_connection_timeout(IDLE_CONNECTION_TIMEOUT)
+        })
         .build();
+
+    <span class="kw">let </span>is_listening = !listen_on.is_empty();
 
     <span class="comment">// Setup listen_on addresses
     </span><span class="kw">for </span><span class="kw-2">mut </span>addr <span class="kw">in </span>listen_on {
@@ -1095,10 +1139,24 @@
 
             <span class="kw">let </span>addr_string = addr.to_string();
             <span class="comment">// Listen on random port if specified is already occupied
-            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(Protocol::Tcp(_port)) = addr.pop() {
-                <span class="macro">info!</span>(<span class="string">&quot;Failed to listen on {addr_string} ({error}), falling back to random port&quot;</span>);
-                addr.push(Protocol::Tcp(<span class="number">0</span>));
-                swarm.listen_on(addr)<span class="question-mark">?</span>;
+            </span><span class="kw">match </span>addr.pop() {
+                <span class="prelude-val">Some</span>(Protocol::Tcp(_port)) =&gt; {
+                    <span class="macro">info!</span>(
+                        <span class="string">&quot;Failed to listen on {addr_string} ({error}), falling back to random port&quot;
+                    </span>);
+                    addr.push(Protocol::Tcp(<span class="number">0</span>));
+                    swarm.listen_on(addr)<span class="question-mark">?</span>;
+                }
+                <span class="prelude-val">Some</span>(Protocol::Udp(_port)) =&gt; {
+                    <span class="macro">info!</span>(
+                        <span class="string">&quot;Failed to listen on {addr_string} ({error}), falling back to random port&quot;
+                    </span>);
+                    addr.push(Protocol::Udp(<span class="number">0</span>));
+                    swarm.listen_on(addr)<span class="question-mark">?</span>;
+                }
+                <span class="kw">_ </span>=&gt; {
+                    <span class="comment">// Do not care about other protocols
+                </span>}
             }
         }
     }
@@ -1121,26 +1179,22 @@
     <span class="kw">let </span>shared_weak = Arc::downgrade(<span class="kw-2">&amp;</span>shared);
 
     <span class="kw">let </span>node = Node::new(shared);
-    <span class="kw">let </span>node_runner =
-        NodeRunner::&lt;LocalRecordProvider&gt;::new(NodeRunnerConfig::&lt;LocalRecordProvider&gt; {
-            allow_non_global_addresses_in_dht,
-            command_receiver,
-            swarm,
-            shared_weak,
-            next_random_query_interval: initial_random_query_interval,
-            networking_parameters_registry: networking_parameters_registry
-                .unwrap_or(StubNetworkingParametersManager.boxed()),
-            reserved_peers: strip_peer_id(reserved_peers).into_iter().collect(),
-            temporary_bans,
-            metrics,
-            protocol_version,
-            general_connection_decision_handler,
-            special_connection_decision_handler,
-            bootstrap_addresses,
-            kademlia_mode,
-            external_addresses,
-            disable_bootstrap_on_start,
-        });
+    <span class="kw">let </span>node_runner = NodeRunner::new(NodeRunnerConfig {
+        allow_non_global_addresses_in_dht,
+        is_listening,
+        command_receiver,
+        swarm,
+        shared_weak,
+        next_random_query_interval: initial_random_query_interval,
+        networking_parameters_registry,
+        reserved_peers: strip_peer_id(reserved_peers).into_iter().collect(),
+        temporary_bans,
+        libp2p_metrics,
+        metrics,
+        protocol_version,
+        bootstrap_addresses,
+        disable_bootstrap_on_start,
+    });
 
     <span class="prelude-val">Ok</span>((node, node_runner))
 }

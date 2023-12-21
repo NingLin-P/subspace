@@ -744,6 +744,10 @@
 <a href="#744" id="744">744</a>
 <a href="#745" id="745">745</a>
 <a href="#746" id="746">746</a>
+<a href="#747" id="747">747</a>
+<a href="#748" id="748">748</a>
+<a href="#749" id="749">749</a>
+<a href="#750" id="750">750</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2019-2021 Parity Technologies (UK) Ltd.
 // Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
@@ -1149,9 +1153,8 @@
     }
 }
 
-<span class="comment">// TODO: Likely add more stuff here
-</span><span class="doccomment">/// Subspace blockchain constants.
-</span><span class="attr">#[derive(Debug, Encode, Decode, MaxEncodedLen, PartialEq, Eq, Clone, Copy, TypeInfo)]
+<span class="doccomment">/// Subspace blockchain constants.
+</span><span class="attr">#[derive(Debug, Encode, Decode, PartialEq, Eq, Clone, Copy, TypeInfo)]
 </span><span class="kw">pub enum </span>ChainConstants {
     <span class="doccomment">/// V0 of the chain constants.
     </span><span class="attr">#[codec(index = <span class="number">0</span>)]
@@ -1164,6 +1167,8 @@
         </span>era_duration: BlockNumber,
         <span class="doccomment">/// Slot probability.
         </span>slot_probability: (u64, u64),
+        <span class="doccomment">/// The slot duration in milliseconds.
+        </span>slot_duration: SlotDuration,
         <span class="doccomment">/// Number of latest archived segments that are considered &quot;recent history&quot;.
         </span>recent_segments: HistorySize,
         <span class="doccomment">/// Fraction of pieces from the &quot;recent history&quot; (`recent_segments`) in each sector.
@@ -1204,6 +1209,12 @@
             slot_probability, ..
         } = <span class="self">self</span>;
         <span class="kw-2">*</span>slot_probability
+    }
+
+    <span class="doccomment">/// The slot duration in milliseconds.
+    </span><span class="kw">pub fn </span>slot_duration(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SlotDuration {
+        <span class="kw">let </span><span class="self">Self</span>::V0 { slot_duration, .. } = <span class="self">self</span>;
+        <span class="kw-2">*</span>slot_duration
     }
 
     <span class="doccomment">/// Number of latest archived segments that are considered &quot;recent history&quot;.
@@ -1433,9 +1444,6 @@
 <span class="macro">sp_api::decl_runtime_apis! </span>{
     <span class="doccomment">/// API necessary for block authorship with Subspace.
     </span><span class="kw">pub trait </span>SubspaceApi&lt;RewardAddress: Encode + Decode&gt; {
-        <span class="doccomment">/// The slot duration in milliseconds for Subspace.
-        </span><span class="kw">fn </span>slot_duration() -&gt; SlotDuration;
-
         <span class="doccomment">/// Proof of time parameters
         </span><span class="kw">fn </span>pot_parameters() -&gt; PotParameters;
 

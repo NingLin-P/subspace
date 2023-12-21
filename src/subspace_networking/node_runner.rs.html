@@ -1505,140 +1505,52 @@
 <a href="#1505" id="1505">1505</a>
 <a href="#1506" id="1506">1506</a>
 <a href="#1507" id="1507">1507</a>
-<a href="#1508" id="1508">1508</a>
-<a href="#1509" id="1509">1509</a>
-<a href="#1510" id="1510">1510</a>
-<a href="#1511" id="1511">1511</a>
-<a href="#1512" id="1512">1512</a>
-<a href="#1513" id="1513">1513</a>
-<a href="#1514" id="1514">1514</a>
-<a href="#1515" id="1515">1515</a>
-<a href="#1516" id="1516">1516</a>
-<a href="#1517" id="1517">1517</a>
-<a href="#1518" id="1518">1518</a>
-<a href="#1519" id="1519">1519</a>
-<a href="#1520" id="1520">1520</a>
-<a href="#1521" id="1521">1521</a>
-<a href="#1522" id="1522">1522</a>
-<a href="#1523" id="1523">1523</a>
-<a href="#1524" id="1524">1524</a>
-<a href="#1525" id="1525">1525</a>
-<a href="#1526" id="1526">1526</a>
-<a href="#1527" id="1527">1527</a>
-<a href="#1528" id="1528">1528</a>
-<a href="#1529" id="1529">1529</a>
-<a href="#1530" id="1530">1530</a>
-<a href="#1531" id="1531">1531</a>
-<a href="#1532" id="1532">1532</a>
-<a href="#1533" id="1533">1533</a>
-<a href="#1534" id="1534">1534</a>
-<a href="#1535" id="1535">1535</a>
-<a href="#1536" id="1536">1536</a>
-<a href="#1537" id="1537">1537</a>
-<a href="#1538" id="1538">1538</a>
-<a href="#1539" id="1539">1539</a>
-<a href="#1540" id="1540">1540</a>
-<a href="#1541" id="1541">1541</a>
-<a href="#1542" id="1542">1542</a>
-<a href="#1543" id="1543">1543</a>
-<a href="#1544" id="1544">1544</a>
-<a href="#1545" id="1545">1545</a>
-<a href="#1546" id="1546">1546</a>
-<a href="#1547" id="1547">1547</a>
-<a href="#1548" id="1548">1548</a>
-<a href="#1549" id="1549">1549</a>
-<a href="#1550" id="1550">1550</a>
-<a href="#1551" id="1551">1551</a>
-<a href="#1552" id="1552">1552</a>
-<a href="#1553" id="1553">1553</a>
-<a href="#1554" id="1554">1554</a>
-<a href="#1555" id="1555">1555</a>
-<a href="#1556" id="1556">1556</a>
-<a href="#1557" id="1557">1557</a>
-<a href="#1558" id="1558">1558</a>
-<a href="#1559" id="1559">1559</a>
-<a href="#1560" id="1560">1560</a>
-<a href="#1561" id="1561">1561</a>
-<a href="#1562" id="1562">1562</a>
-<a href="#1563" id="1563">1563</a>
-<a href="#1564" id="1564">1564</a>
-<a href="#1565" id="1565">1565</a>
-<a href="#1566" id="1566">1566</a>
-<a href="#1567" id="1567">1567</a>
-<a href="#1568" id="1568">1568</a>
-<a href="#1569" id="1569">1569</a>
-<a href="#1570" id="1570">1570</a>
-<a href="#1571" id="1571">1571</a>
-<a href="#1572" id="1572">1572</a>
-<a href="#1573" id="1573">1573</a>
-<a href="#1574" id="1574">1574</a>
-<a href="#1575" id="1575">1575</a>
-<a href="#1576" id="1576">1576</a>
-<a href="#1577" id="1577">1577</a>
-<a href="#1578" id="1578">1578</a>
-<a href="#1579" id="1579">1579</a>
-<a href="#1580" id="1580">1580</a>
-<a href="#1581" id="1581">1581</a>
-<a href="#1582" id="1582">1582</a>
-<a href="#1583" id="1583">1583</a>
-<a href="#1584" id="1584">1584</a>
-<a href="#1585" id="1585">1585</a>
-<a href="#1586" id="1586">1586</a>
-<a href="#1587" id="1587">1587</a>
-<a href="#1588" id="1588">1588</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::behavior::persistent_parameters::{
-    append_p2p_suffix, remove_p2p_suffix, NetworkingParametersRegistry, PeerAddressRemovedEvent,
-    PEERS_ADDRESSES_BATCH_SIZE,
+    append_p2p_suffix, remove_p2p_suffix, KnownPeersRegistry, PeerAddressRemovedEvent,
 };
-<span class="kw">use </span><span class="kw">crate</span>::behavior::{
-    Behavior, Event, GeneralConnectedPeersInstance, SpecialConnectedPeersInstance,
-};
+<span class="kw">use </span><span class="kw">crate</span>::behavior::{Behavior, Event};
 <span class="kw">use </span><span class="kw">crate</span>::constructor;
 <span class="kw">use </span><span class="kw">crate</span>::constructor::temporary_bans::TemporaryBans;
-<span class="kw">use </span><span class="kw">crate</span>::constructor::{ConnectedPeersHandler, KademliaMode, LocalOnlyRecordStore};
-<span class="kw">use </span><span class="kw">crate</span>::protocols::connected_peers::Event <span class="kw">as </span>ConnectedPeersEvent;
-<span class="kw">use </span><span class="kw">crate</span>::protocols::peer_info::{Event <span class="kw">as </span>PeerInfoEvent, PeerInfoSuccess};
+<span class="kw">use </span><span class="kw">crate</span>::constructor::LocalOnlyRecordStore;
 <span class="kw">use </span><span class="kw">crate</span>::protocols::request_response::request_response_factory::{
     Event <span class="kw">as </span>RequestResponseEvent, IfDisconnected,
 };
-<span class="kw">use </span><span class="kw">crate</span>::shared::{Command, CreatedSubscription, NewPeerInfo, PeerDiscovered, Shared};
+<span class="kw">use </span><span class="kw">crate</span>::shared::{Command, CreatedSubscription, PeerDiscovered, Shared};
 <span class="kw">use </span><span class="kw">crate</span>::utils::rate_limiter::RateLimiterPermit;
-<span class="kw">use </span><span class="kw">crate</span>::utils::{is_global_address_or_dns, strip_peer_id, PeerAddress};
+<span class="kw">use </span><span class="kw">crate</span>::utils::{is_global_address_or_dns, strip_peer_id, SubspaceMetrics};
 <span class="kw">use </span>async_mutex::Mutex <span class="kw">as </span>AsyncMutex;
 <span class="kw">use </span>bytes::Bytes;
 <span class="kw">use </span>event_listener_primitives::HandlerId;
 <span class="kw">use </span>futures::channel::mpsc;
 <span class="kw">use </span>futures::future::Fuse;
 <span class="kw">use </span>futures::{FutureExt, StreamExt};
-<span class="kw">use </span>libp2p::autonat::{Event <span class="kw">as </span>AutonatEvent, NatStatus};
-<span class="kw">use </span>libp2p::core::{address_translation, ConnectedPoint};
+<span class="kw">use </span>libp2p::autonat::{Event <span class="kw">as </span>AutonatEvent, NatStatus, OutboundProbeEvent};
+<span class="kw">use </span>libp2p::core::ConnectedPoint;
 <span class="kw">use </span>libp2p::gossipsub::{Event <span class="kw">as </span>GossipsubEvent, TopicHash};
 <span class="kw">use </span>libp2p::identify::Event <span class="kw">as </span>IdentifyEvent;
 <span class="kw">use </span>libp2p::kad::{
-    BootstrapOk, GetClosestPeersError, GetClosestPeersOk, GetProvidersError, GetProvidersOk,
-    GetRecordError, GetRecordOk, InboundRequest, Kademlia, KademliaEvent, Mode, PeerRecord,
-    ProgressStep, PutRecordOk, QueryId, QueryResult, Quorum, Record,
+    Behaviour <span class="kw">as </span>Kademlia, BootstrapOk, Event <span class="kw">as </span>KademliaEvent, GetClosestPeersError,
+    GetClosestPeersOk, GetProvidersError, GetProvidersOk, GetRecordError, GetRecordOk,
+    InboundRequest, PeerRecord, ProgressStep, PutRecordOk, QueryId, QueryResult, Quorum, Record,
 };
 <span class="kw">use </span>libp2p::metrics::{Metrics, Recorder};
+<span class="kw">use </span>libp2p::multiaddr::Protocol;
 <span class="kw">use </span>libp2p::swarm::{DialError, SwarmEvent};
 <span class="kw">use </span>libp2p::{futures, Multiaddr, PeerId, Swarm, TransportError};
 <span class="kw">use </span>nohash_hasher::IntMap;
 <span class="kw">use </span>parking_lot::Mutex;
-<span class="kw">use </span>rand::rngs::StdRng;
-<span class="kw">use </span>rand::{Rng, SeedableRng};
 <span class="kw">use </span>std::collections::hash_map::Entry;
 <span class="kw">use </span>std::collections::{HashMap, HashSet};
+<span class="kw">use </span>std::fmt;
 <span class="kw">use </span>std::fmt::Debug;
+<span class="kw">use </span>std::net::IpAddr;
 <span class="kw">use </span>std::num::NonZeroUsize;
 <span class="kw">use </span>std::pin::Pin;
 <span class="kw">use </span>std::sync::atomic::Ordering;
 <span class="kw">use </span>std::sync::{Arc, Weak};
 <span class="kw">use </span>std::time::Duration;
 <span class="kw">use </span>tokio::time::Sleep;
-<span class="kw">use </span>tracing::{debug, error, info, trace, warn};
-
-<span class="comment">// Defines a batch size for peer addresses from Kademlia buckets.
-</span><span class="kw">const </span>KADEMLIA_PEERS_ADDRESSES_BATCH_SIZE: usize = <span class="number">20</span>;
+<span class="kw">use </span>tracing::{debug, error, trace, warn};
 
 <span class="doccomment">/// How many peers should node be connected to before boosting turns on.
 ///
@@ -1688,6 +1600,8 @@
 {
     <span class="doccomment">/// Should non-global addresses be added to the DHT?
     </span>allow_non_global_addresses_in_dht: bool,
+    <span class="doccomment">/// Whether node is listening on some addresses
+    </span>is_listening: bool,
     command_receiver: mpsc::Receiver&lt;Command&gt;,
     swarm: Swarm&lt;Behavior&lt;LocalOnlyRecordStore&lt;LocalRecordProvider&gt;&gt;&gt;,
     shared_weak: Weak&lt;Shared&gt;,
@@ -1704,32 +1618,23 @@
     <span class="doccomment">/// Defines an interval between periodical tasks.
     </span>periodical_tasks_interval: Pin&lt;Box&lt;Fuse&lt;Sleep&gt;&gt;&gt;,
     <span class="doccomment">/// Manages the networking parameters like known peers and addresses
-    </span>networking_parameters_registry: Box&lt;<span class="kw">dyn </span>NetworkingParametersRegistry&gt;,
+    </span>networking_parameters_registry: Box&lt;<span class="kw">dyn </span>KnownPeersRegistry&gt;,
     <span class="doccomment">/// Defines set of peers with a permanent connection (and reconnection if necessary).
     </span>reserved_peers: HashMap&lt;PeerId, Multiaddr&gt;,
     <span class="doccomment">/// Temporarily banned peers.
     </span>temporary_bans: Arc&lt;Mutex&lt;TemporaryBans&gt;&gt;,
-    <span class="doccomment">/// Prometheus metrics.
-    </span>metrics: <span class="prelude-ty">Option</span>&lt;Metrics&gt;,
-    <span class="doccomment">/// Mapping from specific peer to number of established connections
-    </span>established_connections: HashMap&lt;(PeerId, ConnectedPoint), usize&gt;,
+    <span class="doccomment">/// Libp2p Prometheus metrics.
+    </span>libp2p_metrics: <span class="prelude-ty">Option</span>&lt;Metrics&gt;,
+    <span class="doccomment">/// Subspace Prometheus metrics.
+    </span>metrics: <span class="prelude-ty">Option</span>&lt;SubspaceMetrics&gt;,
+    <span class="doccomment">/// Mapping from specific peer to ip addresses
+    </span>peer_ip_addresses: HashMap&lt;PeerId, HashSet&lt;IpAddr&gt;&gt;,
     <span class="doccomment">/// Defines protocol version for the network peers. Affects network partition.
     </span>protocol_version: String,
-    <span class="doccomment">/// Defines whether we maintain a persistent connection for common peers.
-    </span>general_connection_decision_handler: <span class="prelude-ty">Option</span>&lt;ConnectedPeersHandler&gt;,
-    <span class="doccomment">/// Defines whether we maintain a persistent connection for special peers.
-    </span>special_connection_decision_handler: <span class="prelude-ty">Option</span>&lt;ConnectedPeersHandler&gt;,
-    <span class="doccomment">/// Randomness generator used for choosing Kademlia addresses.
-    </span>rng: StdRng,
     <span class="doccomment">/// Addresses to bootstrap Kademlia network
     </span>bootstrap_addresses: Vec&lt;Multiaddr&gt;,
     <span class="doccomment">/// Ensures a single bootstrap on run() invocation.
     </span>bootstrap_command_state: Arc&lt;AsyncMutex&lt;BootstrapCommandState&gt;&gt;,
-    <span class="doccomment">/// Kademlia mode.
-    </span>kademlia_mode: KademliaMode,
-    <span class="doccomment">/// Known external addresses to the local peer. The addresses are added on the swarm start
-    /// and enable peer to notify others about its reachable address.
-    </span>external_addresses: Vec&lt;Multiaddr&gt;,
     <span class="doccomment">/// Receives an event on peer address removal from the persistent storage.
     </span>removed_addresses_rx: mpsc::UnboundedReceiver&lt;PeerAddressRemovedEvent&gt;,
     <span class="doccomment">/// Optional storage for the [`HandlerId`] of the address removal task.
@@ -1739,26 +1644,34 @@
     </span>disable_bootstrap_on_start: bool,
 }
 
+<span class="kw">impl</span>&lt;LocalRecordProvider&gt; fmt::Debug <span class="kw">for </span>NodeRunner&lt;LocalRecordProvider&gt;
+<span class="kw">where
+    </span>LocalRecordProvider: constructor::LocalRecordProvider + Send + Sync + <span class="lifetime">&#39;static</span>,
+{
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
+        f.debug_struct(<span class="string">&quot;NodeRunner&quot;</span>).finish_non_exhaustive()
+    }
+}
+
 <span class="comment">// Helper struct for NodeRunner configuration (clippy requirement).
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>NodeRunnerConfig&lt;LocalRecordProvider&gt;
 <span class="kw">where
     </span>LocalRecordProvider: constructor::LocalRecordProvider + Send + Sync + <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">pub</span>(<span class="kw">crate</span>) allow_non_global_addresses_in_dht: bool,
+    <span class="doccomment">/// Whether node is listening on some addresses
+    </span><span class="kw">pub</span>(<span class="kw">crate</span>) is_listening: bool,
     <span class="kw">pub</span>(<span class="kw">crate</span>) command_receiver: mpsc::Receiver&lt;Command&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) swarm: Swarm&lt;Behavior&lt;LocalOnlyRecordStore&lt;LocalRecordProvider&gt;&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) shared_weak: Weak&lt;Shared&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) next_random_query_interval: Duration,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) networking_parameters_registry: Box&lt;<span class="kw">dyn </span>NetworkingParametersRegistry&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) networking_parameters_registry: Box&lt;<span class="kw">dyn </span>KnownPeersRegistry&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) reserved_peers: HashMap&lt;PeerId, Multiaddr&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) temporary_bans: Arc&lt;Mutex&lt;TemporaryBans&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) metrics: <span class="prelude-ty">Option</span>&lt;Metrics&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) libp2p_metrics: <span class="prelude-ty">Option</span>&lt;Metrics&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) metrics: <span class="prelude-ty">Option</span>&lt;SubspaceMetrics&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) protocol_version: String,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) general_connection_decision_handler: <span class="prelude-ty">Option</span>&lt;ConnectedPeersHandler&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) special_connection_decision_handler: <span class="prelude-ty">Option</span>&lt;ConnectedPeersHandler&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) bootstrap_addresses: Vec&lt;Multiaddr&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) kademlia_mode: KademliaMode,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) external_addresses: Vec&lt;Multiaddr&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) disable_bootstrap_on_start: bool,
 }
 
@@ -1769,6 +1682,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(
         NodeRunnerConfig {
             allow_non_global_addresses_in_dht,
+            is_listening,
             command_receiver,
             swarm,
             shared_weak,
@@ -1776,13 +1690,10 @@
             <span class="kw-2">mut </span>networking_parameters_registry,
             reserved_peers,
             temporary_bans,
+            libp2p_metrics,
             metrics,
             protocol_version,
-            general_connection_decision_handler,
-            special_connection_decision_handler,
             bootstrap_addresses,
-            kademlia_mode,
-            external_addresses,
             disable_bootstrap_on_start,
         }: NodeRunnerConfig&lt;LocalRecordProvider&gt;,
     ) -&gt; <span class="self">Self </span>{
@@ -1801,6 +1712,7 @@
 
         <span class="self">Self </span>{
             allow_non_global_addresses_in_dht,
+            is_listening,
             command_receiver,
             swarm,
             shared_weak,
@@ -1815,16 +1727,12 @@
             networking_parameters_registry,
             reserved_peers,
             temporary_bans,
+            libp2p_metrics,
             metrics,
-            established_connections: HashMap::new(),
+            peer_ip_addresses: HashMap::new(),
             protocol_version,
-            general_connection_decision_handler,
-            special_connection_decision_handler,
-            rng: StdRng::seed_from_u64(KADEMLIA_PEERS_ADDRESSES_BATCH_SIZE <span class="kw">as </span>u64), <span class="comment">// any seed
-            </span>bootstrap_addresses,
+            bootstrap_addresses,
             bootstrap_command_state: Arc::new(AsyncMutex::new(BootstrapCommandState::default())),
-            kademlia_mode,
-            external_addresses,
             removed_addresses_rx,
             _address_removal_task_handler_id: address_removal_task_handler_id,
             disable_bootstrap_on_start,
@@ -1833,6 +1741,23 @@
 
     <span class="doccomment">/// Drives the main networking future forward.
     </span><span class="kw">pub async fn </span>run(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">if </span><span class="self">self</span>.is_listening {
+            <span class="comment">// Wait for listen addresses, otherwise we will get ephemeral addresses in external address candidates that
+            // we do not want
+            </span><span class="kw">loop </span>{
+                <span class="kw">if </span><span class="self">self</span>.swarm.listeners().next().is_some() {
+                    <span class="kw">break</span>;
+                }
+
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(swarm_event) = <span class="self">self</span>.swarm.next().<span class="kw">await </span>{
+                    <span class="self">self</span>.register_event_metrics(<span class="kw-2">&amp;</span>swarm_event);
+                    <span class="self">self</span>.handle_swarm_event(swarm_event).<span class="kw">await</span>;
+                } <span class="kw">else </span>{
+                    <span class="kw">break</span>;
+                }
+            }
+        }
+
         <span class="kw">if </span>!<span class="self">self</span>.disable_bootstrap_on_start {
             <span class="self">self</span>.bootstrap().<span class="kw">await</span>;
         } <span class="kw">else </span>{
@@ -1913,20 +1838,6 @@
             }
         };
 
-        <span class="macro">debug!</span>(<span class="string">&quot;Bootstrap started.&quot;</span>);
-
-        <span class="kw">let </span>initial_mode = <span class="kw">match </span><span class="self">self</span>.kademlia_mode {
-            KademliaMode::Static(mode) =&gt; mode,
-            KademliaMode::Dynamic { initial_mode } =&gt; initial_mode,
-        };
-
-        <span class="self">self</span>.swarm
-            .behaviour_mut()
-            .kademlia
-            .set_mode(<span class="prelude-val">Some</span>(initial_mode));
-
-        <span class="macro">debug!</span>(<span class="string">&quot;Kademlia mode set: {:?}.&quot;</span>, initial_mode);
-
         <span class="kw">let </span><span class="kw-2">mut </span>bootstrap_step = <span class="number">0</span>;
         <span class="kw">loop </span>{
             <span class="macro">futures::select! </span>{
@@ -1970,6 +1881,8 @@
             addresses.clear();
             addresses.append(<span class="kw-2">&amp;mut </span>external_addresses);
         }
+
+        <span class="self">self</span>.log_kademlia_stats();
     }
 
     <span class="kw">fn </span>handle_random_query_interval(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
@@ -1986,6 +1899,21 @@
     <span class="kw">fn </span>handle_removed_address_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: PeerAddressRemovedEvent) {
         <span class="macro">trace!</span>(<span class="question-mark">?</span>event, <span class="string">&quot;Peer addressed removed event.&quot;</span>,);
 
+        <span class="kw">let </span>bootstrap_node_ids = strip_peer_id(<span class="self">self</span>.bootstrap_addresses.clone())
+            .into_iter()
+            .map(|(peer_id, <span class="kw">_</span>)| peer_id)
+            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+
+        <span class="kw">if </span>bootstrap_node_ids.contains(<span class="kw-2">&amp;</span>event.peer_id) {
+            <span class="macro">debug!</span>(
+                <span class="question-mark">?</span>event,
+                <span class="question-mark">?</span>bootstrap_node_ids,
+                <span class="string">&quot;Skipped removing bootstrap node from Kademlia buckets.&quot;
+            </span>);
+
+            <span class="kw">return</span>;
+        }
+
         <span class="comment">// Remove both versions of the address
         </span><span class="self">self</span>.swarm.behaviour_mut().kademlia.remove_address(
             <span class="kw-2">&amp;</span>event.peer_id,
@@ -1998,7 +1926,7 @@
             .remove_address(<span class="kw-2">&amp;</span>event.peer_id, <span class="kw-2">&amp;</span>remove_p2p_suffix(event.address));
     }
 
-    <span class="kw">async fn </span>handle_swarm_event&lt;E: Debug&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, swarm_event: SwarmEvent&lt;Event, E&gt;) {
+    <span class="kw">async fn </span>handle_swarm_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, swarm_event: SwarmEvent&lt;Event&gt;) {
         <span class="kw">match </span>swarm_event {
             SwarmEvent::Behaviour(Event::Identify(event)) =&gt; {
                 <span class="self">self</span>.handle_identify_event(event).<span class="kw">await</span>;
@@ -2011,15 +1939,6 @@
             }
             SwarmEvent::Behaviour(Event::RequestResponse(event)) =&gt; {
                 <span class="self">self</span>.handle_request_response_event(event).<span class="kw">await</span>;
-            }
-            SwarmEvent::Behaviour(Event::PeerInfo(event)) =&gt; {
-                <span class="self">self</span>.handle_peer_info_event(event).<span class="kw">await</span>;
-            }
-            SwarmEvent::Behaviour(Event::GeneralConnectedPeers(event)) =&gt; {
-                <span class="self">self</span>.handle_general_connected_peers_event(event).<span class="kw">await</span>;
-            }
-            SwarmEvent::Behaviour(Event::SpecialConnectedPeers(event)) =&gt; {
-                <span class="self">self</span>.handle_special_connected_peers_event(event).<span class="kw">await</span>;
             }
             SwarmEvent::Behaviour(Event::Autonat(event)) =&gt; {
                 <span class="self">self</span>.handle_autonat_event(event).<span class="kw">await</span>;
@@ -2050,9 +1969,6 @@
                     }
                 };
 
-                <span class="comment">// Remove temporary ban if there was any
-                </span><span class="self">self</span>.temporary_bans.lock().remove(<span class="kw-2">&amp;</span>peer_id);
-
                 <span class="kw">let </span>shared = <span class="kw">match </span><span class="self">self</span>.shared_weak.upgrade() {
                     <span class="prelude-val">Some</span>(shared) =&gt; shared,
                     <span class="prelude-val">None </span>=&gt; {
@@ -2068,13 +1984,24 @@
                     <span class="string">&quot;Connection established [{num_established} from peer]&quot;
                 </span>);
 
-                <span class="comment">// TODO: Workaround for https://github.com/libp2p/rust-libp2p/discussions/3418
-                </span><span class="self">self</span>.established_connections
-                    .entry((peer_id, endpoint))
-                    .and_modify(|entry| {
-                        <span class="kw-2">*</span>entry += <span class="number">1</span>;
-                    })
-                    .or_insert(<span class="number">1</span>);
+                <span class="kw">let </span>maybe_remote_ip =
+                    endpoint
+                        .get_remote_address()
+                        .iter()
+                        .find_map(|protocol| <span class="kw">match </span>protocol {
+                            Protocol::Ip4(ip) =&gt; <span class="prelude-val">Some</span>(IpAddr::V4(ip)),
+                            Protocol::Ip6(ip) =&gt; <span class="prelude-val">Some</span>(IpAddr::V6(ip)),
+                            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+                        });
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(ip) = maybe_remote_ip {
+                    <span class="self">self</span>.peer_ip_addresses
+                        .entry(peer_id)
+                        .and_modify(|ips| {
+                            ips.insert(ip);
+                        })
+                        .or_insert(HashSet::from([ip]));
+                }
+
                 <span class="kw">let </span>num_established_peer_connections = shared
                     .num_established_peer_connections
                     .fetch_add(<span class="number">1</span>, Ordering::SeqCst)
@@ -2097,10 +2024,13 @@
                 </span><span class="kw">if </span>num_established.get() == <span class="number">1 </span>{
                     shared.handlers.connected_peer.call_simple(<span class="kw-2">&amp;</span>peer_id);
                 }
+
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(metrics) = <span class="self">self</span>.metrics.as_mut() {
+                    metrics.inc_established_connections()
+                }
             }
             SwarmEvent::ConnectionClosed {
                 peer_id,
-                endpoint,
                 num_established,
                 cause,
                 ..
@@ -2116,28 +2046,8 @@
                     <span class="string">&quot;Connection closed with peer {peer_id} [{num_established} from peer]&quot;
                 </span>);
 
-                <span class="comment">// TODO: Workaround for https://github.com/libp2p/rust-libp2p/discussions/3418
-                </span>{
-                    <span class="kw">match </span><span class="self">self</span>.established_connections.entry((peer_id, endpoint)) {
-                        Entry::Vacant(<span class="kw">_</span>) =&gt; {
-                            <span class="comment">// Nothing to do here, we are not aware of the connection being closed
-                            </span><span class="macro">warn!</span>(
-                                <span class="question-mark">?</span>peer_id,
-                                <span class="string">&quot;Connection closed, but it is not known as open connection, \
-                                this is likely a bug in libp2p: \
-                                https://github.com/libp2p/rust-libp2p/discussions/3418&quot;
-                            </span>);
-                            <span class="kw">return</span>;
-                        }
-                        Entry::Occupied(<span class="kw-2">mut </span>entry) =&gt; {
-                            <span class="kw">let </span>value = entry.get_mut();
-                            <span class="kw">if </span><span class="kw-2">*</span>value == <span class="number">1 </span>{
-                                entry.remove_entry();
-                            } <span class="kw">else </span>{
-                                <span class="kw-2">*</span>value -= <span class="number">1</span>;
-                            }
-                        }
-                    };
+                <span class="kw">if </span>num_established == <span class="number">0 </span>{
+                    <span class="self">self</span>.peer_ip_addresses.remove(<span class="kw-2">&amp;</span>peer_id);
                 }
                 <span class="kw">let </span>num_established_peer_connections = shared
                     .num_established_peer_connections
@@ -2162,27 +2072,22 @@
                 </span><span class="kw">if </span>num_established == <span class="number">0 </span>{
                     shared.handlers.disconnected_peer.call_simple(<span class="kw-2">&amp;</span>peer_id);
                 }
+
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(metrics) = <span class="self">self</span>.metrics.as_mut() {
+                    metrics.dec_established_connections()
+                };
             }
             SwarmEvent::OutgoingConnectionError { peer_id, error, .. } =&gt; {
                 <span class="kw">if let </span><span class="prelude-val">Some</span>(peer_id) = <span class="kw-2">&amp;</span>peer_id {
-                    <span class="comment">// Create or extend temporary ban, but only if we are not offline
-                    </span><span class="kw">if let </span><span class="prelude-val">Some</span>(shared) = <span class="self">self</span>.shared_weak.upgrade() {
-                        <span class="comment">// One peer is possibly a node peer is connected to, hence expecting more
-                        // than one for online status
-                        </span><span class="kw">let </span>other_connections_exist = shared
-                            .num_established_peer_connections
-                            .load(Ordering::Relaxed)
-                            &gt; <span class="number">1</span>;
-                        <span class="kw">let </span>should_ban_temporarily =
-                            <span class="self">self</span>.should_temporary_ban_on_dial_error(peer_id, <span class="kw-2">&amp;</span>error);
+                    <span class="kw">let </span>should_ban_temporarily =
+                        <span class="self">self</span>.should_temporary_ban_on_dial_error(peer_id, <span class="kw-2">&amp;</span>error);
 
-                        <span class="macro">trace!</span>(%should_ban_temporarily, %other_connections_exist, <span class="string">&quot;Temporary bans conditions.&quot;</span>);
+                    <span class="macro">trace!</span>(%should_ban_temporarily, <span class="string">&quot;Temporary bans conditions.&quot;</span>);
 
-                        <span class="kw">if </span>other_connections_exist &amp;&amp; should_ban_temporarily {
-                            <span class="self">self</span>.temporary_bans.lock().create_or_extend(peer_id);
-                            <span class="macro">debug!</span>(%peer_id, <span class="question-mark">?</span>error, <span class="string">&quot;Peer was temporarily banned.&quot;</span>);
-                        }
-                    };
+                    <span class="kw">if </span>should_ban_temporarily {
+                        <span class="self">self</span>.temporary_bans.lock().create_or_extend(peer_id);
+                        <span class="macro">debug!</span>(%peer_id, <span class="question-mark">?</span>error, <span class="string">&quot;Peer was temporarily banned.&quot;</span>);
+                    }
                 }
 
                 <span class="macro">debug!</span>(
@@ -2215,6 +2120,21 @@
                     }
                 }
             }
+            SwarmEvent::NewExternalAddrCandidate { address } =&gt; {
+                <span class="macro">trace!</span>(%address, <span class="string">&quot;External address candidate&quot;</span>);
+            }
+            SwarmEvent::ExternalAddrConfirmed { address } =&gt; {
+                <span class="macro">debug!</span>(%address, <span class="string">&quot;Confirmed external address&quot;</span>);
+
+                <span class="kw">let </span>connected_peers = <span class="self">self</span>.swarm.connected_peers().copied().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+                <span class="self">self</span>.swarm.behaviour_mut().identify.push(connected_peers);
+            }
+            SwarmEvent::ExternalAddrExpired { address } =&gt; {
+                <span class="macro">debug!</span>(%address, <span class="string">&quot;External address expired&quot;</span>);
+
+                <span class="kw">let </span>connected_peers = <span class="self">self</span>.swarm.connected_peers().copied().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+                <span class="self">self</span>.swarm.behaviour_mut().identify.push(connected_peers);
+            }
             other =&gt; {
                 <span class="macro">trace!</span>(<span class="string">&quot;Other swarm event: {:?}&quot;</span>, other);
             }
@@ -2222,8 +2142,13 @@
     }
 
     <span class="kw">fn </span>should_temporary_ban_on_dial_error(<span class="kw-2">&amp;</span><span class="self">self</span>, peer_id: <span class="kw-2">&amp;</span>PeerId, error: <span class="kw-2">&amp;</span>DialError) -&gt; bool {
+        <span class="comment">// TODO: Replace with banning of addresses rather peer IDs if this helps
+        </span><span class="kw">if </span><span class="bool-val">true </span>{
+            <span class="kw">return </span><span class="bool-val">false</span>;
+        }
+
         <span class="comment">// Ban temporarily only peers without active connections.
-        </span><span class="kw">if </span>!<span class="self">self</span>.swarm.is_connected(peer_id) {
+        </span><span class="kw">if </span><span class="self">self</span>.swarm.is_connected(peer_id) {
             <span class="kw">return </span><span class="bool-val">false</span>;
         }
 
@@ -2278,21 +2203,30 @@
         <span class="kw">let </span>local_peer_id = <span class="kw-2">*</span><span class="self">self</span>.swarm.local_peer_id();
 
         <span class="kw">if let </span>IdentifyEvent::Received { peer_id, <span class="kw-2">mut </span>info } = event {
-            <span class="macro">debug!</span>(<span class="question-mark">?</span>peer_id, protocols=<span class="question-mark">?</span>info.protocols, <span class="string">&quot;IdentifyEvent::Received&quot;</span>);
+            <span class="macro">debug!</span>(<span class="question-mark">?</span>peer_id, protocols = <span class="question-mark">?</span>info.protocols, <span class="string">&quot;IdentifyEvent::Received&quot;</span>);
 
             <span class="comment">// Check for network partition
             </span><span class="kw">if </span>info.protocol_version != <span class="self">self</span>.protocol_version {
                 <span class="macro">debug!</span>(
                     %local_peer_id,
                     %peer_id,
-                    local_protocol_version=%<span class="self">self</span>.protocol_version,
-                    peer_protocol_version=%info.protocol_version,
-                    <span class="string">&quot;Peer has different protocol version. Peer was banned.&quot;</span>,
+                    local_protocol_version = %<span class="self">self</span>.protocol_version,
+                    peer_protocol_version = %info.protocol_version,
+                    <span class="string">&quot;Peer has different protocol version, banning temporarily&quot;</span>,
                 );
 
-                <span class="self">self</span>.ban_peer(peer_id);
+                <span class="self">self</span>.temporary_bans.lock().create_or_extend(<span class="kw-2">&amp;</span>peer_id);
+                <span class="comment">// Forget about this peer until they upgrade
+                </span><span class="kw">let _ </span>= <span class="self">self</span>.swarm.disconnect_peer_id(peer_id);
+                <span class="self">self</span>.swarm.behaviour_mut().kademlia.remove_peer(<span class="kw-2">&amp;</span>peer_id);
+                <span class="self">self</span>.networking_parameters_registry
+                    .remove_all_known_peer_addresses(peer_id);
+
                 <span class="kw">return</span>;
             }
+
+            <span class="comment">// Remove temporary ban if there was any
+            </span><span class="self">self</span>.temporary_bans.lock().remove(<span class="kw-2">&amp;</span>peer_id);
 
             <span class="kw">if </span>info.listen_addrs.len() &gt; <span class="number">30 </span>{
                 <span class="macro">debug!</span>(
@@ -2312,84 +2246,87 @@
             });
 
             <span class="kw">if </span>full_kademlia_support {
-                <span class="kw">for </span>address <span class="kw">in </span>info.listen_addrs {
-                    <span class="kw">if </span>!<span class="self">self</span>.allow_non_global_addresses_in_dht
-                        &amp;&amp; !is_global_address_or_dns(<span class="kw-2">&amp;</span>address)
-                    {
-                        <span class="macro">trace!</span>(
-                            %local_peer_id,
-                            %peer_id,
-                            %address,
-                            <span class="string">&quot;Ignoring self-reported non-global address.&quot;</span>,
-                        );
-                        <span class="kw">continue</span>;
-                    }
+                <span class="kw">let </span>received_addresses = info
+                    .listen_addrs
+                    .into_iter()
+                    .filter(|address| {
+                        <span class="kw">if </span><span class="self">self</span>.allow_non_global_addresses_in_dht
+                            || is_global_address_or_dns(address)
+                        {
+                            <span class="bool-val">true
+                        </span>} <span class="kw">else </span>{
+                            <span class="macro">trace!</span>(
+                                %local_peer_id,
+                                %peer_id,
+                                %address,
+                                <span class="string">&quot;Ignoring self-reported non-global address&quot;</span>,
+                            );
 
-                    <span class="macro">trace!</span>(
+                            <span class="bool-val">false
+                        </span>}
+                    })
+                    .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+                <span class="kw">let </span>received_address_strings = received_addresses
+                    .iter()
+                    .map(ToString::to_string)
+                    .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+                <span class="kw">let </span>old_addresses = kademlia
+                    .kbucket(peer_id)
+                    .and_then(|peers| {
+                        <span class="kw">let </span>key = peer_id.into();
+                        peers.iter().find_map(|peer| {
+                            (peer.node.key == <span class="kw-2">&amp;</span>key).then_some(
+                                peer.node
+                                    .value
+                                    .iter()
+                                    .filter(|existing_address| {
+                                        <span class="kw">let </span>existing_address = existing_address.to_string();
+
+                                        !received_address_strings.iter().any(|received_address| {
+                                            received_address.starts_with(<span class="kw-2">&amp;</span>existing_address)
+                                                || existing_address.starts_with(received_address)
+                                        })
+                                    })
+                                    .cloned()
+                                    .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
+                            )
+                        })
+                    })
+                    .unwrap_or_default();
+
+                <span class="kw">for </span>address <span class="kw">in </span>received_addresses {
+                    <span class="macro">debug!</span>(
                         %local_peer_id,
                         %peer_id,
                         %address,
-                        <span class="string">&quot;Adding self-reported address to Kademlia DHT ({:?}).&quot;</span>,
-                        kademlia
-                            .protocol_names()
-                            .iter()
-                            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
+                        protocol_names = <span class="question-mark">?</span>kademlia.protocol_names(),
+                        <span class="string">&quot;Adding self-reported address to Kademlia DHT&quot;</span>,
                     );
+
                     kademlia.add_address(<span class="kw-2">&amp;</span>peer_id, address);
+                }
+
+                <span class="kw">for </span>old_address <span class="kw">in </span>old_addresses {
+                    <span class="macro">trace!</span>(
+                        %local_peer_id,
+                        %peer_id,
+                        %old_address,
+                        <span class="string">&quot;Removing old self-reported address from Kademlia DHT&quot;</span>,
+                    );
+
+                    kademlia.remove_address(<span class="kw-2">&amp;</span>peer_id, <span class="kw-2">&amp;</span>old_address);
                 }
             } <span class="kw">else </span>{
                 <span class="macro">debug!</span>(
                     %local_peer_id,
                     %peer_id,
-                    peer_protocols=<span class="question-mark">?</span>info.protocols,
-                    <span class="string">&quot;Peer doesn&#39;t support our Kademlia DHT protocol ({:?}).&quot;</span>,
-                    kademlia
-                        .protocol_names()
-                        .iter()
-                        .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
+                    peer_protocols = <span class="question-mark">?</span>info.protocols,
+                    protocol_names = <span class="question-mark">?</span>kademlia.protocol_names(),
+                    <span class="string">&quot;Peer doesn&#39;t support our Kademlia DHT protocol&quot;</span>,
                 );
 
                 kademlia.remove_peer(<span class="kw-2">&amp;</span>peer_id);
             }
-
-            <span class="self">self</span>.add_observed_external_address(info.observed_addr);
-        }
-    }
-
-    <span class="kw">fn </span>add_observed_external_address(<span class="kw-2">&amp;mut </span><span class="self">self</span>, observed_addr: Multiaddr) {
-        <span class="kw">if </span>!<span class="self">self</span>.external_addresses.is_empty() {
-            <span class="macro">debug!</span>(
-                <span class="string">&quot;Observed address wasn&#39;t added as external (manual external addresses set): {}&quot;</span>,
-                observed_addr
-            );
-            <span class="kw">return</span>;
-        }
-
-        <span class="kw">let </span><span class="prelude-val">Some</span>(listen_addr) = <span class="self">self</span>.swarm.listeners().next() <span class="kw">else </span>{
-            <span class="macro">warn!</span>(<span class="string">&quot;Listener addresses are not specified!&quot;</span>);
-            <span class="kw">return</span>;
-        };
-
-        <span class="kw">let </span><span class="prelude-val">Some</span>(observed_addr) = address_translation(listen_addr, <span class="kw-2">&amp;</span>observed_addr) <span class="kw">else </span>{
-            <span class="macro">warn!</span>(
-                <span class="question-mark">?</span>listen_addr,
-                <span class="question-mark">?</span>observed_addr,
-                <span class="string">&quot;Can&#39;t translate observed address!&quot;
-            </span>);
-            <span class="kw">return</span>;
-        };
-
-        <span class="kw">if </span>!<span class="self">self
-            </span>.swarm
-            .external_addresses()
-            .cloned()
-            .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
-            .contains(<span class="kw-2">&amp;</span>observed_addr)
-        {
-            <span class="macro">info!</span>(<span class="string">&quot;Added observed address as external: {}&quot;</span>, observed_addr);
-            <span class="self">self</span>.swarm.add_external_address(observed_addr);
-        } <span class="kw">else </span>{
-            <span class="macro">trace!</span>(<span class="string">&quot;Skipping known external address: {}&quot;</span>, observed_addr);
         }
     }
 
@@ -2403,7 +2340,7 @@
                 <span class="macro">debug!</span>(<span class="string">&quot;Unexpected AddProvider request received: {:?}&quot;</span>, record);
             }
             KademliaEvent::UnroutablePeer { peer } =&gt; {
-                <span class="macro">debug!</span>(<span class="string">&quot;Unroutable peer detected: {:?}&quot;</span>, peer);
+                <span class="macro">debug!</span>(%peer, <span class="string">&quot;Unroutable peer detected&quot;</span>);
 
                 <span class="self">self</span>.swarm.behaviour_mut().kademlia.remove_peer(<span class="kw-2">&amp;</span>peer);
 
@@ -2715,115 +2652,73 @@
         </span><span class="macro">trace!</span>(<span class="string">&quot;Request response event: {:?}&quot;</span>, event);
     }
 
-    <span class="kw">async fn </span>handle_peer_info_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: PeerInfoEvent) {
-        <span class="macro">trace!</span>(<span class="question-mark">?</span>event, <span class="string">&quot;Peer info event.&quot;</span>);
-
-        <span class="kw">if let </span><span class="prelude-val">Ok</span>(PeerInfoSuccess::Received(peer_info)) = event.result {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(shared) = <span class="self">self</span>.shared_weak.upgrade() {
-                <span class="kw">let </span>connected_peers = <span class="self">self</span>.swarm.connected_peers().cloned().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-
-                shared.handlers.new_peer_info.call_simple(<span class="kw-2">&amp;</span>NewPeerInfo {
-                    peer_id: event.peer_id,
-                    peer_info: peer_info.clone(),
-                    connected_peers,
-                });
-            }
-
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(general_connected_peers) =
-                <span class="self">self</span>.swarm.behaviour_mut().general_connected_peers.as_mut()
-            {
-                <span class="kw">let </span>keep_alive = <span class="self">self
-                    </span>.general_connection_decision_handler
-                    .as_ref()
-                    .map(|handler| handler(<span class="kw-2">&amp;</span>peer_info))
-                    .unwrap_or(<span class="bool-val">false</span>);
-
-                general_connected_peers.update_keep_alive_status(event.peer_id, keep_alive);
-            }
-
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(special_connected_peers) =
-                <span class="self">self</span>.swarm.behaviour_mut().special_connected_peers.as_mut()
-            {
-                <span class="kw">let </span>special_keep_alive = <span class="self">self
-                    </span>.special_connection_decision_handler
-                    .as_ref()
-                    .map(|handler| handler(<span class="kw-2">&amp;</span>peer_info))
-                    .unwrap_or(<span class="bool-val">false</span>);
-
-                special_connected_peers.update_keep_alive_status(event.peer_id, special_keep_alive);
-            }
-        }
-    }
-
-    <span class="kw">async fn </span>handle_general_connected_peers_event(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        event: ConnectedPeersEvent&lt;GeneralConnectedPeersInstance&gt;,
-    ) {
-        <span class="macro">trace!</span>(<span class="question-mark">?</span>event, <span class="string">&quot;General connected peers event.&quot;</span>);
-
-        <span class="kw">let </span>peers = <span class="self">self</span>.get_peers_to_dial().<span class="kw">await</span>;
-
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(general_connected_peers) =
-            <span class="self">self</span>.swarm.behaviour_mut().general_connected_peers.as_mut()
-        {
-            general_connected_peers.add_peers_to_dial(<span class="kw-2">&amp;</span>peers);
-        }
-    }
-
-    <span class="kw">async fn </span>handle_special_connected_peers_event(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        event: ConnectedPeersEvent&lt;SpecialConnectedPeersInstance&gt;,
-    ) {
-        <span class="macro">trace!</span>(<span class="question-mark">?</span>event, <span class="string">&quot;Special connected peers event.&quot;</span>);
-
-        <span class="kw">let </span>peers = <span class="self">self</span>.get_peers_to_dial().<span class="kw">await</span>;
-
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(special_connected_peers) =
-            <span class="self">self</span>.swarm.behaviour_mut().special_connected_peers.as_mut()
-        {
-            special_connected_peers.add_peers_to_dial(<span class="kw-2">&amp;</span>peers);
-        }
-    }
-
     <span class="kw">async fn </span>handle_autonat_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: AutonatEvent) {
         <span class="macro">trace!</span>(<span class="question-mark">?</span>event, <span class="string">&quot;Autonat event received.&quot;</span>);
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(autonat) = <span class="self">self</span>.swarm.behaviour().autonat.as_ref() {
-            <span class="macro">debug!</span>(
-                public_address=<span class="question-mark">?</span>autonat.public_address(),
-                confidence=%autonat.confidence(),
-                <span class="string">&quot;Current public address confidence.&quot;
-            </span>);
-        }
+        <span class="kw">let </span>autonat = <span class="kw-2">&amp;</span><span class="self">self</span>.swarm.behaviour().autonat;
+        <span class="macro">debug!</span>(
+            public_address=<span class="question-mark">?</span>autonat.public_address(),
+            confidence=%autonat.confidence(),
+            <span class="string">&quot;Current public address confidence.&quot;
+        </span>);
 
-        <span class="kw">if let </span>AutonatEvent::StatusChanged { old, new } = event {
-            <span class="macro">info!</span>(<span class="question-mark">?</span>old, <span class="question-mark">?</span>new, <span class="string">&quot;Public address status changed.&quot;</span>);
-
-            <span class="kw">if </span><span class="macro">matches!</span>(<span class="self">self</span>.kademlia_mode, KademliaMode::Dynamic { .. }) {
-                <span class="kw">let </span>mode = <span class="kw">match </span><span class="kw-2">&amp;</span>new {
-                    NatStatus::Public(address) =&gt; {
-                        <span class="kw">if </span>is_global_address_or_dns(address)
-                            || <span class="self">self</span>.allow_non_global_addresses_in_dht
-                        {
-                            Mode::Server
-                        } <span class="kw">else </span>{
-                            <span class="macro">debug!</span>(
-                                <span class="question-mark">?</span>old,
-                                <span class="question-mark">?</span>new,
-                                <span class="question-mark">?</span>address,
-                                non_global_addresses=%<span class="self">self</span>.allow_non_global_addresses_in_dht,
-                                <span class="string">&quot;Kademlia mode wasn&#39;t set.&quot;
-                            </span>);
-                            Mode::Client
+        <span class="kw">match </span>event {
+            AutonatEvent::InboundProbe(_inbound_probe_event) =&gt; {
+                <span class="comment">// We do not care about this event
+            </span>}
+            AutonatEvent::OutboundProbe(outbound_probe_event) =&gt; {
+                <span class="kw">match </span>outbound_probe_event {
+                    OutboundProbeEvent::Request { peer, .. } =&gt; {
+                        <span class="comment">// For outbound probe request add peer to allow list to ensure they can dial us back and not hit
+                        // global incoming connection limit
+                        </span><span class="self">self</span>.swarm
+                            .behaviour_mut()
+                            .connection_limits
+                            <span class="comment">// We expect a single successful dial from this peer
+                            </span>.add_to_incoming_allow_list(
+                                peer,
+                                <span class="self">self</span>.peer_ip_addresses
+                                    .get(<span class="kw-2">&amp;</span>peer)
+                                    .iter()
+                                    .flat_map(|ip_addresses| ip_addresses.iter())
+                                    .copied(),
+                                <span class="number">1</span>,
+                            );
+                    }
+                    OutboundProbeEvent::Response { peer, .. } =&gt; {
+                        <span class="self">self</span>.swarm
+                            .behaviour_mut()
+                            .connection_limits
+                            .remove_from_incoming_allow_list(<span class="kw-2">&amp;</span>peer, <span class="prelude-val">Some</span>(<span class="number">1</span>));
+                    }
+                    OutboundProbeEvent::Error { peer, .. } =&gt; {
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(peer) = peer {
+                            <span class="self">self</span>.swarm
+                                .behaviour_mut()
+                                .connection_limits
+                                .remove_from_incoming_allow_list(<span class="kw-2">&amp;</span>peer, <span class="prelude-val">Some</span>(<span class="number">1</span>));
                         }
                     }
-                    NatStatus::Private =&gt; Mode::Client,
-                    NatStatus::Unknown =&gt; Mode::Client,
-                };
+                }
+            }
+            AutonatEvent::StatusChanged { old, new } =&gt; {
+                <span class="macro">debug!</span>(<span class="question-mark">?</span>old, <span class="question-mark">?</span>new, <span class="string">&quot;Public address status changed.&quot;</span>);
 
-                <span class="self">self</span>.swarm.behaviour_mut().kademlia.set_mode(<span class="prelude-val">Some</span>(mode));
+                <span class="comment">// TODO: Remove block once https://github.com/libp2p/rust-libp2p/issues/4863 is resolved
+                </span><span class="kw">if let </span>(NatStatus::Public(old_address), NatStatus::Private) = (old, new.clone()) {
+                    <span class="self">self</span>.swarm.remove_external_address(<span class="kw-2">&amp;</span>old_address);
+                    <span class="macro">debug!</span>(
+                        <span class="question-mark">?</span>old_address,
+                        new_status = <span class="question-mark">?</span>new,
+                        <span class="string">&quot;Removing old external address...&quot;</span>,
+                    );
 
-                <span class="macro">debug!</span>(<span class="string">&quot;Kademlia mode set: {:?}.&quot;</span>, mode);
-            };
+                    <span class="comment">// Trigger potential mode change manually
+                    </span><span class="self">self</span>.swarm.behaviour_mut().kademlia.set_mode(<span class="prelude-val">None</span>);
+                }
+
+                <span class="kw">let </span>connected_peers = <span class="self">self</span>.swarm.connected_peers().copied().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+                <span class="self">self</span>.swarm.behaviour_mut().identify.push(connected_peers);
+            }
         }
     }
 
@@ -2922,10 +2817,7 @@
                                     }
                                 }
                                 <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>) =&gt; {
-                                    <span class="macro">panic!</span>(
-                                        <span class="string">&quot;Logic error, topic subscription wasn&#39;t created, this must never \
-                            happen&quot;
-                                    </span>);
+                                    <span class="macro">panic!</span>(<span class="string">&quot;Logic error, topic subscription wasn&#39;t created, this must never happen&quot;</span>);
                                 }
                                 <span class="prelude-val">Err</span>(error) =&gt; {
                                     <span class="kw">let _ </span>= result_sender.send(<span class="prelude-val">Err</span>(error));
@@ -3075,8 +2967,8 @@
             .remove_all_known_peer_addresses(peer_id);
     }
 
-    <span class="kw">fn </span>register_event_metrics&lt;E: Debug&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, swarm_event: <span class="kw-2">&amp;</span>SwarmEvent&lt;Event, E&gt;) {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref mut </span>metrics) = <span class="self">self</span>.metrics {
+    <span class="kw">fn </span>register_event_metrics(<span class="kw-2">&amp;mut </span><span class="self">self</span>, swarm_event: <span class="kw-2">&amp;</span>SwarmEvent&lt;Event&gt;) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">ref mut </span>metrics) = <span class="self">self</span>.libp2p_metrics {
             <span class="kw">match </span>swarm_event {
                 SwarmEvent::Behaviour(Event::Ping(ping_event)) =&gt; {
                     metrics.record(ping_event);
@@ -3101,77 +2993,23 @@
         }
     }
 
-    <span class="kw">async fn </span>get_peers_to_dial(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; Vec&lt;PeerAddress&gt; {
-        <span class="kw">let </span><span class="kw-2">mut </span>result_peers =
-            Vec::with_capacity(KADEMLIA_PEERS_ADDRESSES_BATCH_SIZE + PEERS_ADDRESSES_BATCH_SIZE);
-
-        <span class="comment">// Get addresses from Kademlia buckets
-        </span><span class="kw">let </span><span class="kw-2">mut </span>kademlia_addresses = Vec::new();
-        <span class="kw">let </span><span class="kw-2">mut </span>kademlia_peers = HashSet::new();
+    <span class="kw">fn </span>log_kademlia_stats(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">let </span><span class="kw-2">mut </span>peer_counter = <span class="number">0</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>peer_with_no_address_counter = <span class="number">0</span>;
         <span class="kw">for </span>kbucket <span class="kw">in </span><span class="self">self</span>.swarm.behaviour_mut().kademlia.kbuckets() {
             <span class="kw">for </span>entry <span class="kw">in </span>kbucket.iter() {
-                <span class="kw">let </span>peer_id = <span class="kw-2">*</span>entry.node.key.preimage();
-                <span class="kw">let </span>addresses = entry.node.value.clone().into_vec();
-
-                <span class="kw">for </span>address <span class="kw">in </span>addresses {
-                    kademlia_addresses.push((peer_id, address));
+                peer_counter += <span class="number">1</span>;
+                <span class="kw">if </span>entry.node.value.len() == <span class="number">0 </span>{
+                    peer_with_no_address_counter += <span class="number">1</span>;
                 }
             }
         }
 
-        <span class="comment">// Take random batch from kademlia addresses.
-        </span><span class="kw">for _ in </span><span class="number">0</span>..KADEMLIA_PEERS_ADDRESSES_BATCH_SIZE {
-            <span class="kw">if </span>kademlia_addresses.is_empty() {
-                <span class="kw">break</span>;
-            }
-            <span class="kw">let </span>random_index = <span class="self">self</span>.rng.gen_range(<span class="number">0</span>..kademlia_addresses.len());
-
-            <span class="kw">let </span>(peer_id, peer_address) = kademlia_addresses.swap_remove(random_index);
-            result_peers.push((peer_id, peer_address));
-            kademlia_peers.insert(peer_id);
-        }
-
-        <span class="comment">// Get peer batch from the known peers registry
-        </span><span class="kw">let </span>connected_peers = <span class="self">self</span>.swarm.connected_peers().cloned().collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-        <span class="kw">let </span>local_peer_id = <span class="kw-2">*</span><span class="self">self</span>.swarm.local_peer_id();
-        <span class="kw">let </span>allow_non_global_addresses_in_dht = <span class="self">self</span>.allow_non_global_addresses_in_dht;
-
-        <span class="kw">let </span>addresses = <span class="self">self
-            </span>.networking_parameters_registry
-            .next_known_addresses_batch()
-            .<span class="kw">await
-            </span>.into_iter()
-            .filter(|(peer_id, address)| {
-                <span class="kw">if </span>!allow_non_global_addresses_in_dht &amp;&amp; !is_global_address_or_dns(address) {
-                    <span class="macro">trace!</span>(
-                        %local_peer_id,
-                        %peer_id,
-                        %address,
-                        <span class="string">&quot;Ignoring non-global address read from parameters registry.&quot;</span>,
-                    );
-                    <span class="bool-val">false
-                </span>} <span class="kw">else </span>{
-                    <span class="bool-val">true
-                </span>}
-            });
-
-        <span class="macro">trace!</span>(%local_peer_id, <span class="string">&quot;Processing addresses batch: {:?}&quot;</span>, addresses);
-
-        <span class="kw">for </span>(peer_id, addr) <span class="kw">in </span>addresses {
-            <span class="kw">if </span>connected_peers.contains(<span class="kw-2">&amp;</span>peer_id) || kademlia_peers.contains(<span class="kw-2">&amp;</span>peer_id) {
-                <span class="kw">continue</span>;
-            }
-
-            result_peers.push((peer_id, addr))
-        }
-
-        <span class="kw">let </span>bootstrap_nodes = strip_peer_id(<span class="self">self</span>.bootstrap_addresses.clone())
-            .into_iter()
-            .map(|(peer_id, <span class="kw">_</span>)| peer_id)
-            .collect::&lt;HashSet&lt;<span class="kw">_</span>&gt;&gt;();
-
-        result_peers.retain(|(peer_id, <span class="kw">_</span>)| !bootstrap_nodes.contains(peer_id));
-        result_peers
+        <span class="macro">debug!</span>(
+            peers = %peer_counter,
+            peers_with_no_address = %peer_with_no_address_counter,
+            <span class="string">&quot;Kademlia stats&quot;
+        </span>);
     }
 }
 </code></pre></div></section></main></body></html>

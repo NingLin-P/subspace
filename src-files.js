@@ -1,7 +1,7 @@
 var srcIndex = JSON.parse('{\
 "cross_domain_message_gossip":["",[],["gossip_worker.rs","lib.rs","message_listener.rs"]],\
 "domain_block_builder":["",[],["lib.rs"]],\
-"domain_block_preprocessor":["",[],["inherents.rs","lib.rs","runtime_api.rs","runtime_api_full.rs","runtime_api_light.rs","xdm_verifier.rs"]],\
+"domain_block_preprocessor":["",[],["inherents.rs","lib.rs","stateless_runtime.rs","xdm_verifier.rs"]],\
 "domain_client_consensus_relay_chain":["",[],["import_queue.rs","lib.rs"]],\
 "domain_client_message_relayer":["",[],["lib.rs","worker.rs"]],\
 "domain_client_operator":["",[],["aux_schema.rs","bootstrapper.rs","bundle_processor.rs","bundle_producer_election_solver.rs","domain_block_processor.rs","domain_bundle_producer.rs","domain_bundle_proposer.rs","domain_worker.rs","domain_worker_starter.rs","fraud_proof.rs","lib.rs","operator.rs","utils.rs"]],\
@@ -28,7 +28,7 @@ var srcIndex = JSON.parse('{\
 "pallet_subspace":["",[],["equivocation.rs","lib.rs","weights.rs"]],\
 "pallet_transaction_fees":["",[],["default_weights.rs","lib.rs"]],\
 "pallet_transporter":["",[],["lib.rs","weights.rs"]],\
-"sc_consensus_subspace":["",[],["archiver.rs","aux_schema.rs","lib.rs","notification.rs","slot_worker.rs","verifier.rs"]],\
+"sc_consensus_subspace":["",[],["archiver.rs","aux_schema.rs","block_import.rs","lib.rs","notification.rs","slot_worker.rs","verifier.rs"]],\
 "sc_consensus_subspace_rpc":["",[],["lib.rs"]],\
 "sc_proof_of_time":["",[["source",[],["gossip.rs","state.rs","timekeeper.rs"]]],["lib.rs","slots.rs","source.rs","verifier.rs"]],\
 "sc_subspace_block_relay":["",[["consensus",[],["relay.rs","types.rs"]],["protocol",[],["compact_block.rs"]]],["consensus.rs","lib.rs","protocol.rs","types.rs","utils.rs"]],\
@@ -45,8 +45,9 @@ var srcIndex = JSON.parse('{\
 "subspace_erasure_coding":["",[],["lib.rs"]],\
 "subspace_farmer":["",[["node_client",[],["node_rpc_client.rs"]],["single_disk_farm",[["farming",[],["rayon_files.rs"]]],["farming.rs","piece_cache.rs","piece_reader.rs","plotting.rs"]],["utils",[],["farmer_piece_getter.rs","piece_validator.rs","readers_and_pieces.rs","ss58.rs"]]],["identity.rs","lib.rs","node_client.rs","piece_cache.rs","reward_signing.rs","single_disk_farm.rs","utils.rs"]],\
 "subspace_farmer_components":["",[],["auditing.rs","file_ext.rs","lib.rs","plotting.rs","proving.rs","reading.rs","sector.rs","segment_reconstruction.rs"]],\
+"subspace_malicious_operator":["",[],["lib.rs","malicious_bundle_producer.rs","malicious_bundle_tamper.rs","malicious_domain_instance_starter.rs"]],\
 "subspace_metrics":["",[],["lib.rs"]],\
-"subspace_networking":["",[["behavior",[],["persistent_parameters.rs"]],["constructor",[],["temporary_bans.rs","transport.rs"]],["protocols",[["connected_peers",[],["handler.rs"]],["peer_info",[],["handler.rs","protocol.rs"]],["request_response",[["handlers",[],["generic_request_handler.rs","piece_by_index.rs","segment_header.rs"]]],["handlers.rs","request_response_factory.rs"]],["reserved_peers",[],["handler.rs"]]],["connected_peers.rs","peer_info.rs","request_response.rs","reserved_peers.rs"]],["utils",[["rate_limiter",[],["resizable_semaphore.rs"]]],["multihash.rs","piece_provider.rs","rate_limiter.rs","unique_record_binary_heap.rs"]]],["behavior.rs","constructor.rs","lib.rs","node.rs","node_runner.rs","protocols.rs","shared.rs","utils.rs"]],\
+"subspace_networking":["",[["behavior",[],["persistent_parameters.rs"]],["constructor",[],["temporary_bans.rs","transport.rs"]],["protocols",[["request_response",[["handlers",[],["generic_request_handler.rs","piece_by_index.rs","segment_header.rs"]]],["handlers.rs","request_response_factory.rs"]],["reserved_peers",[],["handler.rs"]]],["autonat_wrapper.rs","request_response.rs","reserved_peers.rs","subspace_connection_limits.rs"]],["utils",[["rate_limiter",[],["resizable_semaphore.rs"]]],["multihash.rs","piece_provider.rs","rate_limiter.rs","unique_record_binary_heap.rs"]]],["behavior.rs","constructor.rs","lib.rs","node.rs","node_runner.rs","protocols.rs","shared.rs","utils.rs"]],\
 "subspace_node":["",[["domain",[],["cli.rs","domain_instance_starter.rs","evm_chain_spec.rs"]]],["chain_spec.rs","chain_spec_utils.rs","domain.rs","lib.rs"]],\
 "subspace_proof_of_space":["",[["chiapos",[["table",[],["types.rs"]]],["constants.rs","table.rs","tables.rs","utils.rs"]]],["chia.rs","chiapos.rs","lib.rs","shim.rs"]],\
 "subspace_proof_of_time":["",[["aes",[],["x86_64.rs"]]],["aes.rs","lib.rs"]],\

@@ -1973,6 +1973,49 @@
 <a href="#1973" id="1973">1973</a>
 <a href="#1974" id="1974">1974</a>
 <a href="#1975" id="1975">1975</a>
+<a href="#1976" id="1976">1976</a>
+<a href="#1977" id="1977">1977</a>
+<a href="#1978" id="1978">1978</a>
+<a href="#1979" id="1979">1979</a>
+<a href="#1980" id="1980">1980</a>
+<a href="#1981" id="1981">1981</a>
+<a href="#1982" id="1982">1982</a>
+<a href="#1983" id="1983">1983</a>
+<a href="#1984" id="1984">1984</a>
+<a href="#1985" id="1985">1985</a>
+<a href="#1986" id="1986">1986</a>
+<a href="#1987" id="1987">1987</a>
+<a href="#1988" id="1988">1988</a>
+<a href="#1989" id="1989">1989</a>
+<a href="#1990" id="1990">1990</a>
+<a href="#1991" id="1991">1991</a>
+<a href="#1992" id="1992">1992</a>
+<a href="#1993" id="1993">1993</a>
+<a href="#1994" id="1994">1994</a>
+<a href="#1995" id="1995">1995</a>
+<a href="#1996" id="1996">1996</a>
+<a href="#1997" id="1997">1997</a>
+<a href="#1998" id="1998">1998</a>
+<a href="#1999" id="1999">1999</a>
+<a href="#2000" id="2000">2000</a>
+<a href="#2001" id="2001">2001</a>
+<a href="#2002" id="2002">2002</a>
+<a href="#2003" id="2003">2003</a>
+<a href="#2004" id="2004">2004</a>
+<a href="#2005" id="2005">2005</a>
+<a href="#2006" id="2006">2006</a>
+<a href="#2007" id="2007">2007</a>
+<a href="#2008" id="2008">2008</a>
+<a href="#2009" id="2009">2009</a>
+<a href="#2010" id="2010">2010</a>
+<a href="#2011" id="2011">2011</a>
+<a href="#2012" id="2012">2012</a>
+<a href="#2013" id="2013">2013</a>
+<a href="#2014" id="2014">2014</a>
+<a href="#2015" id="2015">2015</a>
+<a href="#2016" id="2016">2016</a>
+<a href="#2017" id="2017">2017</a>
+<a href="#2018" id="2018">2018</a>
 </pre></div><pre class="rust"><code><span class="kw">pub mod </span>farming;
 <span class="kw">pub mod </span>piece_cache;
 <span class="kw">pub mod </span>piece_reader;
@@ -1993,6 +2036,7 @@
     plotting, plotting_scheduler, PlottingOptions, PlottingSchedulerOptions,
 };
 <span class="kw">use </span><span class="kw">crate</span>::utils::{tokio_rayon_spawn_handler, AsyncJoinOnDrop};
+<span class="kw">use </span><span class="kw">crate</span>::KNOWN_PEERS_CACHE_SIZE;
 <span class="kw">use </span>async_lock::RwLock;
 <span class="kw">use </span>derive_more::{Display, From};
 <span class="kw">use </span>event_listener_primitives::{Bag, HandlerId};
@@ -2026,7 +2070,7 @@
 <span class="kw">use </span>subspace_farmer_components::plotting::{PieceGetter, PlottedSector};
 <span class="kw">use </span>subspace_farmer_components::sector::{sector_size, SectorMetadata, SectorMetadataChecksummed};
 <span class="kw">use </span>subspace_farmer_components::FarmerProtocolInfo;
-<span class="kw">use </span>subspace_networking::NetworkingParametersManager;
+<span class="kw">use </span>subspace_networking::KnownPeersManager;
 <span class="kw">use </span>subspace_proof_of_space::Table;
 <span class="kw">use </span>subspace_rpc_primitives::{FarmerAppInfo, SolutionResponse};
 <span class="kw">use </span>thiserror::Error;
@@ -2060,6 +2104,12 @@
     </span><span class="kw">pub fn </span>new() -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::Ulid(Ulid::new())
     }
+}
+
+<span class="doccomment">/// Exclusive lock for single disk farm info file, ensuring no concurrent edits by cooperating processes is done
+</span><span class="attr">#[must_use = <span class="string">&quot;Lock file must be kept around or as long as farm is used&quot;</span>]
+</span><span class="kw">pub struct </span>SingleDiskFarmInfoLock {
+    _file: File,
 }
 
 <span class="doccomment">/// Important information about the contents of the `SingleDiskFarm`
@@ -2136,6 +2186,15 @@
         )
     }
 
+    <span class="doccomment">/// Try to acquire exclusive lock on the single disk farm info file, ensuring no concurrent edits by cooperating
+    /// processes is done
+    </span><span class="kw">pub fn </span>try_lock(directory: <span class="kw-2">&amp;</span>Path) -&gt; io::Result&lt;SingleDiskFarmInfoLock&gt; {
+        <span class="kw">let </span>file = File::open(directory.join(<span class="self">Self</span>::FILE_NAME))<span class="question-mark">?</span>;
+        fs4::FileExt::try_lock_exclusive(<span class="kw-2">&amp;</span>file)<span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>(SingleDiskFarmInfoLock { _file: file })
+    }
+
     <span class="comment">// ID of the farm
     </span><span class="kw">pub fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SingleDiskFarmId {
         <span class="kw">let </span><span class="self">Self</span>::V0 { id, .. } = <span class="self">self</span>;
@@ -2172,6 +2231,7 @@
 }
 
 <span class="doccomment">/// Summary of single disk farm for presentational purposes
+</span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub enum </span>SingleDiskFarmSummary {
     <span class="doccomment">/// Farm was found and read successfully
     </span>Found {
@@ -2261,6 +2321,9 @@
     <span class="doccomment">/// Failed to open or create identity
     </span><span class="attr">#[error(<span class="string">&quot;Failed to open or create identity: {0}&quot;</span>)]
     </span>FailedToOpenIdentity(<span class="attr">#[from] </span>IdentityError),
+    <span class="doccomment">/// Farm is likely already in use, make sure no other farmer is using it
+    </span><span class="attr">#[error(<span class="string">&quot;Farm is likely already in use, make sure no other farmer is using it: {0}&quot;</span>)]
+    </span>LikelyAlreadyInUse(io::Error),
     <span class="comment">// TODO: Make more variants out of this generic one
     </span><span class="doccomment">/// I/O error occurred
     </span><span class="attr">#[error(<span class="string">&quot;I/O error: {0}&quot;</span>)]
@@ -2352,6 +2415,9 @@
 <span class="doccomment">/// Errors happening during scrubbing
 </span><span class="attr">#[derive(Debug, Error)]
 </span><span class="kw">pub enum </span>SingleDiskFarmScrubError {
+    <span class="doccomment">/// Farm is likely already in use, make sure no other farmer is using it
+    </span><span class="attr">#[error(<span class="string">&quot;Farm is likely already in use, make sure no other farmer is using it: {0}&quot;</span>)]
+    </span>LikelyAlreadyInUse(io::Error),
     <span class="doccomment">/// Failed to determine file size
     </span><span class="attr">#[error(<span class="string">&quot;Failed to file size of {file}: {error}&quot;</span>)]
     </span>FailedToDetermineFileSize {
@@ -2523,6 +2589,7 @@
     <span class="doccomment">/// Metadata of all sectors plotted so far
     </span>sectors_metadata: Arc&lt;RwLock&lt;Vec&lt;SectorMetadataChecksummed&gt;&gt;&gt;,
     pieces_in_sector: u16,
+    total_sectors_count: SectorIndex,
     span: Span,
     tasks: FuturesUnordered&lt;BackgroundTask&gt;,
     handlers: Arc&lt;Handlers&gt;,
@@ -2532,6 +2599,7 @@
     </span>start_sender: <span class="prelude-ty">Option</span>&lt;broadcast::Sender&lt;()&gt;&gt;,
     <span class="doccomment">/// Sender that will be used to signal to background threads that they must stop
     </span>stop_sender: <span class="prelude-ty">Option</span>&lt;broadcast::Sender&lt;()&gt;&gt;,
+    _single_disk_farm_info_lock: SingleDiskFarmInfoLock,
 }
 
 <span class="kw">impl </span>Drop <span class="kw">for </span>SingleDiskFarm {
@@ -2657,6 +2725,9 @@
             }
         };
 
+        <span class="kw">let </span>single_disk_farm_info_lock = SingleDiskFarmInfo::try_lock(<span class="kw-2">&amp;</span>directory)
+            .map_err(SingleDiskFarmError::LikelyAlreadyInUse)<span class="question-mark">?</span>;
+
         <span class="kw">let </span>pieces_in_sector = single_disk_farm_info.pieces_in_sector();
         <span class="kw">let </span>sector_size = sector_size(pieces_in_sector);
         <span class="kw">let </span>sector_metadata_size = SectorMetadataChecksummed::encoded_size();
@@ -2665,7 +2736,7 @@
         </span><span class="kw">let </span>fixed_space_usage = RESERVED_PLOT_METADATA
             + RESERVED_FARM_INFO
             + Identity::file_size() <span class="kw">as </span>u64
-            + NetworkingParametersManager::file_size() <span class="kw">as </span>u64;
+            + KnownPeersManager::file_size(KNOWN_PEERS_CACHE_SIZE) <span class="kw">as </span>u64;
         <span class="comment">// Calculate how many sectors can fit
         </span><span class="kw">let </span>target_sector_count = {
             <span class="kw">let </span>potentially_plottable_space = allocated_space.saturating_sub(fixed_space_usage)
@@ -2718,8 +2789,7 @@
             }
         };
 
-        <span class="comment">// TODO: Consider file locking to prevent other apps from modifying it
-        </span><span class="kw">let </span><span class="kw-2">mut </span>metadata_file = OpenOptions::new()
+        <span class="kw">let </span><span class="kw-2">mut </span>metadata_file = OpenOptions::new()
             .read(<span class="bool-val">true</span>)
             .write(<span class="bool-val">true</span>)
             .create(<span class="bool-val">true</span>)
@@ -2904,44 +2974,46 @@
                     }
                 };
 
-                <span class="kw">let </span>plotting_fut = <span class="kw">async move </span>{
+                <span class="kw">let </span>plotting_options = PlottingOptions {
+                    public_key,
+                    node_client: <span class="kw-2">&amp;</span>node_client,
+                    pieces_in_sector,
+                    sector_size,
+                    sector_metadata_size,
+                    metadata_header,
+                    plot_file,
+                    metadata_file,
+                    sectors_metadata,
+                    piece_getter: <span class="kw-2">&amp;</span>piece_getter,
+                    kzg: <span class="kw-2">&amp;</span>kzg,
+                    erasure_coding: <span class="kw-2">&amp;</span>erasure_coding,
+                    handlers,
+                    modifying_sector_index,
+                    sectors_to_plot_receiver,
+                    downloading_semaphore,
+                    encoding_semaphore: <span class="kw-2">&amp;</span>encoding_semaphore,
+                    plotting_thread_pool,
+                    replotting_thread_pool,
+                    stop_receiver: <span class="kw-2">&amp;mut </span>stop_receiver.resubscribe(),
+                };
+
+                <span class="kw">let </span>plotting_fut = <span class="kw">async </span>{
                     <span class="kw">if </span>start_receiver.recv().<span class="kw">await</span>.is_err() {
                         <span class="comment">// Dropped before starting
-                        </span><span class="kw">return</span>;
+                        </span><span class="kw">return </span><span class="prelude-val">Ok</span>(());
                     }
 
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(plotting_delay) = plotting_delay {
                         <span class="kw">if </span>plotting_delay.<span class="kw">await</span>.is_err() {
                             <span class="comment">// Dropped before resolving
-                            </span><span class="kw">return</span>;
+                            </span><span class="kw">return </span><span class="prelude-val">Ok</span>(());
                         }
                     }
 
-                    <span class="kw">let </span>plotting_options = PlottingOptions {
-                        public_key,
-                        node_client: <span class="kw-2">&amp;</span>node_client,
-                        pieces_in_sector,
-                        sector_size,
-                        sector_metadata_size,
-                        metadata_header,
-                        plot_file,
-                        metadata_file,
-                        sectors_metadata,
-                        piece_getter: <span class="kw-2">&amp;</span>piece_getter,
-                        kzg: <span class="kw-2">&amp;</span>kzg,
-                        erasure_coding: <span class="kw-2">&amp;</span>erasure_coding,
-                        handlers,
-                        modifying_sector_index,
-                        sectors_to_plot_receiver,
-                        downloading_semaphore,
-                        encoding_semaphore: <span class="kw-2">&amp;</span>encoding_semaphore,
-                        plotting_thread_pool,
-                        replotting_thread_pool,
-                        stop_receiver: <span class="kw-2">&amp;mut </span>stop_receiver.resubscribe(),
-                    };
+                    plotting::&lt;<span class="kw">_</span>, <span class="kw">_</span>, PosTable&gt;(plotting_options).<span class="kw">await
+                </span>};
 
-                    <span class="kw">let </span>plotting_fut = plotting::&lt;<span class="kw">_</span>, <span class="kw">_</span>, PosTable&gt;(plotting_options);
-
+                Handle::current().block_on(<span class="kw">async </span>{
                     <span class="macro">select! </span>{
                         plotting_result = plotting_fut.fuse() =&gt; {
                             <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = plotting_result
@@ -2958,9 +3030,7 @@
                             <span class="comment">// Nothing, just exit
                         </span>}
                     }
-                };
-
-                Handle::current().block_on(plotting_fut);
+                });
             }
         });
         <span class="kw">let </span>plotting_join_handle = AsyncJoinOnDrop::new(plotting_join_handle, <span class="bool-val">false</span>);
@@ -3160,6 +3230,7 @@
             single_disk_farm_info,
             sectors_metadata,
             pieces_in_sector,
+            total_sectors_count: target_sector_count,
             span,
             tasks,
             handlers,
@@ -3167,6 +3238,7 @@
             piece_reader,
             start_sender: <span class="prelude-val">Some</span>(start_sender),
             stop_sender: <span class="prelude-val">Some</span>(stop_sender),
+            _single_disk_farm_info_lock: single_disk_farm_info_lock,
         };
 
         <span class="prelude-val">Ok</span>(farm)
@@ -3247,6 +3319,16 @@
     <span class="doccomment">/// ID of this farm
     </span><span class="kw">pub fn </span>id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SingleDiskFarmId {
         <span class="self">self</span>.single_disk_farm_info.id()
+    }
+
+    <span class="doccomment">/// Info of this farm
+    </span><span class="kw">pub fn </span>info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>SingleDiskFarmInfo {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.single_disk_farm_info
+    }
+
+    <span class="doccomment">/// Number of sectors in this farm
+    </span><span class="kw">pub fn </span>total_sectors_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SectorIndex {
+        <span class="self">self</span>.total_sectors_count
     }
 
     <span class="doccomment">/// Number of sectors successfully plotted so far
@@ -3413,6 +3495,10 @@
                 }
             }
         };
+
+        <span class="kw">let </span>_single_disk_farm_info_lock = SingleDiskFarmInfo::try_lock(directory)
+            .map_err(SingleDiskFarmScrubError::LikelyAlreadyInUse)<span class="question-mark">?</span>;
+
         <span class="kw">let </span>identity = {
             <span class="kw">let </span>file = directory.join(Identity::FILE_NAME);
             <span class="macro">info!</span>(path = %file.display(), <span class="string">&quot;Checking identity file&quot;</span>);

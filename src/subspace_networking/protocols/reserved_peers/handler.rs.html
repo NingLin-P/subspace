@@ -64,40 +64,9 @@
 <a href="#64" id="64">64</a>
 <a href="#65" id="65">65</a>
 <a href="#66" id="66">66</a>
-<a href="#67" id="67">67</a>
-<a href="#68" id="68">68</a>
-<a href="#69" id="69">69</a>
-<a href="#70" id="70">70</a>
-<a href="#71" id="71">71</a>
-<a href="#72" id="72">72</a>
-<a href="#73" id="73">73</a>
-<a href="#74" id="74">74</a>
-<a href="#75" id="75">75</a>
-<a href="#76" id="76">76</a>
-<a href="#77" id="77">77</a>
-<a href="#78" id="78">78</a>
-<a href="#79" id="79">79</a>
-<a href="#80" id="80">80</a>
-<a href="#81" id="81">81</a>
-<a href="#82" id="82">82</a>
-<a href="#83" id="83">83</a>
-<a href="#84" id="84">84</a>
-<a href="#85" id="85">85</a>
-<a href="#86" id="86">86</a>
-<a href="#87" id="87">87</a>
-<a href="#88" id="88">88</a>
-<a href="#89" id="89">89</a>
-<a href="#90" id="90">90</a>
-<a href="#91" id="91">91</a>
-<a href="#92" id="92">92</a>
-<a href="#93" id="93">93</a>
-<a href="#94" id="94">94</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>libp2p::core::upgrade::ReadyUpgrade;
+</pre></div><pre class="rust"><code><span class="kw">use </span>libp2p::core::upgrade::DeniedUpgrade;
 <span class="kw">use </span>libp2p::swarm::handler::ConnectionEvent;
-<span class="kw">use </span>libp2p::swarm::{ConnectionHandler, ConnectionHandlerEvent, KeepAlive, SubstreamProtocol};
-<span class="kw">use </span>libp2p::StreamProtocol;
-<span class="kw">use </span>std::error::Error;
-<span class="kw">use </span>std::fmt;
+<span class="kw">use </span>libp2p::swarm::{ConnectionHandler, ConnectionHandlerEvent, SubstreamProtocol};
 <span class="kw">use </span>std::task::{Context, Poll};
 <span class="kw">use </span>void::Void;
 
@@ -115,63 +84,38 @@
 /// This behavior ensures that connections to reserved peers are maintained persistently,
 /// while connections to non-reserved peers are allowed to close.
 </span><span class="kw">pub struct </span>Handler {
-    <span class="doccomment">/// Protocol name.
-    </span>protocol_name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str,
     <span class="doccomment">/// A boolean flag indicating whether the handler is currently connected to a reserved peer.
     </span>connected_to_reserved_peer: bool,
 }
 
 <span class="kw">impl </span>Handler {
     <span class="doccomment">/// Builds a new [`Handler`].
-    </span><span class="kw">pub fn </span>new(protocol_name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str, connected_to_reserved_peer: bool) -&gt; <span class="self">Self </span>{
+    </span><span class="kw">pub fn </span>new(connected_to_reserved_peer: bool) -&gt; <span class="self">Self </span>{
         Handler {
-            protocol_name,
             connected_to_reserved_peer,
         }
     }
 }
 
-<span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>ReservedPeersError;
-
-<span class="kw">impl </span>fmt::Display <span class="kw">for </span>ReservedPeersError {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; fmt::Result {
-        <span class="macro">write!</span>(f, <span class="string">&quot;Reserved peers error.&quot;</span>)
-    }
-}
-
-<span class="kw">impl </span>Error <span class="kw">for </span>ReservedPeersError {}
-
 <span class="kw">impl </span>ConnectionHandler <span class="kw">for </span>Handler {
     <span class="kw">type </span>FromBehaviour = Void;
     <span class="kw">type </span>ToBehaviour = ();
-    <span class="kw">type </span>Error = ReservedPeersError;
-    <span class="kw">type </span>InboundProtocol = ReadyUpgrade&lt;StreamProtocol&gt;;
-    <span class="kw">type </span>OutboundProtocol = ReadyUpgrade&lt;StreamProtocol&gt;;
+    <span class="kw">type </span>InboundProtocol = DeniedUpgrade;
+    <span class="kw">type </span>OutboundProtocol = DeniedUpgrade;
     <span class="kw">type </span>OutboundOpenInfo = ();
     <span class="kw">type </span>InboundOpenInfo = ();
 
-    <span class="kw">fn </span>listen_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SubstreamProtocol&lt;ReadyUpgrade&lt;StreamProtocol&gt;, ()&gt; {
-        SubstreamProtocol::new(
-            ReadyUpgrade::new(StreamProtocol::new(<span class="self">self</span>.protocol_name)),
-            (),
-        )
+    <span class="kw">fn </span>listen_protocol(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SubstreamProtocol&lt;DeniedUpgrade, ()&gt; {
+        SubstreamProtocol::new(DeniedUpgrade, ())
     }
 
     <span class="kw">fn </span>on_behaviour_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: Void) {}
 
-    <span class="kw">fn </span>connection_keep_alive(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; KeepAlive {
-        <span class="kw">if </span><span class="self">self</span>.connected_to_reserved_peer {
-            KeepAlive::Yes
-        } <span class="kw">else </span>{
-            KeepAlive::No
-        }
+    <span class="kw">fn </span>connection_keep_alive(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.connected_to_reserved_peer
     }
 
-    <span class="kw">fn </span>poll(
-        <span class="kw-2">&amp;mut </span><span class="self">self</span>,
-        <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;,
-    ) -&gt; Poll&lt;ConnectionHandlerEvent&lt;ReadyUpgrade&lt;StreamProtocol&gt;, (), (), <span class="self">Self</span>::Error&gt;&gt; {
+    <span class="kw">fn </span>poll(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;mut </span>Context&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; Poll&lt;ConnectionHandlerEvent&lt;DeniedUpgrade, (), ()&gt;&gt; {
         Poll::Pending
     }
 

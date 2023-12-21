@@ -52,7 +52,6 @@
 <a href="#52" id="52">52</a>
 <a href="#53" id="53">53</a>
 <a href="#54" id="54">54</a>
-<a href="#55" id="55">55</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
@@ -83,15 +82,13 @@
 <span class="kw">pub mod </span>utils;
 
 <span class="kw">pub use </span><span class="kw">crate</span>::behavior::persistent_parameters::{
-    NetworkParametersPersistenceError, NetworkingParametersManager,
+    KnownPeersManager, KnownPeersManagerConfig, KnownPeersManagerPersistenceError,
+    KnownPeersRegistry, PeerAddressRemovedEvent,
 };
 <span class="kw">pub use </span><span class="kw">crate</span>::node::{
     GetClosestPeersError, Node, SendRequestError, SubscribeError, TopicSubscription,
 };
 <span class="kw">pub use </span><span class="kw">crate</span>::node_runner::NodeRunner;
-<span class="kw">pub use </span><span class="kw">crate</span>::protocols::peer_info::{
-    Config <span class="kw">as </span>PeerInfoConfig, Notification, NotificationHandler, PeerInfo, PeerInfoProvider,
-};
 <span class="kw">pub use </span>constructor::{
     construct, peer_id, Config, CreationError, KademliaMode, LocalRecordProvider,
 };
@@ -105,7 +102,8 @@
 <span class="kw">pub use </span>protocols::request_response::handlers::segment_header::{
     SegmentHeaderBySegmentIndexesRequestHandler, SegmentHeaderRequest, SegmentHeaderResponse,
 };
-<span class="kw">pub use </span>shared::{NewPeerInfo, PeerDiscovered};
+<span class="kw">pub use </span>shared::PeerDiscovered;
 <span class="kw">pub use </span>utils::multihash::Multihash;
 <span class="kw">pub use </span>utils::unique_record_binary_heap::{KeyWrapper, UniqueRecordBinaryHeap};
+<span class="kw">pub use </span>utils::PeerAddress;
 </code></pre></div></section></main></body></html>

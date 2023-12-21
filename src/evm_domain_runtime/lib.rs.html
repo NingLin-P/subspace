@@ -1243,6 +1243,23 @@
 <a href="#1243" id="1243">1243</a>
 <a href="#1244" id="1244">1244</a>
 <a href="#1245" id="1245">1245</a>
+<a href="#1246" id="1246">1246</a>
+<a href="#1247" id="1247">1247</a>
+<a href="#1248" id="1248">1248</a>
+<a href="#1249" id="1249">1249</a>
+<a href="#1250" id="1250">1250</a>
+<a href="#1251" id="1251">1251</a>
+<a href="#1252" id="1252">1252</a>
+<a href="#1253" id="1253">1253</a>
+<a href="#1254" id="1254">1254</a>
+<a href="#1255" id="1255">1255</a>
+<a href="#1256" id="1256">1256</a>
+<a href="#1257" id="1257">1257</a>
+<a href="#1258" id="1258">1258</a>
+<a href="#1259" id="1259">1259</a>
+<a href="#1260" id="1260">1260</a>
+<a href="#1261" id="1261">1261</a>
+<a href="#1262" id="1262">1262</a>
 </pre></div><pre class="rust"><code><span class="attr">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 </span><span class="comment">// `construct_runtime!` does a lot of recursion and requires us to increase the limit to 256.
 </span><span class="attr">#![recursion_limit = <span class="string">&quot;256&quot;</span>]
@@ -1258,12 +1275,12 @@
 <span class="kw">pub use </span>domain_runtime_primitives::{opaque, Balance, BlockNumber, Hash, Nonce};
 <span class="kw">use </span>domain_runtime_primitives::{MultiAccountId, TryConvertBack, SLOT_DURATION};
 <span class="kw">use </span>fp_account::EthereumSignature;
-<span class="kw">use </span>fp_self_contained::SelfContainedCall;
+<span class="kw">use </span>fp_self_contained::{CheckedSignature, SelfContainedCall};
 <span class="kw">use </span>frame_support::dispatch::{DispatchClass, GetDispatchInfo};
 <span class="kw">use </span>frame_support::inherent::ProvideInherent;
 <span class="kw">use </span>frame_support::traits::{
     ConstU16, ConstU32, ConstU64, Currency, Everything, FindAuthor, Imbalance, OnFinalize,
-    OnUnbalanced, PalletInfoAccess,
+    OnUnbalanced,
 };
 <span class="kw">use </span>frame_support::weights::constants::{
     BlockExecutionWeight, ExtrinsicBaseWeight, ParityDbWeight, WEIGHT_REF_TIME_PER_MILLIS,
@@ -1291,16 +1308,17 @@
 };
 <span class="kw">use </span>sp_runtime::generic::Era;
 <span class="kw">use </span>sp_runtime::traits::{
-    BlakeTwo256, Block <span class="kw">as </span>BlockT, Convert, DispatchInfoOf, Dispatchable, IdentifyAccount,
-    IdentityLookup, PostDispatchInfoOf, UniqueSaturatedInto, Verify,
+    BlakeTwo256, Block <span class="kw">as </span>BlockT, Checkable, Convert, DispatchInfoOf, Dispatchable,
+    IdentifyAccount, IdentityLookup, One, PostDispatchInfoOf, SignedExtension, UniqueSaturatedInto,
+    ValidateUnsigned, Verify,
 };
 <span class="kw">use </span>sp_runtime::transaction_validity::{
-    TransactionSource, TransactionValidity, TransactionValidityError,
+    InvalidTransaction, TransactionSource, TransactionValidity, TransactionValidityError,
 };
 <span class="kw">use </span>sp_runtime::{
     create_runtime_str, generic, impl_opaque_keys, ApplyExtrinsicResult, ConsensusEngineId, Digest,
 };
-<span class="kw">pub use </span>sp_runtime::{MultiAddress, Perbill, Permill, SaturatedConversion};
+<span class="kw">pub use </span>sp_runtime::{MultiAddress, Perbill, Permill};
 <span class="kw">use </span>sp_std::marker::PhantomData;
 <span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
 <span class="attr">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
@@ -1420,8 +1438,8 @@
 
 <span class="macro">impl_opaque_keys! </span>{
     <span class="kw">pub struct </span>SessionKeys {
-        <span class="doccomment">/// Primarily used for adding the executor authority key into the keystore in the dev mode.
-        </span><span class="kw">pub </span>executor: sp_domains::OperatorKey,
+        <span class="doccomment">/// Primarily used for adding the operator signing key into the Keystore.
+        </span><span class="kw">pub </span>operator: sp_domains::OperatorKey,
     }
 }
 
@@ -1461,6 +1479,26 @@
     NativeVersion {
         runtime_version: VERSION,
         can_author_with: Default::default(),
+    }
+}
+
+<span class="doccomment">/// EVM domain executor instance.
+</span><span class="attr">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+</span><span class="kw">pub struct </span>ExecutorDispatch;
+
+<span class="attr">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
+</span><span class="kw">impl </span>sc_executor::NativeExecutionDispatch <span class="kw">for </span>ExecutorDispatch {
+    <span class="attr">#[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
+    </span><span class="kw">type </span>ExtendHostFunctions = frame_benchmarking::benchmarking::HostFunctions;
+    <span class="attr">#[cfg(not(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>))]
+    </span><span class="kw">type </span>ExtendHostFunctions = ();
+
+    <span class="kw">fn </span>dispatch(method: <span class="kw-2">&amp;</span>str, data: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; {
+        api::dispatch(method, data)
+    }
+
+    <span class="kw">fn </span>native_version() -&gt; sc_executor::NativeVersion {
+        native_version()
     }
 }
 
@@ -1764,6 +1802,10 @@
     }
 }
 
+<span class="macro">parameter_types! </span>{
+    <span class="kw">pub const </span>GasLimitPovSizeRatio: u64 = <span class="number">4</span>;
+}
+
 <span class="kw">impl </span>pallet_evm::Config <span class="kw">for </span>Runtime {
     <span class="kw">type </span>FeeCalculator = BaseFee;
     <span class="kw">type </span>GasWeightMapping = pallet_evm::FixedGasWeightMapping&lt;<span class="self">Self</span>&gt;;
@@ -1782,7 +1824,7 @@
     <span class="kw">type </span>OnChargeTransaction = EVMCurrencyAdapter;
     <span class="kw">type </span>OnCreate = ();
     <span class="kw">type </span>FindAuthor = FindAuthorTruncated;
-    <span class="kw">type </span>GasLimitPovSizeRatio = ();
+    <span class="kw">type </span>GasLimitPovSizeRatio = GasLimitPovSizeRatio;
     <span class="kw">type </span>Timestamp = Timestamp;
     <span class="kw">type </span>WeightInfo = pallet_evm::weights::SubstrateWeight&lt;<span class="self">Self</span>&gt;;
 }
@@ -1948,30 +1990,12 @@
         .collect()
 }
 
-<span class="kw">fn </span>storage_keys_for_verifying_tx_validity_inner(
-    sender: AccountId,
-    block_number: BlockNumber,
-    maybe_tx_era: <span class="prelude-ty">Option</span>&lt;Era&gt;,
-) -&gt; Vec&lt;Vec&lt;u8&gt;&gt; {
-    <span class="kw">let </span><span class="kw-2">mut </span>storage_keys = <span class="macro">sp_std::vec!</span>[
-        frame_system::BlockHash::&lt;Runtime&gt;::hashed_key_for(BlockNumber::from(<span class="number">0u32</span>)),
-        frame_support::storage::storage_prefix(System::name().as_bytes(), <span class="string">b&quot;Number&quot;</span>).to_vec(),
-        frame_system::Account::&lt;Runtime&gt;::hashed_key_for(sender),
-        pallet_transaction_payment::NextFeeMultiplier::&lt;Runtime&gt;::hashed_key().to_vec()
-    ];
-
-    <span class="kw">match </span>maybe_tx_era {
-        <span class="prelude-val">None </span>=&gt; storage_keys,
-        <span class="prelude-val">Some</span>(era) =&gt; {
-            <span class="kw">let </span>birth_number = era
-                .birth(block_number.saturated_into::&lt;u64&gt;())
-                .saturated_into::&lt;BlockNumber&gt;();
-            storage_keys.push(frame_system::BlockHash::&lt;Runtime&gt;::hashed_key_for(
-                birth_number,
-            ));
-            storage_keys
-        }
-    }
+<span class="kw">fn </span>extrinsic_era(extrinsic: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic) -&gt; <span class="prelude-ty">Option</span>&lt;Era&gt; {
+    extrinsic
+        .<span class="number">0
+        </span>.signature
+        .as_ref()
+        .map(|(<span class="kw">_</span>, <span class="kw">_</span>, extra)| extra.<span class="number">4 </span>.<span class="number">0</span>)
 }
 
 <span class="attr">#[cfg(feature = <span class="string">&quot;runtime-benchmarks&quot;</span>)]
@@ -2088,7 +2112,8 @@
         }
     }
 
-    <span class="kw">impl </span>domain_runtime_primitives::DomainCoreApi&lt;Block&gt; <span class="kw">for </span>Runtime {
+    <span class="attr">#[api_version(<span class="number">2</span>)]
+    </span><span class="kw">impl </span>domain_runtime_primitives::DomainCoreApi&lt;Block&gt; <span class="kw">for </span>Runtime {
         <span class="kw">fn </span>extract_signer(
             extrinsics: Vec&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;,
         ) -&gt; Vec&lt;(<span class="prelude-ty">Option</span>&lt;opaque::AccountId&gt;, &lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic)&gt; {
@@ -2152,49 +2177,54 @@
             }
         }
 
-        <span class="kw">fn </span>check_transaction_validity(
+        <span class="kw">fn </span>check_transaction_and_do_pre_dispatch(
             uxt: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic,
             block_number: BlockNumber,
             block_hash: &lt;Block <span class="kw">as </span>BlockT&gt;::Hash
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;(), domain_runtime_primitives::CheckTxValidityError&gt; {
+        ) -&gt; <span class="prelude-ty">Result</span>&lt;(), TransactionValidityError&gt; {
             <span class="kw">let </span>lookup = frame_system::ChainContext::&lt;Runtime&gt;::default();
-            <span class="kw">let </span>maybe_signer_info = extract_signer_inner(uxt, <span class="kw-2">&amp;</span>lookup);
 
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(signer_info) = maybe_signer_info {
-                <span class="kw">let </span>signer = signer_info.map_err(|tx_validity_error| {
-                    domain_runtime_primitives::CheckTxValidityError::UnableToExtractSigner {
-                        error: tx_validity_error
-                    }
-                })<span class="question-mark">?</span>;
+            <span class="comment">// Initializing block related storage required for validation
+            </span>System::initialize(
+                <span class="kw-2">&amp;</span>(block_number + BlockNumber::one()),
+                <span class="kw-2">&amp;</span>block_hash,
+                <span class="kw-2">&amp;</span>Default::default(),
+            );
 
-                <span class="kw">let </span>tx_validity =
-                    Executive::validate_transaction(TransactionSource::External, uxt.clone(), block_hash);
+            <span class="kw">let </span>xt = uxt.clone().check(<span class="kw-2">&amp;</span>lookup)<span class="question-mark">?</span>;
 
-                tx_validity.map(|<span class="kw">_</span>| ()).map_err(|tx_validity_error| {
-                    domain_runtime_primitives::CheckTxValidityError::InvalidTransaction {
-                        error: tx_validity_error,
-                        storage_keys: storage_keys_for_verifying_tx_validity_inner(signer, block_number, <span class="self">Self</span>::extrinsic_era(uxt)),
-                    }
-                })
-            } <span class="kw">else </span>{
-                <span class="prelude-val">Ok</span>(())
+            <span class="kw">let </span>dispatch_info = xt.get_dispatch_info();
+
+            <span class="kw">if </span>dispatch_info.class == DispatchClass::Mandatory {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(InvalidTransaction::MandatoryValidation.into());
             }
-        }
 
-        <span class="kw">fn </span>storage_keys_for_verifying_transaction_validity(
-            who: opaque::AccountId,
-            block_number: BlockNumber,
-            maybe_tx_era: <span class="prelude-ty">Option</span>&lt;Era&gt;
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;Vec&lt;u8&gt;&gt;, domain_runtime_primitives::VerifyTxValidityError&gt; {
-            <span class="kw">let </span>sender = AccountId::decode(<span class="kw-2">&amp;mut </span>who.as_slice())
-                .map_err(|<span class="kw">_</span>| domain_runtime_primitives::VerifyTxValidityError::FailedToDecodeAccountId)<span class="question-mark">?</span>;
-            <span class="prelude-val">Ok</span>(storage_keys_for_verifying_tx_validity_inner(sender, block_number, maybe_tx_era))
+            <span class="kw">let </span>encoded_len = uxt.encoded_size();
+
+            <span class="comment">// We invoke `pre_dispatch` in addition to `validate_transaction`(even though the validation is almost same)
+            // as that will add the side effect of SignedExtension in the storage buffer
+            // which would help to maintain context across multiple transaction validity check against same
+            // runtime instance.
+            </span><span class="kw">match </span>xt.signed {
+                    CheckedSignature::Signed(account_id, extra) =&gt; {
+                        extra.pre_dispatch(<span class="kw-2">&amp;</span>account_id, <span class="kw-2">&amp;</span>xt.function, <span class="kw-2">&amp;</span>dispatch_info, encoded_len).map(|<span class="kw">_</span>| ())
+                    },
+                    CheckedSignature::Unsigned =&gt; {
+                        Runtime::pre_dispatch(<span class="kw-2">&amp;</span>xt.function).map(|<span class="kw">_</span>| ())<span class="question-mark">?</span>;
+                        SignedExtra::pre_dispatch_unsigned(<span class="kw-2">&amp;</span>xt.function, <span class="kw-2">&amp;</span>dispatch_info, encoded_len).map(|<span class="kw">_</span>| ())
+                    },
+                    CheckedSignature::SelfContained(self_contained_signing_info) =&gt; {
+                        xt.function.pre_dispatch_self_contained(<span class="kw-2">&amp;</span>self_contained_signing_info, <span class="kw-2">&amp;</span>dispatch_info, encoded_len).ok_or(TransactionValidityError::Invalid(
+                            InvalidTransaction::Call,
+                        )).map(|<span class="kw">_</span>| ())
+                    }
+                }
         }
 
         <span class="kw">fn </span>extrinsic_era(
           extrinsic: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic
         ) -&gt; <span class="prelude-ty">Option</span>&lt;Era&gt; {
-            extrinsic.<span class="number">0</span>.signature.as_ref().map(|(<span class="kw">_</span>, <span class="kw">_</span>, extra)| extra.<span class="number">4.0</span>)
+            extrinsic_era(extrinsic)
         }
 
         <span class="kw">fn </span>extrinsic_weight(ext: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic) -&gt; Weight {
@@ -2207,6 +2237,10 @@
 
         <span class="kw">fn </span>block_digest() -&gt; Digest {
             System::digest()
+        }
+
+        <span class="kw">fn </span>block_weight() -&gt; Weight {
+            System::block_weight().total()
         }
     }
 

@@ -484,11 +484,29 @@
 <a href="#484" id="484">484</a>
 <a href="#485" id="485">485</a>
 <a href="#486" id="486">486</a>
+<a href="#487" id="487">487</a>
+<a href="#488" id="488">488</a>
+<a href="#489" id="489">489</a>
+<a href="#490" id="490">490</a>
+<a href="#491" id="491">491</a>
+<a href="#492" id="492">492</a>
+<a href="#493" id="493">493</a>
+<a href="#494" id="494">494</a>
+<a href="#495" id="495">495</a>
+<a href="#496" id="496">496</a>
+<a href="#497" id="497">497</a>
+<a href="#498" id="498">498</a>
+<a href="#499" id="499">499</a>
+<a href="#500" id="500">500</a>
+<a href="#501" id="501">501</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Utilities used for testing with the domain.
 </span><span class="attr">#![warn(missing_docs)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::chain_spec::create_domain_spec;
-<span class="kw">use crate</span>::{construct_extrinsic_generic, node_config, EcdsaKeyring, UncheckedExtrinsicFor};
+<span class="kw">use crate</span>::{
+    construct_extrinsic_generic, node_config, BalanceOf, EcdsaKeyring, UncheckedExtrinsicFor,
+};
+<span class="kw">use </span>cross_domain_message_gossip::ChainTxPoolMsg;
 <span class="kw">use </span>domain_client_operator::{BootstrapResult, Bootstrapper, OperatorStreams};
 <span class="kw">use </span>domain_runtime_primitives::opaque::Block;
 <span class="kw">use </span>domain_runtime_primitives::{Balance, DomainCoreApi};
@@ -605,7 +623,7 @@
     <span class="doccomment">/// Domain oeprator.
     </span><span class="kw">pub </span>operator: DomainOperator&lt;RuntimeApi, ExecutorDispatch&gt;,
     <span class="doccomment">/// Sink to the node&#39;s tx pool
-    </span><span class="kw">pub </span>tx_pool_sink: TracingUnboundedSender&lt;Vec&lt;u8&gt;&gt;,
+    </span><span class="kw">pub </span>tx_pool_sink: TracingUnboundedSender&lt;ChainTxPoolMsg&gt;,
     _phantom_data: PhantomData&lt;(Runtime, AccountId)&gt;,
 }
 
@@ -707,6 +725,8 @@
             .xdm_gossip_worker_builder()
             .gossip_msg_sink();
 
+        <span class="kw">let </span>maybe_operator_id = role.is_authority().then_some(<span class="number">0</span>);
+
         <span class="kw">let </span>domain_params = domain_service::DomainParams {
             domain_id,
             domain_config,
@@ -716,11 +736,13 @@
                 mock_consensus_node.transaction_pool.clone(),
             ),
             consensus_network_sync_oracle: mock_consensus_node.sync_service.clone(),
+            consensus_network: mock_consensus_node.network_service.clone(),
             operator_streams,
             gossip_message_sink: gossip_msg_sink,
             domain_message_receiver,
             provider: DefaultProvider,
             skip_empty_bundle_production,
+            maybe_operator_id,
         };
 
         <span class="kw">let </span>domain_node = domain_service::new_full::&lt;
@@ -733,6 +755,7 @@
             RuntimeApi,
             ExecutorDispatch,
             AccountId,
+            <span class="kw">_</span>,
             <span class="kw">_</span>,
         &gt;(domain_params)
         .<span class="kw">await
@@ -821,7 +844,7 @@
             <span class="self">self</span>.key,
             <span class="bool-val">false</span>,
             <span class="self">self</span>.account_nonce(),
-            <span class="number">0</span>,
+            <span class="number">0</span>.into(),
         );
         <span class="self">self</span>.rpc_handlers.send_transaction(extrinsic.into()).<span class="kw">await
     </span>}
@@ -832,14 +855,21 @@
         nonce: u32,
         function: <span class="kw">impl </span>Into&lt;&lt;Runtime <span class="kw">as </span>frame_system::Config&gt;::RuntimeCall&gt;,
     ) -&gt; UncheckedExtrinsicFor&lt;Runtime&gt; {
-        construct_extrinsic_generic::&lt;Runtime, <span class="kw">_</span>&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>.client, function, <span class="self">self</span>.key, <span class="bool-val">false</span>, nonce, <span class="number">0</span>)
+        construct_extrinsic_generic::&lt;Runtime, <span class="kw">_</span>&gt;(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.client,
+            function,
+            <span class="self">self</span>.key,
+            <span class="bool-val">false</span>,
+            nonce,
+            <span class="number">0</span>.into(),
+        )
     }
 
     <span class="doccomment">/// Construct an extrinsic with the given transaction tip.
     </span><span class="kw">pub fn </span>construct_extrinsic_with_tip(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         nonce: u32,
-        tip: u32,
+        tip: BalanceOf&lt;Runtime&gt;,
         function: <span class="kw">impl </span>Into&lt;&lt;Runtime <span class="kw">as </span>frame_system::Config&gt;::RuntimeCall&gt;,
     ) -&gt; UncheckedExtrinsicFor&lt;Runtime&gt; {
         construct_extrinsic_generic::&lt;Runtime, <span class="kw">_</span>&gt;(
