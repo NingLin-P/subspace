@@ -1609,10 +1609,10 @@ impl<T: Config> Pallet<T> {
             .fold(0, |acc, xt| acc + xt.encoded_size() as u32);
 
         ensure!(max_size >= bundle_size, BundleError::BundleTooLarge);
-        ensure!(
-            opaque_bundle.size() == bundle_size,
-            BundleError::InvalidBundleSize
-        );
+        if opaque_bundle.size() != bundle_size {
+            log::info!("check_bundle_size, opaque_bundle.size() {}, bundle_size {bundle_size:?},  opaque_bundle {opaque_bundle:?}", opaque_bundle.size());
+            return Err(BundleError::InvalidBundleSize);
+        }
 
         Ok(())
     }
