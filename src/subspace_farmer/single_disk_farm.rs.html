@@ -1974,48 +1974,6 @@
 <a href="#1974" id="1974">1974</a>
 <a href="#1975" id="1975">1975</a>
 <a href="#1976" id="1976">1976</a>
-<a href="#1977" id="1977">1977</a>
-<a href="#1978" id="1978">1978</a>
-<a href="#1979" id="1979">1979</a>
-<a href="#1980" id="1980">1980</a>
-<a href="#1981" id="1981">1981</a>
-<a href="#1982" id="1982">1982</a>
-<a href="#1983" id="1983">1983</a>
-<a href="#1984" id="1984">1984</a>
-<a href="#1985" id="1985">1985</a>
-<a href="#1986" id="1986">1986</a>
-<a href="#1987" id="1987">1987</a>
-<a href="#1988" id="1988">1988</a>
-<a href="#1989" id="1989">1989</a>
-<a href="#1990" id="1990">1990</a>
-<a href="#1991" id="1991">1991</a>
-<a href="#1992" id="1992">1992</a>
-<a href="#1993" id="1993">1993</a>
-<a href="#1994" id="1994">1994</a>
-<a href="#1995" id="1995">1995</a>
-<a href="#1996" id="1996">1996</a>
-<a href="#1997" id="1997">1997</a>
-<a href="#1998" id="1998">1998</a>
-<a href="#1999" id="1999">1999</a>
-<a href="#2000" id="2000">2000</a>
-<a href="#2001" id="2001">2001</a>
-<a href="#2002" id="2002">2002</a>
-<a href="#2003" id="2003">2003</a>
-<a href="#2004" id="2004">2004</a>
-<a href="#2005" id="2005">2005</a>
-<a href="#2006" id="2006">2006</a>
-<a href="#2007" id="2007">2007</a>
-<a href="#2008" id="2008">2008</a>
-<a href="#2009" id="2009">2009</a>
-<a href="#2010" id="2010">2010</a>
-<a href="#2011" id="2011">2011</a>
-<a href="#2012" id="2012">2012</a>
-<a href="#2013" id="2013">2013</a>
-<a href="#2014" id="2014">2014</a>
-<a href="#2015" id="2015">2015</a>
-<a href="#2016" id="2016">2016</a>
-<a href="#2017" id="2017">2017</a>
-<a href="#2018" id="2018">2018</a>
 </pre></div><pre class="rust"><code><span class="kw">pub mod </span>farming;
 <span class="kw">pub mod </span>piece_cache;
 <span class="kw">pub mod </span>piece_reader;
@@ -2027,7 +1985,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::single_disk_farm::farming::rayon_files::RayonFiles;
 <span class="kw">pub use </span><span class="kw">crate</span>::single_disk_farm::farming::FarmingError;
 <span class="kw">use </span><span class="kw">crate</span>::single_disk_farm::farming::{
-    farming, slot_notification_forwarder, FarmingOptions, PlotAudit,
+    farming, slot_notification_forwarder, AuditEvent, FarmingOptions, PlotAudit,
 };
 <span class="kw">use </span><span class="kw">crate</span>::single_disk_farm::piece_cache::{DiskPieceCache, DiskPieceCacheError};
 <span class="kw">use </span><span class="kw">crate</span>::single_disk_farm::piece_reader::PieceReader;
@@ -2035,6 +1993,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::single_disk_farm::plotting::{
     plotting, plotting_scheduler, PlottingOptions, PlottingSchedulerOptions,
 };
+<span class="kw">use </span><span class="kw">crate</span>::thread_pool_manager::PlottingThreadPoolManager;
 <span class="kw">use </span><span class="kw">crate</span>::utils::{tokio_rayon_spawn_handler, AsyncJoinOnDrop};
 <span class="kw">use </span><span class="kw">crate</span>::KNOWN_PEERS_CACHE_SIZE;
 <span class="kw">use </span>async_lock::RwLock;
@@ -2058,6 +2017,7 @@
 <span class="kw">use </span>std::pin::Pin;
 <span class="kw">use </span>std::sync::atomic::{AtomicUsize, Ordering};
 <span class="kw">use </span>std::sync::Arc;
+<span class="kw">use </span>std::time::Duration;
 <span class="kw">use </span>std::{fs, io, mem};
 <span class="kw">use </span>subspace_core_primitives::crypto::blake3_hash;
 <span class="kw">use </span>subspace_core_primitives::crypto::kzg::Kzg;
@@ -2081,12 +2041,13 @@
 
 <span class="comment">// Refuse to compile on non-64-bit platforms, offsets may fail on those when converting from u64 to
 // usize depending on chain parameters
-</span><span class="macro">const_assert!</span>(std::mem::size_of::&lt;usize&gt;() &gt;= std::mem::size_of::&lt;u64&gt;());
+</span><span class="macro">const_assert!</span>(mem::size_of::&lt;usize&gt;() &gt;= mem::size_of::&lt;u64&gt;());
 
 <span class="doccomment">/// Reserve 1M of space for plot metadata (for potential future expansion)
 </span><span class="kw">const </span>RESERVED_PLOT_METADATA: u64 = <span class="number">1024 </span>* <span class="number">1024</span>;
 <span class="doccomment">/// Reserve 1M of space for farm info (for potential future expansion)
 </span><span class="kw">const </span>RESERVED_FARM_INFO: u64 = <span class="number">1024 </span>* <span class="number">1024</span>;
+<span class="kw">const </span>NEW_SEGMENT_PROCESSING_DELAY: Duration = Duration::from_secs(<span class="number">30</span>);
 
 <span class="doccomment">/// An identifier for single disk farm, can be used for in logs, thread names, etc.
 </span><span class="attr">#[derive(
@@ -2297,19 +2258,13 @@
     <span class="doccomment">/// Semaphore for part of the plotting when farmer downloads new sector, allows to limit memory
     /// usage of the plotting process, permit will be held until the end of the plotting process
     </span><span class="kw">pub </span>downloading_semaphore: Arc&lt;Semaphore&gt;,
-    <span class="doccomment">/// Semaphore for part of the plotting when farmer encodes downloaded sector, should typically
-    /// allow one permit at a time for efficient CPU utilization
-    </span><span class="kw">pub </span>encoding_semaphore: Arc&lt;Semaphore&gt;,
     <span class="doccomment">/// Whether to farm during initial plotting
     </span><span class="kw">pub </span>farm_during_initial_plotting: bool,
     <span class="doccomment">/// Thread pool size used for farming (mostly for blocking I/O, but also for some
     /// compute-intensive operations during proving)
     </span><span class="kw">pub </span>farming_thread_pool_size: usize,
-    <span class="doccomment">/// Thread pool size used for plotting
-    </span><span class="kw">pub </span>plotting_thread_pool_size: usize,
-    <span class="doccomment">/// Thread pool size used for replotting, typically smaller pool than for plotting to not affect
-    /// farming as much
-    </span><span class="kw">pub </span>replotting_thread_pool_size: usize,
+    <span class="doccomment">/// Thread pool manager used for plotting
+    </span><span class="kw">pub </span>plotting_thread_pool_manager: PlottingThreadPoolManager,
     <span class="doccomment">/// Notification for plotter to start, can be used to delay plotting until some initialization
     /// has happened externally
     </span><span class="kw">pub </span>plotting_delay: <span class="prelude-ty">Option</span>&lt;oneshot::Receiver&lt;()&gt;&gt;,
@@ -2576,6 +2531,7 @@
     sector_plotting: Handler&lt;SectorPlottingDetails&gt;,
     sector_plotted: Handler&lt;(PlottedSector, <span class="prelude-ty">Option</span>&lt;PlottedSector&gt;)&gt;,
     solution: Handler&lt;SolutionResponse&gt;,
+    plot_audited: Handler&lt;AuditEvent&gt;,
 }
 
 <span class="doccomment">/// Single disk farm abstraction is a container for everything necessary to plot/farm with a single
@@ -2641,10 +2597,8 @@
             erasure_coding,
             cache_percentage,
             downloading_semaphore,
-            encoding_semaphore,
             farming_thread_pool_size,
-            plotting_thread_pool_size,
-            replotting_thread_pool_size,
+            plotting_thread_pool_manager,
             plotting_delay,
             farm_during_initial_plotting,
         } = options;
@@ -2724,6 +2678,7 @@
                 single_disk_farm_info
             }
         };
+        <span class="kw">let </span>farm_id = <span class="kw-2">*</span>single_disk_farm_info.id();
 
         <span class="kw">let </span>single_disk_farm_info_lock = SingleDiskFarmInfo::try_lock(<span class="kw-2">&amp;</span>directory)
             .map_err(SingleDiskFarmError::LikelyAlreadyInUse)<span class="question-mark">?</span>;
@@ -2929,50 +2884,6 @@
 
             <span class="kw">move </span>|| {
                 <span class="kw">let </span>_span_guard = span.enter();
-                <span class="kw">let </span>plotting_thread_pool = <span class="kw">match </span>ThreadPoolBuilder::new()
-                    .thread_name(<span class="kw">move </span>|thread_index| {
-                        <span class="macro">format!</span>(<span class="string">&quot;plotting-{disk_farm_index}.{thread_index}&quot;</span>)
-                    })
-                    .num_threads(plotting_thread_pool_size)
-                    .spawn_handler(tokio_rayon_spawn_handler())
-                    .build()
-                    .map_err(PlottingError::FailedToCreateThreadPool)
-                {
-                    <span class="prelude-val">Ok</span>(thread_pool) =&gt; thread_pool,
-                    <span class="prelude-val">Err</span>(error) =&gt; {
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>(error_sender) = error_sender.lock().take() {
-                            <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = error_sender.send(error.into()) {
-                                <span class="macro">error!</span>(
-                                    %error,
-                                    <span class="string">&quot;Plotting failed to send error to background task&quot;</span>,
-                                );
-                            }
-                        }
-                        <span class="kw">return</span>;
-                    }
-                };
-                <span class="kw">let </span>replotting_thread_pool = <span class="kw">match </span>ThreadPoolBuilder::new()
-                    .thread_name(<span class="kw">move </span>|thread_index| {
-                        <span class="macro">format!</span>(<span class="string">&quot;replotting-{disk_farm_index}.{thread_index}&quot;</span>)
-                    })
-                    .num_threads(replotting_thread_pool_size)
-                    .spawn_handler(tokio_rayon_spawn_handler())
-                    .build()
-                    .map_err(PlottingError::FailedToCreateThreadPool)
-                {
-                    <span class="prelude-val">Ok</span>(thread_pool) =&gt; thread_pool,
-                    <span class="prelude-val">Err</span>(error) =&gt; {
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>(error_sender) = error_sender.lock().take() {
-                            <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = error_sender.send(error.into()) {
-                                <span class="macro">error!</span>(
-                                    %error,
-                                    <span class="string">&quot;Plotting failed to send error to background task&quot;</span>,
-                                );
-                            }
-                        }
-                        <span class="kw">return</span>;
-                    }
-                };
 
                 <span class="kw">let </span>plotting_options = PlottingOptions {
                     public_key,
@@ -2991,9 +2902,7 @@
                     modifying_sector_index,
                     sectors_to_plot_receiver,
                     downloading_semaphore,
-                    encoding_semaphore: <span class="kw-2">&amp;</span>encoding_semaphore,
-                    plotting_thread_pool,
-                    replotting_thread_pool,
+                    plotting_thread_pool_manager,
                     stop_receiver: <span class="kw-2">&amp;mut </span>stop_receiver.resubscribe(),
                 };
 
@@ -3054,6 +2963,7 @@
             sectors_metadata: Arc::clone(<span class="kw-2">&amp;</span>sectors_metadata),
             sectors_to_plot_sender,
             initial_plotting_finished: farming_delay_sender,
+            new_segment_processing_delay: NEW_SEGMENT_PROCESSING_DELAY,
         };
         tasks.push(Box::pin(plotting_scheduler(plotting_scheduler_options)));
 
@@ -3136,6 +3046,7 @@
                             handlers,
                             modifying_sector_index,
                             slot_info_notifications: slot_info_forwarder_receiver,
+                            farm_id,
                         };
                         farming::&lt;PosTable, <span class="kw">_</span>, <span class="kw">_</span>&gt;(farming_options).<span class="kw">await
                     </span>};
@@ -3392,6 +3303,11 @@
         callback: HandlerFn&lt;(PlottedSector, <span class="prelude-ty">Option</span>&lt;PlottedSector&gt;)&gt;,
     ) -&gt; HandlerId {
         <span class="self">self</span>.handlers.sector_plotted.add(callback)
+    }
+
+    <span class="doccomment">/// Subscribe to notification about audited plots
+    </span><span class="kw">pub fn </span>on_plot_audited(<span class="kw-2">&amp;</span><span class="self">self</span>, callback: HandlerFn&lt;AuditEvent&gt;) -&gt; HandlerId {
+        <span class="self">self</span>.handlers.plot_audited.add(callback)
     }
 
     <span class="doccomment">/// Subscribe to new solution notification

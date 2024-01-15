@@ -195,28 +195,31 @@
 <a href="#195" id="195">195</a>
 <a href="#196" id="196">196</a>
 <a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::malicious_bundle_producer::MaliciousBundleProducer;
+<span class="kw">use crate</span>::{create_malicious_operator_configuration, DomainCli};
 <span class="kw">use </span>cross_domain_message_gossip::{ChainTxPoolMsg, Message};
 <span class="kw">use </span>domain_client_operator::{BootstrapResult, OperatorStreams};
 <span class="kw">use </span>domain_eth_service::provider::EthProvider;
 <span class="kw">use </span>domain_eth_service::DefaultEthConfig;
 <span class="kw">use </span>domain_runtime_primitives::opaque::Block <span class="kw">as </span>DomainBlock;
 <span class="kw">use </span>domain_service::{FullBackend, FullClient};
-<span class="kw">use </span>evm_domain_runtime::ExecutorDispatch <span class="kw">as </span>EVMDomainExecutorDispatch;
+<span class="kw">use </span>evm_domain_runtime::{AccountId <span class="kw">as </span>AccountId20, ExecutorDispatch <span class="kw">as </span>EVMDomainExecutorDispatch};
 <span class="kw">use </span>futures::StreamExt;
 <span class="kw">use </span>sc_cli::CliConfiguration;
 <span class="kw">use </span>sc_consensus_subspace::block_import::BlockImportingNotification;
 <span class="kw">use </span>sc_consensus_subspace::notification::SubspaceNotificationStream;
 <span class="kw">use </span>sc_consensus_subspace::slot_worker::NewSlotNotification;
 <span class="kw">use </span>sc_network::NetworkPeers;
-<span class="kw">use </span>sc_service::BasePath;
 <span class="kw">use </span>sc_transaction_pool_api::OffchainTransactionPoolFactory;
 <span class="kw">use </span>sc_utils::mpsc::{TracingUnboundedReceiver, TracingUnboundedSender};
 <span class="kw">use </span>sp_core::traits::SpawnEssentialNamed;
 <span class="kw">use </span>sp_domains::{DomainInstanceData, RuntimeType};
 <span class="kw">use </span>sp_keystore::KeystorePtr;
+<span class="kw">use </span>std::path::PathBuf;
 <span class="kw">use </span>std::sync::Arc;
-<span class="kw">use </span>subspace_node::domain::{create_configuration, evm_chain_spec, AccountId20, DomainCli};
 <span class="kw">use </span>subspace_runtime::{ExecutorDispatch <span class="kw">as </span>CExecutorDispatch, RuntimeApi <span class="kw">as </span>CRuntimeApi};
 <span class="kw">use </span>subspace_runtime_primitives::opaque::Block <span class="kw">as </span>CBlock;
 <span class="kw">use </span>subspace_service::FullClient <span class="kw">as </span>CFullClient;
@@ -225,6 +228,7 @@
 /// bootstrap result
 </span><span class="kw">pub struct </span>DomainInstanceStarter&lt;CNetwork&gt; {
     <span class="kw">pub </span>domain_cli: DomainCli,
+    <span class="kw">pub </span>base_path: PathBuf,
     <span class="kw">pub </span>tokio_handle: tokio::runtime::Handle,
     <span class="kw">pub </span>consensus_client: Arc&lt;CFullClient&lt;CRuntimeApi, CExecutorDispatch&gt;&gt;,
     <span class="kw">pub </span>consensus_keystore: KeystorePtr,
@@ -259,6 +263,7 @@
 
         <span class="kw">let </span>DomainInstanceStarter {
             domain_cli,
+            base_path,
             tokio_handle,
             consensus_client,
             consensus_keystore,
@@ -271,25 +276,28 @@
             consensus_network,
         } = <span class="self">self</span>;
 
-        <span class="kw">let </span>domain_id = domain_cli.domain_id;
+        <span class="kw">let </span>domain_id = domain_cli.domain_id.into();
         <span class="kw">let </span>domain_config = {
-            <span class="kw">let </span>chain_id = domain_cli.chain_id(domain_cli.is_dev()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
-
-            <span class="kw">let </span>domain_spec = evm_chain_spec::create_domain_spec(chain_id.as_str(), raw_genesis)<span class="question-mark">?</span>;
-
-            create_configuration::&lt;<span class="kw">_</span>, DomainCli, DomainCli&gt;(<span class="kw-2">&amp;</span>domain_cli, domain_spec, tokio_handle)<span class="question-mark">?
+            <span class="kw">let </span>chain_id = domain_cli.run.chain_id(domain_cli.run.is_dev()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+            <span class="kw">let </span>domain_spec =
+                <span class="kw">crate</span>::chain_spec::create_domain_spec(chain_id.as_str(), raw_genesis)<span class="question-mark">?</span>;
+            create_malicious_operator_configuration::&lt;DomainCli&gt;(
+                domain_id,
+                base_path.into(),
+                <span class="kw-2">&amp;</span>domain_cli,
+                domain_spec,
+                tokio_handle,
+            )<span class="question-mark">?
         </span>};
 
-        <span class="kw">let </span>block_importing_notification_stream = || {
-            block_importing_notification_stream.subscribe().then(
-                |block_importing_notification| <span class="kw">async move </span>{
-                    (
-                        block_importing_notification.block_number,
-                        block_importing_notification.acknowledgement_sender,
-                    )
-                },
-            )
-        };
+        <span class="kw">let </span>block_importing_notification_stream = block_importing_notification_stream
+            .subscribe()
+            .then(|block_importing_notification| <span class="kw">async move </span>{
+                (
+                    block_importing_notification.block_number,
+                    block_importing_notification.acknowledgement_sender,
+                )
+            });
 
         <span class="kw">let </span>new_slot_notification_stream = || {
             new_slot_notification_stream
@@ -305,7 +313,7 @@
         <span class="kw">let </span>operator_streams = OperatorStreams {
             <span class="comment">// TODO: proper value
             </span>consensus_block_import_throttling_buffer_size: <span class="number">10</span>,
-            block_importing_notification_stream: block_importing_notification_stream(),
+            block_importing_notification_stream,
             imported_block_notification_stream,
             new_slot_notification_stream: new_slot_notification_stream(),
             acknowledgement_sender_stream: futures::stream::empty(),
@@ -314,11 +322,9 @@
 
         <span class="kw">match </span>runtime_type {
             RuntimeType::Evm =&gt; {
-                <span class="kw">let </span>evm_base_path = BasePath::new(
-                    domain_config
-                        .base_path
-                        .config_dir(domain_config.chain_spec.id()),
-                );
+                <span class="kw">let </span>evm_base_path = domain_config
+                    .base_path
+                    .config_dir(domain_config.chain_spec.id());
 
                 <span class="kw">let </span>eth_provider =
                     EthProvider::&lt;
@@ -331,7 +337,7 @@
                             &gt;,
                             FullBackend&lt;DomainBlock&gt;,
                         &gt;,
-                    &gt;::new(<span class="prelude-val">Some</span>(evm_base_path), domain_cli.additional_args());
+                    &gt;::new(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>evm_base_path), domain_cli.additional_args());
 
                 <span class="kw">let </span>domain_params = domain_service::DomainParams {
                     domain_id,

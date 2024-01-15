@@ -1260,6 +1260,9 @@
 <a href="#1260" id="1260">1260</a>
 <a href="#1261" id="1261">1261</a>
 <a href="#1262" id="1262">1262</a>
+<a href="#1263" id="1263">1263</a>
+<a href="#1264" id="1264">1264</a>
+<a href="#1265" id="1265">1265</a>
 </pre></div><pre class="rust"><code><span class="attr">#![cfg_attr(not(feature = <span class="string">&quot;std&quot;</span>), no_std)]
 </span><span class="comment">// `construct_runtime!` does a lot of recursion and requires us to increase the limit to 256.
 </span><span class="attr">#![recursion_limit = <span class="string">&quot;256&quot;</span>]
@@ -1270,22 +1273,27 @@
 </span><span class="attr">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
 </span><span class="macro">include!</span>(<span class="macro">concat!</span>(<span class="macro">env!</span>(<span class="string">&quot;OUT_DIR&quot;</span>), <span class="string">&quot;/wasm_binary.rs&quot;</span>));
 
+<span class="kw">extern crate </span>alloc;
+
 <span class="kw">use </span>codec::{Decode, Encode};
 <span class="kw">use </span>domain_runtime_primitives::opaque::Header;
-<span class="kw">pub use </span>domain_runtime_primitives::{opaque, Balance, BlockNumber, Hash, Nonce};
-<span class="kw">use </span>domain_runtime_primitives::{MultiAccountId, TryConvertBack, SLOT_DURATION};
+<span class="kw">pub use </span>domain_runtime_primitives::{
+    block_weights, maximum_block_length, opaque, Balance, BlockNumber, Hash, Nonce,
+    EXISTENTIAL_DEPOSIT, MAXIMUM_BLOCK_WEIGHT,
+};
+<span class="kw">use </span>domain_runtime_primitives::{
+    CheckExtrinsicsValidityError, DecodeExtrinsicError, MultiAccountId, TryConvertBack,
+    SLOT_DURATION,
+};
 <span class="kw">use </span>fp_account::EthereumSignature;
 <span class="kw">use </span>fp_self_contained::{CheckedSignature, SelfContainedCall};
-<span class="kw">use </span>frame_support::dispatch::{DispatchClass, GetDispatchInfo};
+<span class="kw">use </span>frame_support::dispatch::{DispatchClass, DispatchInfo, GetDispatchInfo};
 <span class="kw">use </span>frame_support::inherent::ProvideInherent;
 <span class="kw">use </span>frame_support::traits::{
     ConstU16, ConstU32, ConstU64, Currency, Everything, FindAuthor, Imbalance, OnFinalize,
     OnUnbalanced,
 };
-<span class="kw">use </span>frame_support::weights::constants::{
-    BlockExecutionWeight, ExtrinsicBaseWeight, ParityDbWeight, WEIGHT_REF_TIME_PER_MILLIS,
-    WEIGHT_REF_TIME_PER_SECOND,
-};
+<span class="kw">use </span>frame_support::weights::constants::{ParityDbWeight, WEIGHT_REF_TIME_PER_SECOND};
 <span class="kw">use </span>frame_support::weights::{ConstantMultiplier, IdentityFee, Weight};
 <span class="kw">use </span>frame_support::{construct_runtime, parameter_types};
 <span class="kw">use </span>frame_system::limits::{BlockLength, BlockWeights};
@@ -1324,7 +1332,7 @@
 <span class="attr">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
 </span><span class="kw">use </span>sp_version::NativeVersion;
 <span class="kw">use </span>sp_version::RuntimeVersion;
-<span class="kw">use </span>subspace_runtime_primitives::{Moment, SlowAdjustingFeeUpdate, SHANNON};
+<span class="kw">use </span>subspace_runtime_primitives::{Moment, SlowAdjustingFeeUpdate};
 
 <span class="doccomment">/// Alias to 512-bit hash when used in the context of a transaction signature on the chain.
 </span><span class="kw">pub type </span>Signature = EthereumSignature;
@@ -1371,11 +1379,9 @@
 <span class="doccomment">/// Executive: handles dispatch to the various modules.
 </span><span class="kw">pub type </span>Executive = domain_pallet_executive::Executive&lt;
     Runtime,
-    Block,
     frame_system::ChainContext&lt;Runtime&gt;,
     Runtime,
     AllPalletsWithSystem,
-    Runtime,
 &gt;;
 
 <span class="kw">impl </span>fp_self_contained::SelfContainedCall <span class="kw">for </span>RuntimeCall {
@@ -1455,24 +1461,6 @@
     state_version: <span class="number">0</span>,
 };
 
-<span class="doccomment">/// The existential deposit. Same with the one on primary chain.
-</span><span class="kw">pub const </span>EXISTENTIAL_DEPOSIT: Balance = <span class="number">500 </span>* SHANNON;
-
-<span class="doccomment">/// We assume that ~5% of the block weight is consumed by `on_initialize` handlers. This is
-/// used to limit the maximal weight of a single extrinsic.
-</span><span class="kw">const </span>AVERAGE_ON_INITIALIZE_RATIO: Perbill = Perbill::from_percent(<span class="number">5</span>);
-
-<span class="doccomment">/// We allow `Normal` extrinsics to fill up the block up to 75%, the rest can be used by
-/// `Operational` extrinsics.
-</span><span class="kw">const </span>NORMAL_DISPATCH_RATIO: Perbill = Perbill::from_percent(<span class="number">75</span>);
-<span class="doccomment">/// We allow for 2000ms of compute with a 6 second average block time.
-</span><span class="kw">pub const </span>WEIGHT_MILLISECS_PER_BLOCK: u64 = <span class="number">2000</span>;
-<span class="kw">pub const </span>MAXIMUM_BLOCK_WEIGHT: Weight = Weight::from_parts(
-    WEIGHT_MILLISECS_PER_BLOCK * WEIGHT_REF_TIME_PER_MILLIS,
-    u64::MAX,
-);
-<span class="kw">pub const </span>MAXIMUM_BLOCK_LENGTH: u32 = <span class="number">5 </span>* <span class="number">1024 </span>* <span class="number">1024</span>;
-
 <span class="doccomment">/// The version information used to identify this runtime when compiled natively.
 </span><span class="attr">#[cfg(feature = <span class="string">&quot;std&quot;</span>)]
 </span><span class="kw">pub fn </span>native_version() -&gt; NativeVersion {
@@ -1510,26 +1498,8 @@
     //  The `RuntimeBlockLength` and `RuntimeBlockWeights` exist here because the
     // `DeletionWeightLimit` and `DeletionQueueDepth` depend on those to parameterize
     // the lazy contract deletion.
-    </span><span class="kw">pub </span>RuntimeBlockLength: BlockLength =
-        BlockLength::max_with_normal_ratio(<span class="number">5 </span>* <span class="number">1024 </span>* <span class="number">1024</span>, NORMAL_DISPATCH_RATIO);
-    <span class="kw">pub </span>RuntimeBlockWeights: BlockWeights = BlockWeights::builder()
-        .base_block(BlockExecutionWeight::get())
-        .for_class(DispatchClass::all(), |weights| {
-            weights.base_extrinsic = ExtrinsicBaseWeight::get();
-        })
-        .for_class(DispatchClass::Normal, |weights| {
-            weights.max_total = <span class="prelude-val">Some</span>(NORMAL_DISPATCH_RATIO * MAXIMUM_BLOCK_WEIGHT);
-        })
-        .for_class(DispatchClass::Operational, |weights| {
-            weights.max_total = <span class="prelude-val">Some</span>(MAXIMUM_BLOCK_WEIGHT);
-            <span class="comment">// Operational transactions have some extra reserved space, so that they
-            // are included even if block reached `MAXIMUM_BLOCK_WEIGHT`.
-            </span>weights.reserved = <span class="prelude-val">Some</span>(
-                MAXIMUM_BLOCK_WEIGHT - NORMAL_DISPATCH_RATIO * MAXIMUM_BLOCK_WEIGHT
-            );
-        })
-        .avg_block_initialization(AVERAGE_ON_INITIALIZE_RATIO)
-        .build_or_panic();
+    </span><span class="kw">pub </span>RuntimeBlockLength: BlockLength = maximum_block_length();
+    <span class="kw">pub </span>RuntimeBlockWeights: BlockWeights = block_weights();
     <span class="kw">pub const </span>ExtrinsicsRootStateVersion: StateVersion = StateVersion::V1;
 }
 
@@ -1646,9 +1616,26 @@
     <span class="kw">type </span>OperationalFeeMultiplier = OperationalFeeMultiplier;
 }
 
+<span class="kw">pub struct </span>ExtrinsicStorageFees;
+<span class="kw">impl </span>domain_pallet_executive::ExtrinsicStorageFees&lt;Runtime&gt; <span class="kw">for </span>ExtrinsicStorageFees {
+    <span class="kw">fn </span>extract_signer(xt: UncheckedExtrinsic) -&gt; (<span class="prelude-ty">Option</span>&lt;AccountId&gt;, DispatchInfo) {
+        <span class="kw">let </span>dispatch_info = xt.get_dispatch_info();
+        <span class="kw">let </span>lookup = frame_system::ChainContext::&lt;Runtime&gt;::default();
+        <span class="kw">let </span>maybe_signer = extract_signer_inner(<span class="kw-2">&amp;</span>xt, <span class="kw-2">&amp;</span>lookup).and_then(|res| res.ok());
+        (maybe_signer, dispatch_info)
+    }
+
+    <span class="kw">fn </span>on_storage_fees_charged(charged_fees: Balance) {
+        OperatorRewards::note_operator_rewards(charged_fees)
+    }
+}
+
 <span class="kw">impl </span>domain_pallet_executive::Config <span class="kw">for </span>Runtime {
     <span class="kw">type </span>RuntimeEvent = RuntimeEvent;
     <span class="kw">type </span>WeightInfo = domain_pallet_executive::weights::SubstrateWeight&lt;Runtime&gt;;
+    <span class="kw">type </span>Currency = Balances;
+    <span class="kw">type </span>LengthToFee = &lt;Runtime <span class="kw">as </span>pallet_transaction_payment::Config&gt;::LengthToFee;
+    <span class="kw">type </span>ExtrinsicStorageFees = ExtrinsicStorageFees;
 }
 
 <span class="kw">impl </span>pallet_sudo::Config <span class="kw">for </span>Runtime {
@@ -1745,8 +1732,6 @@
 
 <span class="doccomment">/// Current approximation of the gas/s consumption considering
 /// EVM execution over compiled WASM (on 4.4Ghz CPU).
-/// Given the 500ms Weight, from which 75% only are used for transactions,
-/// the total EVM execution gas limit is: GAS_PER_SECOND * 0.500 * 0.75 ~= 15_000_000.
 </span><span class="kw">pub const </span>GAS_PER_SECOND: u64 = <span class="number">40_000_000</span>;
 
 <span class="doccomment">/// Approximate ratio of the amount of Weight per Gas.
@@ -1754,9 +1739,9 @@
 </span><span class="kw">pub const </span>WEIGHT_PER_GAS: u64 = WEIGHT_REF_TIME_PER_SECOND.saturating_div(GAS_PER_SECOND);
 
 <span class="macro">parameter_types! </span>{
-    <span class="doccomment">/// EVM gas limit
+    <span class="doccomment">/// EVM block gas limit is set to maximum to allow all the transaction stored on Consensus chain.
     </span><span class="kw">pub </span>BlockGasLimit: U256 = U256::from(
-        NORMAL_DISPATCH_RATIO * MAXIMUM_BLOCK_WEIGHT.ref_time() / WEIGHT_PER_GAS
+        MAXIMUM_BLOCK_WEIGHT.ref_time() / WEIGHT_PER_GAS
     );
     <span class="kw">pub </span>PrecompilesValue: Precompiles = Precompiles::default();
     <span class="kw">pub </span>WeightPerGas: Weight = Weight::from_parts(WEIGHT_PER_GAS, <span class="number">0</span>);
@@ -2007,6 +1992,42 @@
     );
 }
 
+<span class="kw">fn </span>check_transaction_and_do_pre_dispatch_inner(
+    uxt: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic,
+) -&gt; <span class="prelude-ty">Result</span>&lt;(), TransactionValidityError&gt; {
+    <span class="kw">let </span>lookup = frame_system::ChainContext::&lt;Runtime&gt;::default();
+
+    <span class="kw">let </span>xt = uxt.clone().check(<span class="kw-2">&amp;</span>lookup)<span class="question-mark">?</span>;
+
+    <span class="kw">let </span>dispatch_info = xt.get_dispatch_info();
+
+    <span class="kw">if </span>dispatch_info.class == DispatchClass::Mandatory {
+        <span class="kw">return </span><span class="prelude-val">Err</span>(InvalidTransaction::MandatoryValidation.into());
+    }
+
+    <span class="kw">let </span>encoded_len = uxt.encoded_size();
+
+    <span class="comment">// We invoke `pre_dispatch` in addition to `validate_transaction`(even though the validation is almost same)
+    // as that will add the side effect of SignedExtension in the storage buffer
+    // which would help to maintain context across multiple transaction validity check against same
+    // runtime instance.
+    </span><span class="kw">match </span>xt.signed {
+        CheckedSignature::Signed(account_id, extra) =&gt; extra
+            .pre_dispatch(<span class="kw-2">&amp;</span>account_id, <span class="kw-2">&amp;</span>xt.function, <span class="kw-2">&amp;</span>dispatch_info, encoded_len)
+            .map(|<span class="kw">_</span>| ()),
+        CheckedSignature::Unsigned =&gt; {
+            Runtime::pre_dispatch(<span class="kw-2">&amp;</span>xt.function).map(|<span class="kw">_</span>| ())<span class="question-mark">?</span>;
+            SignedExtra::pre_dispatch_unsigned(<span class="kw-2">&amp;</span>xt.function, <span class="kw-2">&amp;</span>dispatch_info, encoded_len)
+                .map(|<span class="kw">_</span>| ())
+        }
+        CheckedSignature::SelfContained(self_contained_signing_info) =&gt; xt
+            .function
+            .pre_dispatch_self_contained(<span class="kw-2">&amp;</span>self_contained_signing_info, <span class="kw-2">&amp;</span>dispatch_info, encoded_len)
+            .ok_or(TransactionValidityError::Invalid(InvalidTransaction::Call))
+            .map(|<span class="kw">_</span>| ()),
+    }
+}
+
 <span class="macro">impl_runtime_apis! </span>{
     <span class="kw">impl </span>sp_api::Core&lt;Block&gt; <span class="kw">for </span>Runtime {
         <span class="kw">fn </span>version() -&gt; RuntimeVersion {
@@ -2177,13 +2198,8 @@
             }
         }
 
-        <span class="kw">fn </span>check_transaction_and_do_pre_dispatch(
-            uxt: <span class="kw-2">&amp;</span>&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic,
-            block_number: BlockNumber,
-            block_hash: &lt;Block <span class="kw">as </span>BlockT&gt;::Hash
-        ) -&gt; <span class="prelude-ty">Result</span>&lt;(), TransactionValidityError&gt; {
-            <span class="kw">let </span>lookup = frame_system::ChainContext::&lt;Runtime&gt;::default();
-
+        <span class="kw">fn </span>check_extrinsics_and_do_pre_dispatch(uxts: Vec&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic&gt;, block_number: BlockNumber,
+            block_hash: &lt;Block <span class="kw">as </span>BlockT&gt;::Hash) -&gt; <span class="prelude-ty">Result</span>&lt;(), CheckExtrinsicsValidityError&gt; {
             <span class="comment">// Initializing block related storage required for validation
             </span>System::initialize(
                 <span class="kw-2">&amp;</span>(block_number + BlockNumber::one()),
@@ -2191,34 +2207,24 @@
                 <span class="kw-2">&amp;</span>Default::default(),
             );
 
-            <span class="kw">let </span>xt = uxt.clone().check(<span class="kw-2">&amp;</span>lookup)<span class="question-mark">?</span>;
-
-            <span class="kw">let </span>dispatch_info = xt.get_dispatch_info();
-
-            <span class="kw">if </span>dispatch_info.class == DispatchClass::Mandatory {
-                <span class="kw">return </span><span class="prelude-val">Err</span>(InvalidTransaction::MandatoryValidation.into());
+            <span class="kw">for </span>(extrinsic_index, uxt) <span class="kw">in </span>uxts.iter().enumerate() {
+                check_transaction_and_do_pre_dispatch_inner(uxt).map_err(|e| {
+                    CheckExtrinsicsValidityError {
+                        extrinsic_index: extrinsic_index <span class="kw">as </span>u32,
+                        transaction_validity_error: e
+                    }
+                })<span class="question-mark">?</span>;
             }
 
-            <span class="kw">let </span>encoded_len = uxt.encoded_size();
+            <span class="prelude-val">Ok</span>(())
+        }
 
-            <span class="comment">// We invoke `pre_dispatch` in addition to `validate_transaction`(even though the validation is almost same)
-            // as that will add the side effect of SignedExtension in the storage buffer
-            // which would help to maintain context across multiple transaction validity check against same
-            // runtime instance.
-            </span><span class="kw">match </span>xt.signed {
-                    CheckedSignature::Signed(account_id, extra) =&gt; {
-                        extra.pre_dispatch(<span class="kw-2">&amp;</span>account_id, <span class="kw-2">&amp;</span>xt.function, <span class="kw-2">&amp;</span>dispatch_info, encoded_len).map(|<span class="kw">_</span>| ())
-                    },
-                    CheckedSignature::Unsigned =&gt; {
-                        Runtime::pre_dispatch(<span class="kw-2">&amp;</span>xt.function).map(|<span class="kw">_</span>| ())<span class="question-mark">?</span>;
-                        SignedExtra::pre_dispatch_unsigned(<span class="kw-2">&amp;</span>xt.function, <span class="kw-2">&amp;</span>dispatch_info, encoded_len).map(|<span class="kw">_</span>| ())
-                    },
-                    CheckedSignature::SelfContained(self_contained_signing_info) =&gt; {
-                        xt.function.pre_dispatch_self_contained(<span class="kw-2">&amp;</span>self_contained_signing_info, <span class="kw-2">&amp;</span>dispatch_info, encoded_len).ok_or(TransactionValidityError::Invalid(
-                            InvalidTransaction::Call,
-                        )).map(|<span class="kw">_</span>| ())
-                    }
-                }
+        <span class="kw">fn </span>decode_extrinsic(
+            opaque_extrinsic: sp_runtime::OpaqueExtrinsic,
+        ) -&gt; <span class="prelude-ty">Result</span>&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Extrinsic, DecodeExtrinsicError&gt; {
+            <span class="kw">let </span>encoded = opaque_extrinsic.encode();
+            UncheckedExtrinsic::decode(<span class="kw-2">&amp;mut </span>encoded.as_slice())
+                .map_err(|err| DecodeExtrinsicError(<span class="macro">alloc::format!</span>(<span class="string">&quot;{}&quot;</span>, err)))
         }
 
         <span class="kw">fn </span>extrinsic_era(
