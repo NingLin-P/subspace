@@ -271,7 +271,7 @@ where
     IBNS: Stream<Item = (NumberFor<CBlock>, mpsc::Sender<()>)> + Send + 'static,
     CIBNS: Stream<Item = BlockImportNotification<CBlock>> + Send + 'static,
     NSNS: Stream<Item = (Slot, Randomness)> + Send + 'static,
-    ASS: Stream<Item = mpsc::Sender<()>> + Send + 'static,
+    ASS: Stream<Item = (String, mpsc::Sender<()>)> + Send + 'static,
     RuntimeApi: ConstructRuntimeApi<Block, FullClient<Block, RuntimeApi>> + Send + Sync + 'static,
     RuntimeApi::RuntimeApi: ApiExt<Block>
         + Metadata<Block>

@@ -96,7 +96,7 @@ pub(super) async fn start_worker<
     IBNS: Stream<Item = (NumberFor<CBlock>, mpsc::Sender<()>)> + Send + 'static,
     CIBNS: Stream<Item = BlockImportNotification<CBlock>> + Send + 'static,
     NSNS: Stream<Item = NewSlotNotification> + Send + 'static,
-    ASS: Stream<Item = mpsc::Sender<()>> + Send + 'static,
+    ASS: Stream<Item = (String, mpsc::Sender<()>)> + Send + 'static,
     E: CodeExecutor,
 {
     let span = tracing::Span::current();
@@ -187,7 +187,8 @@ pub(super) async fn start_worker<
                 }
                 // In production the `acknowledgement_sender_stream` is an empty stream, it only set to
                 // real stream in test
-                Some(mut acknowledgement_sender) = acknowledgement_sender_stream.next() => {
+                Some((tag, mut acknowledgement_sender)) = acknowledgement_sender_stream.next() => {
+                    tracing::info!(?tag, "acknowledgement_sender_stream");
                     if let Err(err) = acknowledgement_sender.send(()).await {
                         tracing::error!(
                             ?err,
