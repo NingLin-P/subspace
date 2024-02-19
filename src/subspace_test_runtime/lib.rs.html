@@ -1434,6 +1434,14 @@
 <a href="#1432" id="1432">1432</a>
 <a href="#1433" id="1433">1433</a>
 <a href="#1434" id="1434">1434</a>
+<a href="#1435" id="1435">1435</a>
+<a href="#1436" id="1436">1436</a>
+<a href="#1437" id="1437">1437</a>
+<a href="#1438" id="1438">1438</a>
+<a href="#1439" id="1439">1439</a>
+<a href="#1440" id="1440">1440</a>
+<a href="#1441" id="1441">1441</a>
+<a href="#1442" id="1442">1442</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -1464,7 +1472,7 @@
 <span class="kw">use </span>core::num::NonZeroU64;
 <span class="kw">use </span>domain_runtime_primitives::opaque::Header <span class="kw">as </span>DomainHeader;
 <span class="kw">use </span>domain_runtime_primitives::{
-    BlockNumber <span class="kw">as </span>DomainNumber, Hash <span class="kw">as </span>DomainHash, MultiAccountId, TryConvertBack,
+    AccountIdConverter, BlockNumber <span class="kw">as </span>DomainNumber, Hash <span class="kw">as </span>DomainHash,
 };
 <span class="kw">use </span>frame_support::inherent::ProvideInherent;
 <span class="kw">use </span>frame_support::traits::{
@@ -1500,8 +1508,8 @@
     ExtractedStateRootsFromProof, MessageId,
 };
 <span class="kw">use </span>sp_runtime::traits::{
-    AccountIdConversion, AccountIdLookup, BlakeTwo256, Block <span class="kw">as </span>BlockT, ConstBool, Convert,
-    DispatchInfoOf, Keccak256, NumberFor, PostDispatchInfoOf, Zero,
+    AccountIdConversion, AccountIdLookup, BlakeTwo256, Block <span class="kw">as </span>BlockT, ConstBool, DispatchInfoOf,
+    Keccak256, NumberFor, PostDispatchInfoOf, Zero,
 };
 <span class="kw">use </span>sp_runtime::transaction_validity::{
     InvalidTransaction, TransactionSource, TransactionValidity, TransactionValidityError,
@@ -1761,6 +1769,10 @@
     <span class="kw">fn </span>domain_instantiation_id(domain_id: DomainId) -&gt; <span class="self">Self </span>{
         <span class="self">Self</span>::Domains(DomainsHoldIdentifier::DomainInstantiation(domain_id))
     }
+
+    <span class="kw">fn </span>storage_fund_withdrawal(operator_id: OperatorId) -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Domains(DomainsHoldIdentifier::StorageFund(operator_id))
+    }
 }
 
 <span class="kw">impl </span>VariantCount <span class="kw">for </span>HoldIdentifier {
@@ -1829,7 +1841,7 @@
     <span class="kw">type </span>BlockchainHistorySize = BlockchainHistorySize;
     <span class="kw">type </span>Currency = Balances;
     <span class="kw">type </span>FindBlockRewardAddress = Subspace;
-    <span class="kw">type </span>DynamicCostOfStorage = ConstBool&lt;{ !<span class="macro">cfg!</span>(feature = <span class="string">"do-not-enforce-cost-of-storage"</span>) }&gt;;
+    <span class="kw">type </span>DynamicCostOfStorage = ConstBool&lt;<span class="bool-val">false</span>&gt;;
     <span class="kw">type </span>WeightInfo = ();
 }
 
@@ -1964,9 +1976,9 @@
         Domains::domain_best_number(domain_id)
     }
 
-    <span class="kw">fn </span>domain_state_root(domain_id: DomainId, number: BlockNumber, hash: Hash) -&gt; <span class="prelude-ty">Option</span>&lt;Hash&gt; {
-        Domains::domain_state_root(domain_id, number, hash)
-    }
+    <span class="kw">fn </span>domain_state_root(_domain_id: DomainId, _number: BlockNumber, _hash: Hash) -&gt; <span class="prelude-ty">Option</span>&lt;Hash&gt; {
+        <span class="prelude-val">None
+    </span>}
 }
 
 <span class="kw">impl </span>pallet_messenger::Config <span class="kw">for </span>Runtime {
@@ -1999,23 +2011,6 @@
 
 <span class="macro">parameter_types! </span>{
     <span class="kw">pub const </span>TransporterEndpointId: EndpointId = <span class="number">1</span>;
-}
-
-<span class="kw">pub struct </span>AccountIdConverter;
-
-<span class="kw">impl </span>Convert&lt;AccountId, MultiAccountId&gt; <span class="kw">for </span>AccountIdConverter {
-    <span class="kw">fn </span>convert(account_id: AccountId) -&gt; MultiAccountId {
-        MultiAccountId::AccountId32(account_id.into())
-    }
-}
-
-<span class="kw">impl </span>TryConvertBack&lt;AccountId, MultiAccountId&gt; <span class="kw">for </span>AccountIdConverter {
-    <span class="kw">fn </span>try_convert_back(multi_account_id: MultiAccountId) -&gt; <span class="prelude-ty">Option</span>&lt;AccountId&gt; {
-        <span class="kw">match </span>multi_account_id {
-            MultiAccountId::AccountId32(acc) =&gt; <span class="prelude-val">Some</span>(AccountId::from(acc)),
-            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-        }
-    }
 }
 
 <span class="kw">impl </span>pallet_transporter::Config <span class="kw">for </span>Runtime {
@@ -2054,10 +2049,25 @@
     <span class="kw">pub const </span>MaxPendingStakingOperation: u32 = <span class="number">100</span>;
     <span class="kw">pub const </span>MaxNominators: u32 = <span class="number">100</span>;
     <span class="kw">pub </span>SudoId: AccountId = Sudo::key().expect(<span class="string">"Sudo account must exist"</span>);
+    <span class="kw">pub const </span>DomainsPalletId: PalletId = PalletId(<span class="kw-2">*</span><span class="string">b"domains_"</span>);
+    <span class="kw">pub const </span>MaxInitialDomainAccounts: u32 = <span class="number">20</span>;
+    <span class="kw">pub const </span>MinInitialDomainAccountBalance: Balance = SSC;
 }
 
 <span class="comment">// Minimum operator stake must be &gt;= minimum nominator stake since operator is also a nominator.
 </span><span class="macro">const_assert!</span>(MinOperatorStake::get() &gt;= MinNominatorStake::get());
+
+<span class="kw">pub struct </span>BlockSlot;
+
+<span class="kw">impl </span>pallet_domains::BlockSlot <span class="kw">for </span>BlockSlot {
+    <span class="kw">fn </span>current_slot() -&gt; sp_consensus_slots::Slot {
+        Subspace::current_slot()
+    }
+
+    <span class="kw">fn </span>future_slot() -&gt; sp_consensus_slots::Slot {
+        Subspace::current_slot() + Slot::from(BlockAuthoringDelay::get())
+    }
+}
 
 <span class="kw">impl </span>pallet_domains::Config <span class="kw">for </span>Runtime {
     <span class="kw">type </span>RuntimeEvent = RuntimeEvent;
@@ -2086,6 +2096,12 @@
     <span class="kw">type </span>Randomness = Subspace;
     <span class="kw">type </span>SudoId = SudoId;
     <span class="kw">type </span>MinNominatorStake = MinNominatorStake;
+    <span class="kw">type </span>PalletId = DomainsPalletId;
+    <span class="kw">type </span>StorageFee = TransactionFees;
+    <span class="kw">type </span>BlockSlot = BlockSlot;
+    <span class="kw">type </span>DomainsTransfersTracker = Transporter;
+    <span class="kw">type </span>MaxInitialDomainAccounts = MaxInitialDomainAccounts;
+    <span class="kw">type </span>MinInitialDomainAccountBalance = MinInitialDomainAccountBalance;
 }
 
 <span class="macro">parameter_types! </span>{
@@ -2682,9 +2698,9 @@
             Domains::domain_best_number(domain_id)
         }
 
-        <span class="kw">fn </span>domain_state_root(domain_id: DomainId, number: DomainNumber, hash: DomainHash) -&gt; <span class="prelude-ty">Option</span>&lt;DomainHash&gt;{
-            Domains::domain_state_root(domain_id, number, hash)
-        }
+        <span class="kw">fn </span>domain_state_root(_domain_id: DomainId, _number: DomainNumber, _hash: DomainHash) -&gt; <span class="prelude-ty">Option</span>&lt;DomainHash&gt;{
+            <span class="prelude-val">None
+        </span>}
 
         <span class="kw">fn </span>execution_receipt(receipt_hash: DomainHash) -&gt; <span class="prelude-ty">Option</span>&lt;ExecutionReceiptFor&lt;DomainHeader, Block, Balance&gt;&gt; {
             Domains::execution_receipt(receipt_hash)

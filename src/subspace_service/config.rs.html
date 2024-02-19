@@ -260,7 +260,7 @@
 <a href="#258" id="258">258</a>
 <a href="#259" id="259">259</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::dsn::DsnConfig;
-<span class="kw">use </span>prometheus_client::registry::Registry;
+<span class="kw">use </span><span class="kw">crate</span>::sync_from_dsn::DsnSyncPieceGetter;
 <span class="kw">use </span>sc_chain_spec::ChainSpec;
 <span class="kw">use </span>sc_network::config::{
     MultiaddrWithPeerId, NetworkConfiguration, NodeKeyConfig, SetConfig, SyncMode, TransportConfig,
@@ -344,7 +344,7 @@
     <span class="doccomment">/// Network configuration
     </span><span class="kw">pub </span>network: SubstrateNetworkConfiguration,
     <span class="doccomment">/// State pruning settings
-    </span><span class="kw">pub </span>state_pruning: <span class="prelude-ty">Option</span>&lt;PruningMode&gt;,
+    </span><span class="kw">pub </span>state_pruning: PruningMode,
     <span class="doccomment">/// Number of blocks to keep in the db.
     ///
     /// NOTE: only finalized blocks are subject for removal!
@@ -420,7 +420,7 @@
             data_path: configuration.base_path.clone(),
             <span class="comment">// Substrate's default
             </span>trie_cache_maximum_size: <span class="prelude-val">Some</span>(<span class="number">64 </span>* <span class="number">1024 </span>* <span class="number">1024</span>),
-            state_pruning: configuration.state_pruning,
+            state_pruning: <span class="prelude-val">Some</span>(configuration.state_pruning),
             blocks_pruning: configuration.blocks_pruning,
             wasm_method: Default::default(),
             wasm_runtime_overrides: <span class="prelude-val">None</span>,
@@ -483,8 +483,6 @@
         </span>node: Node,
         <span class="doccomment">/// Bootstrap nodes used (that can be also sent to the farmer over RPC)
         </span>bootstrap_nodes: Vec&lt;Multiaddr&gt;,
-        <span class="doccomment">/// DSN metrics registry
-        </span>metrics_registry: <span class="prelude-ty">Option</span>&lt;Registry&gt;,
     },
     <span class="doccomment">/// Networking must be instantiated internally
     </span>Create {
@@ -503,6 +501,8 @@
     </span><span class="kw">pub </span>force_new_slot_notifications: bool,
     <span class="doccomment">/// Subspace networking (DSN).
     </span><span class="kw">pub </span>subspace_networking: SubspaceNetworking,
+    <span class="doccomment">/// DSN piece getter
+    </span><span class="kw">pub </span>dsn_piece_getter: <span class="prelude-ty">Option</span>&lt;Arc&lt;<span class="kw">dyn </span>DsnSyncPieceGetter + Send + Sync + <span class="lifetime">'static</span>&gt;&gt;,
     <span class="doccomment">/// Enables DSN-sync on startup.
     </span><span class="kw">pub </span>sync_from_dsn: bool,
     <span class="doccomment">/// Is this node a Timekeeper
