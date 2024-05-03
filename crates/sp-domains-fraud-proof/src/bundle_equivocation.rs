@@ -7,7 +7,7 @@ use codec::{Decode, Encode};
 use sc_client_api::backend::AuxStore;
 use sp_blockchain::{Error as ClientError, Result as ClientResult};
 use sp_consensus_slots::Slot;
-use sp_domains::SealedBundleHeader;
+use sp_domains::{DomainId, SealedBundleHeader};
 use sp_runtime::traits::{Block as BlockT, Header as HeaderT, NumberFor};
 use std::sync::Arc;
 use subspace_runtime_primitives::Balance;
@@ -37,7 +37,14 @@ where
 }
 
 pub type CheckEquivocationResult<CNumber, CHash, DomainHeader> =
-    ClientResult<Option<FraudProof<CNumber, CHash, DomainHeader>>>;
+    ClientResult<Option<BundleEquivocationData<CNumber, CHash, DomainHeader>>>;
+
+pub struct BundleEquivocationData<Number, Hash, DomainHeader: HeaderT> {
+    pub domain_id: DomainId,
+    pub slot: Slot,
+    pub first_header: SealedBundleHeader<Number, Hash, DomainHeader, Balance>,
+    pub second_header: SealedBundleHeader<Number, Hash, DomainHeader, Balance>,
+}
 
 /// Checks if the header is an equivocation and returns the proof in that case.
 ///
@@ -102,14 +109,12 @@ where
                     previous_bundle_header.hash(),
                     bundle_header.hash(),
                 );
-                Ok(Some(FraudProof::BundleEquivocation(
-                    BundleEquivocationProof {
-                        domain_id: bundle_header.header.proof_of_election.domain_id,
-                        slot,
-                        first_header: previous_bundle_header.clone(),
-                        second_header: bundle_header,
-                    },
-                )))
+                Ok(Some(BundleEquivocationData {
+                    domain_id: bundle_header.header.proof_of_election.domain_id,
+                    slot,
+                    first_header: previous_bundle_header.clone(),
+                    second_header: bundle_header,
+                }))
             } else {
                 // We don't need to continue in case of duplicated header,
                 // since it's already saved and a possible equivocation

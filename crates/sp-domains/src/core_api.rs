@@ -85,5 +85,8 @@ sp_api::decl_runtime_apis! {
 
         /// Returns the storage key for the Transfers on Domain.
         fn transfers_storage_key() -> Vec<u8>;
+
+        /// Returns the storage key for the `CollectedBlockFees` on Domain.
+        fn block_fees_storage_key() -> Vec<u8>;
     }
 }

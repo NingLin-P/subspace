@@ -3,7 +3,10 @@ extern crate alloc;
 
 #[cfg(feature = "std")]
 use crate::FraudProofExtension;
-use crate::{FraudProofVerificationInfoRequest, FraudProofVerificationInfoResponse};
+use crate::{
+    FraudProofVerificationInfoRequest, FraudProofVerificationInfoRequestV2,
+    FraudProofVerificationInfoResponse, FraudProofVerificationInfoResponseV2,
+};
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 use domain_runtime_primitives::BlockNumber;
@@ -18,6 +21,7 @@ use sp_runtime_interface::runtime_interface;
 #[runtime_interface]
 pub trait FraudProofRuntimeInterface {
     /// Returns required fraud proof verification information to the runtime through host function.
+    // TODO: remove before the new network
     fn get_fraud_proof_verification_info(
         &mut self,
         consensus_block_hash: H256,
@@ -26,6 +30,17 @@ pub trait FraudProofRuntimeInterface {
         self.extension::<FraudProofExtension>()
             .expect("No `FraudProofExtension` associated for the current context!")
             .get_fraud_proof_verification_info(consensus_block_hash, fraud_proof_verification_req)
+    }
+
+    /// Returns required fraud proof verification information to the runtime through host function.
+    fn get_fraud_proof_verification_info_v2(
+        &mut self,
+        domain_runtime_code: Option<Vec<u8>>,
+        fraud_proof_verification_req: FraudProofVerificationInfoRequestV2,
+    ) -> Option<FraudProofVerificationInfoResponseV2> {
+        self.extension::<FraudProofExtension>()
+            .expect("No `FraudProofExtension` associated for the current context!")
+            .get_fraud_proof_verification_info_v2(domain_runtime_code, fraud_proof_verification_req)
     }
 
     /// Derive the bundle digest for the given bundle body.

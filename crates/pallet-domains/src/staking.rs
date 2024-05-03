@@ -20,8 +20,11 @@ use frame_support::traits::tokens::{Fortitude, Precision, Preservation};
 use frame_support::{ensure, PalletError};
 use scale_info::TypeInfo;
 use sp_core::{sr25519, Get};
-use sp_domains::{DomainId, EpochIndex, OperatorId, OperatorPublicKey};
-use sp_runtime::traits::{CheckedAdd, CheckedSub, Zero};
+use sp_domains::{
+    DomainEpoch, DomainId, EpochIndex, Operator, OperatorDeregisteredInfo, OperatorId,
+    OperatorPublicKey, OperatorStatus,
+};
+use sp_runtime::traits::{CheckedAdd, CheckedSub, One, Zero};
 use sp_runtime::{Perbill, Percent, Perquintill, Saturating};
 use sp_std::collections::btree_map::BTreeMap;
 use sp_std::collections::btree_set::BTreeSet;
@@ -66,22 +69,6 @@ impl SharePrice {
         } else {
             self.0.saturating_reciprocal_mul_floor(shares.into())
         }
-    }
-}
-
-/// Unique epoch identifier across all domains. A combination of Domain and its epoch.
-#[derive(TypeInfo, Debug, Encode, Decode, Copy, Clone, PartialEq, Eq)]
-pub struct DomainEpoch(DomainId, EpochIndex);
-
-impl DomainEpoch {
-    pub(crate) fn deconstruct(self) -> (DomainId, EpochIndex) {
-        (self.0, self.1)
-    }
-}
-
-impl From<(DomainId, EpochIndex)> for DomainEpoch {
-    fn from((domain_id, epoch_idx): (DomainId, EpochIndex)) -> Self {
-        Self(domain_id, epoch_idx)
     }
 }
 
@@ -142,112 +129,17 @@ pub(crate) struct WithdrawalInShares<DomainBlockNumber, Share, Balance> {
     pub(crate) storage_fee_refund: Balance,
 }
 
-#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
-pub struct OperatorDeregisteredInfo<DomainBlockNumber> {
-    pub domain_epoch: DomainEpoch,
-    pub unlock_at_confirmed_domain_block_number: DomainBlockNumber,
-}
-
-impl<DomainBlockNumber> From<(DomainId, EpochIndex, DomainBlockNumber)>
-    for OperatorDeregisteredInfo<DomainBlockNumber>
-{
-    fn from(value: (DomainId, EpochIndex, DomainBlockNumber)) -> Self {
-        OperatorDeregisteredInfo {
-            domain_epoch: (value.0, value.1).into(),
-            unlock_at_confirmed_domain_block_number: value.2,
-        }
+pub fn operator_status<T: Config>(
+    operator: &Operator<BalanceOf<T>, T::Share, DomainBlockNumberFor<T>>,
+    operator_id: OperatorId,
+) -> &OperatorStatus<DomainBlockNumberFor<T>> {
+    if matches!(operator.status, OperatorStatus::Slashed) {
+        &OperatorStatus::Slashed
+    } else if Pallet::<T>::is_operator_pending_to_slash(operator.current_domain_id, operator_id) {
+        &OperatorStatus::PendingSlash
+    } else {
+        &operator.status
     }
-}
-
-/// Type that represents an operator status.
-#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
-pub enum OperatorStatus<DomainBlockNumber> {
-    Registered,
-    /// De-registered at given domain epoch.
-    Deregistered(OperatorDeregisteredInfo<DomainBlockNumber>),
-    Slashed,
-    PendingSlash,
-}
-
-/// Type that represents an operator details.
-#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
-pub struct Operator<Balance, Share, DomainBlockNumber> {
-    pub signing_key: OperatorPublicKey,
-    pub current_domain_id: DomainId,
-    pub next_domain_id: DomainId,
-    pub minimum_nominator_stake: Balance,
-    pub nomination_tax: Percent,
-    /// Total active stake of combined nominators under this operator.
-    pub current_total_stake: Balance,
-    /// Total rewards this operator received this current epoch.
-    pub current_epoch_rewards: Balance,
-    /// Total shares of all the nominators under this operator.
-    pub current_total_shares: Share,
-    /// The status of the operator, it may be stale due to the `OperatorStatus::PendingSlash` is
-    /// not assigned to this field directly, thus MUST use the `status()` method to query the status
-    /// instead.
-    /// TODO: update the filed to `_status` to avoid accidental access in next network reset
-    status: OperatorStatus<DomainBlockNumber>,
-    /// Total deposits during the previous epoch
-    pub deposits_in_epoch: Balance,
-    /// Total withdrew shares during the previous epoch
-    pub withdrawals_in_epoch: Share,
-    /// Total balance deposited to the bundle storage fund
-    pub total_storage_fee_deposit: Balance,
-}
-
-impl<Balance, Share, DomainBlockNumber> Operator<Balance, Share, DomainBlockNumber> {
-    pub fn status<T: Config>(&self, operator_id: OperatorId) -> &OperatorStatus<DomainBlockNumber> {
-        if matches!(self.status, OperatorStatus::Slashed) {
-            &OperatorStatus::Slashed
-        } else if Pallet::<T>::is_operator_pending_to_slash(self.current_domain_id, operator_id) {
-            &OperatorStatus::PendingSlash
-        } else {
-            &self.status
-        }
-    }
-
-    pub fn update_status(&mut self, new_status: OperatorStatus<DomainBlockNumber>) {
-        self.status = new_status;
-    }
-}
-
-#[cfg(test)]
-impl<Balance: Zero, Share: Zero, DomainBlockNumber> Operator<Balance, Share, DomainBlockNumber> {
-    pub(crate) fn dummy(
-        domain_id: DomainId,
-        signing_key: OperatorPublicKey,
-        minimum_nominator_stake: Balance,
-    ) -> Self {
-        Operator {
-            signing_key,
-            current_domain_id: domain_id,
-            next_domain_id: domain_id,
-            minimum_nominator_stake,
-            nomination_tax: Default::default(),
-            current_total_stake: Zero::zero(),
-            current_epoch_rewards: Zero::zero(),
-            current_total_shares: Zero::zero(),
-            status: OperatorStatus::Registered,
-            deposits_in_epoch: Zero::zero(),
-            withdrawals_in_epoch: Zero::zero(),
-            total_storage_fee_deposit: Zero::zero(),
-        }
-    }
-}
-
-#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
-pub struct StakingSummary<OperatorId, Balance> {
-    /// Current epoch index for the domain.
-    pub current_epoch_index: EpochIndex,
-    /// Total active stake for the current epoch.
-    pub current_total_stake: Balance,
-    /// Current operators for this epoch
-    pub current_operators: BTreeMap<OperatorId, Balance>,
-    /// Operators for the next epoch.
-    pub next_operators: BTreeSet<OperatorId>,
-    /// Operator's current Epoch rewards
-    pub current_epoch_rewards: BTreeMap<OperatorId, Balance>,
 }
 
 #[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
@@ -557,7 +449,7 @@ pub(crate) fn do_nominate_operator<T: Config>(
         let operator = maybe_operator.as_mut().ok_or(Error::UnknownOperator)?;
 
         ensure!(
-            *operator.status::<T>(operator_id) == OperatorStatus::Registered,
+            *operator_status::<T>(&operator, operator_id) == OperatorStatus::Registered,
             Error::OperatorNotRegistered
         );
 
@@ -676,7 +568,7 @@ fn do_switch_operator_domain<T: Config>(
         note_pending_staking_operation::<T>(operator.current_domain_id)?;
 
         ensure!(
-            *operator.status::<T>(operator_id) == OperatorStatus::Registered,
+            *operator_status::<T>(&operator, operator_id) == OperatorStatus::Registered,
             Error::OperatorNotRegistered
         );
 
@@ -733,7 +625,7 @@ pub(crate) fn do_deregister_operator<T: Config>(
         let operator = maybe_operator.as_mut().ok_or(Error::UnknownOperator)?;
 
         ensure!(
-            *operator.status::<T>(operator_id) == OperatorStatus::Registered,
+            *operator_status::<T>(&operator, operator_id) == OperatorStatus::Registered,
             Error::OperatorNotRegistered
         );
 
@@ -773,7 +665,7 @@ pub(crate) fn do_withdraw_stake<T: Config>(
     Operators::<T>::try_mutate(operator_id, |maybe_operator| {
         let operator = maybe_operator.as_mut().ok_or(Error::UnknownOperator)?;
         ensure!(
-            *operator.status::<T>(operator_id) == OperatorStatus::Registered,
+            *operator_status::<T>(&operator, operator_id) == OperatorStatus::Registered,
             Error::OperatorNotRegistered
         );
 
@@ -972,7 +864,7 @@ pub(crate) fn do_unlock_funds<T: Config>(
 ) -> Result<BalanceOf<T>, Error> {
     let operator = Operators::<T>::get(operator_id).ok_or(Error::UnknownOperator)?;
     ensure!(
-        *operator.status::<T>(operator_id) == OperatorStatus::Registered,
+        *operator_status::<T>(&operator, operator_id) == OperatorStatus::Registered,
         Error::OperatorNotRegistered
     );
 
@@ -1063,7 +955,7 @@ pub(crate) fn do_unlock_operator<T: Config>(operator_id: OperatorId) -> Result<u
         let OperatorDeregisteredInfo {
             domain_epoch,
             unlock_at_confirmed_domain_block_number,
-        } = match operator.status::<T>(operator_id) {
+        } = match operator_status::<T>(&operator, operator_id) {
             OperatorStatus::Deregistered(operator_deregistered_info) => operator_deregistered_info,
             _ => return Err(Error::OperatorNotDeregistered),
         };
@@ -1328,15 +1220,14 @@ pub(crate) fn do_slash_operators<T: Config>(
 
 #[cfg(test)]
 pub(crate) mod tests {
-    use crate::domain_registry::{DomainConfig, DomainObject};
     use crate::pallet::{
         Config, Deposits, DomainRegistry, DomainStakingSummary, LatestConfirmedDomainBlock,
         NextOperatorId, NominatorCount, OperatorIdOwner, Operators, PendingSlashes, Withdrawals,
     };
     use crate::staking::{
         do_convert_previous_epoch_withdrawal, do_nominate_operator, do_reward_operators,
-        do_slash_operators, do_unlock_funds, do_withdraw_stake, Error as StakingError, Operator,
-        OperatorConfig, OperatorStatus, StakingSummary,
+        do_slash_operators, do_unlock_funds, do_withdraw_stake, operator_status,
+        Error as StakingError, Operator, OperatorConfig,
     };
     use crate::staking_epoch::do_finalize_domain_current_epoch;
     use crate::tests::{new_test_ext, ExistentialDeposit, RuntimeOrigin, Test};
@@ -1347,8 +1238,8 @@ pub(crate) mod tests {
     use frame_support::{assert_err, assert_ok};
     use sp_core::{sr25519, Pair, U256};
     use sp_domains::{
-        ConfirmedDomainBlock, DomainId, OperatorAllowList, OperatorId, OperatorPair,
-        OperatorPublicKey,
+        ConfirmedDomainBlock, DomainConfig, DomainId, DomainObject, OperatorAllowList, OperatorId,
+        OperatorPair, OperatorPublicKey, OperatorStatus, StakingSummary,
     };
     use sp_runtime::traits::Zero;
     use sp_runtime::{PerThing, Perbill};
@@ -1875,7 +1766,7 @@ pub(crate) mod tests {
 
             let operator = Operators::<Test>::get(operator_id).unwrap();
             assert_eq!(
-                *operator.status::<Test>(operator_id),
+                *operator_status::<Test>(&operator, operator_id),
                 OperatorStatus::Deregistered(
                     (
                         domain_id,
@@ -2731,7 +2622,7 @@ pub(crate) mod tests {
 
             let operator = Operators::<Test>::get(operator_id).unwrap();
             assert_eq!(
-                *operator.status::<Test>(operator_id),
+                *operator_status::<Test>(&operator, operator_id),
                 OperatorStatus::Slashed
             );
 
@@ -2843,19 +2734,19 @@ pub(crate) mod tests {
 
             let operator = Operators::<Test>::get(operator_id_1).unwrap();
             assert_eq!(
-                *operator.status::<Test>(operator_id_1),
+                *operator_status::<Test>(&operator, operator_id_1),
                 OperatorStatus::Slashed
             );
 
             let operator = Operators::<Test>::get(operator_id_2).unwrap();
             assert_eq!(
-                *operator.status::<Test>(operator_id_2),
+                *operator_status::<Test>(&operator, operator_id_2),
                 OperatorStatus::Slashed
             );
 
             let operator = Operators::<Test>::get(operator_id_3).unwrap();
             assert_eq!(
-                *operator.status::<Test>(operator_id_3),
+                *operator_status::<Test>(&operator, operator_id_3),
                 OperatorStatus::Slashed
             );
 

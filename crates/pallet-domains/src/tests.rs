@@ -1,6 +1,4 @@
 use crate::block_tree::BlockTreeNode;
-use crate::domain_registry::{DomainConfig, DomainObject};
-use crate::staking::Operator;
 use crate::{
     self as pallet_domains, BalanceOf, BlockSlot, BlockTree, BlockTreeNodes, BundleError, Config,
     ConsensusBlockHash, DomainBlockNumberFor, DomainHashingFor, DomainRegistry, ExecutionInbox,
@@ -25,8 +23,9 @@ use sp_domains::merkle_tree::MerkleTree;
 use sp_domains::proof_provider_and_verifier::StorageProofProvider;
 use sp_domains::storage::RawGenesis;
 use sp_domains::{
-    BundleHeader, ChainId, DomainId, DomainsHoldIdentifier, ExecutionReceipt, ExtrinsicDigest,
-    InboxedBundle, InvalidBundleType, OpaqueBundle, OperatorAllowList, OperatorId, OperatorPair,
+    BundleHeader, ChainId, DomainConfig, DomainId, DomainObject, DomainsHoldIdentifier,
+    ExecutionReceipt, ExtrinsicDigest, InboxedBundle, InvalidBundleType, OpaqueBundle, Operator,
+    OperatorAllowList, OperatorId, OperatorPair, OperatorPublicKey, OperatorStatus,
     ProofOfElection, RuntimeType, SealedBundleHeader, StakingHoldIdentifier,
 };
 use sp_domains_fraud_proof::fraud_proof::{
@@ -35,10 +34,11 @@ use sp_domains_fraud_proof::fraud_proof::{
 };
 use sp_domains_fraud_proof::{
     DomainChainAllowlistUpdateExtrinsic, FraudProofExtension, FraudProofHostFunctions,
-    FraudProofVerificationInfoRequest, FraudProofVerificationInfoResponse, SetCodeExtrinsic,
+    FraudProofVerificationInfoRequest, FraudProofVerificationInfoRequestV2,
+    FraudProofVerificationInfoResponse, FraudProofVerificationInfoResponseV2, SetCodeExtrinsic,
 };
 use sp_runtime::traits::{
-    AccountIdConversion, BlakeTwo256, BlockNumberProvider, Hash as HashT, IdentityLookup, One,
+    AccountIdConversion, BlakeTwo256, BlockNumberProvider, Hash as HashT, IdentityLookup, One, Zero,
 };
 use sp_runtime::{BuildStorage, Digest, OpaqueExtrinsic, Saturating};
 use sp_state_machine::backend::AsTrieBackend;
@@ -290,6 +290,9 @@ impl pallet_domains::Config for Test {
     type ConsensusSlotProbability = SlotProbability;
     type DomainBundleSubmitted = ();
     type Balance = Balance;
+    type MmrHash = H256;
+    type MmrProofVerifier = ();
+    type FraudProofStorageKeyProvider = ();
 }
 
 pub struct ExtrinsicStorageFees;
@@ -425,6 +428,14 @@ impl FraudProofHostFunctions for MockDomainFraudProofExtension {
         };
 
         Some(response)
+    }
+
+    fn get_fraud_proof_verification_info_v2(
+        &self,
+        _domain_runtime_code: Option<Vec<u8>>,
+        _fraud_proof_verification_info_req: FraudProofVerificationInfoRequestV2,
+    ) -> Option<FraudProofVerificationInfoResponseV2> {
+        None
     }
 
     fn derive_bundle_digest(
@@ -612,10 +623,34 @@ pub(crate) fn register_genesis_domain(creator: u128, operator_ids: Vec<OperatorI
 
     let pair = OperatorPair::from_seed(&U256::from(0u32).into());
     for operator_id in operator_ids {
-        Operators::<Test>::insert(operator_id, Operator::dummy(domain_id, pair.public(), SSC));
+        Operators::<Test>::insert(
+            operator_id,
+            dummy_operator::<Test>(domain_id, pair.public(), SSC),
+        );
     }
 
     domain_id
+}
+
+pub(crate) fn dummy_operator<T: Config>(
+    domain_id: DomainId,
+    signing_key: OperatorPublicKey,
+    minimum_nominator_stake: BalanceOf<T>,
+) -> Operator<BalanceOf<T>, T::Share, DomainBlockNumberFor<T>> {
+    Operator {
+        signing_key,
+        current_domain_id: domain_id,
+        next_domain_id: domain_id,
+        minimum_nominator_stake,
+        nomination_tax: Default::default(),
+        current_total_stake: Zero::zero(),
+        current_epoch_rewards: Zero::zero(),
+        current_total_shares: Zero::zero(),
+        status: OperatorStatus::Registered,
+        deposits_in_epoch: Zero::zero(),
+        withdrawals_in_epoch: Zero::zero(),
+        total_storage_fee_deposit: Zero::zero(),
+    }
 }
 
 // Submit new head receipt to extend the block tree from the genesis block
@@ -1229,7 +1264,7 @@ fn test_invalid_domain_block_hash_fraud_proof() {
 fn generate_invalid_domain_block_hash_fraud_proof<T: Config>(
     digest: Digest,
 ) -> (T::Hash, StorageProof) {
-    let digest_storage_key = sp_domains_fraud_proof::fraud_proof::system_digest_final_key();
+    let digest_storage_key = sp_domains::system_digest_final_key();
     let mut root = T::Hash::default();
     let mut mdb = PrefixedMemoryDB::<T::Hashing>::default();
     {

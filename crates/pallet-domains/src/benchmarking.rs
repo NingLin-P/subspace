@@ -8,7 +8,6 @@ use crate::bundle_storage_fund::refund_storage_fee;
 use crate::domain_registry::DomainConfig;
 use crate::staking::{
     do_convert_previous_epoch_deposits, do_reward_operators, do_slash_operators, OperatorConfig,
-    OperatorStatus,
 };
 use crate::staking_epoch::{
     do_finalize_domain_current_epoch, do_finalize_domain_epoch_staking,
@@ -28,7 +27,7 @@ use frame_system::{Pallet as System, RawOrigin};
 use sp_core::crypto::UncheckedFrom;
 use sp_domains::{
     dummy_opaque_bundle, ConfirmedDomainBlock, DomainId, ExecutionReceipt, OperatorAllowList,
-    OperatorId, OperatorPublicKey, RuntimeType,
+    OperatorId, OperatorPublicKey, OperatorStatus, RuntimeType,
 };
 use sp_domains_fraud_proof::fraud_proof::FraudProof;
 use sp_runtime::traits::{CheckedAdd, One, Zero};

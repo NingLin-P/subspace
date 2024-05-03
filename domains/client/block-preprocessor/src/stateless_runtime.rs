@@ -282,4 +282,8 @@ where
     pub fn transfers_storage_key(&self) -> Result<Vec<u8>, ApiError> {
         <Self as DomainCoreApi<Block>>::transfers_storage_key(self, Default::default())
     }
+
+    pub fn block_fees_storage_key(&self) -> Result<Vec<u8>, ApiError> {
+        <Self as DomainCoreApi<Block>>::block_fees_storage_key(self, Default::default())
+    }
 }

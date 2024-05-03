@@ -6,8 +6,8 @@ use crate::pallet::{
     PendingStakingOperationCount, Withdrawals,
 };
 use crate::staking::{
-    do_convert_previous_epoch_deposits, do_convert_previous_epoch_withdrawal, DomainEpoch,
-    Error as TransitionError, OperatorStatus, SharePrice, WithdrawalInShares,
+    do_convert_previous_epoch_deposits, do_convert_previous_epoch_withdrawal, operator_status,
+    Error as TransitionError, SharePrice, WithdrawalInShares,
 };
 use crate::{
     bundle_storage_fund, BalanceOf, Config, ElectionVerificationParams, Event, HoldIdentifier,
@@ -21,7 +21,7 @@ use frame_support::traits::tokens::{
 use frame_support::PalletError;
 use scale_info::TypeInfo;
 use sp_core::Get;
-use sp_domains::{DomainId, EpochIndex, OperatorId};
+use sp_domains::{DomainEpoch, DomainId, EpochIndex, OperatorId, OperatorStatus};
 use sp_runtime::traits::{CheckedAdd, CheckedSub, One, Zero};
 use sp_runtime::Saturating;
 use sp_std::collections::btree_map::BTreeMap;
@@ -193,7 +193,7 @@ fn switch_operator<T: Config>(
             .ok_or(TransitionError::UnknownOperator)?;
 
         // operator is not registered, just no-op
-        if *operator.status::<T>(operator_id) != OperatorStatus::Registered {
+        if *operator_status::<T>(&operator, operator_id) != OperatorStatus::Registered {
             return Ok(());
         }
 
@@ -284,7 +284,7 @@ pub(crate) fn do_finalize_operator_epoch_staking<T: Config>(
         None => return Err(TransitionError::UnknownOperator),
     };
 
-    if *operator.status::<T>(operator_id) != OperatorStatus::Registered {
+    if *operator_status::<T>(&operator, operator_id) != OperatorStatus::Registered {
         return Err(TransitionError::OperatorNotRegistered);
     }
 

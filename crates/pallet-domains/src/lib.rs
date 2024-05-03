@@ -36,8 +36,9 @@ extern crate alloc;
 
 use crate::block_tree::verify_execution_receipt;
 use crate::bundle_storage_fund::storage_fund_account;
-use crate::domain_registry::Error as DomainRegistryError;
-use crate::staking::OperatorStatus;
+use crate::domain_registry::{calculate_bundle_limit, Error as DomainRegistryError};
+use crate::runtime_registry::into_complete_raw_genesis;
+use crate::staking::operator_status;
 use crate::staking_epoch::EpochTransitionResult;
 use crate::weights::WeightInfo;
 #[cfg(not(feature = "std"))]
@@ -62,21 +63,26 @@ use sp_core::H256;
 use sp_domains::bundle_producer_election::BundleProducerElectionParams;
 use sp_domains::{
     DomainBlockLimit, DomainBundleLimit, DomainId, DomainInstanceData, ExecutionReceipt,
-    OpaqueBundle, OperatorId, OperatorPublicKey, RuntimeId,
+    OpaqueBundle, OperatorId, OperatorPublicKey, OperatorStatus, RuntimeId,
     DOMAIN_EXTRINSICS_SHUFFLING_SEED_SUBJECT, EMPTY_EXTRINSIC_ROOT,
 };
 use sp_domains_fraud_proof::fraud_proof::{
-    FraudProof, InvalidBlockFeesProof, InvalidDomainBlockHashProof,
+    DomainRuntimeCodeAt, FraudProof, FraudProofV2, FraudProofVariant, InvalidBlockFeesProof,
+    InvalidBlockFeesProofV2, InvalidDomainBlockHashProof, InvalidDomainBlockHashProofV2,
+    InvalidTransfersProof, InvalidTransfersProofV2,
 };
+use sp_domains_fraud_proof::storage_proof::{self, BasicStorageProof, DomainRuntimeCodeProof};
 use sp_domains_fraud_proof::verification::{
     verify_bundle_equivocation_fraud_proof, verify_invalid_block_fees_fraud_proof,
     verify_invalid_bundles_fraud_proof, verify_invalid_domain_block_hash_fraud_proof,
     verify_invalid_domain_extrinsics_root_fraud_proof, verify_invalid_state_transition_fraud_proof,
     verify_invalid_transfers_fraud_proof, verify_valid_bundle_fraud_proof,
 };
+use sp_domains_fraud_proof::verification_v2::{self, verify_mmr_proof_and_extract_state_root};
 use sp_runtime::traits::{BlockNumberProvider, CheckedSub, Hash, Header, One, Zero};
 use sp_runtime::transaction_validity::TransactionPriority;
 use sp_runtime::{RuntimeAppPublic, SaturatedConversion, Saturating};
+use sp_subspace_mmr::{ConsensusChainMmrLeafProof, MmrProofVerifier};
 pub use staking::OperatorConfig;
 use subspace_core_primitives::{BlockHash, PotOutput, SlotNumber, U256};
 use subspace_runtime_primitives::Balance;
@@ -151,6 +157,8 @@ const STORAGE_VERSION: StorageVersion = StorageVersion::new(0);
 /// 100 as the maximum number of bundle per block for benchmarking.
 const MAX_BUNLDE_PER_BLOCK: u32 = 100;
 
+pub(crate) type StateRootOf<T> = <<T as frame_system::Config>::Hashing as Hash>::Output;
+
 #[frame_support::pallet]
 mod pallet {
     #![allow(clippy::large_enum_variant)]
@@ -164,20 +172,19 @@ mod pallet {
     use crate::bundle_storage_fund::refund_storage_fee;
     use crate::bundle_storage_fund::{charge_bundle_storage_fee, Error as BundleStorageFundError};
     use crate::domain_registry::{
-        do_instantiate_domain, do_update_domain_allow_list, DomainConfig, DomainObject,
+        calculate_bundle_limit, do_instantiate_domain, do_update_domain_allow_list,
         Error as DomainRegistryError,
     };
     use crate::runtime_registry::{
         do_register_runtime, do_schedule_runtime_upgrade, do_upgrade_runtimes,
-        register_runtime_at_genesis, Error as RuntimeRegistryError, RuntimeObject,
-        ScheduledRuntimeUpgrade,
+        register_runtime_at_genesis, Error as RuntimeRegistryError, ScheduledRuntimeUpgrade,
     };
     #[cfg(not(feature = "runtime-benchmarks"))]
     use crate::staking::do_reward_operators;
     use crate::staking::{
         do_deregister_operator, do_nominate_operator, do_register_operator, do_slash_operators,
-        do_unlock_funds, do_unlock_operator, do_withdraw_stake, Deposit, DomainEpoch,
-        Error as StakingError, Operator, OperatorConfig, SharePrice, StakingSummary, Withdrawal,
+        do_unlock_funds, do_unlock_operator, do_withdraw_stake, Deposit, Error as StakingError,
+        OperatorConfig, SharePrice, Withdrawal,
     };
     use crate::staking_epoch::{do_finalize_domain_current_epoch, Error as StakingEpochError};
     use crate::weights::WeightInfo;
@@ -185,8 +192,8 @@ mod pallet {
     use crate::DomainHashingFor;
     use crate::{
         BalanceOf, BlockSlot, BlockTreeNodeFor, DomainBlockNumberFor, ElectionVerificationParams,
-        HoldIdentifier, NominatorId, OpaqueBundleOf, ReceiptHashFor, MAX_BUNLDE_PER_BLOCK,
-        STORAGE_VERSION,
+        HoldIdentifier, NominatorId, OpaqueBundleOf, ReceiptHashFor, StateRootOf,
+        MAX_BUNLDE_PER_BLOCK, STORAGE_VERSION,
     };
     #[cfg(not(feature = "std"))]
     use alloc::string::String;
@@ -206,11 +213,13 @@ mod pallet {
     use sp_core::H256;
     use sp_domains::bundle_producer_election::ProofOfElectionError;
     use sp_domains::{
-        BundleDigest, ConfirmedDomainBlock, DomainBundleSubmitted, DomainId,
-        DomainsTransfersTracker, EpochIndex, GenesisDomain, OperatorAllowList, OperatorId,
-        OperatorPublicKey, RuntimeId, RuntimeType,
+        BundleDigest, BundleSlotProbability, ConfirmedDomainBlock, DomainBundleSubmitted,
+        DomainConfig, DomainEpoch, DomainId, DomainObject, DomainsTransfersTracker, EpochIndex,
+        FraudProofStorageKeyProvider, GenesisDomain, Operator, OperatorAllowList, OperatorId,
+        OperatorPublicKey, RuntimeId, RuntimeObject, RuntimeType, StakingSummary,
     };
-    use sp_domains_fraud_proof::fraud_proof::FraudProof;
+    use sp_domains_fraud_proof::fraud_proof::{FraudProof, FraudProofV2};
+    use sp_domains_fraud_proof::storage_proof::{self, BasicStorageProof};
     use sp_domains_fraud_proof::InvalidTransactionCode;
     use sp_runtime::traits::{
         AtLeast32BitUnsigned, BlockNumberProvider, CheckEqual, CheckedAdd, Header as HeaderT,
@@ -220,6 +229,7 @@ mod pallet {
     use sp_std::boxed::Box;
     use sp_std::collections::btree_set::BTreeSet;
     use sp_std::fmt::Debug;
+    use sp_subspace_mmr::{ConsensusChainMmrLeafProof, MmrProofVerifier};
     use subspace_core_primitives::U256;
     use subspace_runtime_primitives::StorageFee;
 
@@ -389,6 +399,19 @@ mod pallet {
 
         /// Post hook to notify accepted domain bundles in previous block.
         type DomainBundleSubmitted: DomainBundleSubmitted;
+
+        /// Hash type of MMR
+        type MmrHash: Parameter + Member + Default + Clone;
+
+        /// MMR proof verifier
+        type MmrProofVerifier: MmrProofVerifier<
+            Self::MmrHash,
+            BlockNumberFor<Self>,
+            StateRootOf<Self>,
+        >;
+
+        /// Fraud proof storage key provider
+        type FraudProofStorageKeyProvider: FraudProofStorageKeyProvider;
     }
 
     #[pallet::pallet]
@@ -398,7 +421,7 @@ mod pallet {
 
     /// Bundles submitted successfully in current block.
     #[pallet::storage]
-    pub(super) type SuccessfulBundles<T> = StorageMap<_, Identity, DomainId, Vec<H256>, ValueQuery>;
+    pub type SuccessfulBundles<T> = StorageMap<_, Identity, DomainId, Vec<H256>, ValueQuery>;
 
     /// Fraud proofs submitted successfully in current block.
     #[pallet::storage]
@@ -425,7 +448,7 @@ mod pallet {
     pub(super) type NextEVMChainId<T> = StorageValue<_, EVMChainId, ValueQuery, StartingEVMChainId>;
 
     #[pallet::storage]
-    pub(super) type RuntimeRegistry<T: Config> =
+    pub type RuntimeRegistry<T: Config> =
         StorageMap<_, Identity, RuntimeId, RuntimeObject<BlockNumberFor<T>, T::Hash>, OptionQuery>;
 
     #[pallet::storage]
@@ -438,6 +461,17 @@ mod pallet {
         ScheduledRuntimeUpgrade<T::Hash>,
         OptionQuery,
     >;
+
+    /// A handy mapping of `domain_id` -> `runtime_id`, used in fraud proof to generate storage
+    /// proof of the domain runtime code.
+    #[pallet::storage]
+    pub(super) type DomainRuntimeMap<T> = StorageMap<_, Identity, DomainId, RuntimeId, OptionQuery>;
+
+    /// A handy mapping of `domain_id` -> `bundle_slot_probability`, used in fraud proof to generate storage
+    /// proof of the domain slot probability.
+    #[pallet::storage]
+    pub type BundleSlotProbabilityMap<T> =
+        StorageMap<_, Identity, DomainId, BundleSlotProbability, OptionQuery>;
 
     #[pallet::storage]
     pub(super) type NextOperatorId<T> = StorageValue<_, OperatorId, ValueQuery>;
@@ -454,12 +488,12 @@ mod pallet {
 
     #[pallet::storage]
     #[pallet::getter(fn domain_staking_summary)]
-    pub(super) type DomainStakingSummary<T: Config> =
+    pub type DomainStakingSummary<T: Config> =
         StorageMap<_, Identity, DomainId, StakingSummary<OperatorId, BalanceOf<T>>, OptionQuery>;
 
     /// List of all registered operators and their configuration.
     #[pallet::storage]
-    pub(super) type Operators<T: Config> = StorageMap<
+    pub type Operators<T: Config> = StorageMap<
         _,
         Identity,
         OperatorId,
@@ -723,6 +757,20 @@ mod pallet {
         BadBundleEquivocationFraudProof,
         /// The bad receipt already reported by a previous fraud proof
         BadReceiptAlreadyReported,
+        /// Bad MMR proof, it may due to the proof is expired or it is generated against a different fork.
+        BadMmrProof,
+        /// Unexpected MMR proof
+        UnexpectedMmrProof,
+        /// Missing MMR proof
+        MissingMmrProof,
+        Dummy,
+        StorageProof(storage_proof::VerificationError),
+    }
+
+    impl From<storage_proof::VerificationError> for FraudProofError {
+        fn from(err: storage_proof::VerificationError) -> Self {
+            FraudProofError::StorageProof(err)
+        }
     }
 
     impl<T> From<FraudProofError> for Error<T> {
@@ -1414,6 +1462,92 @@ mod pallet {
             PermissionedActionAllowedBy::<T>::put(permissioned_action_allowed_by);
             Ok(())
         }
+
+        #[pallet::call_index(15)]
+        #[pallet::weight((
+            T::WeightInfo::submit_fraud_proof().saturating_add(
+                T::WeightInfo::handle_bad_receipt(MAX_BUNLDE_PER_BLOCK)
+            ),
+            DispatchClass::Operational,
+            Pays::No
+        ))]
+        pub fn submit_fraud_proof_v2(
+            origin: OriginFor<T>,
+            fraud_proof: Box<FraudProofV2<BlockNumberFor<T>, T::Hash, T::DomainHeader, T::MmrHash>>,
+        ) -> DispatchResultWithPostInfo {
+            ensure_none(origin)?;
+
+            log::trace!(target: "runtime::domains", "Processing fraud proof: {fraud_proof:?}");
+            let domain_id = fraud_proof.domain_id();
+            let mut actual_weight = T::WeightInfo::submit_fraud_proof();
+
+            if let Some(bad_receipt_hash) = fraud_proof.targeted_bad_receipt_hash() {
+                let head_receipt_number = HeadReceiptNumber::<T>::get(domain_id);
+                let bad_receipt_number = BlockTreeNodes::<T>::get(bad_receipt_hash)
+                    .ok_or::<Error<T>>(FraudProofError::BadReceiptNotFound.into())?
+                    .execution_receipt
+                    .domain_block_number;
+                // The `head_receipt_number` must greater than or equal to any existing receipt, including
+                // the bad receipt, otherwise the fraud proof should be rejected due to `BadReceiptNotFound`,
+                // double check here to make it more robust.
+                ensure!(
+                    head_receipt_number >= bad_receipt_number,
+                    Error::<T>::from(FraudProofError::BadReceiptNotFound),
+                );
+
+                // Prune the bad ER and slash the submitter, the descendants of the bad ER (i.e. all ERs in
+                // `[bad_receipt_number + 1..head_receipt_number]` ) and the corresponding submitter will be
+                // pruned/slashed lazily as the domain progressed.
+                //
+                // NOTE: Skip the following staking related operations when benchmarking the
+                // `submit_fraud_proof` call, these operations will be benchmarked separately.
+                #[cfg(not(feature = "runtime-benchmarks"))]
+                {
+                    let block_tree_node = prune_receipt::<T>(domain_id, bad_receipt_number)
+                        .map_err(Error::<T>::from)?
+                        .ok_or::<Error<T>>(FraudProofError::BadReceiptNotFound.into())?;
+
+                    actual_weight =
+                        actual_weight.saturating_add(T::WeightInfo::handle_bad_receipt(
+                            (block_tree_node.operator_ids.len() as u32).min(MAX_BUNLDE_PER_BLOCK),
+                        ));
+
+                    do_slash_operators::<T>(
+                        block_tree_node.operator_ids.into_iter(),
+                        SlashedReason::BadExecutionReceipt(bad_receipt_hash),
+                    )
+                    .map_err(Error::<T>::from)?;
+                }
+
+                // Update the head receipt number to `bad_receipt_number - 1`
+                let new_head_receipt_number = bad_receipt_number.saturating_sub(One::one());
+                HeadReceiptNumber::<T>::insert(domain_id, new_head_receipt_number);
+
+                Self::deposit_event(Event::FraudProofProcessed {
+                    domain_id,
+                    new_head_receipt_number: Some(new_head_receipt_number),
+                });
+            } else if let Some((targeted_bad_operator, slot)) =
+                fraud_proof.targeted_bad_operator_and_slot_for_bundle_equivocation()
+            {
+                Self::deposit_event(Event::FraudProofProcessed {
+                    domain_id,
+                    new_head_receipt_number: None,
+                });
+
+                do_slash_operators::<T>(
+                    vec![targeted_bad_operator].into_iter(),
+                    SlashedReason::BundleEquivocation(slot),
+                )
+                .map_err(Error::<T>::from)?;
+
+                actual_weight = actual_weight.saturating_add(T::WeightInfo::handle_bad_receipt(1));
+            }
+
+            SuccessfulFraudProofs::<T>::append(domain_id, fraud_proof.hash());
+
+            Ok(Some(actual_weight).into())
+        }
     }
 
     #[pallet::genesis_config]
@@ -1539,6 +1673,11 @@ mod pallet {
                 Call::submit_fraud_proof { fraud_proof } => Self::validate_fraud_proof(fraud_proof)
                     .map(|_| ())
                     .map_err(|_| InvalidTransaction::Call.into()),
+                Call::submit_fraud_proof_v2 { fraud_proof } => {
+                    Self::validate_fraud_proof_v2(fraud_proof)
+                        .map(|_| ())
+                        .map_err(|_| InvalidTransaction::Call.into())
+                }
                 _ => Err(InvalidTransaction::Call.into()),
             }
         }
@@ -1624,6 +1763,26 @@ mod pallet {
                         .propagate(true)
                         .build()
                 }
+                Call::submit_fraud_proof_v2 { fraud_proof } => {
+                    let (tag, priority) = match Self::validate_fraud_proof_v2(fraud_proof) {
+                        Err(e) => {
+                            log::warn!(
+                                target: "runtime::domains",
+                                "Bad fraud proof {fraud_proof:?}, error: {e:?}",
+                            );
+                            return InvalidTransactionCode::FraudProof.into();
+                        }
+                        Ok(tp) => tp,
+                    };
+
+                    ValidTransaction::with_tag_prefix("SubspaceSubmitFraudProof")
+                        .priority(priority)
+                        .and_provides(tag)
+                        .longevity(TransactionLongevity::MAX)
+                        // We need this extrinsic to be propagated to the farmer nodes.
+                        .propagate(true)
+                        .build()
+                }
 
                 _ => InvalidTransaction::Call.into(),
             }
@@ -1661,14 +1820,14 @@ impl<T: Config> Pallet<T> {
         let runtime_object = RuntimeRegistry::<T>::get(domain_obj.domain_config.runtime_id)?;
         let runtime_type = runtime_object.runtime_type.clone();
         let total_issuance = domain_obj.domain_config.total_issuance()?;
-        let raw_genesis = runtime_object
-            .into_complete_raw_genesis::<T>(
-                domain_id,
-                domain_obj.domain_runtime_info,
-                total_issuance,
-                domain_obj.domain_config.initial_balances,
-            )
-            .ok()?;
+        let raw_genesis = into_complete_raw_genesis::<T>(
+            runtime_object,
+            domain_id,
+            domain_obj.domain_runtime_info,
+            total_issuance,
+            domain_obj.domain_config.initial_balances,
+        )
+        .ok()?;
         Some((
             DomainInstanceData {
                 runtime_type,
@@ -1814,8 +1973,8 @@ impl<T: Config> Pallet<T> {
         let operator = Operators::<T>::get(operator_id).ok_or(BundleError::InvalidOperatorId)?;
 
         ensure!(
-            *operator.status::<T>(operator_id) != OperatorStatus::Slashed
-                && *operator.status::<T>(operator_id) != OperatorStatus::PendingSlash,
+            *operator_status::<T>(&operator, operator_id) != OperatorStatus::Slashed
+                && *operator_status::<T>(&operator, operator_id) != OperatorStatus::PendingSlash,
             BundleError::BadOperator
         );
 
@@ -1832,8 +1991,7 @@ impl<T: Config> Pallet<T> {
             .ok_or(BundleError::InvalidDomainId)?
             .domain_config;
 
-        let domain_bundle_limit = domain_config
-            .calculate_bundle_limit::<T>()
+        let domain_bundle_limit = calculate_bundle_limit::<T>(&domain_config)
             .map_err(|_| BundleError::UnableToCalculateBundleLimit)?;
 
         ensure!(
@@ -2081,6 +2239,314 @@ impl<T: Config> Pallet<T> {
         Ok(tag_and_priority)
     }
 
+    fn validate_fraud_proof_v2(
+        fraud_proof: &FraudProofV2<BlockNumberFor<T>, T::Hash, T::DomainHeader, T::MmrHash>,
+    ) -> Result<(FraudProofTag, TransactionPriority), FraudProofError> {
+        let domain_id = fraud_proof.domain_id();
+        let tag_and_priority = if let Some(bad_receipt_hash) =
+            fraud_proof.targeted_bad_receipt_hash()
+        {
+            let bad_receipt = BlockTreeNodes::<T>::get(bad_receipt_hash)
+                .ok_or(FraudProofError::BadReceiptNotFound)?
+                .execution_receipt;
+            let domain_block_number = bad_receipt.domain_block_number;
+
+            ensure!(
+                !bad_receipt.domain_block_number.is_zero(),
+                FraudProofError::ChallengingGenesisReceipt
+            );
+
+            ensure!(
+                !Self::is_bad_er_pending_to_prune(domain_id, bad_receipt.domain_block_number),
+                FraudProofError::BadReceiptAlreadyReported,
+            );
+
+            let maybe_state_root = match &fraud_proof.maybe_mmr_proof {
+                Some(mmr_proof) => Some(
+                    verify_mmr_proof_and_extract_state_root::<
+                        T::Block,
+                        T::DomainHeader,
+                        T::MmrHash,
+                        T::MmrProofVerifier,
+                    >(mmr_proof.clone(), bad_receipt.consensus_block_number)
+                    .map_err(|_| FraudProofError::BadMmrProof)?,
+                ),
+                None => None,
+            };
+
+            // TODO: error if state_root/domain_runtime_code is unexpected but provided
+
+            match &fraud_proof.proof {
+                FraudProofVariant::InvalidBlockFees(InvalidBlockFeesProofV2 {
+                    storage_proof,
+                    ..
+                }) => {
+                    let bad_receipt_parent =
+                        BlockTreeNodes::<T>::get(bad_receipt.parent_domain_block_receipt_hash)
+                            .ok_or(FraudProofError::ParentReceiptNotFound)?
+                            .execution_receipt;
+                    let domain_runtime_code = Self::get_domain_runtime_code_at(
+                        bad_receipt_parent.consensus_block_number,
+                        domain_id,
+                        fraud_proof.maybe_domain_runtime_code_proof.clone(),
+                    )?;
+
+                    verification_v2::verify_invalid_block_fees_fraud_proof::<
+                        T::Block,
+                        DomainBlockNumberFor<T>,
+                        T::DomainHash,
+                        BalanceOf<T>,
+                        DomainHashingFor<T>,
+                    >(bad_receipt, storage_proof, domain_runtime_code)
+                    .map_err(|err| {
+                        log::error!(
+                            target: "runtime::domains",
+                            "Block fees proof verification failed: {err:?}"
+                        );
+                        FraudProofError::InvalidBlockFeesFraudProof
+                    })?;
+                }
+                FraudProofVariant::InvalidTransfers(InvalidTransfersProofV2 {
+                    storage_proof,
+                    ..
+                }) => {
+                    let bad_receipt_parent =
+                        BlockTreeNodes::<T>::get(bad_receipt.parent_domain_block_receipt_hash)
+                            .ok_or(FraudProofError::ParentReceiptNotFound)?
+                            .execution_receipt;
+                    let domain_runtime_code = Self::get_domain_runtime_code_at(
+                        bad_receipt_parent.consensus_block_number,
+                        domain_id,
+                        fraud_proof.maybe_domain_runtime_code_proof.clone(),
+                    )?;
+
+                    verification_v2::verify_invalid_transfers_fraud_proof::<
+                        T::Block,
+                        DomainBlockNumberFor<T>,
+                        T::DomainHash,
+                        BalanceOf<T>,
+                        DomainHashingFor<T>,
+                    >(bad_receipt, storage_proof, domain_runtime_code)
+                    .map_err(|err| {
+                        log::error!(
+                            target: "runtime::domains",
+                            "Domain transfers proof verification failed: {err:?}"
+                        );
+                        FraudProofError::InvalidTransfersFraudProof
+                    })?;
+                }
+                FraudProofVariant::InvalidDomainBlockHash(InvalidDomainBlockHashProofV2 {
+                    digest_storage_proof,
+                    ..
+                }) => {
+                    let parent_receipt =
+                        BlockTreeNodes::<T>::get(bad_receipt.parent_domain_block_receipt_hash)
+                            .ok_or(FraudProofError::ParentReceiptNotFound)?
+                            .execution_receipt;
+                    verification_v2::verify_invalid_domain_block_hash_fraud_proof::<
+                        T::Block,
+                        BalanceOf<T>,
+                        T::DomainHeader,
+                    >(
+                        bad_receipt,
+                        digest_storage_proof.clone(),
+                        parent_receipt.domain_block_hash,
+                    )
+                    .map_err(|err| {
+                        log::error!(
+                            target: "runtime::domains",
+                            "Invalid Domain block hash proof verification failed: {err:?}"
+                        );
+                        FraudProofError::InvalidDomainBlockHashFraudProof
+                    })?;
+                }
+                FraudProofVariant::InvalidExtrinsicsRoot(proof) => {
+                    let bad_receipt_parent =
+                        BlockTreeNodes::<T>::get(bad_receipt.parent_domain_block_receipt_hash)
+                            .ok_or(FraudProofError::ParentReceiptNotFound)?
+                            .execution_receipt;
+                    let domain_runtime_code = Self::get_domain_runtime_code_at(
+                        bad_receipt_parent.consensus_block_number,
+                        domain_id,
+                        fraud_proof.maybe_domain_runtime_code_proof.clone(),
+                    )?;
+                    let runtime_id = Self::runtime_id(domain_id).ok_or(FraudProofError::Dummy)?;
+                    let state_root = maybe_state_root.ok_or(FraudProofError::MissingMmrProof)?;
+
+                    verification_v2::verify_invalid_domain_extrinsics_root_fraud_proof::<
+                        T::Block,
+                        BalanceOf<T>,
+                        T::DomainHeader,
+                        T::Hashing,
+                        T::FraudProofStorageKeyProvider,
+                    >(
+                        bad_receipt,
+                        proof,
+                        domain_id,
+                        runtime_id,
+                        state_root,
+                        domain_runtime_code,
+                    )
+                    .map_err(|err| {
+                        log::error!(
+                            target: "runtime::domains",
+                            "Invalid Domain extrinsic root proof verification failed: {err:?}"
+                        );
+                        FraudProofError::InvalidExtrinsicRootFraudProof
+                    })?;
+                }
+                FraudProofVariant::InvalidStateTransition(proof) => {
+                    let bad_receipt_parent =
+                        BlockTreeNodes::<T>::get(bad_receipt.parent_domain_block_receipt_hash)
+                            .ok_or(FraudProofError::ParentReceiptNotFound)?
+                            .execution_receipt;
+
+                    let domain_runtime_code = Self::get_domain_runtime_code_at(
+                        bad_receipt_parent.consensus_block_number,
+                        domain_id,
+                        fraud_proof.maybe_domain_runtime_code_proof.clone(),
+                    )?;
+
+                    verification_v2::verify_invalid_state_transition_fraud_proof::<
+                        T::Block,
+                        T::DomainHeader,
+                        BalanceOf<T>,
+                    >(
+                        bad_receipt,
+                        bad_receipt_parent,
+                        &proof,
+                        domain_id,
+                        domain_runtime_code,
+                    )
+                    .map_err(|err| {
+                        log::error!(
+                            target: "runtime::domains",
+                            "Invalid State transition proof verification failed: {err:?}"
+                        );
+                        FraudProofError::InvalidStateTransitionFraudProof
+                    })?;
+                }
+                FraudProofVariant::InvalidBundles(proof) => {
+                    let bad_receipt_parent =
+                        BlockTreeNodes::<T>::get(bad_receipt.parent_domain_block_receipt_hash)
+                            .ok_or(FraudProofError::ParentReceiptNotFound)?
+                            .execution_receipt;
+
+                    let state_root = maybe_state_root.ok_or(FraudProofError::MissingMmrProof)?;
+                    let domain_runtime_code = Self::get_domain_runtime_code_at(
+                        bad_receipt_parent.consensus_block_number,
+                        domain_id,
+                        fraud_proof.maybe_domain_runtime_code_proof.clone(),
+                    )?;
+
+                    verification_v2::verify_invalid_bundles_fraud_proof::<
+                        T::Block,
+                        T::DomainHeader,
+                        BalanceOf<T>,
+                        T::FraudProofStorageKeyProvider,
+                    >(
+                        bad_receipt,
+                        bad_receipt_parent,
+                        proof,
+                        domain_id,
+                        state_root,
+                        domain_runtime_code,
+                    )
+                    .map_err(|err| {
+                        log::error!(
+                            target: "runtime::domains",
+                            "Invalid Bundle proof verification failed: {err:?}"
+                        );
+                        FraudProofError::InvalidBundleFraudProof
+                    })?;
+                }
+                FraudProofVariant::ValidBundle(proof) => {
+                    let state_root = maybe_state_root.ok_or(FraudProofError::MissingMmrProof)?;
+                    verification_v2::verify_valid_bundle_fraud_proof::<
+                        T::Block,
+                        T::DomainHeader,
+                        BalanceOf<T>,
+                        T::FraudProofStorageKeyProvider,
+                    >(bad_receipt, &proof, domain_id, state_root)
+                    .map_err(|err| {
+                        log::error!(
+                            target: "runtime::domains",
+                            "Valid bundle proof verification failed: {err:?}"
+                        );
+                        FraudProofError::BadValidBundleFraudProof
+                    })?
+                }
+                _ => return Err(FraudProofError::UnexpectedFraudProof),
+            }
+
+            // The priority of fraud proof is determined by how many blocks left before the bad ER
+            // is confirmed, the less the more emergency it is, thus give a higher priority.
+            let block_before_bad_er_confirm = domain_block_number.saturating_sub(
+                Self::latest_confirmed_domain_block_number(fraud_proof.domain_id()),
+            );
+            let priority =
+                TransactionPriority::MAX - block_before_bad_er_confirm.saturated_into::<u64>();
+
+            // Use the domain id as tag thus the consensus node only accept one fraud proof for a
+            // specific domain at a time
+            let tag = FraudProofTag::BadER(fraud_proof.domain_id());
+
+            (tag, priority)
+        } else if let Some((bad_operator_id, _)) =
+            fraud_proof.targeted_bad_operator_and_slot_for_bundle_equivocation()
+        {
+            match &fraud_proof.proof {
+                FraudProofVariant::BundleEquivocation(proof) => {
+                    let mmr_proof = fraud_proof
+                        .maybe_mmr_proof
+                        .as_ref()
+                        .ok_or(FraudProofError::MissingMmrProof)?;
+                    // FIXME:
+                    let consensus_block_number =
+                        proof.first_header.header.receipt.consensus_block_number;
+                    let state_root =
+                        verify_mmr_proof_and_extract_state_root::<
+                            T::Block,
+                            T::DomainHeader,
+                            T::MmrHash,
+                            T::MmrProofVerifier,
+                        >(mmr_proof.clone(), consensus_block_number)
+                        .map_err(|_| FraudProofError::BadMmrProof)?;
+
+                    verification_v2::verify_bundle_equivocation_fraud_proof::<
+                        T::Block,
+                        T::DomainHeader,
+                        T::FraudProofStorageKeyProvider,
+                    >(&proof, domain_id, state_root)
+                    .map_err(|err| {
+                        log::error!(
+                            target: "runtime::domains",
+                            "Bundle equivocation proof verification failed: {err:?}"
+                        );
+                        FraudProofError::BadBundleEquivocationFraudProof
+                    })?;
+                }
+                _ => return Err(FraudProofError::UnexpectedFraudProof),
+            }
+
+            // Bundle equivocation fraud proof doesn't target bad ER thus we give it the lowest priority
+            // compared to other fraud proofs
+            let priority = TransactionPriority::MAX
+                - T::BlockTreePruningDepth::get().saturated_into::<u64>()
+                - 1;
+
+            // Use the operator id as tag thus the consensus node only accept one bundle equivacotion fraud proof
+            // for a specific operator at a time
+            let tag = FraudProofTag::BundleEquivocation(bad_operator_id);
+
+            (tag, priority)
+        } else {
+            return Err(FraudProofError::UnexpectedFraudProof);
+        };
+
+        Ok(tag_and_priority)
+    }
+
     /// Return operators specific election verification params for Proof of Election verification.
     /// If there was an epoch transition in this block for this domain,
     ///     then return the parameters from previous epoch stored in LastEpochStakingDistribution
@@ -2238,7 +2704,7 @@ impl<T: Config> Pallet<T> {
             Some(domain_obj) => domain_obj.domain_config,
         };
 
-        let bundle_limit = domain_config.calculate_bundle_limit::<T>()?;
+        let bundle_limit = calculate_bundle_limit::<T>(&domain_config)?;
 
         Ok(Some(bundle_limit))
     }
@@ -2370,6 +2836,67 @@ impl<T: Config> Pallet<T> {
         let storage_fund_acc = storage_fund_account::<T>(operator_id);
         T::Currency::reducible_balance(&storage_fund_acc, Preservation::Preserve, Fortitude::Polite)
     }
+
+    // NOTE: domain runtime code is take affect in the next block so in most case should
+    // use the parent block here
+    pub fn get_domain_runtime_code_at(
+        at: BlockNumberFor<T>,
+        domain_id: DomainId,
+        maybe_domain_runtime_code_at: Option<
+            DomainRuntimeCodeAt<BlockNumberFor<T>, T::Hash, T::MmrHash>,
+        >,
+    ) -> Result<Vec<u8>, FraudProofError> {
+        let runtime_id = Self::runtime_id(domain_id).ok_or(FraudProofError::Dummy)?;
+        let current_runtime_obj =
+            RuntimeRegistry::<T>::get(runtime_id).ok_or(FraudProofError::Dummy)?;
+        let is_domain_runtime_updraded = current_runtime_obj.updated_at >= at;
+
+        let mut runtime_obj = match (is_domain_runtime_updraded, maybe_domain_runtime_code_at) {
+            //  The domain runtime is upgraded since `at`, the domain runtime code in `at` is not available
+            // so `domain_runtime_code_proof` must be provided
+            (true, None) => return Err(FraudProofError::Dummy),
+            (true, Some(domain_runtime_code_at)) => {
+                let DomainRuntimeCodeAt {
+                    mmr_proof,
+                    domain_runtime_code_proof,
+                } = domain_runtime_code_at;
+
+                let state_root = verify_mmr_proof_and_extract_state_root::<
+                    T::Block,
+                    T::DomainHeader,
+                    T::MmrHash,
+                    T::MmrProofVerifier,
+                >(mmr_proof, at)
+                .map_err(|_| FraudProofError::BadMmrProof)?;
+
+                let runtime_obj =
+                    <DomainRuntimeCodeProof as BasicStorageProof<T::Block>>::verify::<
+                        T::FraudProofStorageKeyProvider,
+                    >(domain_runtime_code_proof, runtime_id, &state_root)?
+                    .ok_or(storage_proof::VerificationError::MissingStorageValue)?;
+
+                runtime_obj
+            }
+            // Domain runtime code in `at` is available in the state so `domain_runtime_code_proof`
+            // is unexpected
+            (false, Some(_)) => return Err(FraudProofError::Dummy),
+            (false, None) => current_runtime_obj,
+        };
+        let code = runtime_obj
+            .raw_genesis
+            .take_runtime_code()
+            .ok_or(storage_proof::VerificationError::RuntimeCodeNotFound)?;
+        Ok(code)
+    }
+
+    pub fn is_domain_runtime_updraded_since(
+        domain_id: DomainId,
+        at: BlockNumberFor<T>,
+    ) -> Option<bool> {
+        Self::runtime_id(domain_id)
+            .and_then(RuntimeRegistry::<T>::get)
+            .map(|runtime_obj| runtime_obj.updated_at >= at)
+    }
 }
 
 impl<T: Config> sp_domains::DomainOwner<T::AccountId> for Pallet<T> {
@@ -2411,6 +2938,24 @@ where
         fraud_proof: FraudProof<BlockNumberFor<T>, T::Hash, T::DomainHeader>,
     ) {
         let call = Call::submit_fraud_proof {
+            fraud_proof: Box::new(fraud_proof),
+        };
+
+        match SubmitTransaction::<T, Call<T>>::submit_unsigned_transaction(call.into()) {
+            Ok(()) => {
+                log::info!(target: "runtime::domains", "Submitted fraud proof");
+            }
+            Err(()) => {
+                log::error!(target: "runtime::domains", "Error submitting fraud proof");
+            }
+        }
+    }
+
+    /// Submits an unsigned extrinsic [`Call::submit_fraud_proof_v2`].
+    pub fn submit_fraud_proof_v2_unsigned(
+        fraud_proof: FraudProofV2<BlockNumberFor<T>, T::Hash, T::DomainHeader, T::MmrHash>,
+    ) {
+        let call = Call::submit_fraud_proof_v2 {
             fraud_proof: Box::new(fraud_proof),
         };
 

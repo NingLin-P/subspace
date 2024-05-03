@@ -16,6 +16,7 @@
 
 //! Subspace fraud proof primitives for consensus chain.
 #![cfg_attr(not(feature = "std"), no_std)]
+#![feature(associated_type_defaults)]
 
 #[cfg(feature = "std")]
 pub mod bundle_equivocation;
@@ -25,16 +26,18 @@ pub mod fraud_proof;
 #[cfg(feature = "std")]
 mod host_functions;
 mod runtime_interface;
+pub mod storage_proof;
 #[cfg(test)]
 pub mod test_ethereum_tx;
 #[cfg(test)]
 mod tests;
 pub mod verification;
+pub mod verification_v2;
 
 #[cfg(not(feature = "std"))]
 extern crate alloc;
 
-use crate::fraud_proof::FraudProof;
+use crate::fraud_proof::{FraudProof, FraudProofV2};
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 use codec::{Decode, Encode};
@@ -47,15 +50,15 @@ pub use runtime_interface::fraud_proof_runtime_interface;
 pub use runtime_interface::fraud_proof_runtime_interface::HostFunctions;
 use scale_info::TypeInfo;
 use sp_core::H256;
-use sp_domains::{DomainId, OperatorId};
+use sp_domains::{DomainAllowlistUpdates, DomainId, OperatorId};
 use sp_runtime::traits::{Header as HeaderT, NumberFor};
 use sp_runtime::transaction_validity::{InvalidTransaction, TransactionValidity};
 use sp_runtime::OpaqueExtrinsic;
 use sp_runtime_interface::pass_by;
 use sp_runtime_interface::pass_by::PassBy;
 use sp_trie::StorageProof;
-use subspace_core_primitives::Randomness;
-use subspace_runtime_primitives::Balance;
+use subspace_core_primitives::{Randomness, U256};
+use subspace_runtime_primitives::{Balance, Moment};
 
 /// Custom invalid validity code for the extrinsics in pallet-domains.
 #[repr(u8)]
@@ -163,6 +166,106 @@ pub enum FraudProofVerificationInfoRequest {
 
 impl PassBy for FraudProofVerificationInfoRequest {
     type PassBy = pass_by::Codec<Self>;
+}
+
+#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+pub struct DomainInherentExtrinsicData {
+    pub timestamp: Moment,
+    pub maybe_domain_runtime_upgrade: Option<Vec<u8>>,
+    pub consensus_transaction_byte_fee: Balance,
+    pub domain_chain_allowlist: Option<DomainAllowlistUpdates>,
+}
+
+#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+pub struct DomainInherentExtrinsic {
+    domain_timestamp_extrinsic: Vec<u8>,
+    maybe_domain_chain_allowlist_extrinsic: Option<Vec<u8>>,
+    consensus_chain_byte_fee_extrinsic: Vec<u8>,
+    maybe_domain_set_code_extrinsic: Option<Vec<u8>>,
+}
+
+#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+pub enum DomainStorageKeyRequest {
+    BlockFees,
+    Transfers,
+}
+
+#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+pub enum StatelessDomainRuntimeCall {
+    IsTxInRange {
+        domain_tx_range: U256,
+        bundle_vrf_hash: U256,
+    },
+    IsInherentExtrinsic,
+    IsDecodableExtrinsic,
+}
+
+/// Request type to fetch required verification information for fraud proof through Host function.
+#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+pub enum FraudProofVerificationInfoRequestV2 {
+    ConstructDomainInherentExtrinsic(DomainInherentExtrinsicData),
+    DomainStorageKey(DomainStorageKeyRequest),
+    DomainRuntimeCall {
+        call: StatelessDomainRuntimeCall,
+        opaque_extrinsic: OpaqueExtrinsic,
+    },
+    CheckExtrinsicsInSingleContext {
+        domain_id: DomainId,
+        /// Domain block number from ER
+        domain_block_number: u32,
+        /// Domain block hash from ER
+        domain_block_hash: H256,
+        /// Domain block state root from ER
+        domain_block_state_root: H256,
+        /// Extrinsics which we want to check in single context
+        extrinsics: Vec<OpaqueExtrinsic>,
+        /// Storage proof for the keys used in validating the extrinsic
+        storage_proof: StorageProof,
+    },
+}
+
+impl PassBy for FraudProofVerificationInfoRequestV2 {
+    type PassBy = pass_by::Codec<Self>;
+}
+
+#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+pub enum FraudProofVerificationInfoResponseV2 {
+    ConstructDomainInherentExtrinsic(DomainInherentExtrinsic),
+    DomainStorageKey(Vec<u8>),
+    DomainRuntimeCall(bool),
+    CheckExtrinsicsInSingleContext(Option<u32>),
+}
+
+impl FraudProofVerificationInfoResponseV2 {
+    pub fn into_construct_domain_inherent_extrinsic(self) -> Option<DomainInherentExtrinsic> {
+        match self {
+            Self::ConstructDomainInherentExtrinsic(tx) => Some(tx),
+            _ => None,
+        }
+    }
+
+    pub fn into_domain_storage_key(self) -> Option<Vec<u8>> {
+        match self {
+            Self::DomainStorageKey(key) => Some(key),
+            _ => None,
+        }
+    }
+
+    pub fn into_domain_runtime_call(self) -> Option<bool> {
+        match self {
+            Self::DomainRuntimeCall(call) => Some(call),
+            _ => None,
+        }
+    }
+
+    pub fn into_single_context_extrinsic_check(self) -> Option<Option<u32>> {
+        match self {
+            FraudProofVerificationInfoResponseV2::CheckExtrinsicsInSingleContext(result) => {
+                Some(result)
+            }
+            _ => None,
+        }
+    }
 }
 
 /// Type that maybe holds an encoded set_code extrinsic with upgraded runtime
@@ -353,6 +456,9 @@ sp_api::decl_runtime_apis! {
     pub trait FraudProofApi<DomainHeader: HeaderT> {
         /// Submit the fraud proof via an unsigned extrinsic.
         fn submit_fraud_proof_unsigned(fraud_proof: FraudProof<NumberFor<Block>, Block::Hash, DomainHeader>);
+
+        /// Submit the fraud proof v2 via an unsigned extrinsic.
+        fn submit_fraud_proof_v2_unsigned(fraud_proof: FraudProofV2<NumberFor<Block>, Block::Hash, DomainHeader, H256>);
 
         /// Extract the fraud proof handled successfully from the given extrinsics.
         fn extract_fraud_proofs(

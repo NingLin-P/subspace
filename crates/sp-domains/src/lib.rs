@@ -41,7 +41,7 @@ use bundle_producer_election::{BundleProducerElectionParams, ProofOfElectionErro
 use core::num::ParseIntError;
 use core::ops::{Add, Sub};
 use core::str::FromStr;
-use domain_runtime_primitives::MultiAccountId;
+use domain_runtime_primitives::{EVMChainId, MultiAccountId};
 use frame_support::storage::storage_prefix;
 use frame_support::{Blake2_128Concat, StorageHasher};
 use hexlit::hex;
@@ -84,6 +84,12 @@ mod app {
     app_crypto!(sr25519, KEY_TYPE);
 }
 
+// FIXME: store it in runtime.
+// The domain storage fee multiplier used to charge a higher storage fee to the domain
+// transaction to even out the duplicated/illegal domain transaction storage cost, which
+// can not be eliminated right now.
+pub const DOMAIN_STORAGE_FEE_MULTIPLIER: Balance = 3;
+
 /// An operator authority signature.
 pub type OperatorSignature = app::Signature;
 
@@ -109,6 +115,8 @@ pub type StakeWeight = u128;
 
 /// The Trie root of all extrinsics included in a bundle.
 pub type ExtrinsicsRoot = H256;
+
+pub type BundleSlotProbability = (u64, u64);
 
 /// Type alias for Header Hashing.
 pub type HeaderHashingFor<Header> = <Header as HeaderT>::Hashing;
@@ -316,6 +324,161 @@ impl<Balance> Transfers<Balance> {
             && !self.transfers_in.contains_key(&chain_id)
             && !self.transfers_out.contains_key(&chain_id)
             && !self.rejected_transfers_claimed.contains_key(&chain_id)
+    }
+}
+
+/// Initial tx range = U256::MAX / INITIAL_DOMAIN_TX_RANGE.
+pub const INITIAL_DOMAIN_TX_RANGE: u64 = 3;
+
+#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
+pub struct StakingSummary<OperatorId, Balance> {
+    /// Current epoch index for the domain.
+    pub current_epoch_index: EpochIndex,
+    /// Total active stake for the current epoch.
+    pub current_total_stake: Balance,
+    /// Current operators for this epoch
+    pub current_operators: BTreeMap<OperatorId, Balance>,
+    /// Operators for the next epoch.
+    pub next_operators: BTreeSet<OperatorId>,
+    /// Operator's current Epoch rewards
+    pub current_epoch_rewards: BTreeMap<OperatorId, Balance>,
+}
+
+#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
+pub struct DomainConfig<AccountId: Ord, Balance> {
+    /// A user defined name for this domain, should be a human-readable UTF-8 encoded string.
+    pub domain_name: String,
+    /// A pointer to the `RuntimeRegistry` entry for this domain.
+    pub runtime_id: RuntimeId,
+    /// The max block size for this domain, may not exceed the system-wide `MaxDomainBlockSize` limit.
+    pub max_block_size: u32,
+    /// The max block weight for this domain, may not exceed the system-wide `MaxDomainBlockWeight` limit.
+    pub max_block_weight: Weight,
+    /// The probability of successful bundle in a slot (active slots coefficient). This defines the
+    /// expected bundle production rate, must be `> 0` and `≤ 1`.
+    pub bundle_slot_probability: BundleSlotProbability,
+    /// The expected number of bundles for a domain block, must be `≥ 1` and `≤ MaxBundlesPerBlock`.
+    pub target_bundles_per_block: u32,
+    /// Allowed operators to operate for this domain.
+    pub operator_allow_list: OperatorAllowList<AccountId>,
+    // Initial balances for Domain.
+    pub initial_balances: Vec<(MultiAccountId, Balance)>,
+}
+
+impl<AccountId, Balance> DomainConfig<AccountId, Balance>
+where
+    AccountId: Ord,
+    Balance: Zero + CheckedAdd + PartialOrd,
+{
+    pub fn total_issuance(&self) -> Option<Balance> {
+        self.initial_balances
+            .iter()
+            .try_fold(Balance::zero(), |total, (_, balance)| {
+                total.checked_add(balance)
+            })
+    }
+}
+
+#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
+pub struct DomainObject<Number, ReceiptHash, AccountId: Ord, Balance> {
+    /// The address of the domain creator, used to validate updating the domain config.
+    pub owner_account_id: AccountId,
+    /// The consensus chain block number when the domain first instantiated.
+    pub created_at: Number,
+    /// The hash of the genesis execution receipt for this domain.
+    pub genesis_receipt_hash: ReceiptHash,
+    /// The domain config.
+    pub domain_config: DomainConfig<AccountId, Balance>,
+    /// Domain runtime specific information.
+    pub domain_runtime_info: DomainRuntimeInfo,
+}
+
+/// Domain runtime specific information to create domain raw genesis.
+#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq, Copy)]
+pub enum DomainRuntimeInfo {
+    EVM { chain_id: EVMChainId },
+    AutoId,
+}
+
+impl Default for DomainRuntimeInfo {
+    fn default() -> Self {
+        Self::EVM { chain_id: 0 }
+    }
+}
+
+/// Unique epoch identifier across all domains. A combination of Domain and its epoch.
+#[derive(TypeInfo, Debug, Encode, Decode, Copy, Clone, PartialEq, Eq)]
+pub struct DomainEpoch(DomainId, EpochIndex);
+
+impl DomainEpoch {
+    pub fn deconstruct(self) -> (DomainId, EpochIndex) {
+        (self.0, self.1)
+    }
+}
+
+impl From<(DomainId, EpochIndex)> for DomainEpoch {
+    fn from((domain_id, epoch_idx): (DomainId, EpochIndex)) -> Self {
+        Self(domain_id, epoch_idx)
+    }
+}
+
+#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
+pub struct OperatorDeregisteredInfo<DomainBlockNumber> {
+    pub domain_epoch: DomainEpoch,
+    pub unlock_at_confirmed_domain_block_number: DomainBlockNumber,
+}
+
+impl<DomainBlockNumber> From<(DomainId, EpochIndex, DomainBlockNumber)>
+    for OperatorDeregisteredInfo<DomainBlockNumber>
+{
+    fn from(value: (DomainId, EpochIndex, DomainBlockNumber)) -> Self {
+        OperatorDeregisteredInfo {
+            domain_epoch: (value.0, value.1).into(),
+            unlock_at_confirmed_domain_block_number: value.2,
+        }
+    }
+}
+
+/// Type that represents an operator status.
+#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
+pub enum OperatorStatus<DomainBlockNumber> {
+    Registered,
+    /// De-registered at given domain epoch.
+    Deregistered(OperatorDeregisteredInfo<DomainBlockNumber>),
+    Slashed,
+    PendingSlash,
+}
+
+/// Type that represents an operator details.
+#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
+pub struct Operator<Balance, Share, DomainBlockNumber> {
+    pub signing_key: OperatorPublicKey,
+    pub current_domain_id: DomainId,
+    pub next_domain_id: DomainId,
+    pub minimum_nominator_stake: Balance,
+    pub nomination_tax: Percent,
+    /// Total active stake of combined nominators under this operator.
+    pub current_total_stake: Balance,
+    /// Total rewards this operator received this current epoch.
+    pub current_epoch_rewards: Balance,
+    /// Total shares of all the nominators under this operator.
+    pub current_total_shares: Share,
+    /// The status of the operator, it may be stale due to the `OperatorStatus::PendingSlash` is
+    /// not assigned to this field directly, thus MUST use the `status()` method to query the status
+    /// instead.
+    /// TODO: update the filed to `_status` to avoid accidental access in next network reset
+    pub status: OperatorStatus<DomainBlockNumber>,
+    /// Total deposits during the previous epoch
+    pub deposits_in_epoch: Balance,
+    /// Total withdrew shares during the previous epoch
+    pub withdrawals_in_epoch: Share,
+    /// Total balance deposited to the bundle storage fund
+    pub total_storage_fee_deposit: Balance,
+}
+
+impl<Balance, Share, DomainBlockNumber> Operator<Balance, Share, DomainBlockNumber> {
+    pub fn update_status(&mut self, new_status: OperatorStatus<DomainBlockNumber>) {
+        self.status = new_status;
     }
 }
 
@@ -699,6 +862,7 @@ pub struct ProofOfElection<CHash> {
     pub vrf_signature: VrfSignature,
     /// Operator index in the OperatorRegistry.
     pub operator_id: OperatorId,
+    // FIXME: attacker can provide arbitrary to bypass the bundle equiBundleEquivocationProof
     /// Consensus block hash at which proof of election was derived.
     pub consensus_block_hash: CHash,
 }
@@ -1243,12 +1407,63 @@ pub type ExecutionReceiptFor<DomainHeader, CBlock, Balance> = ExecutionReceipt<
 >;
 
 /// Domain chains allowlist updates.
-#[derive(Default, Debug, Encode, Decode, PartialEq, Clone, TypeInfo)]
+#[derive(Default, Debug, Encode, Decode, PartialEq, Eq, Clone, TypeInfo)]
 pub struct DomainAllowlistUpdates {
     /// Chains that are allowed to open channel with this chain.
     pub allow_chains: BTreeSet<ChainId>,
     /// Chains that are not allowed to open channel with this chain.
     pub remove_chains: BTreeSet<ChainId>,
+}
+
+#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
+pub struct RuntimeObject<Number, Hash> {
+    pub runtime_name: String,
+    pub runtime_type: RuntimeType,
+    pub runtime_upgrades: u32,
+    pub hash: Hash,
+    // The raw gensis storage that contains the runtime code.
+    // NOTE: don't use this field directly but `into_complete_raw_genesis` instead
+    pub raw_genesis: RawGenesis,
+    pub version: RuntimeVersion,
+    pub created_at: Number,
+    pub updated_at: Number,
+}
+
+/// Digest storage key in frame_system.
+/// Unfortunately, the digest storage is private and not possible to derive the key from it directly.
+pub fn system_digest_final_key() -> Vec<u8> {
+    frame_support::storage::storage_prefix("System".as_ref(), "Digest".as_ref()).to_vec()
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub enum FraudProofStorageKeyRequest {
+    BlockRandomness,
+    Timestamp,
+    SuccessfulBundles(DomainId),
+    TransactionByteFee,
+    DomainAllowlistUpdates(DomainId),
+    DomainStakingSummary(DomainId),
+    BundleSlotProbabilityMap(DomainId),
+    Operator(OperatorId),
+    BlockDigest,
+    RuntimeRegistry(RuntimeId),
+    DynamicCostOfStorage,
+}
+
+/// Trait to get Storage keys.
+pub trait FraudProofStorageKeyProvider {
+    fn storage_key(req: FraudProofStorageKeyRequest) -> Vec<u8>;
+}
+
+impl FraudProofStorageKeyProvider for () {
+    fn storage_key(_req: FraudProofStorageKeyRequest) -> Vec<u8> {
+        Default::default()
+    }
+}
+
+/// Trait to get Storage keys, similar to `StorageKeyProvider` but take `&self`.
+pub trait FraudProofStorageKeyProviderInstance {
+    fn storage_key(&self, req: FraudProofStorageKeyRequest) -> Option<Vec<u8>>;
 }
 
 sp_api::decl_runtime_apis! {
@@ -1336,6 +1551,12 @@ sp_api::decl_runtime_apis! {
 
         /// Return the balance of the storage fund account
         fn storage_fund_account_balance(operator_id: OperatorId) -> Balance;
+
+        /// Reture the storage key used in fraud proof
+        fn fraud_proof_storage_key(req: FraudProofStorageKeyRequest) -> Vec<u8>;
+
+        /// Return if the domain runtime code is upgraded since `at`
+        fn is_domain_runtime_updraded_since(domain_id: DomainId, at: NumberFor<Block>) -> Option<bool>;
     }
 
     pub trait BundleProducerElectionApi<Balance: Encode + Decode> {

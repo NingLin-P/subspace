@@ -5,11 +5,10 @@ extern crate alloc;
 
 use crate::block_tree::import_genesis_receipt;
 use crate::pallet::{DomainStakingSummary, NextEVMChainId};
-use crate::runtime_registry::DomainRuntimeInfo;
-use crate::staking::StakingSummary;
+use crate::runtime_registry::into_complete_raw_genesis;
 use crate::{
-    BalanceOf, Config, DomainHashingFor, DomainRegistry, ExecutionReceiptOf, HoldIdentifier,
-    NextDomainId, RuntimeRegistry,
+    BalanceOf, BundleSlotProbabilityMap, Config, DomainHashingFor, DomainRegistry,
+    DomainRuntimeMap, ExecutionReceiptOf, HoldIdentifier, NextDomainId, RuntimeRegistry,
 };
 #[cfg(not(feature = "std"))]
 use alloc::string::String;
@@ -25,8 +24,9 @@ use frame_system::pallet_prelude::*;
 use scale_info::TypeInfo;
 use sp_core::Get;
 use sp_domains::{
-    derive_domain_block_hash, DomainBundleLimit, DomainId, DomainsDigestItem,
-    DomainsTransfersTracker, OperatorAllowList, RuntimeId, RuntimeType,
+    derive_domain_block_hash, DomainBundleLimit, DomainConfig, DomainId, DomainObject,
+    DomainRuntimeInfo, DomainsDigestItem, DomainsTransfersTracker, OperatorAllowList, RuntimeId,
+    RuntimeType, StakingSummary,
 };
 use sp_runtime::traits::{CheckedAdd, Zero};
 use sp_runtime::DigestItem;
@@ -58,94 +58,74 @@ pub enum Error {
     BundleLimitCalculationOverflow,
 }
 
-#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
-pub struct DomainConfig<AccountId: Ord, Balance> {
-    /// A user defined name for this domain, should be a human-readable UTF-8 encoded string.
-    pub domain_name: String,
-    /// A pointer to the `RuntimeRegistry` entry for this domain.
-    pub runtime_id: RuntimeId,
-    /// The max block size for this domain, may not exceed the system-wide `MaxDomainBlockSize` limit.
-    pub max_block_size: u32,
-    /// The max block weight for this domain, may not exceed the system-wide `MaxDomainBlockWeight` limit.
-    pub max_block_weight: Weight,
-    /// The probability of successful bundle in a slot (active slots coefficient). This defines the
-    /// expected bundle production rate, must be `> 0` and `≤ 1`.
-    pub bundle_slot_probability: (u64, u64),
-    /// The expected number of bundles for a domain block, must be `≥ 1` and `≤ MaxBundlesPerBlock`.
-    pub target_bundles_per_block: u32,
-    /// Allowed operators to operate for this domain.
-    pub operator_allow_list: OperatorAllowList<AccountId>,
-    // Initial balances for Domain.
-    pub initial_balances: Vec<(MultiAccountId, Balance)>,
+pub(crate) fn check_initial_balances<T: Config>(
+    domain_config: &DomainConfig<T::AccountId, BalanceOf<T>>,
+) -> Result<(), Error> {
+    let accounts: BTreeSet<MultiAccountId> = domain_config
+        .initial_balances
+        .iter()
+        .map(|(acc, _)| acc)
+        .cloned()
+        .collect();
+
+    ensure!(
+        accounts.len() == domain_config.initial_balances.len(),
+        Error::DuplicateInitialAccounts
+    );
+
+    ensure!(
+        domain_config.initial_balances.len() as u32 <= T::MaxInitialDomainAccounts::get(),
+        Error::MaxInitialDomainAccounts
+    );
+
+    for (_, balance) in &domain_config.initial_balances {
+        ensure!(
+            *balance >= T::MinInitialDomainAccountBalance::get().into(),
+            Error::MinInitialAccountBalance
+        );
+    }
+
+    Ok(())
 }
 
-impl<AccountId, Balance> DomainConfig<AccountId, Balance>
-where
-    AccountId: Ord,
-    Balance: Zero + CheckedAdd + PartialOrd,
-{
-    pub(crate) fn total_issuance(&self) -> Option<Balance> {
-        self.initial_balances
-            .iter()
-            .try_fold(Balance::zero(), |total, (_, balance)| {
-                total.checked_add(balance)
-            })
-    }
-
-    pub(crate) fn check_initial_balances<T: Config>(&self) -> Result<(), Error>
-    where
-        Balance: From<BalanceOf<T>>,
-    {
-        let accounts: BTreeSet<MultiAccountId> = self
-            .initial_balances
-            .iter()
-            .map(|(acc, _)| acc)
-            .cloned()
-            .collect();
-
-        ensure!(
-            accounts.len() == self.initial_balances.len(),
-            Error::DuplicateInitialAccounts
-        );
-
-        ensure!(
-            self.initial_balances.len() as u32 <= T::MaxInitialDomainAccounts::get(),
-            Error::MaxInitialDomainAccounts
-        );
-
-        for (_, balance) in &self.initial_balances {
-            ensure!(
-                *balance >= T::MinInitialDomainAccountBalance::get().into(),
-                Error::MinInitialAccountBalance
-            );
-        }
-
-        Ok(())
-    }
-
-    pub(crate) fn calculate_bundle_limit<T: Config>(&self) -> Result<DomainBundleLimit, Error> {
-        calculate_max_bundle_weight_and_size(
-            self.max_block_size,
-            self.max_block_weight,
-            T::ConsensusSlotProbability::get(),
-            self.bundle_slot_probability,
-        )
-        .ok_or(Error::BundleLimitCalculationOverflow)
-    }
+pub(crate) fn calculate_bundle_limit<T: Config>(
+    domain_config: &DomainConfig<T::AccountId, BalanceOf<T>>,
+) -> Result<DomainBundleLimit, Error> {
+    calculate_max_bundle_weight_and_size(
+        domain_config.max_block_size,
+        domain_config.max_block_weight,
+        T::ConsensusSlotProbability::get(),
+        domain_config.bundle_slot_probability,
+    )
+    .ok_or(Error::BundleLimitCalculationOverflow)
 }
 
-#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
-pub struct DomainObject<Number, ReceiptHash, AccountId: Ord, Balance> {
-    /// The address of the domain creator, used to validate updating the domain config.
-    pub owner_account_id: AccountId,
-    /// The consensus chain block number when the domain first instantiated.
-    pub created_at: Number,
-    /// The hash of the genesis execution receipt for this domain.
-    pub genesis_receipt_hash: ReceiptHash,
-    /// The domain config.
-    pub domain_config: DomainConfig<AccountId, Balance>,
-    /// Domain runtime specific information.
-    pub domain_runtime_info: DomainRuntimeInfo,
+// See https://forum.subspace.network/t/on-bundle-weight-limits-sum/2277 for more details
+// about the formula
+pub(crate) fn calculate_max_bundle_weight_and_size(
+    max_domain_block_size: u32,
+    max_domain_block_weight: Weight,
+    consensus_slot_probability: (u64, u64),
+    bundle_slot_probability: (u64, u64),
+) -> Option<DomainBundleLimit> {
+    // (n1 / d1) / (n2 / d2) is equal to (n1 * d2) / (d1 * n2)
+    // This represents: bundle_slot_probability/SLOT_PROBABILITY
+    let expected_bundles_per_block = bundle_slot_probability
+        .0
+        .checked_mul(consensus_slot_probability.1)?
+        .checked_div(
+            bundle_slot_probability
+                .1
+                .checked_mul(consensus_slot_probability.0)?,
+        )?;
+
+    let max_bundle_weight = max_domain_block_weight.checked_div(expected_bundles_per_block)?;
+    let max_bundle_size = (max_domain_block_size as u64).checked_div(expected_bundles_per_block)?;
+
+    Some(DomainBundleLimit {
+        max_bundle_size: max_bundle_size as u32,
+        max_bundle_weight,
+    })
 }
 
 pub(crate) fn can_instantiate_domain<T: Config>(
@@ -182,7 +162,7 @@ pub(crate) fn can_instantiate_domain<T: Config>(
     );
 
     // Ensure the bundle limit can be calculated successfully
-    let _ = domain_config.calculate_bundle_limit::<T>()?;
+    let _ = calculate_bundle_limit::<T>(&domain_config)?;
 
     ensure!(
         T::Currency::reducible_balance(owner_account_id, Preservation::Protect, Fortitude::Polite)
@@ -190,7 +170,7 @@ pub(crate) fn can_instantiate_domain<T: Config>(
         Error::InsufficientFund
     );
 
-    domain_config.check_initial_balances::<T>()?;
+    check_initial_balances::<T>(&domain_config)?;
 
     Ok(())
 }
@@ -203,7 +183,9 @@ pub(crate) fn do_instantiate_domain<T: Config>(
     can_instantiate_domain::<T>(&owner_account_id, &domain_config)?;
 
     let domain_id = NextDomainId::<T>::get();
-    let runtime_obj = RuntimeRegistry::<T>::get(domain_config.runtime_id)
+    let runtime_id = domain_config.runtime_id;
+    let bundle_slot_probability = domain_config.bundle_slot_probability;
+    let runtime_obj = RuntimeRegistry::<T>::get(runtime_id)
         .expect("Runtime object must exist as checked in `can_instantiate_domain`; qed");
 
     let domain_runtime_info = match runtime_obj.runtime_type {
@@ -236,14 +218,14 @@ pub(crate) fn do_instantiate_domain<T: Config>(
 
     let genesis_receipt = {
         let state_version = runtime_obj.version.state_version();
-        let raw_genesis = runtime_obj
-            .into_complete_raw_genesis::<T>(
-                domain_id,
-                domain_runtime_info,
-                total_issuance,
-                domain_config.initial_balances.clone(),
-            )
-            .map_err(Error::FailedToGenerateRawGenesis)?;
+        let raw_genesis = into_complete_raw_genesis::<T>(
+            runtime_obj,
+            domain_id,
+            domain_runtime_info,
+            total_issuance,
+            domain_config.initial_balances.clone(),
+        )
+        .map_err(Error::FailedToGenerateRawGenesis)?;
         let state_root = raw_genesis.state_root::<DomainHashingFor<T>>(state_version);
         let genesis_block_hash = derive_domain_block_hash::<T::DomainHeader>(
             Zero::zero(),
@@ -269,6 +251,8 @@ pub(crate) fn do_instantiate_domain<T: Config>(
         domain_runtime_info,
     };
     DomainRegistry::<T>::insert(domain_id, domain_obj);
+    DomainRuntimeMap::<T>::insert(domain_id, runtime_id);
+    BundleSlotProbabilityMap::<T>::insert(domain_id, bundle_slot_probability);
 
     let next_domain_id = domain_id.checked_add(&1.into()).ok_or(Error::MaxDomainId)?;
     NextDomainId::<T>::set(next_domain_id);
@@ -316,44 +300,16 @@ pub(crate) fn do_update_domain_allow_list<T: Config>(
     })
 }
 
-// See https://forum.subspace.network/t/on-bundle-weight-limits-sum/2277 for more details
-// about the formula
-pub(crate) fn calculate_max_bundle_weight_and_size(
-    max_domain_block_size: u32,
-    max_domain_block_weight: Weight,
-    consensus_slot_probability: (u64, u64),
-    bundle_slot_probability: (u64, u64),
-) -> Option<DomainBundleLimit> {
-    // (n1 / d1) / (n2 / d2) is equal to (n1 * d2) / (d1 * n2)
-    // This represents: bundle_slot_probability/SLOT_PROBABILITY
-    let expected_bundles_per_block = bundle_slot_probability
-        .0
-        .checked_mul(consensus_slot_probability.1)?
-        .checked_div(
-            bundle_slot_probability
-                .1
-                .checked_mul(consensus_slot_probability.0)?,
-        )?;
-
-    let max_bundle_weight = max_domain_block_weight.checked_div(expected_bundles_per_block)?;
-    let max_bundle_size = (max_domain_block_size as u64).checked_div(expected_bundles_per_block)?;
-
-    Some(DomainBundleLimit {
-        max_bundle_size: max_bundle_size as u32,
-        max_bundle_weight,
-    })
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::runtime_registry::RuntimeObject;
     use crate::tests::{new_test_ext, Test};
     use domain_runtime_primitives::{AccountId20, AccountId20Converter};
     use frame_support::traits::Currency;
     use frame_support::{assert_err, assert_ok};
     use hex_literal::hex;
     use sp_domains::storage::RawGenesis;
+    use sp_domains::RuntimeObject;
     use sp_runtime::traits::Convert;
     use sp_std::vec;
     use sp_version::RuntimeVersion;

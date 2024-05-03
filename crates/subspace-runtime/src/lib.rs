@@ -62,10 +62,11 @@ use sp_core::{OpaqueMetadata, H256};
 use sp_domains::bundle_producer_election::BundleProducerElectionParams;
 use sp_domains::{
     ChannelId, DomainAllowlistUpdates, DomainId, DomainInstanceData, DomainsHoldIdentifier,
-    ExecutionReceiptFor, MessengerHoldIdentifier, OpaqueBundle, OperatorId, OperatorPublicKey,
-    StakingHoldIdentifier,
+    ExecutionReceiptFor, FraudProofStorageKeyProvider, FraudProofStorageKeyRequest,
+    MessengerHoldIdentifier, OpaqueBundle, OperatorId, OperatorPublicKey, StakingHoldIdentifier,
+    DOMAIN_STORAGE_FEE_MULTIPLIER, INITIAL_DOMAIN_TX_RANGE,
 };
-use sp_domains_fraud_proof::fraud_proof::FraudProof;
+use sp_domains_fraud_proof::fraud_proof::{FraudProof, FraudProofV2};
 use sp_messenger::endpoint::{Endpoint, EndpointHandler as EndpointHandlerT, EndpointId};
 use sp_messenger::messages::{
     BlockMessagesWithStorageKey, ChainId, CrossDomainMessage, MessageId, MessageKey,
@@ -100,11 +101,6 @@ sp_runtime::impl_opaque_keys! {
     pub struct SessionKeys {
     }
 }
-
-// The domain storage fee multiplier used to charge a higher storage fee to the domain
-// transaction to even out the duplicated/illegal domain transaction storage cost, which
-// can not be eliminated right now.
-const DOMAIN_STORAGE_FEE_MULTIPLIER: Balance = 3;
 
 /// How many pieces one sector is supposed to contain (max)
 const MAX_PIECES_IN_SECTOR: u16 = 1000;
@@ -174,9 +170,6 @@ const_assert!(POT_ENTROPY_INJECTION_DELAY > BLOCK_AUTHORING_DELAY + 1);
 const ERA_DURATION_IN_BLOCKS: BlockNumber = 2016;
 
 const EQUIVOCATION_REPORT_LONGEVITY: BlockNumber = 256;
-
-/// Initial tx range = U256::MAX / INITIAL_DOMAIN_TX_RANGE.
-const INITIAL_DOMAIN_TX_RANGE: u64 = 3;
 
 /// Tx range is adjusted every DOMAIN_TX_RANGE_ADJUSTMENT_INTERVAL blocks.
 const TX_RANGE_ADJUSTMENT_INTERVAL_BLOCKS: u64 = 100;
@@ -504,9 +497,9 @@ impl sp_messenger::OnXDMRewards<Balance> for OnXDMRewards {
 pub struct MmrProofVerifier;
 
 impl sp_subspace_mmr::MmrProofVerifier<mmr::Hash, NumberFor<Block>, Hash> for MmrProofVerifier {
-    fn verify_proof_and_extract_consensus_state_root(
+    fn verify_proof_and_extract_leaf(
         mmr_leaf_proof: ConsensusChainMmrLeafProof<NumberFor<Block>, Hash, mmr::Hash>,
-    ) -> Option<Hash> {
+    ) -> Option<mmr::Leaf> {
         let ConsensusChainMmrLeafProof {
             consensus_block_number,
             opaque_mmr_leaf,
@@ -527,7 +520,7 @@ impl sp_subspace_mmr::MmrProofVerifier<mmr::Hash, NumberFor<Block>, Hash> for Mm
 
         let leaf: mmr::Leaf = opaque_mmr_leaf.into_opaque_leaf().try_decode()?;
 
-        Some(leaf.state_root())
+        Some(leaf)
     }
 }
 
@@ -713,6 +706,9 @@ impl pallet_domains::Config for Runtime {
     type MinInitialDomainAccountBalance = MinInitialDomainAccountBalance;
     type DomainBundleSubmitted = Messenger;
     type Balance = Balance;
+    type MmrHash = mmr::Hash;
+    type MmrProofVerifier = MmrProofVerifier;
+    type FraudProofStorageKeyProvider = StorageKeyProvider;
 }
 
 parameter_types! {
@@ -896,6 +892,45 @@ impl From<RewardAddress> for AccountId32 {
     #[inline]
     fn from(reward_address: RewardAddress) -> Self {
         reward_address.0.into()
+    }
+}
+
+pub struct StorageKeyProvider;
+impl FraudProofStorageKeyProvider for StorageKeyProvider {
+    fn storage_key(req: FraudProofStorageKeyRequest) -> Vec<u8> {
+        match req {
+            FraudProofStorageKeyRequest::BlockRandomness => {
+                pallet_subspace::BlockRandomness::<Runtime>::hashed_key().to_vec()
+            }
+            FraudProofStorageKeyRequest::Timestamp => {
+                pallet_timestamp::Now::<Runtime>::hashed_key().to_vec()
+            }
+            FraudProofStorageKeyRequest::SuccessfulBundles(domain_id) => {
+                pallet_domains::SuccessfulBundles::<Runtime>::hashed_key_for(domain_id)
+            }
+            FraudProofStorageKeyRequest::TransactionByteFee => {
+                TransactionFees::transaction_byte_fee_storage_key()
+            }
+            FraudProofStorageKeyRequest::DomainAllowlistUpdates(domain_id) => {
+                pallet_messenger::DomainChainAllowlistUpdate::<Runtime>::hashed_key_for(domain_id)
+            }
+            FraudProofStorageKeyRequest::DomainStakingSummary(domain_id) => {
+                pallet_domains::DomainStakingSummary::<Runtime>::hashed_key_for(domain_id)
+            }
+            FraudProofStorageKeyRequest::BundleSlotProbabilityMap(domain_id) => {
+                pallet_domains::BundleSlotProbabilityMap::<Runtime>::hashed_key_for(domain_id)
+            }
+            FraudProofStorageKeyRequest::Operator(operator_id) => {
+                pallet_domains::Operators::<Runtime>::hashed_key_for(operator_id)
+            }
+            FraudProofStorageKeyRequest::BlockDigest => sp_domains::system_digest_final_key(),
+            FraudProofStorageKeyRequest::RuntimeRegistry(runtime_id) => {
+                pallet_domains::RuntimeRegistry::<Runtime>::hashed_key_for(runtime_id)
+            }
+            FraudProofStorageKeyRequest::DynamicCostOfStorage => {
+                pallet_runtime_configs::EnableDynamicCostOfStorage::<Runtime>::hashed_key().to_vec()
+            }
+        }
     }
 }
 
@@ -1209,6 +1244,14 @@ impl_runtime_apis! {
         fn storage_fund_account_balance(operator_id: OperatorId) -> Balance {
             Domains::storage_fund_account_balance(operator_id)
         }
+
+        fn fraud_proof_storage_key(req: FraudProofStorageKeyRequest) -> Vec<u8> {
+            <StorageKeyProvider as FraudProofStorageKeyProvider>::storage_key(req)
+        }
+
+        fn is_domain_runtime_updraded_since(domain_id: DomainId, at: NumberFor<Block>) -> Option<bool> {
+            Domains::is_domain_runtime_updraded_since(domain_id, at)
+        }
     }
 
     impl sp_domains::BundleProducerElectionApi<Block, Balance> for Runtime {
@@ -1309,6 +1352,10 @@ impl_runtime_apis! {
     impl sp_domains_fraud_proof::FraudProofApi<Block, DomainHeader> for Runtime {
         fn submit_fraud_proof_unsigned(fraud_proof: FraudProof<NumberFor<Block>, <Block as BlockT>::Hash, DomainHeader>) {
             Domains::submit_fraud_proof_unsigned(fraud_proof)
+        }
+
+        fn submit_fraud_proof_v2_unsigned(fraud_proof: FraudProofV2<NumberFor<Block>, <Block as BlockT>::Hash, DomainHeader, H256>) {
+            Domains::submit_fraud_proof_v2_unsigned(fraud_proof)
         }
 
         fn extract_fraud_proofs(

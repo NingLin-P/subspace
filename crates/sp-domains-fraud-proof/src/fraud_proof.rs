@@ -1,6 +1,7 @@
 #[cfg(not(feature = "std"))]
 extern crate alloc;
 
+use crate::storage_proof::{self, *};
 use crate::verification::InvalidBundleEquivocationError;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
@@ -13,10 +14,11 @@ use sp_domain_digests::AsPredigest;
 use sp_domains::proof_provider_and_verifier::StorageProofVerifier;
 use sp_domains::{
     BundleValidity, DomainId, ExecutionReceiptFor, ExtrinsicDigest, HeaderHashFor,
-    HeaderHashingFor, InvalidBundleType, OperatorId, SealedBundleHeader,
+    HeaderHashingFor, HeaderNumberFor, InvalidBundleType, OperatorId, SealedBundleHeader,
 };
 use sp_runtime::traits::{Block as BlockT, Hash as HashT, Header as HeaderT};
 use sp_runtime::{Digest, DigestItem};
+use sp_subspace_mmr::ConsensusChainMmrLeafProof;
 use sp_trie::StorageProof;
 use subspace_runtime_primitives::Balance;
 
@@ -414,11 +416,52 @@ pub enum VerificationError<DomainHash> {
         error("Failed to check extrinsics in single context")
     )]
     FailedToCheckExtrinsicsInSingleContext,
+    #[cfg_attr(
+        feature = "thiserror",
+        error(
+            "Bad MMR proof, the proof is probably expired or is generated against a different fork"
+        )
+    )]
+    BadMmrProof,
+    #[cfg_attr(feature = "thiserror", error("Unexpected MMR proof"))]
+    UnexpectedMmrProof,
+    #[cfg_attr(feature = "thiserror", error("Failed to verify storage proof"))]
+    StorageProof(storage_proof::VerificationError),
+    /// Failed to derive domain inherent extrinsic
+    #[cfg_attr(
+        feature = "thiserror",
+        error("Failed to derive domain inherent extrinsic")
+    )]
+    FailedToDeriveDomainInherentExtrinsic,
+    /// Failed to derive domain storage key
+    #[cfg_attr(feature = "thiserror", error("Failed to derive domain storage key"))]
+    FailedToGetDomainStorageKey,
+    /// Unexpected invalid bundle proof data
+    #[cfg_attr(feature = "thiserror", error("Unexpected invalid bundle proof data"))]
+    UnexpectedInvalidBundleProofData,
+    /// Extrinsic with requested index not found in bundle
+    #[cfg_attr(
+        feature = "thiserror",
+        error("Extrinsic with requested index not found in bundle")
+    )]
+    ExtrinsicNotFound,
+    /// Failed to get domain runtime call response
+    #[cfg_attr(
+        feature = "thiserror",
+        error("Failed to get domain runtime call response")
+    )]
+    FailedToGetDomainRuntimeCallResponse,
 }
 
 impl<DomainHash> From<InvalidBundleEquivocationError> for VerificationError<DomainHash> {
     fn from(err: InvalidBundleEquivocationError) -> Self {
         Self::InvalidBundleEquivocationFraudProof(err)
+    }
+}
+
+impl<DomainHash> From<storage_proof::VerificationError> for VerificationError<DomainHash> {
+    fn from(err: storage_proof::VerificationError) -> Self {
+        Self::StorageProof(err)
     }
 }
 
@@ -449,6 +492,209 @@ impl<ReceiptHash> InvalidBundlesFraudProof<ReceiptHash> {
             proof_data,
             is_true_invalid_fraud_proof,
         }
+    }
+}
+
+// Domain runtime code at a specific block
+#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+pub struct DomainRuntimeCodeAt<Number, Hash, MmrHash> {
+    pub mmr_proof: ConsensusChainMmrLeafProof<Number, Hash, MmrHash>,
+    pub domain_runtime_code_proof: DomainRuntimeCodeProof,
+}
+
+/// Proves an invalid state transition by challenging the trace at specific index in a bad receipt.
+#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+pub struct InvalidStateTransitionProofV2<ReceiptHash> {
+    /// Hash of the bad receipt in which an invalid trace occurred.
+    pub bad_receipt_hash: ReceiptHash,
+    /// Proof recorded during the computation.
+    pub execution_proof: StorageProof,
+    /// Execution phase.
+    pub execution_phase: ExecutionPhase,
+}
+
+/// Fraud proof for the valid bundles in `ExecutionReceipt::inboxed_bundles`
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct ValidBundleProofV2<Number, Hash, DomainHeader: HeaderT> {
+    /// The targetted bad receipt
+    pub bad_receipt_hash: HeaderHashFor<DomainHeader>,
+    /// The targetted bundle with proof
+    pub bundle_with_proof: OpaqueBundleWithProof<Number, Hash, DomainHeader, Balance>,
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct InvalidExtrinsicsRootProofV2<ReceiptHash> {
+    /// The targetted bad receipt
+    pub bad_receipt_hash: ReceiptHash,
+    /// Valid Bundle digests
+    pub valid_bundle_digests: Vec<ValidBundleDigest>,
+    /// Block randomness storage proof
+    pub block_randomness_proof: BlockRandomnessProof,
+    /// The storage proof used during verification
+    pub domain_inherent_extrinsic_data_proof: DomainInherentExtrinsicDataProof,
+}
+
+/// Represents a bundle equivocation proof. An equivocation happens when an executor
+/// produces more than one bundle on the same slot. The proof of equivocation
+/// are the given distinct bundle headers that were signed by the validator and which
+/// include the slot number.
+#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+pub struct BundleEquivocationProofV2<Number, Hash, DomainHeader: HeaderT> {
+    /// The slot at which the equivocation happened.
+    pub slot: Slot,
+    /// Storage proof related to operator bundle production
+    pub bundle_producion_proof: BundleProductionProof<HeaderNumberFor<DomainHeader>>,
+    // TODO: The generic type should be `<Number, Hash, DomainNumber, DomainHash, Balance>`
+    // TODO: `SealedBundleHeader` contains `ExecutionReceipt` which make the size of the proof
+    // large, revisit when proceeding to fraud proof v2.
+    /// The first header involved in the equivocation.
+    pub first_header: SealedBundleHeader<Number, Hash, DomainHeader, Balance>,
+    /// The second header involved in the equivocation.
+    pub second_header: SealedBundleHeader<Number, Hash, DomainHeader, Balance>,
+}
+
+#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+pub enum InvalidBundlesProofData<Number, Hash, DomainHeader: HeaderT> {
+    Extrinsic(StorageProof),
+    Bundle(OpaqueBundleWithProof<Number, Hash, DomainHeader, Balance>),
+    BundleAndExecution {
+        bundle_with_proof: OpaqueBundleWithProof<Number, Hash, DomainHeader, Balance>,
+        execution_proof: StorageProof,
+    },
+}
+
+#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+pub struct InvalidBundlesProofV2<Number, Hash, DomainHeader: HeaderT> {
+    pub bad_receipt_hash: HeaderHashFor<DomainHeader>,
+    pub bundle_index: u32,
+    pub invalid_bundle_type: InvalidBundleType,
+    pub is_true_invalid_fraud_proof: bool,
+    /// Proof data of the invalid bundle
+    pub proof_data: InvalidBundlesProofData<Number, Hash, DomainHeader>,
+}
+
+/// Represents an invalid block fees proof.
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct InvalidBlockFeesProofV2<ReceiptHash> {
+    /// Hash of the bad receipt this fraud proof targeted
+    pub bad_receipt_hash: ReceiptHash,
+    /// Storage witness needed for verifying this proof.
+    pub storage_proof: StorageProof,
+}
+
+/// Represents an invalid transfers proof.
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct InvalidTransfersProofV2<ReceiptHash> {
+    /// Hash of the bad receipt this fraud proof targeted
+    pub bad_receipt_hash: ReceiptHash,
+    /// Storage witness needed for verifying this proof.
+    pub storage_proof: StorageProof,
+}
+
+/// Represents an invalid domain block hash fraud proof.
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct InvalidDomainBlockHashProofV2<ReceiptHash> {
+    /// Hash of the bad receipt this fraud proof targeted
+    pub bad_receipt_hash: ReceiptHash,
+    /// Digests storage proof that is used to derive Domain block hash.
+    pub digest_storage_proof: StorageProof,
+}
+
+#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+pub struct FraudProofV2<Number, Hash, DomainHeader: HeaderT, MmrHash> {
+    pub domain_id: DomainId,
+    /// The MMR proof for the consensus state root that used to verify the storage proof
+    ///
+    /// It is set `None` if the specific fraud proof variant doesn't contains storage proof
+    pub maybe_mmr_proof: Option<ConsensusChainMmrLeafProof<Number, Hash, MmrHash>>,
+    /// The domain runtime code storage proof
+    ///
+    /// It is set `None` if the specific fraud proof variant doesn't required domain runtime code
+    /// or the required domain runtime code is available from the current runtime state.
+    pub maybe_domain_runtime_code_proof: Option<DomainRuntimeCodeAt<Number, Hash, MmrHash>>,
+    /// The specific fraud proof variant
+    pub proof: FraudProofVariant<Number, Hash, DomainHeader>,
+}
+
+// TODO: remove debug derive
+#[allow(clippy::large_enum_variant)]
+#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+pub enum FraudProofVariant<Number, Hash, DomainHeader: HeaderT> {
+    InvalidStateTransition(InvalidStateTransitionProofV2<HeaderHashFor<DomainHeader>>),
+    ValidBundle(ValidBundleProofV2<Number, Hash, DomainHeader>),
+    InvalidExtrinsicsRoot(InvalidExtrinsicsRootProofV2<HeaderHashFor<DomainHeader>>),
+    BundleEquivocation(BundleEquivocationProofV2<Number, Hash, DomainHeader>),
+    InvalidBundles(InvalidBundlesProofV2<Number, Hash, DomainHeader>),
+    InvalidDomainBlockHash(InvalidDomainBlockHashProofV2<HeaderHashFor<DomainHeader>>),
+    InvalidBlockFees(InvalidBlockFeesProofV2<HeaderHashFor<DomainHeader>>),
+    InvalidTransfers(InvalidTransfersProofV2<HeaderHashFor<DomainHeader>>),
+    // Dummy fraud proof only used in test and benchmark
+    //
+    // NOTE: the `Dummy` must be the last variant, because the `#[cfg(..)]` will apply to
+    // all the variants after it.
+    #[cfg(any(feature = "std", feature = "runtime-benchmarks"))]
+    Dummy {
+        /// Hash of the bad receipt this fraud proof targeted
+        bad_receipt_hash: HeaderHashFor<DomainHeader>,
+    },
+}
+
+impl<Number, Hash, MmrHash, DomainHeader: HeaderT>
+    FraudProofV2<Number, Hash, DomainHeader, MmrHash>
+{
+    pub fn domain_id(&self) -> DomainId {
+        self.domain_id
+    }
+
+    pub fn targeted_bad_receipt_hash(&self) -> Option<HeaderHashFor<DomainHeader>> {
+        match &self.proof {
+            FraudProofVariant::InvalidStateTransition(proof) => Some(proof.bad_receipt_hash),
+            FraudProofVariant::ValidBundle(proof) => Some(proof.bad_receipt_hash),
+            FraudProofVariant::InvalidExtrinsicsRoot(proof) => Some(proof.bad_receipt_hash),
+            FraudProofVariant::InvalidBundles(proof) => Some(proof.bad_receipt_hash),
+            FraudProofVariant::InvalidDomainBlockHash(proof) => Some(proof.bad_receipt_hash),
+            FraudProofVariant::InvalidBlockFees(proof) => Some(proof.bad_receipt_hash),
+            FraudProofVariant::InvalidTransfers(proof) => Some(proof.bad_receipt_hash),
+            FraudProofVariant::BundleEquivocation(_) => None,
+            #[cfg(any(feature = "std", feature = "runtime-benchmarks"))]
+            FraudProofVariant::Dummy { bad_receipt_hash } => Some(*bad_receipt_hash),
+        }
+    }
+
+    pub fn targeted_bad_operator_and_slot_for_bundle_equivocation(
+        &self,
+    ) -> Option<(OperatorId, Slot)> {
+        match &self.proof {
+            FraudProofVariant::BundleEquivocation(proof) => Some((
+                proof.first_header.header.proof_of_election.operator_id,
+                proof.slot,
+            )),
+            _ => None,
+        }
+    }
+
+    #[cfg(any(feature = "std", feature = "runtime-benchmarks"))]
+    pub fn dummy_fraud_proof(
+        domain_id: DomainId,
+        bad_receipt_hash: HeaderHashFor<DomainHeader>,
+    ) -> FraudProofV2<Number, Hash, DomainHeader, MmrHash> {
+        Self {
+            domain_id,
+            maybe_mmr_proof: None,
+            maybe_domain_runtime_code_proof: None,
+            proof: FraudProofVariant::Dummy { bad_receipt_hash },
+        }
+    }
+}
+
+impl<Number, Hash, MmrHash, DomainHeader: HeaderT> FraudProofV2<Number, Hash, DomainHeader, MmrHash>
+where
+    Number: Encode,
+    Hash: Encode,
+    MmrHash: Encode,
+{
+    pub fn hash(&self) -> HeaderHashFor<DomainHeader> {
+        HeaderHashingFor::<DomainHeader>::hash(&self.encode())
     }
 }
 
@@ -711,6 +957,7 @@ pub struct ImproperTransactionSortitionProof<ReceiptHash> {
 /// Represents an invalid block fees proof.
 #[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
 pub struct InvalidBlockFeesProof<ReceiptHash> {
+    // TODO: remove
     /// The id of the domain this fraud proof targeted
     pub domain_id: DomainId,
     /// Hash of the bad receipt this fraud proof targeted
@@ -792,10 +1039,4 @@ pub struct ValidBundleProof<ReceiptHash> {
     pub bad_receipt_hash: ReceiptHash,
     /// The index of the targetted bundle
     pub bundle_index: u32,
-}
-
-/// Digest storage key in frame_system.
-/// Unfortunately, the digest storage is private and not possible to derive the key from it directly.
-pub fn system_digest_final_key() -> Vec<u8> {
-    frame_support::storage::storage_prefix("System".as_ref(), "Digest".as_ref()).to_vec()
 }

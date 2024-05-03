@@ -296,7 +296,7 @@ mod pallet {
     /// Will be cleared in the next block once the previous block has a domain bundle.
     #[pallet::storage]
     #[pallet::getter(fn domain_chain_allowlist_updates)]
-    pub(super) type DomainChainAllowlistUpdate<T: Config> =
+    pub type DomainChainAllowlistUpdate<T: Config> =
         StorageMap<_, Identity, DomainId, DomainAllowlistUpdates, OptionQuery>;
 
     /// `pallet-messenger` events
@@ -1148,10 +1148,10 @@ mod pallet {
             // nonce should be either be next or in future.
             ensure!(xdm.nonce >= next_nonce, InvalidTransaction::Call);
 
-            let state_root = T::MmrProofVerifier::verify_proof_and_extract_consensus_state_root(
-                xdm.proof.consensus_mmr_proof(),
-            )
-            .ok_or(InvalidTransaction::BadProof)?;
+            let state_root =
+                T::MmrProofVerifier::verify_proof_and_extract_leaf(xdm.proof.consensus_mmr_proof())
+                    .ok_or(InvalidTransaction::BadProof)?
+                    .state_root();
 
             // if the message is from domain, verify domain confirmation proof
             let state_root = if let Some(domain_proof) = xdm.proof.domain_proof().clone()

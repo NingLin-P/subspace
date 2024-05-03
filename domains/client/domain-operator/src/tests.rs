@@ -1,6 +1,4 @@
-use crate::domain_block_processor::{
-    generate_mmr_proof, DomainBlockProcessor, PendingConsensusBlocks,
-};
+use crate::domain_block_processor::{DomainBlockProcessor, PendingConsensusBlocks};
 use crate::domain_bundle_producer::DomainBundleProducer;
 use crate::domain_bundle_proposer::DomainBundleProposer;
 use crate::fraud_proof::{FraudProofGenerator, TraceDiffType};
@@ -17,6 +15,7 @@ use futures::StreamExt;
 use pallet_messenger::ChainAllowlistUpdate;
 use sc_client_api::{Backend, BlockBackend, BlockchainEvents, HeaderBackend};
 use sc_consensus::SharedBlockImport;
+use sc_domains::generate_mmr_proof;
 use sc_service::{BasePath, Role};
 use sc_transaction_pool::error::Error as PoolError;
 use sc_transaction_pool_api::error::Error as TxPoolError;
@@ -4572,6 +4571,7 @@ async fn test_handle_duplicated_tx_with_diff_nonce_in_previous_bundle() {
     assert_eq!(alice.account_nonce(), nonce + 3);
 }
 
+// TODO: add test to ensure MMR proof from diff fork wil be rejected
 #[tokio::test(flavor = "multi_thread")]
 async fn test_verify_mmr_proof_stateless() {
     use subspace_test_primitives::OnchainStateApi as _;
@@ -4621,11 +4621,9 @@ async fn test_verify_mmr_proof_stateless() {
         let res = ferdie
             .client
             .runtime_api()
-            .verify_proof_and_extract_consensus_state_root(
-                ferdie.client.info().best_hash,
-                proof.clone(),
-            )
-            .unwrap();
+            .verify_proof_and_extract_leaf(ferdie.client.info().best_hash, proof.clone())
+            .unwrap()
+            .map(|leaf| leaf.state_root());
 
         produce_blocks!(ferdie, alice, 1).await.unwrap();
 
@@ -4643,11 +4641,9 @@ async fn test_verify_mmr_proof_stateless() {
         let res = ferdie
             .client
             .runtime_api()
-            .verify_proof_and_extract_consensus_state_root(
-                ferdie.client.info().best_hash,
-                proof.clone(),
-            )
-            .unwrap();
+            .verify_proof_and_extract_leaf(ferdie.client.info().best_hash, proof.clone())
+            .unwrap()
+            .map(|leaf| leaf.state_root());
 
         assert_eq!(res, Some(expected_state_root));
         produce_blocks!(ferdie, alice, 1).await.unwrap();

@@ -1,7 +1,8 @@
 use async_trait::async_trait;
 use futures::future::{Future, FutureExt, Ready};
 use sc_client_api::blockchain::HeaderBackend;
-use sc_client_api::{AuxStore, BlockBackend, ExecutorProvider, UsageProvider};
+use sc_client_api::{AuxStore, BlockBackend, ExecutorProvider, ProofProvider, UsageProvider};
+use sc_domains::FPStorageKeyProvider;
 use sc_service::{TaskManager, TransactionPoolOptions};
 use sc_transaction_pool::error::{Error as TxPoolError, Result as TxPoolResult};
 use sc_transaction_pool::{
@@ -17,10 +18,15 @@ use sp_blockchain::{HeaderMetadata, TreeRoute};
 use sp_consensus_slots::Slot;
 use sp_consensus_subspace::{ChainConstants, FarmerPublicKey, SubspaceApi};
 use sp_core::traits::SpawnEssentialNamed;
+use sp_core::H256;
 use sp_domains::DomainsApi;
-use sp_domains_fraud_proof::bundle_equivocation::check_equivocation;
-use sp_domains_fraud_proof::fraud_proof::FraudProof;
+use sp_domains_fraud_proof::bundle_equivocation::{check_equivocation, BundleEquivocationData};
+use sp_domains_fraud_proof::fraud_proof::{
+    BundleEquivocationProof, BundleEquivocationProofV2, FraudProof, FraudProofV2, FraudProofVariant,
+};
+use sp_domains_fraud_proof::storage_proof::BundleProductionProof;
 use sp_domains_fraud_proof::{FraudProofApi, InvalidTransactionCode};
+use sp_mmr_primitives::MmrApi;
 use sp_runtime::generic::BlockId;
 use sp_runtime::traits::{Block as BlockT, BlockIdTo, Header as HeaderT, NumberFor};
 use sp_runtime::transaction_validity::{TransactionValidity, TransactionValidityError};
@@ -77,10 +83,13 @@ where
         + BlockIdTo<Block>
         + HeaderBackend<Block>
         + HeaderMetadata<Block, Error = sp_blockchain::Error>
+        + ProofProvider<Block>
         + Send
         + Sync
         + 'static,
-    Client::Api: TaggedTransactionQueue<Block> + SubspaceApi<Block, FarmerPublicKey>,
+    Client::Api: TaggedTransactionQueue<Block>
+        + SubspaceApi<Block, FarmerPublicKey>
+        + MmrApi<Block, H256, NumberFor<Block>>,
     DomainHeader: HeaderT,
 {
     fn new(
@@ -131,13 +140,15 @@ where
         + BlockIdTo<Block>
         + HeaderBackend<Block>
         + HeaderMetadata<Block, Error = sp_blockchain::Error>
+        + ProofProvider<Block>
         + Send
         + Sync
         + 'static,
     DomainHeader: HeaderT,
     Client::Api: TaggedTransactionQueue<Block>
         + SubspaceApi<Block, FarmerPublicKey>
-        + DomainsApi<Block, DomainHeader>,
+        + DomainsApi<Block, DomainHeader>
+        + MmrApi<Block, H256, NumberFor<Block>>,
 {
     type Block = Block;
     type Error = sc_transaction_pool::error::Error;
@@ -199,7 +210,60 @@ where
                         opaque_bundle.sealed_header,
                     )?;
 
-                    if let Some(equivocation_fraud_proof) = maybe_equivocation_fraud_proof {
+                    if let Some(equivocation_fraud_data) = maybe_equivocation_fraud_proof {
+                        let BundleEquivocationData {
+                            domain_id,
+                            slot,
+                            first_header,
+                            second_header,
+                        } = equivocation_fraud_data;
+                        let operator_id = first_header.header.proof_of_election.operator_id;
+                        let consensus_block_hash =
+                            first_header.header.proof_of_election.consensus_block_hash;
+                        let consensus_block_number =
+                            client.number(consensus_block_hash)?.ok_or_else(|| {
+                                sp_blockchain::Error::Application(Box::from(format!(
+                                    "Failed to get block number for hash {consensus_block_hash:?}"
+                                )))
+                            })?;
+
+                        let mmr_proof =
+                            sc_domains::generate_mmr_proof(&client, consensus_block_number)?;
+                        let bundle_producion_proof = BundleProductionProof::generate(
+                            &FPStorageKeyProvider::<Block, DomainHeader, _>::new(client.clone()),
+                            client.as_ref(),
+                            domain_id,
+                            consensus_block_hash,
+                            operator_id,
+                        )
+                        .map_err(|err| {
+                            sp_blockchain::Error::Application(Box::from(format!(
+                                "Failed to generate bundle producion proof: {err}"
+                            )))
+                        })?;
+
+                        // TODO: submit fraud proof
+                        let equivocation_fraud_proof_v2 = FraudProofV2 {
+                            domain_id,
+                            maybe_mmr_proof: Some(mmr_proof),
+                            maybe_domain_runtime_code_proof: None,
+                            proof: FraudProofVariant::BundleEquivocation(
+                                BundleEquivocationProofV2 {
+                                    slot,
+                                    bundle_producion_proof,
+                                    first_header: first_header.clone(),
+                                    second_header: second_header.clone(),
+                                },
+                            ),
+                        };
+
+                        let equivocation_fraud_proof =
+                            FraudProof::BundleEquivocation(BundleEquivocationProof {
+                                domain_id,
+                                slot,
+                                first_header,
+                                second_header,
+                            });
                         let sent_result = fraud_proof_submit_sink.send(equivocation_fraud_proof);
                         if let Err(err) = sent_result {
                             error!(
@@ -319,13 +383,15 @@ where
         + BlockIdTo<Block>
         + HeaderBackend<Block>
         + HeaderMetadata<Block, Error = sp_blockchain::Error>
+        + ProofProvider<Block>
         + Send
         + Sync
         + 'static,
     Client::Api: TaggedTransactionQueue<Block>
         + SubspaceApi<Block, FarmerPublicKey>
         + FraudProofApi<Block, DomainHeader>
-        + DomainsApi<Block, DomainHeader>,
+        + DomainsApi<Block, DomainHeader>
+        + MmrApi<Block, H256, NumberFor<Block>>,
 {
     type Block = Block;
     type Hash = ExtrinsicHash<FullChainApiWrapper<Client, Block, DomainHeader>>;
@@ -473,6 +539,7 @@ where
         + ExecutorProvider<Block>
         + UsageProvider<Block>
         + BlockIdTo<Block>
+        + ProofProvider<Block>
         + Send
         + Sync
         + 'static,
@@ -480,7 +547,8 @@ where
     Client::Api: TaggedTransactionQueue<Block>
         + SubspaceApi<Block, FarmerPublicKey>
         + FraudProofApi<Block, DomainHeader>
-        + DomainsApi<Block, DomainHeader>,
+        + DomainsApi<Block, DomainHeader>
+        + MmrApi<Block, H256, NumberFor<Block>>,
 {
     let (fraud_proof_submit_sink, mut fraud_proof_submit_stream) = mpsc::unbounded_channel();
     let pool_api = Arc::new(FullChainApiWrapper::new(

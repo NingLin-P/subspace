@@ -1,0 +1,601 @@
+use crate::DomainInherentExtrinsicData;
+use codec::{Decode, Encode, FullCodec};
+use frame_support::storage::generator::StorageMap;
+use frame_support::{Identity, PalletError};
+use hash_db::Hasher;
+use scale_info::TypeInfo;
+use sp_core::storage::StorageKey;
+use sp_core::H256;
+use sp_domains::proof_provider_and_verifier::{
+    StorageProofVerifier, VerificationError as StorageProofVerificationError,
+};
+use sp_domains::{
+    BundleSlotProbability, DomainAllowlistUpdates, DomainId, DomainsDigestItem,
+    FraudProofStorageKeyProvider as StorageKeyProvider,
+    FraudProofStorageKeyProviderInstance as StorageKeyProviderInstance,
+    FraudProofStorageKeyRequest, OpaqueBundle, Operator, OperatorId, OperatorPublicKey, RuntimeId,
+    RuntimeObject, StakingSummary, DOMAIN_STORAGE_FEE_MULTIPLIER,
+};
+use sp_runtime::generic::Digest;
+use sp_runtime::traits::{Block as BlockT, HashingFor, Header as HeaderT, NumberFor};
+use sp_std::marker::PhantomData;
+use sp_std::vec::Vec;
+use sp_trie::{read_trie_value, LayoutV1, StorageProof};
+use subspace_core_primitives::Randomness;
+use subspace_runtime_primitives::{Balance, BlockTransactionByteFee, Moment};
+
+#[cfg(feature = "std")]
+use sc_client_api::ProofProvider;
+
+#[cfg(feature = "std")]
+#[derive(Debug, thiserror::Error)]
+pub enum GenerationError {
+    // TODO: keep sp_blockchain error for more detail
+    // StorageProof(sp_blockchain::Error),
+    #[error("Failed to generate storage proof")]
+    StorageProof,
+    #[error("Failed to get storage key")]
+    StorageKey,
+}
+
+#[derive(Debug, PartialEq, Eq, Encode, Decode, PalletError, TypeInfo)]
+pub enum VerificationError {
+    InvalidBundleStorageProof,
+    RuntimeCodeNotFound,
+    MissingStorageValue,
+    StorageProof(StorageProofVerificationError),
+    UnexpectedDomainRuntimeUpgrade,
+}
+
+impl From<StorageProofVerificationError> for VerificationError {
+    fn from(err: StorageProofVerificationError) -> Self {
+        Self::StorageProof(err)
+    }
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct OpaqueBundleWithProof<Number, Hash, DomainHeader: HeaderT, Balance> {
+    // The targetted valid bundle
+    pub bundle: OpaqueBundle<Number, Hash, DomainHeader, Balance>,
+    // The index of the bundle
+    pub bundle_index: u32,
+    /// Storage witness of the targetted valid bundle
+    pub bundle_storage_proof: SuccessfulBundlesProof,
+}
+
+impl<Number, Hash, DomainHeader, Balance> OpaqueBundleWithProof<Number, Hash, DomainHeader, Balance>
+where
+    Number: Encode,
+    Hash: Encode,
+    DomainHeader: HeaderT,
+    Balance: Encode,
+{
+    /// Generate `OpaqueBundleWithProof`
+    ///
+    /// - `block_hash`: the hash of the block that included the `bundle` in the `SuccessfulBundles` state
+    /// - `bundle`: the bundle included in `block_hash`
+    /// - `bundle_index`: the index of the `bundle` in the `SuccessfulBundles` state
+    #[cfg(feature = "std")]
+    #[allow(clippy::let_and_return)]
+    pub fn generate<Block: BlockT, PP: ProofProvider<Block>, SKP: StorageKeyProviderInstance>(
+        storage_key_provider: &SKP,
+        proof_provider: &PP,
+        domain_id: DomainId,
+        block_hash: Block::Hash,
+        bundle: OpaqueBundle<Number, Hash, DomainHeader, Balance>,
+        bundle_index: u32,
+    ) -> Result<Self, GenerationError> {
+        let bundle_storage_proof = SuccessfulBundlesProof::generate(
+            proof_provider,
+            block_hash,
+            domain_id,
+            storage_key_provider,
+        )?;
+
+        Ok(OpaqueBundleWithProof {
+            bundle,
+            bundle_index,
+            bundle_storage_proof,
+        })
+    }
+
+    /// Verify if the `bundle` does commit to the given `state_root`
+    pub fn verify<Block: BlockT, SKP: StorageKeyProvider>(
+        &self,
+        domain_id: DomainId,
+        state_root: &Block::Hash,
+    ) -> Result<(), VerificationError> {
+        let successful_bundles_at: Vec<H256> =
+            <SuccessfulBundlesProof as BasicStorageProof<Block>>::verify::<SKP>(
+                self.bundle_storage_proof.clone(),
+                domain_id,
+                state_root,
+            )?;
+
+        successful_bundles_at
+            .get(self.bundle_index as usize)
+            .filter(|b| **b == self.bundle.hash())
+            .ok_or(VerificationError::InvalidBundleStorageProof)?;
+
+        Ok(())
+    }
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct MaybeDomainRuntimeUpgradedProof {
+    pub block_digest: BlockDigestProof,
+    pub new_domain_runtime_code: Option<DomainRuntimeCodeProof>,
+}
+
+impl MaybeDomainRuntimeUpgradedProof {
+    #[cfg(feature = "std")]
+    #[allow(clippy::let_and_return)]
+    pub fn generate<Block: BlockT, PP: ProofProvider<Block>, SKP: StorageKeyProviderInstance>(
+        storage_key_provider: &SKP,
+        proof_provider: &PP,
+        block_hash: Block::Hash,
+        maybe_runtime_id: Option<RuntimeId>,
+    ) -> Result<Self, GenerationError> {
+        let block_digest =
+            BlockDigestProof::generate(proof_provider, block_hash, (), storage_key_provider)?;
+        let new_domain_runtime_code = if let Some(runtime_id) = maybe_runtime_id {
+            Some(DomainRuntimeCodeProof::generate(
+                proof_provider,
+                block_hash,
+                runtime_id,
+                storage_key_provider,
+            )?)
+        } else {
+            None
+        };
+        Ok(MaybeDomainRuntimeUpgradedProof {
+            block_digest,
+            new_domain_runtime_code,
+        })
+    }
+
+    pub fn verify<Block: BlockT, SKP: StorageKeyProvider>(
+        &self,
+        runtime_id: RuntimeId,
+        state_root: &Block::Hash,
+    ) -> Result<Option<Vec<u8>>, VerificationError> {
+        let block_digest = <BlockDigestProof as BasicStorageProof<Block>>::verify::<SKP>(
+            self.block_digest.clone(),
+            (),
+            state_root,
+        )?;
+
+        let runtime_upgraded = block_digest
+            .logs
+            .iter()
+            .filter_map(|log| log.as_domain_runtime_upgrade())
+            .any(|upgraded_runtime_id| upgraded_runtime_id == runtime_id);
+
+        match (runtime_upgraded, self.new_domain_runtime_code.as_ref()) {
+            (true, None) | (false, Some(_)) => {
+                Err(VerificationError::UnexpectedDomainRuntimeUpgrade)
+            }
+            (false, None) => Ok(None),
+            (true, Some(runtime_code_proof)) => {
+                let mut runtime_obj =
+                    <DomainRuntimeCodeProof as BasicStorageProof<Block>>::verify::<SKP>(
+                        runtime_code_proof.clone(),
+                        runtime_id,
+                        state_root,
+                    )?
+                    .ok_or(VerificationError::MissingStorageValue)?;
+                let code = runtime_obj
+                    .raw_genesis
+                    .take_runtime_code()
+                    .ok_or(VerificationError::RuntimeCodeNotFound)?;
+                Ok(Some(code))
+            }
+        }
+    }
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct DomainInherentExtrinsicDataProof {
+    pub timestamp_proof: TimestampStorageProof,
+    pub maybe_domain_runtime_upgrade_proof: MaybeDomainRuntimeUpgradedProof,
+    pub dynamic_cost_of_storage_proof: DynamicCostOfStorageProof,
+    pub consensus_chain_byte_fee_proof: ConsensusTransactionByteFeeProof,
+    pub domain_chain_allowlist_proof: DomainChainsAllowlistUpdateStorageProof,
+}
+
+impl DomainInherentExtrinsicDataProof {
+    #[cfg(feature = "std")]
+    #[allow(clippy::let_and_return)]
+    pub fn generate<Block: BlockT, PP: ProofProvider<Block>, SKP: StorageKeyProviderInstance>(
+        storage_key_provider: &SKP,
+        proof_provider: &PP,
+        domain_id: DomainId,
+        block_hash: Block::Hash,
+        maybe_runtime_id: Option<RuntimeId>,
+    ) -> Result<Self, GenerationError> {
+        let timestamp_proof =
+            TimestampStorageProof::generate(proof_provider, block_hash, (), storage_key_provider)?;
+        let maybe_domain_runtime_upgrade_proof = MaybeDomainRuntimeUpgradedProof::generate(
+            storage_key_provider,
+            proof_provider,
+            block_hash,
+            maybe_runtime_id,
+        )?;
+        let dynamic_cost_of_storage_proof = DynamicCostOfStorageProof::generate(
+            proof_provider,
+            block_hash,
+            (),
+            storage_key_provider,
+        )?;
+        let consensus_chain_byte_fee_proof = ConsensusTransactionByteFeeProof::generate(
+            proof_provider,
+            block_hash,
+            (),
+            storage_key_provider,
+        )?;
+        let domain_chain_allowlist_proof = DomainChainsAllowlistUpdateStorageProof::generate(
+            proof_provider,
+            block_hash,
+            domain_id,
+            storage_key_provider,
+        )?;
+        Ok(Self {
+            timestamp_proof,
+            maybe_domain_runtime_upgrade_proof,
+            dynamic_cost_of_storage_proof,
+            consensus_chain_byte_fee_proof,
+            domain_chain_allowlist_proof,
+        })
+    }
+
+    pub fn verify<Block: BlockT, SKP: StorageKeyProvider>(
+        &self,
+        domain_id: DomainId,
+        runtime_id: RuntimeId,
+        state_root: &Block::Hash,
+    ) -> Result<DomainInherentExtrinsicData, VerificationError> {
+        let timestamp = <TimestampStorageProof as BasicStorageProof<Block>>::verify::<SKP>(
+            self.timestamp_proof.clone(),
+            (),
+            state_root,
+        )?;
+
+        let maybe_domain_runtime_upgrade = self
+            .maybe_domain_runtime_upgrade_proof
+            .verify::<Block, SKP>(runtime_id, state_root)?;
+
+        let dynamic_cost_of_storage =
+            <DynamicCostOfStorageProof as BasicStorageProof<Block>>::verify::<SKP>(
+                self.dynamic_cost_of_storage_proof.clone(),
+                (),
+                state_root,
+            )?;
+        let consensus_transaction_byte_fee = if dynamic_cost_of_storage {
+            let raw_transaction_byte_fee =
+                <ConsensusTransactionByteFeeProof as BasicStorageProof<Block>>::verify::<SKP>(
+                    self.consensus_chain_byte_fee_proof.clone(),
+                    (),
+                    state_root,
+                )?;
+
+            // TODO: getting from runtime instead of hardcode?
+            sp_domains::DOMAIN_STORAGE_FEE_MULTIPLIER * raw_transaction_byte_fee.next
+        } else {
+            Balance::from(1u32)
+        };
+
+        let domain_chain_allowlist =
+            <DomainChainsAllowlistUpdateStorageProof as BasicStorageProof<Block>>::verify::<SKP>(
+                self.domain_chain_allowlist_proof.clone(),
+                domain_id,
+                state_root,
+            )?;
+
+        Ok(DomainInherentExtrinsicData {
+            timestamp,
+            maybe_domain_runtime_upgrade,
+            consensus_transaction_byte_fee,
+            domain_chain_allowlist,
+        })
+    }
+}
+
+macro_rules! impl_storage_proof {
+    ($name:ident) => {
+        impl From<StorageProof> for $name {
+            fn from(sp: StorageProof) -> Self {
+                $name(sp)
+            }
+        }
+        impl Into<StorageProof> for $name {
+            fn into(self) -> StorageProof {
+                self.0
+            }
+        }
+    };
+}
+
+pub trait BasicStorageProof<Block: BlockT>:
+    Into<StorageProof> + From<StorageProof> + Clone
+{
+    // TODO: add test for `OptionQuery` & `ValueQuery`
+    type StorageValue: Decode;
+    type Key = ();
+
+    fn storage_key_request(key: Self::Key) -> FraudProofStorageKeyRequest;
+
+    #[cfg(feature = "std")]
+    fn generate<PP: ProofProvider<Block>, SKPI: StorageKeyProviderInstance>(
+        proof_provider: &PP,
+        block_hash: Block::Hash,
+        key: Self::Key,
+        storage_key_provider: &SKPI,
+    ) -> Result<Self, GenerationError> {
+        let storage_key = storage_key_provider
+            .storage_key(Self::storage_key_request(key))
+            .ok_or(GenerationError::StorageKey)?;
+        let storage_proof = proof_provider
+            .read_proof(block_hash, &mut [storage_key.as_slice()].into_iter())
+            .map_err(|_| GenerationError::StorageProof)?;
+        Ok(storage_proof.into())
+    }
+
+    fn verify<SKP: StorageKeyProvider>(
+        self,
+        key: Self::Key,
+        state_root: &Block::Hash,
+    ) -> Result<Self::StorageValue, VerificationError> {
+        let storage_key = SKP::storage_key(Self::storage_key_request(key));
+        Ok(
+            StorageProofVerifier::<HashingFor<Block>>::get_decoded_value::<Self::StorageValue>(
+                state_root,
+                self.into(),
+                StorageKey(storage_key),
+            )?,
+        )
+    }
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct SuccessfulBundlesProof(StorageProof);
+
+impl_storage_proof!(SuccessfulBundlesProof);
+impl<Block: BlockT> BasicStorageProof<Block> for SuccessfulBundlesProof {
+    type StorageValue = Vec<H256>;
+    type Key = DomainId;
+    fn storage_key_request(key: Self::Key) -> FraudProofStorageKeyRequest {
+        FraudProofStorageKeyRequest::SuccessfulBundles(key)
+    }
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct BlockRandomnessProof(StorageProof);
+
+impl_storage_proof!(BlockRandomnessProof);
+impl<Block: BlockT> BasicStorageProof<Block> for BlockRandomnessProof {
+    type StorageValue = Randomness;
+    fn storage_key_request(_key: Self::Key) -> FraudProofStorageKeyRequest {
+        FraudProofStorageKeyRequest::BlockRandomness
+    }
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct DomainChainsAllowlistUpdateStorageProof(StorageProof);
+
+impl_storage_proof!(DomainChainsAllowlistUpdateStorageProof);
+impl<Block: BlockT> BasicStorageProof<Block> for DomainChainsAllowlistUpdateStorageProof {
+    type StorageValue = Option<DomainAllowlistUpdates>;
+    type Key = DomainId;
+    fn storage_key_request(key: Self::Key) -> FraudProofStorageKeyRequest {
+        FraudProofStorageKeyRequest::DomainAllowlistUpdates(key)
+    }
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct TimestampStorageProof(StorageProof);
+
+impl_storage_proof!(TimestampStorageProof);
+impl<Block: BlockT> BasicStorageProof<Block> for TimestampStorageProof {
+    type StorageValue = Moment;
+    fn storage_key_request(_key: Self::Key) -> FraudProofStorageKeyRequest {
+        FraudProofStorageKeyRequest::Timestamp
+    }
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct DynamicCostOfStorageProof(StorageProof);
+
+impl_storage_proof!(DynamicCostOfStorageProof);
+impl<Block: BlockT> BasicStorageProof<Block> for DynamicCostOfStorageProof {
+    type StorageValue = bool;
+    fn storage_key_request(_key: Self::Key) -> FraudProofStorageKeyRequest {
+        FraudProofStorageKeyRequest::DynamicCostOfStorage
+    }
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct ConsensusTransactionByteFeeProof(StorageProof);
+
+impl_storage_proof!(ConsensusTransactionByteFeeProof);
+impl<Block: BlockT> BasicStorageProof<Block> for ConsensusTransactionByteFeeProof {
+    type StorageValue = BlockTransactionByteFee<Balance>;
+    fn storage_key_request(_key: Self::Key) -> FraudProofStorageKeyRequest {
+        FraudProofStorageKeyRequest::TransactionByteFee
+    }
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct DomainStakingSummaryProof(StorageProof);
+
+impl_storage_proof!(DomainStakingSummaryProof);
+impl<Block: BlockT> BasicStorageProof<Block> for DomainStakingSummaryProof {
+    type StorageValue = Option<StakingSummary<OperatorId, Balance>>;
+    type Key = DomainId;
+    fn storage_key_request(key: Self::Key) -> FraudProofStorageKeyRequest {
+        FraudProofStorageKeyRequest::DomainStakingSummary(key)
+    }
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct BundleSlotProbabilityProof(StorageProof);
+
+impl_storage_proof!(BundleSlotProbabilityProof);
+impl<Block: BlockT> BasicStorageProof<Block> for BundleSlotProbabilityProof {
+    type StorageValue = Option<BundleSlotProbability>;
+    type Key = DomainId;
+    fn storage_key_request(key: Self::Key) -> FraudProofStorageKeyRequest {
+        FraudProofStorageKeyRequest::BundleSlotProbabilityMap(key)
+    }
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct OperatorProof<DomainBlockNumber> {
+    storage_proof: StorageProof,
+    _phantom: PhantomData<DomainBlockNumber>,
+}
+impl<DomainBlockNumber> From<StorageProof> for OperatorProof<DomainBlockNumber> {
+    fn from(storage_proof: StorageProof) -> Self {
+        OperatorProof {
+            storage_proof,
+            _phantom: Default::default(),
+        }
+    }
+}
+impl<DomainBlockNumber> Into<StorageProof> for OperatorProof<DomainBlockNumber> {
+    fn into(self) -> StorageProof {
+        self.storage_proof
+    }
+}
+impl<Block: BlockT, DomainBlockNumber: Clone + Decode> BasicStorageProof<Block>
+    for OperatorProof<DomainBlockNumber>
+{
+    type StorageValue = Option<Operator<Balance, Balance, DomainBlockNumber>>;
+    type Key = OperatorId;
+    fn storage_key_request(key: Self::Key) -> FraudProofStorageKeyRequest {
+        FraudProofStorageKeyRequest::Operator(key)
+    }
+}
+
+/// Helper struct for storage proof related to bundle production
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct BundleProductionProof<DomainBlockNumber> {
+    pub domain_staking_summary_proof: DomainStakingSummaryProof,
+    pub bundle_slot_probability_proof: BundleSlotProbabilityProof,
+    pub operator_proof: OperatorProof<DomainBlockNumber>,
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct BundleProductionData {
+    pub domain_total_stake: Balance,
+    pub operator_total_stake: Balance,
+    pub operator_signing_key: OperatorPublicKey,
+    pub bundle_slot_probability: BundleSlotProbability,
+}
+
+impl<DomainBlockNumber: Clone + Decode> BundleProductionProof<DomainBlockNumber> {
+    #[cfg(feature = "std")]
+    #[allow(clippy::let_and_return)]
+    pub fn generate<Block: BlockT, PP: ProofProvider<Block>, SKP: StorageKeyProviderInstance>(
+        storage_key_provider: &SKP,
+        proof_provider: &PP,
+        domain_id: DomainId,
+        block_hash: Block::Hash,
+        operator_id: OperatorId,
+    ) -> Result<Self, GenerationError> {
+        let domain_staking_summary_proof = DomainStakingSummaryProof::generate(
+            proof_provider,
+            block_hash,
+            domain_id,
+            storage_key_provider,
+        )?;
+
+        let bundle_slot_probability_proof = BundleSlotProbabilityProof::generate(
+            proof_provider,
+            block_hash,
+            domain_id,
+            storage_key_provider,
+        )?;
+
+        let operator_proof = OperatorProof::generate(
+            proof_provider,
+            block_hash,
+            operator_id,
+            storage_key_provider,
+        )?;
+
+        Ok(Self {
+            domain_staking_summary_proof,
+            bundle_slot_probability_proof,
+            operator_proof,
+        })
+    }
+
+    pub fn verify<Block: BlockT, SKP: StorageKeyProvider>(
+        &self,
+        domain_id: DomainId,
+        operator_id: OperatorId,
+        state_root: &Block::Hash,
+    ) -> Result<BundleProductionData, VerificationError> {
+        let domain_staking_summary =
+            <DomainStakingSummaryProof as BasicStorageProof<Block>>::verify::<SKP>(
+                self.domain_staking_summary_proof.clone(),
+                domain_id,
+                state_root,
+            )?
+            .ok_or(VerificationError::MissingStorageValue)?;
+
+        let bundle_slot_probability =
+            <BundleSlotProbabilityProof as BasicStorageProof<Block>>::verify::<SKP>(
+                self.bundle_slot_probability_proof.clone(),
+                domain_id,
+                state_root,
+            )?
+            .ok_or(VerificationError::MissingStorageValue)?;
+
+        let operator =
+            <OperatorProof<DomainBlockNumber> as BasicStorageProof<Block>>::verify::<SKP>(
+                self.operator_proof.clone(),
+                operator_id,
+                state_root,
+            )?
+            .ok_or(VerificationError::MissingStorageValue)?;
+
+        Ok(BundleProductionData {
+            domain_total_stake: domain_staking_summary.current_total_stake,
+            operator_total_stake: operator.current_total_stake,
+            operator_signing_key: operator.signing_key,
+            bundle_slot_probability,
+        })
+    }
+}
+
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct BlockDigestProof(StorageProof);
+
+impl_storage_proof!(BlockDigestProof);
+impl<Block: BlockT> BasicStorageProof<Block> for BlockDigestProof {
+    type StorageValue = Digest;
+    fn storage_key_request(_key: Self::Key) -> FraudProofStorageKeyRequest {
+        FraudProofStorageKeyRequest::BlockDigest
+    }
+}
+
+// TODO: get the runtime id from pallet-domains since it won't change for a given domain
+// The domain runtime code with storage proof
+//
+// NOTE: usually we should use the parent consensus block hash to `generate` or `verify` the
+// domain runtime code because the domain's `set_code` extrinsic is always the last extrinsic
+// to execute thus the domain runtime code will take effect in the next domain block, in other
+// word the domain runtime code of the parent consensus block is the one used when construting
+// the `ExecutionReceipt`.
+#[derive(Clone, Debug, Decode, Encode, Eq, PartialEq, TypeInfo)]
+pub struct DomainRuntimeCodeProof(StorageProof);
+
+impl_storage_proof!(DomainRuntimeCodeProof);
+impl<Block: BlockT> BasicStorageProof<Block> for DomainRuntimeCodeProof {
+    type StorageValue = Option<RuntimeObject<NumberFor<Block>, Block::Hash>>;
+    type Key = RuntimeId;
+    fn storage_key_request(key: Self::Key) -> FraudProofStorageKeyRequest {
+        FraudProofStorageKeyRequest::RuntimeRegistry(key)
+    }
+}
