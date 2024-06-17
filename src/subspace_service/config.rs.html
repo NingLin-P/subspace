@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-service/src/config.rs`."><title>config.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-4e54bb2b497cc83f.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_service" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (25f8d01fd 2024-01-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0b2e2def73e61cbe.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../subspace_service/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-service/src/config.rs`."><title>config.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_service" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../subspace_service/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -259,6 +257,73 @@
 <a href="#257" id="257">257</a>
 <a href="#258" id="258">258</a>
 <a href="#259" id="259">259</a>
+<a href="#260" id="260">260</a>
+<a href="#261" id="261">261</a>
+<a href="#262" id="262">262</a>
+<a href="#263" id="263">263</a>
+<a href="#264" id="264">264</a>
+<a href="#265" id="265">265</a>
+<a href="#266" id="266">266</a>
+<a href="#267" id="267">267</a>
+<a href="#268" id="268">268</a>
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::dsn::DsnConfig;
 <span class="kw">use </span><span class="kw">crate</span>::sync_from_dsn::DsnSyncPieceGetter;
 <span class="kw">use </span>sc_chain_spec::ChainSpec;
@@ -266,17 +331,21 @@
     MultiaddrWithPeerId, NetworkConfiguration, NodeKeyConfig, SetConfig, SyncMode, TransportConfig,
     DEFAULT_KADEMLIA_REPLICATION_FACTOR,
 };
-<span class="kw">use </span>sc_service::config::{KeystoreConfig, OffchainWorkerConfig, PrometheusConfig};
+<span class="kw">use </span>sc_service::config::{
+    KeystoreConfig, OffchainWorkerConfig, PrometheusConfig, RpcBatchRequestConfig,
+};
 <span class="kw">use </span>sc_service::{
     BasePath, BlocksPruning, Configuration, DatabaseSource, PruningMode, RpcMethods,
     TransactionPoolOptions,
 };
 <span class="kw">use </span>sc_telemetry::TelemetryEndpoints;
 <span class="kw">use </span>std::collections::HashSet;
+<span class="kw">use </span>std::fmt;
 <span class="kw">use </span>std::net::SocketAddr;
-<span class="kw">use </span>std::num::NonZeroUsize;
+<span class="kw">use </span>std::num::{NonZeroU32, NonZeroUsize};
 <span class="kw">use </span>std::ops::Deref;
 <span class="kw">use </span>std::path::PathBuf;
+<span class="kw">use </span>std::str::FromStr;
 <span class="kw">use </span>std::sync::atomic::AtomicBool;
 <span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>subspace_networking::libp2p::Multiaddr;
@@ -291,16 +360,24 @@
 <span class="doccomment">/// Simplified RPC configuration used in Substrate
 </span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub struct </span>SubstrateRpcConfiguration {
-    <span class="doccomment">/// IP and port (TCP) on which to listen for RPC requests.
+    <span class="doccomment">/// IP and port (TCP) on which to listen for RPC requests
     </span><span class="kw">pub </span>listen_on: SocketAddr,
-    <span class="doccomment">/// Maximum number of connections for JSON-RPC server.
+    <span class="doccomment">/// Maximum number of connections for JSON-RPC server
     </span><span class="kw">pub </span>max_connections: u32,
-    <span class="doccomment">/// CORS settings for HTTP &amp; WS servers. `None` if all origins are allowed.
+    <span class="doccomment">/// CORS settings for HTTP &amp; WS servers. `None` if all origins are allowed
     </span><span class="kw">pub </span>cors: <span class="prelude-ty">Option</span>&lt;Vec&lt;String&gt;&gt;,
-    <span class="doccomment">/// RPC methods to expose (by default only a safe subset or all of them).
+    <span class="doccomment">/// RPC methods to expose (by default only a safe subset or all of them)
     </span><span class="kw">pub </span>methods: RpcMethods,
+    <span class="doccomment">/// RPC rate limiting (calls/minute) for each connection
+    </span><span class="kw">pub </span>rate_limit: <span class="prelude-ty">Option</span>&lt;NonZeroU32&gt;,
     <span class="doccomment">/// Maximum allowed subscriptions per rpc connection
     </span><span class="kw">pub </span>max_subscriptions_per_connection: u32,
+    <span class="doccomment">/// The number of messages the RPC server is allowed to keep in memory
+    </span><span class="kw">pub </span>message_buffer_capacity_per_connection: u32,
+    <span class="doccomment">/// Disable RPC batch requests
+    </span><span class="kw">pub </span>disable_batch_requests: bool,
+    <span class="doccomment">/// Limit the max length per RPC batch request
+    </span><span class="kw">pub </span>max_batch_request_len: <span class="prelude-ty">Option</span>&lt;u32&gt;,
 }
 
 <span class="doccomment">/// Simplified network used in Substrate
@@ -321,6 +398,8 @@
     <span class="doccomment">/// Determines whether we allow keeping non-global (private, shared, loopback..) addresses
     /// in Kademlia DHT.
     </span><span class="kw">pub </span>allow_private_ips: bool,
+    <span class="doccomment">/// Sync mode
+    </span><span class="kw">pub </span>sync_mode: ChainSyncMode,
     <span class="doccomment">/// Parameter that allows node to forcefully assume it is synced, needed for network
     /// bootstrapping only, as long as two synced nodes remain on the network at any time, this
     /// doesn't need to be used.
@@ -397,8 +476,14 @@
                 </span>max_parallel_downloads: <span class="number">5</span>,
                 <span class="comment">// Substrate's default
                 </span>max_blocks_per_request: <span class="number">64</span>,
-                <span class="comment">// Substrate's default, full mode
-                </span>sync_mode: SyncMode::Full,
+                sync_mode: <span class="kw">match </span>configuration.network.sync_mode {
+                    ChainSyncMode::Full =&gt; SyncMode::Full,
+                    <span class="comment">// TODO: revisit SyncMode change after https://github.com/paritytech/polkadot-sdk/issues/4407
+                    </span>ChainSyncMode::Snap =&gt; SyncMode::LightState {
+                        skip_proofs: <span class="bool-val">false</span>,
+                        storage_chain_mode: <span class="bool-val">false</span>,
+                    },
+                },
                 pause_sync: Arc::new(AtomicBool::new(<span class="bool-val">false</span>)),
                 <span class="comment">// Substrate's default
                 </span>enable_dht_random_walk: <span class="bool-val">true</span>,
@@ -434,6 +519,17 @@
             rpc_max_subs_per_conn: configuration.rpc_options.max_subscriptions_per_connection,
             <span class="comment">// Doesn't matter since we have specified address above
             </span>rpc_port: <span class="number">0</span>,
+            rpc_message_buffer_capacity: configuration
+                .rpc_options
+                .message_buffer_capacity_per_connection,
+            rpc_batch_config: <span class="kw">if </span>configuration.rpc_options.disable_batch_requests {
+                RpcBatchRequestConfig::Disabled
+            } <span class="kw">else if let </span><span class="prelude-val">Some</span>(l) = configuration.rpc_options.max_batch_request_len {
+                RpcBatchRequestConfig::Limit(l)
+            } <span class="kw">else </span>{
+                RpcBatchRequestConfig::Unlimited
+            },
+            rpc_rate_limit: configuration.rpc_options.rate_limit,
             prometheus_config: configuration
                 .prometheus_listen_on
                 .map(|prometheus_listen_on| {
@@ -503,12 +599,48 @@
     </span><span class="kw">pub </span>subspace_networking: SubspaceNetworking,
     <span class="doccomment">/// DSN piece getter
     </span><span class="kw">pub </span>dsn_piece_getter: <span class="prelude-ty">Option</span>&lt;Arc&lt;<span class="kw">dyn </span>DsnSyncPieceGetter + Send + Sync + <span class="lifetime">'static</span>&gt;&gt;,
-    <span class="doccomment">/// Enables DSN-sync on startup.
-    </span><span class="kw">pub </span>sync_from_dsn: bool,
     <span class="doccomment">/// Is this node a Timekeeper
     </span><span class="kw">pub </span>is_timekeeper: bool,
     <span class="doccomment">/// CPU cores that timekeeper can use
     </span><span class="kw">pub </span>timekeeper_cpu_cores: HashSet&lt;usize&gt;,
+    <span class="doccomment">/// Defines blockchain sync mode
+    </span><span class="kw">pub </span>sync: ChainSyncMode,
+}
+
+<span class="doccomment">/// Syncing mode.
+</span><span class="attr">#[derive(Debug, Clone, Copy, PartialEq)]
+</span><span class="kw">pub enum </span>ChainSyncMode {
+    <span class="doccomment">/// Full sync. Download and verify all blocks from DSN.
+    </span>Full,
+    <span class="doccomment">/// Download latest state and related blocks only. Run full DSN-sync afterwards.
+    </span>Snap,
+}
+
+<span class="kw">impl </span>FromStr <span class="kw">for </span>ChainSyncMode {
+    <span class="kw">type </span><span class="prelude-val">Err </span>= String;
+
+    <span class="kw">fn </span>from_str(input: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Err&gt; {
+        <span class="kw">match </span>input {
+            <span class="string">"full" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Full),
+            <span class="string">"snap" </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::Snap),
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="string">"Unsupported sync type"</span>.to_string()),
+        }
+    }
+}
+
+<span class="kw">impl </span>fmt::Display <span class="kw">for </span>ChainSyncMode {
+    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::Full =&gt; f.write_str(<span class="string">"full"</span>),
+            <span class="self">Self</span>::Snap =&gt; f.write_str(<span class="string">"snap"</span>),
+        }
+    }
+}
+
+<span class="kw">impl </span>Default <span class="kw">for </span>ChainSyncMode {
+    <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+        <span class="self">Self</span>::Full
+    }
 }
 
 <span class="kw">impl </span>Deref <span class="kw">for </span>SubspaceConfiguration {

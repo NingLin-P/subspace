@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `domains/pallets/executive/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-4e54bb2b497cc83f.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="domain_pallet_executive" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (25f8d01fd 2024-01-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0b2e2def73e61cbe.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../domain_pallet_executive/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `domains/pallets/executive/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="domain_pallet_executive" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../domain_pallet_executive/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -600,6 +598,13 @@
 <a href="#598" id="598">598</a>
 <a href="#599" id="599">599</a>
 <a href="#600" id="600">600</a>
+<a href="#601" id="601">601</a>
+<a href="#602" id="602">602</a>
+<a href="#603" id="603">603</a>
+<a href="#604" id="604">604</a>
+<a href="#605" id="605">605</a>
+<a href="#606" id="606">606</a>
+<a href="#607" id="607">607</a>
 </pre></div><pre class="rust"><code><span class="comment">// This file is part of Substrate.
 
 // Copyright (C) 2017-2022 Parity Technologies (UK) Ltd.
@@ -627,13 +632,14 @@
 
 #[cfg(feature = <span class="string">"runtime-benchmarks"</span>)]
 </span><span class="kw">mod </span>benchmarking;
-
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>mock;
 <span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests;
-
 <span class="kw">pub mod </span>weights;
+
+<span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+</span><span class="kw">extern crate </span>alloc;
 
 <span class="kw">use </span>codec::{Codec, Encode};
 <span class="kw">use </span>frame_support::dispatch::{
@@ -644,7 +650,7 @@
 <span class="kw">use </span>frame_support::traits::tokens::{Fortitude, Precision};
 <span class="kw">use </span>frame_support::traits::{
     BeforeAllRuntimeMigrations, EnsureInherentsAreFirst, ExecuteBlock, Get, OffchainWorker,
-    OnFinalize, OnIdle, OnInitialize, OnRuntimeUpgrade,
+    OnFinalize, OnIdle, OnInitialize, OnPoll, OnRuntimeUpgrade,
 };
 <span class="kw">use </span>frame_support::weights::{Weight, WeightToFee};
 <span class="kw">use </span>frame_system::pallet_prelude::<span class="kw-2">*</span>;
@@ -656,7 +662,7 @@
 <span class="kw">use </span>sp_runtime::transaction_validity::{
     InvalidTransaction, TransactionSource, TransactionValidity, TransactionValidityError,
 };
-<span class="kw">use </span>sp_runtime::{ApplyExtrinsicResult, DispatchError};
+<span class="kw">use </span>sp_runtime::{ApplyExtrinsicResult, DispatchError, ExtrinsicInclusionMode};
 <span class="kw">use </span>sp_std::marker::PhantomData;
 <span class="kw">use </span>sp_std::prelude::<span class="kw-2">*</span>;
 
@@ -669,7 +675,10 @@
     <span class="doccomment">/// Extracts signer from given extrinsic and its dispatch info.
     </span><span class="kw">fn </span>extract_signer(xt: ExtrinsicOf&lt;T&gt;) -&gt; (<span class="prelude-ty">Option</span>&lt;AccountIdOf&lt;T&gt;&gt;, DispatchInfo);
     <span class="doccomment">/// Hook to note operator rewards for charged storage fees.
-    </span><span class="kw">fn </span>on_storage_fees_charged(charged_fees: BalanceOf&lt;T&gt;, tx_size: u32);
+    </span><span class="kw">fn </span>on_storage_fees_charged(
+        charged_fees: BalanceOf&lt;T&gt;,
+        tx_size: u32,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), TransactionValidityError&gt;;
 }
 
 <span class="kw">type </span>AccountIdOf&lt;T&gt; = &lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId;
@@ -684,13 +693,14 @@
 </span><span class="kw">mod </span>pallet {
     <span class="kw">use </span><span class="kw">crate</span>::weights::WeightInfo;
     <span class="kw">use crate</span>::{BalanceOf, ExtrinsicStorageFees};
+    <span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+    </span><span class="kw">use </span>alloc::vec::Vec;
     <span class="kw">use </span>frame_support::pallet_prelude::<span class="kw-2">*</span>;
     <span class="kw">use </span>frame_support::traits::fungible::Mutate;
     <span class="kw">use </span>frame_support::weights::WeightToFee;
     <span class="kw">use </span>frame_system::pallet_prelude::<span class="kw-2">*</span>;
     <span class="kw">use </span>frame_system::SetCode;
     <span class="kw">use </span>sp_executive::{InherentError, InherentType, INHERENT_IDENTIFIER};
-    <span class="kw">use </span>sp_std::vec::Vec;
 
     <span class="attr">#[pallet::config]
     </span><span class="kw">pub trait </span>Config: frame_system::Config {
@@ -828,7 +838,8 @@
             + OnInitialize&lt;BlockNumberFor&lt;ExecutiveConfig&gt;&gt;
             + OnIdle&lt;BlockNumberFor&lt;ExecutiveConfig&gt;&gt;
             + OnFinalize&lt;BlockNumberFor&lt;ExecutiveConfig&gt;&gt;
-            + OffchainWorker&lt;BlockNumberFor&lt;ExecutiveConfig&gt;&gt;,
+            + OffchainWorker&lt;BlockNumberFor&lt;ExecutiveConfig&gt;&gt;
+            + OnPoll&lt;BlockNumberFor&lt;ExecutiveConfig&gt;&gt;,
         COnRuntimeUpgrade: OnRuntimeUpgrade,
     &gt; ExecuteBlock&lt;BlockOf&lt;ExecutiveConfig&gt;&gt;
     <span class="kw">for </span>Executive&lt;
@@ -866,7 +877,8 @@
             + OnInitialize&lt;BlockNumberFor&lt;ExecutiveConfig&gt;&gt;
             + OnIdle&lt;BlockNumberFor&lt;ExecutiveConfig&gt;&gt;
             + OnFinalize&lt;BlockNumberFor&lt;ExecutiveConfig&gt;&gt;
-            + OffchainWorker&lt;BlockNumberFor&lt;ExecutiveConfig&gt;&gt;,
+            + OffchainWorker&lt;BlockNumberFor&lt;ExecutiveConfig&gt;&gt;
+            + OnPoll&lt;BlockNumberFor&lt;ExecutiveConfig&gt;&gt;,
         COnRuntimeUpgrade: OnRuntimeUpgrade,
     &gt;
     Executive&lt;ExecutiveConfig, Context, UnsignedValidator, AllPalletsWithSystem, COnRuntimeUpgrade&gt;
@@ -925,7 +937,7 @@
     <span class="doccomment">/// Wrapped `frame_executive::Executive::initialize_block`.
     ///
     /// Note the storage root in the end.
-    </span><span class="kw">pub fn </span>initialize_block(header: <span class="kw-2">&amp;</span>HeaderFor&lt;ExecutiveConfig&gt;) {
+    </span><span class="kw">pub fn </span>initialize_block(header: <span class="kw-2">&amp;</span>HeaderFor&lt;ExecutiveConfig&gt;) -&gt; ExtrinsicInclusionMode {
         frame_executive::Executive::&lt;
             ExecutiveConfig,
             BlockOf&lt;ExecutiveConfig&gt;,
@@ -933,7 +945,7 @@
             UnsignedValidator,
             AllPalletsWithSystem,
             COnRuntimeUpgrade,
-        &gt;::initialize_block(header);
+        &gt;::initialize_block(header)
     }
 
     <span class="comment">// TODO: https://github.com/paritytech/substrate/issues/10711
@@ -962,7 +974,7 @@
     /// [`Executive::apply_extrinsic`].
     </span><span class="kw">pub fn </span>execute_block(block: BlockOf&lt;ExecutiveConfig&gt;) {
         sp_io::init_tracing();
-        <span class="macro">sp_tracing::within_span! </span>{
+        <span class="macro">sp_tracing::within_span!</span> {
             <span class="macro">sp_tracing::info_span!</span>(<span class="string">"execute_block"</span>, <span class="question-mark">?</span>block);
 
             <span class="self">Self</span>::initialize_block(block.header());
@@ -990,7 +1002,7 @@
         });
 
         <span class="comment">// Note the storage root before finalizing the block so that the block imported during the
-        // syncing processs produces the same storage root with the one processed based on
+        // syncing process produces the same storage root with the one processed based on
         // the consensus block.
         </span>Pallet::&lt;ExecutiveConfig&gt;::push_root(<span class="self">Self</span>::storage_root());
 
@@ -1099,7 +1111,7 @@
                         ExecutiveConfig::ExtrinsicStorageFees::on_storage_fees_charged(
                             charged_fees,
                             encoded.len() <span class="kw">as </span>u32,
-                        )
+                        )<span class="question-mark">?</span>;
                     }
                 }
 

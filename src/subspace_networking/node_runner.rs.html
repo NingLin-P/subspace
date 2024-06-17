@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-networking/src/node_runner.rs`."><title>node_runner.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-4e54bb2b497cc83f.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_networking" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (25f8d01fd 2024-01-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0b2e2def73e61cbe.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../subspace_networking/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-networking/src/node_runner.rs`."><title>node_runner.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_networking" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../subspace_networking/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1487,6 +1485,54 @@
 <a href="#1485" id="1485">1485</a>
 <a href="#1486" id="1486">1486</a>
 <a href="#1487" id="1487">1487</a>
+<a href="#1488" id="1488">1488</a>
+<a href="#1489" id="1489">1489</a>
+<a href="#1490" id="1490">1490</a>
+<a href="#1491" id="1491">1491</a>
+<a href="#1492" id="1492">1492</a>
+<a href="#1493" id="1493">1493</a>
+<a href="#1494" id="1494">1494</a>
+<a href="#1495" id="1495">1495</a>
+<a href="#1496" id="1496">1496</a>
+<a href="#1497" id="1497">1497</a>
+<a href="#1498" id="1498">1498</a>
+<a href="#1499" id="1499">1499</a>
+<a href="#1500" id="1500">1500</a>
+<a href="#1501" id="1501">1501</a>
+<a href="#1502" id="1502">1502</a>
+<a href="#1503" id="1503">1503</a>
+<a href="#1504" id="1504">1504</a>
+<a href="#1505" id="1505">1505</a>
+<a href="#1506" id="1506">1506</a>
+<a href="#1507" id="1507">1507</a>
+<a href="#1508" id="1508">1508</a>
+<a href="#1509" id="1509">1509</a>
+<a href="#1510" id="1510">1510</a>
+<a href="#1511" id="1511">1511</a>
+<a href="#1512" id="1512">1512</a>
+<a href="#1513" id="1513">1513</a>
+<a href="#1514" id="1514">1514</a>
+<a href="#1515" id="1515">1515</a>
+<a href="#1516" id="1516">1516</a>
+<a href="#1517" id="1517">1517</a>
+<a href="#1518" id="1518">1518</a>
+<a href="#1519" id="1519">1519</a>
+<a href="#1520" id="1520">1520</a>
+<a href="#1521" id="1521">1521</a>
+<a href="#1522" id="1522">1522</a>
+<a href="#1523" id="1523">1523</a>
+<a href="#1524" id="1524">1524</a>
+<a href="#1525" id="1525">1525</a>
+<a href="#1526" id="1526">1526</a>
+<a href="#1527" id="1527">1527</a>
+<a href="#1528" id="1528">1528</a>
+<a href="#1529" id="1529">1529</a>
+<a href="#1530" id="1530">1530</a>
+<a href="#1531" id="1531">1531</a>
+<a href="#1532" id="1532">1532</a>
+<a href="#1533" id="1533">1533</a>
+<a href="#1534" id="1534">1534</a>
+<a href="#1535" id="1535">1535</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::behavior::persistent_parameters::{
     append_p2p_suffix, remove_p2p_suffix, KnownPeersRegistry, PeerAddressRemovedEvent,
 };
@@ -1513,11 +1559,13 @@
     Behaviour <span class="kw">as </span>Kademlia, BootstrapOk, Event <span class="kw">as </span>KademliaEvent, GetClosestPeersError,
     GetClosestPeersOk, GetProvidersError, GetProvidersOk, GetRecordError, GetRecordOk,
     InboundRequest, PeerRecord, ProgressStep, PutRecordOk, QueryId, QueryResult, Quorum, Record,
+    RecordKey,
 };
 <span class="kw">use </span>libp2p::metrics::{Metrics, Recorder};
 <span class="kw">use </span>libp2p::multiaddr::Protocol;
+<span class="kw">use </span>libp2p::swarm::dial_opts::DialOpts;
 <span class="kw">use </span>libp2p::swarm::{DialError, SwarmEvent};
-<span class="kw">use </span>libp2p::{futures, Multiaddr, PeerId, Swarm, TransportError};
+<span class="kw">use </span>libp2p::{Multiaddr, PeerId, Swarm, TransportError};
 <span class="kw">use </span>nohash_hasher::IntMap;
 <span class="kw">use </span>parking_lot::Mutex;
 <span class="kw">use </span>std::collections::hash_map::Entry;
@@ -1534,6 +1582,8 @@
 <span class="kw">use </span>tokio::time::Sleep;
 <span class="kw">use </span>tracing::{debug, error, trace, warn};
 
+<span class="kw">const </span>BOOTSTRAP_TIMEOUT: Duration = Duration::from_secs(<span class="number">5 </span>* <span class="number">60</span>);
+
 <span class="kw">enum </span>QueryResultSender {
     Value {
         sender: mpsc::UnboundedSender&lt;PeerRecord&gt;,
@@ -1546,6 +1596,7 @@
         </span>_permit: <span class="prelude-ty">Option</span>&lt;OwnedSemaphorePermit&gt;,
     },
     Providers {
+        key: RecordKey,
         sender: mpsc::UnboundedSender&lt;PeerId&gt;,
         <span class="comment">// Just holding onto permit while data structure is not dropped
         </span>_permit: <span class="prelude-ty">Option</span>&lt;OwnedSemaphorePermit&gt;,
@@ -1594,7 +1645,7 @@
     <span class="doccomment">/// Defines an interval between periodical tasks.
     </span>periodical_tasks_interval: Pin&lt;Box&lt;Fuse&lt;Sleep&gt;&gt;&gt;,
     <span class="doccomment">/// Manages the networking parameters like known peers and addresses
-    </span>networking_parameters_registry: Box&lt;<span class="kw">dyn </span>KnownPeersRegistry&gt;,
+    </span>known_peers_registry: Box&lt;<span class="kw">dyn </span>KnownPeersRegistry&gt;,
     <span class="doccomment">/// Defines set of peers with a permanent connection (and reconnection if necessary).
     </span>reserved_peers: HashMap&lt;PeerId, Multiaddr&gt;,
     <span class="doccomment">/// Temporarily banned peers.
@@ -1616,15 +1667,14 @@
     <span class="doccomment">/// Optional storage for the [`HandlerId`] of the address removal task.
     /// We keep to stop the task along with the rest of the networking.
     </span>_address_removal_task_handler_id: <span class="prelude-ty">Option</span>&lt;HandlerId&gt;,
-    <span class="doccomment">/// Defines whether we should run blocking Kademlia bootstrap() operation before other requests.
-    </span>disable_bootstrap_on_start: bool,
 }
 
 <span class="kw">impl</span>&lt;LocalRecordProvider&gt; fmt::Debug <span class="kw">for </span>NodeRunner&lt;LocalRecordProvider&gt;
 <span class="kw">where
     </span>LocalRecordProvider: constructor::LocalRecordProvider + Send + Sync + <span class="lifetime">'static</span>,
 {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter) -&gt; fmt::Result {
         f.debug_struct(<span class="string">"NodeRunner"</span>).finish_non_exhaustive()
     }
 }
@@ -1641,14 +1691,13 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) swarm: Swarm&lt;Behavior&lt;LocalOnlyRecordStore&lt;LocalRecordProvider&gt;&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) shared_weak: Weak&lt;Shared&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) next_random_query_interval: Duration,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) networking_parameters_registry: Box&lt;<span class="kw">dyn </span>KnownPeersRegistry&gt;,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) known_peers_registry: Box&lt;<span class="kw">dyn </span>KnownPeersRegistry&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) reserved_peers: HashMap&lt;PeerId, Multiaddr&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) temporary_bans: Arc&lt;Mutex&lt;TemporaryBans&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) libp2p_metrics: <span class="prelude-ty">Option</span>&lt;Metrics&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) metrics: <span class="prelude-ty">Option</span>&lt;SubspaceMetrics&gt;,
     <span class="kw">pub</span>(<span class="kw">crate</span>) protocol_version: String,
     <span class="kw">pub</span>(<span class="kw">crate</span>) bootstrap_addresses: Vec&lt;Multiaddr&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) disable_bootstrap_on_start: bool,
 }
 
 <span class="kw">impl</span>&lt;LocalRecordProvider&gt; NodeRunner&lt;LocalRecordProvider&gt;
@@ -1663,20 +1712,19 @@
             swarm,
             shared_weak,
             next_random_query_interval,
-            <span class="kw-2">mut </span>networking_parameters_registry,
+            <span class="kw-2">mut </span>known_peers_registry,
             reserved_peers,
             temporary_bans,
             libp2p_metrics,
             metrics,
             protocol_version,
             bootstrap_addresses,
-            disable_bootstrap_on_start,
         }: NodeRunnerConfig&lt;LocalRecordProvider&gt;,
     ) -&gt; <span class="self">Self </span>{
         <span class="comment">// Setup the address removal events exchange between persistent params storage and Kademlia.
         </span><span class="kw">let </span>(removed_addresses_tx, removed_addresses_rx) = mpsc::unbounded();
         <span class="kw">let </span><span class="kw-2">mut </span>address_removal_task_handler_id = <span class="prelude-val">None</span>;
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(handler_id) = networking_parameters_registry.on_unreachable_address({
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(handler_id) = known_peers_registry.on_unreachable_address({
             Arc::new(<span class="kw">move </span>|event| {
                 <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = removed_addresses_tx.unbounded_send(event.clone()) {
                     <span class="macro">debug!</span>(<span class="question-mark">?</span>error, <span class="question-mark">?</span>event, <span class="string">"Cannot send PeerAddressRemovedEvent"</span>)
@@ -1700,7 +1748,7 @@
             </span>random_query_timeout: Box::pin(tokio::time::sleep(Duration::from_secs(<span class="number">0</span>)).fuse()),
             <span class="comment">// We'll make the first dial right away and continue at the interval.
             </span>periodical_tasks_interval: Box::pin(tokio::time::sleep(Duration::from_secs(<span class="number">0</span>)).fuse()),
-            networking_parameters_registry,
+            known_peers_registry,
             reserved_peers,
             temporary_bans,
             libp2p_metrics,
@@ -1711,7 +1759,6 @@
             bootstrap_command_state: Arc::new(AsyncMutex::new(BootstrapCommandState::default())),
             removed_addresses_rx,
             _address_removal_task_handler_id: address_removal_task_handler_id,
-            disable_bootstrap_on_start,
         }
     }
 
@@ -1734,14 +1781,17 @@
             }
         }
 
-        <span class="kw">if </span>!<span class="self">self</span>.disable_bootstrap_on_start {
-            <span class="self">self</span>.bootstrap().<span class="kw">await</span>;
-        } <span class="kw">else </span>{
-            <span class="macro">debug!</span>(<span class="string">"Kademlia bootstrapping was skipped."</span>);
+        <span class="comment">// TODO: Remove once https://github.com/libp2p/rust-libp2p/issues/5432 is resolved,
+        //  downstream issue is https://github.com/subspace/subspace/issues/2729
+        </span><span class="kw">if </span>tokio::time::timeout(BOOTSTRAP_TIMEOUT, <span class="self">self</span>.bootstrap())
+            .<span class="kw">await
+            </span>.is_err()
+        {
+            <span class="macro">warn!</span>(<span class="string">"Bootstrapping timed out, moving on regardless"</span>);
         }
 
         <span class="kw">loop </span>{
-            <span class="macro">futures::select! </span>{
+            <span class="macro">futures::select!</span> {
                 <span class="kw">_ </span>= <span class="kw-2">&amp;mut </span><span class="self">self</span>.random_query_timeout =&gt; {
                     <span class="self">self</span>.handle_random_query_interval();
                     <span class="comment">// Increase interval 2x, but to at most 60 seconds.
@@ -1765,7 +1815,7 @@
                         <span class="kw">break</span>;
                     }
                 },
-                <span class="kw">_ </span>= <span class="self">self</span>.networking_parameters_registry.run().fuse() =&gt; {
+                <span class="kw">_ </span>= <span class="self">self</span>.known_peers_registry.run().fuse() =&gt; {
                     <span class="macro">trace!</span>(<span class="string">"Network parameters registry runner exited."</span>)
                 },
                 <span class="kw">_ </span>= <span class="kw-2">&amp;mut </span><span class="self">self</span>.periodical_tasks_interval =&gt; {
@@ -1786,6 +1836,47 @@
 
     <span class="doccomment">/// Bootstraps Kademlia network
     </span><span class="kw">async fn </span>bootstrap(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="comment">// Add bootstrap nodes first to make sure there is space for them in k-buckets
+        </span><span class="kw">for </span>(peer_id, address) <span class="kw">in </span>strip_peer_id(<span class="self">self</span>.bootstrap_addresses.clone()) {
+            <span class="self">self</span>.swarm
+                .behaviour_mut()
+                .kademlia
+                .add_address(<span class="kw-2">&amp;</span>peer_id, address);
+        }
+
+        <span class="kw">let </span>known_peers = <span class="self">self</span>.known_peers_registry.all_known_peers().<span class="kw">await</span>;
+
+        <span class="kw">if </span>!known_peers.is_empty() {
+            <span class="kw">for </span>(peer_id, addresses) <span class="kw">in </span>known_peers {
+                <span class="kw">for </span>address <span class="kw">in </span>addresses.clone() {
+                    <span class="kw">let </span>address = <span class="kw">match </span>address.with_p2p(peer_id) {
+                        <span class="prelude-val">Ok</span>(address) =&gt; address,
+                        <span class="prelude-val">Err</span>(address) =&gt; {
+                            <span class="macro">warn!</span>(%peer_id, %address, <span class="string">"Failed to add peer ID to known peer address"</span>);
+                            <span class="kw">break</span>;
+                        }
+                    };
+                    <span class="self">self</span>.swarm
+                        .behaviour_mut()
+                        .kademlia
+                        .add_address(<span class="kw-2">&amp;</span>peer_id, address);
+                }
+
+                <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = <span class="self">self
+                    </span>.swarm
+                    .dial(DialOpts::peer_id(peer_id).addresses(addresses).build())
+                {
+                    <span class="macro">warn!</span>(%peer_id, %error, <span class="string">"Failed to dial peer during bootstrapping"</span>);
+                }
+            }
+
+            <span class="comment">// Do bootstrap asynchronously
+            </span><span class="self">self</span>.handle_command(Command::Bootstrap {
+                result_sender: <span class="prelude-val">None</span>,
+            });
+            <span class="kw">return</span>;
+        }
+
         <span class="kw">let </span>bootstrap_command_state = <span class="self">self</span>.bootstrap_command_state.clone();
         <span class="kw">let </span><span class="kw-2">mut </span>bootstrap_command_state = bootstrap_command_state.lock().<span class="kw">await</span>;
         <span class="kw">let </span>bootstrap_command_receiver = <span class="kw">match </span><span class="kw-2">&amp;mut *</span>bootstrap_command_state {
@@ -1795,7 +1886,7 @@
                 <span class="kw">let </span>(bootstrap_command_sender, bootstrap_command_receiver) = mpsc::unbounded();
 
                 <span class="self">self</span>.handle_command(Command::Bootstrap {
-                    result_sender: bootstrap_command_sender,
+                    result_sender: <span class="prelude-val">Some</span>(bootstrap_command_sender),
                 });
 
                 <span class="kw-2">*</span>bootstrap_command_state =
@@ -1819,7 +1910,7 @@
 
         <span class="kw">let </span><span class="kw-2">mut </span>bootstrap_step = <span class="number">0</span>;
         <span class="kw">loop </span>{
-            <span class="macro">futures::select! </span>{
+            <span class="macro">futures::select!</span> {
                 swarm_event = <span class="self">self</span>.swarm.next() =&gt; {
                     <span class="kw">if let </span><span class="prelude-val">Some</span>(swarm_event) = swarm_event {
                         <span class="self">self</span>.register_event_metrics(<span class="kw-2">&amp;</span>swarm_event);
@@ -1942,7 +2033,7 @@
                 </span><span class="kw">if let </span>ConnectedPoint::Dialer { address, .. } = <span class="kw-2">&amp;</span>endpoint {
                     <span class="comment">// filter non-global addresses when non-globals addresses are disabled
                     </span><span class="kw">if </span><span class="self">self</span>.allow_non_global_addresses_in_dht || is_global_address_or_dns(address) {
-                        <span class="self">self</span>.networking_parameters_registry
+                        <span class="self">self</span>.known_peers_registry
                             .add_known_peer(peer_id, <span class="macro">vec!</span>[address.clone()])
                             .<span class="kw">await</span>;
                     }
@@ -2063,7 +2154,7 @@
                         <span class="kw">for </span>(addr, <span class="kw">_</span>) <span class="kw">in </span>addresses {
                             <span class="macro">trace!</span>(<span class="question-mark">?</span>error, <span class="question-mark">?</span>peer_id, %addr, <span class="string">"SwarmEvent::OutgoingConnectionError (DialError::Transport) for peer."</span>);
                             <span class="kw">if let </span><span class="prelude-val">Some</span>(peer_id) = peer_id {
-                                <span class="self">self</span>.networking_parameters_registry
+                                <span class="self">self</span>.known_peers_registry
                                     .remove_known_peer_addresses(peer_id, <span class="macro">vec!</span>[addr.clone()])
                                     .<span class="kw">await</span>;
                             }
@@ -2181,7 +2272,7 @@
                 <span class="comment">// Forget about this peer until they upgrade
                 </span><span class="kw">let _ </span>= <span class="self">self</span>.swarm.disconnect_peer_id(peer_id);
                 <span class="self">self</span>.swarm.behaviour_mut().kademlia.remove_peer(<span class="kw-2">&amp;</span>peer_id);
-                <span class="self">self</span>.networking_parameters_registry
+                <span class="self">self</span>.known_peers_registry
                     .remove_all_known_peer_addresses(peer_id);
 
                 <span class="kw">return</span>;
@@ -2460,7 +2551,7 @@
                 ..
             } =&gt; {
                 <span class="kw">let </span><span class="kw-2">mut </span>cancelled = <span class="bool-val">false</span>;
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(QueryResultSender::Providers { sender, .. }) =
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(QueryResultSender::Providers { key, sender, .. }) =
                     <span class="self">self</span>.query_id_receivers.get(<span class="kw-2">&amp;</span>id)
                 {
                     <span class="kw">match </span>result {
@@ -2481,8 +2572,12 @@
                                 ) || cancelled;
                             }
                         }
-                        <span class="prelude-val">Ok</span>(GetProvidersOk::FinishedWithNoAdditionalRecord { .. }) =&gt; {
-                            <span class="macro">trace!</span>(<span class="string">"Get providers query yielded no results"</span>);
+                        <span class="prelude-val">Ok</span>(GetProvidersOk::FinishedWithNoAdditionalRecord { closest_peers }) =&gt; {
+                            <span class="macro">trace!</span>(
+                                key = hex::encode(key),
+                                closest_peers = %closest_peers.len(),
+                                <span class="string">"Get providers query yielded no results"
+                            </span>);
                         }
                         <span class="prelude-val">Err</span>(error) =&gt; {
                             <span class="kw">let </span>GetProvidersError::Timeout { key, .. } = error;
@@ -2872,11 +2967,12 @@
                     </span>.swarm
                     .behaviour_mut()
                     .kademlia
-                    .get_providers(key.into());
+                    .get_providers(key.clone());
 
                 <span class="self">self</span>.query_id_receivers.insert(
                     query_id,
                     QueryResultSender::Providers {
+                        key,
                         sender: result_sender,
                         _permit: permit,
                     },
@@ -2896,18 +2992,16 @@
             Command::Bootstrap { result_sender } =&gt; {
                 <span class="kw">let </span>kademlia = <span class="kw-2">&amp;mut </span><span class="self">self</span>.swarm.behaviour_mut().kademlia;
 
-                <span class="kw">for </span>(peer_id, address) <span class="kw">in </span>strip_peer_id(<span class="self">self</span>.bootstrap_addresses.clone()) {
-                    kademlia.add_address(<span class="kw-2">&amp;</span>peer_id, address);
-                }
-
                 <span class="kw">match </span>kademlia.bootstrap() {
                     <span class="prelude-val">Ok</span>(query_id) =&gt; {
-                        <span class="self">self</span>.query_id_receivers.insert(
-                            query_id,
-                            QueryResultSender::Bootstrap {
-                                sender: result_sender,
-                            },
-                        );
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(result_sender) = result_sender {
+                            <span class="self">self</span>.query_id_receivers.insert(
+                                query_id,
+                                QueryResultSender::Bootstrap {
+                                    sender: result_sender,
+                                },
+                            );
+                        }
                     }
                     <span class="prelude-val">Err</span>(err) =&gt; {
                         <span class="macro">debug!</span>(<span class="question-mark">?</span>err, <span class="string">"Bootstrap error."</span>);
@@ -2925,7 +3019,7 @@
 
         <span class="self">self</span>.swarm.behaviour_mut().block_list.block_peer(peer_id);
         <span class="self">self</span>.swarm.behaviour_mut().kademlia.remove_peer(<span class="kw-2">&amp;</span>peer_id);
-        <span class="self">self</span>.networking_parameters_registry
+        <span class="self">self</span>.known_peers_registry
             .remove_all_known_peer_addresses(peer_id);
     }
 

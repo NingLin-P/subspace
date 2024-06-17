@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-farmer/src/utils/plotted_pieces.rs`."><title>plotted_pieces.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-4e54bb2b497cc83f.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="subspace_farmer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (25f8d01fd 2024-01-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-0b2e2def73e61cbe.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../subspace_farmer/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-farmer/src/utils/plotted_pieces.rs`."><title>plotted_pieces.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="subspace_farmer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../subspace_farmer/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -131,53 +129,136 @@
 <a href="#129" id="129">129</a>
 <a href="#130" id="130">130</a>
 <a href="#131" id="131">131</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::single_disk_farm::piece_reader::PieceReader;
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
+<a href="#162" id="162">162</a>
+<a href="#163" id="163">163</a>
+<a href="#164" id="164">164</a>
+<a href="#165" id="165">165</a>
+<a href="#166" id="166">166</a>
+<a href="#167" id="167">167</a>
+<a href="#168" id="168">168</a>
+<a href="#169" id="169">169</a>
+<a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
+<a href="#181" id="181">181</a>
+<a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a>
+<a href="#184" id="184">184</a>
+<a href="#185" id="185">185</a>
+<a href="#186" id="186">186</a>
+<a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
+<a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::farm::{FarmError, PieceReader};
+<span class="kw">use </span>async_trait::async_trait;
+<span class="kw">use </span>rand::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span>rayon::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>std::collections::hash_map::Entry;
 <span class="kw">use </span>std::collections::HashMap;
+<span class="kw">use </span>std::fmt;
 <span class="kw">use </span>std::future::Future;
+<span class="kw">use </span>std::hash::Hash;
+<span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>subspace_core_primitives::{Piece, PieceIndex, PieceOffset, SectorIndex};
 <span class="kw">use </span>subspace_farmer_components::plotting::PlottedSector;
 <span class="kw">use </span>tracing::{trace, warn};
 
+<span class="attr">#[derive(Debug)]
+</span><span class="kw">struct </span>DummyReader;
+
+<span class="attr">#[async_trait]
+</span><span class="kw">impl </span>PieceReader <span class="kw">for </span>DummyReader {
+    <span class="attr">#[inline]
+    </span><span class="kw">async fn </span>read_piece(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        _sector_index: SectorIndex,
+        _piece_offset: PieceOffset,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Piece&gt;, FarmError&gt; {
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
+    }
+}
+
 <span class="attr">#[derive(Debug, Copy, Clone, Eq, PartialEq)]
-</span><span class="kw">struct </span>PieceDetails {
-    disk_farm_index: u8,
+</span><span class="kw">struct </span>PieceDetails&lt;FarmIndex&gt; {
+    farm_index: FarmIndex,
     sector_index: SectorIndex,
     piece_offset: PieceOffset,
 }
 
 <span class="doccomment">/// Wrapper data structure for pieces plotted under multiple plots.
-</span><span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>PlottedPieces {
-    readers: Vec&lt;PieceReader&gt;,
-    pieces: HashMap&lt;PieceIndex, Vec&lt;PieceDetails&gt;&gt;,
+</span><span class="attr">#[derive(Debug, Default)]
+</span><span class="kw">pub struct </span>PlottedPieces&lt;FarmIndex&gt; {
+    readers: Vec&lt;Arc&lt;<span class="kw">dyn </span>PieceReader&gt;&gt;,
+    pieces: HashMap&lt;PieceIndex, Vec&lt;PieceDetails&lt;FarmIndex&gt;&gt;&gt;,
 }
 
-<span class="kw">impl </span>PlottedPieces {
-    <span class="doccomment">/// Initialize with readers for each farm
-    </span><span class="kw">pub fn </span>new(readers: Vec&lt;PieceReader&gt;) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            readers,
-            pieces: HashMap::new(),
-        }
-    }
-
+<span class="kw">impl</span>&lt;FarmIndex&gt; PlottedPieces&lt;FarmIndex&gt;
+<span class="kw">where
+    </span>FarmIndex: Hash + Eq + Copy + fmt::Debug + Send + Sync + <span class="lifetime">'static</span>,
+    usize: From&lt;FarmIndex&gt;,
+{
     <span class="doccomment">/// Check if piece is known and can be retrieved
     </span><span class="kw">pub fn </span>contains_piece(<span class="kw-2">&amp;</span><span class="self">self</span>, piece_index: <span class="kw-2">&amp;</span>PieceIndex) -&gt; bool {
         <span class="self">self</span>.pieces.contains_key(piece_index)
     }
 
-    <span class="doccomment">/// Read plotted piece from oneof the farms.
+    <span class="doccomment">/// Read plotted piece from one of the farms.
     ///
     /// If piece doesn't exist `None` is returned, if by the time future is polled piece is no
     /// longer in the plot, future will resolve with `None`.
     </span><span class="kw">pub fn </span>read_piece(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        piece_index: <span class="kw-2">&amp;</span>PieceIndex,
+        piece_index: PieceIndex,
     ) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>Future&lt;Output = <span class="prelude-ty">Option</span>&lt;Piece&gt;&gt; + <span class="lifetime">'static</span>&gt; {
-        <span class="kw">let </span>piece_details = <span class="kw">match </span><span class="self">self</span>.pieces.get(piece_index) {
+        <span class="kw">let </span>piece_details = <span class="kw">match </span><span class="self">self</span>.pieces.get(<span class="kw-2">&amp;</span>piece_index) {
             <span class="prelude-val">Some</span>(piece_details) =&gt; piece_details
-                .first()
+                .choose(<span class="kw-2">&amp;mut </span>thread_rng())
                 .copied()
                 .expect(<span class="string">"Empty lists are not stored in the map; qed"</span>),
             <span class="prelude-val">None </span>=&gt; {
@@ -188,10 +269,14 @@
                 <span class="kw">return </span><span class="prelude-val">None</span>;
             }
         };
-        <span class="kw">let </span><span class="kw-2">mut </span>reader = <span class="kw">match </span><span class="self">self</span>.readers.get(usize::from(piece_details.disk_farm_index)) {
+        <span class="kw">let </span>reader = <span class="kw">match </span><span class="self">self</span>.readers.get(usize::from(piece_details.farm_index)) {
             <span class="prelude-val">Some</span>(reader) =&gt; reader.clone(),
             <span class="prelude-val">None </span>=&gt; {
-                <span class="macro">warn!</span>(<span class="question-mark">?</span>piece_index, <span class="question-mark">?</span>piece_details, <span class="string">"Plot offset is invalid"</span>);
+                <span class="macro">warn!</span>(
+                    <span class="question-mark">?</span>piece_index,
+                    <span class="question-mark">?</span>piece_details,
+                    <span class="string">"No piece reader for associated farm index"
+                </span>);
                 <span class="kw">return </span><span class="prelude-val">None</span>;
             }
         };
@@ -200,16 +285,26 @@
             reader
                 .read_piece(piece_details.sector_index, piece_details.piece_offset)
                 .<span class="kw">await
-        </span>})
+                </span>.unwrap_or_else(|error| {
+                    <span class="macro">warn!</span>(
+                        %error,
+                        %piece_index,
+                        farm_index = <span class="question-mark">?</span>piece_details.farm_index,
+                        sector_index = piece_details.sector_index,
+                        <span class="string">"Failed to retrieve piece"
+                    </span>);
+                    <span class="prelude-val">None
+                </span>})
+        })
     }
 
     <span class="doccomment">/// Add new sector to collect plotted pieces
-    </span><span class="kw">pub fn </span>add_sector(<span class="kw-2">&amp;mut </span><span class="self">self</span>, disk_farm_index: u8, plotted_sector: <span class="kw-2">&amp;</span>PlottedSector) {
+    </span><span class="kw">pub fn </span>add_sector(<span class="kw-2">&amp;mut </span><span class="self">self</span>, farm_index: FarmIndex, plotted_sector: <span class="kw-2">&amp;</span>PlottedSector) {
         <span class="kw">for </span>(piece_offset, <span class="kw-2">&amp;</span>piece_index) <span class="kw">in
             </span>(PieceOffset::ZERO..).zip(plotted_sector.piece_indexes.iter())
         {
             <span class="kw">let </span>piece_details = PieceDetails {
-                disk_farm_index,
+                farm_index,
                 sector_index: plotted_sector.sector_index,
                 piece_offset,
             };
@@ -226,12 +321,12 @@
     }
 
     <span class="doccomment">/// Add old sector from plotted pieces (happens on replotting)
-    </span><span class="kw">pub fn </span>delete_sector(<span class="kw-2">&amp;mut </span><span class="self">self</span>, disk_farm_index: u8, plotted_sector: <span class="kw-2">&amp;</span>PlottedSector) {
+    </span><span class="kw">pub fn </span>delete_sector(<span class="kw-2">&amp;mut </span><span class="self">self</span>, farm_index: FarmIndex, plotted_sector: <span class="kw-2">&amp;</span>PlottedSector) {
         <span class="kw">for </span>(piece_offset, <span class="kw-2">&amp;</span>piece_index) <span class="kw">in
             </span>(PieceOffset::ZERO..).zip(plotted_sector.piece_indexes.iter())
         {
             <span class="kw">let </span>searching_piece_details = PieceDetails {
-                disk_farm_index,
+                farm_index,
                 sector_index: plotted_sector.sector_index,
                 piece_offset,
             };
@@ -253,6 +348,41 @@
                 </span><span class="kw">if </span>piece_details.is_empty() {
                     entry.remove_entry();
                 }
+            }
+        }
+    }
+
+    <span class="doccomment">/// Add new farm with corresponding piece reader
+    </span><span class="kw">pub fn </span>add_farm(<span class="kw-2">&amp;mut </span><span class="self">self</span>, farm_index: FarmIndex, piece_reader: Arc&lt;<span class="kw">dyn </span>PieceReader&gt;) {
+        <span class="kw">let </span>farm_index = usize::from(farm_index);
+
+        <span class="kw">if </span><span class="self">self</span>.readers.len() &lt;= farm_index {
+            <span class="self">self</span>.readers.resize(farm_index, Arc::new(DummyReader));
+            <span class="self">self</span>.readers.push(piece_reader);
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.readers[farm_index] = piece_reader;
+        }
+    }
+
+    <span class="doccomment">/// Add all sectors of the farm
+    </span><span class="kw">pub fn </span>delete_farm(<span class="kw-2">&amp;mut </span><span class="self">self</span>, farm_index: FarmIndex) {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(reader) = <span class="self">self</span>.readers.get_mut(usize::from(farm_index)) {
+            <span class="comment">// Replace reader with a dummy one to maintain farm order
+            </span><span class="kw-2">*</span>reader = Arc::new(DummyReader);
+
+            <span class="kw">let </span>piece_indices_to_remove = <span class="self">self
+                </span>.pieces
+                .par_iter_mut()
+                .filter_map(|(<span class="kw-2">&amp;</span>piece_index, piece_details)| {
+                    piece_details.retain(|piece_details| piece_details.farm_index != farm_index);
+
+                    piece_details.is_empty().then_some(piece_index)
+                })
+                .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+
+            <span class="comment">// Remove pieces for which this was the only farm storing them
+            </span><span class="kw">for </span>piece_index <span class="kw">in </span>piece_indices_to_remove {
+                <span class="self">self</span>.pieces.remove(<span class="kw-2">&amp;</span>piece_index);
             }
         }
     }

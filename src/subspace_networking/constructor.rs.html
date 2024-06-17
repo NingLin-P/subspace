@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-networking/src/constructor.rs`."><title>constructor.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-4e54bb2b497cc83f.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_networking" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (25f8d01fd 2024-01-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0b2e2def73e61cbe.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../subspace_networking/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-networking/src/constructor.rs`."><title>constructor.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_networking" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../subspace_networking/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -573,33 +571,6 @@
 <a href="#571" id="571">571</a>
 <a href="#572" id="572">572</a>
 <a href="#573" id="573">573</a>
-<a href="#574" id="574">574</a>
-<a href="#575" id="575">575</a>
-<a href="#576" id="576">576</a>
-<a href="#577" id="577">577</a>
-<a href="#578" id="578">578</a>
-<a href="#579" id="579">579</a>
-<a href="#580" id="580">580</a>
-<a href="#581" id="581">581</a>
-<a href="#582" id="582">582</a>
-<a href="#583" id="583">583</a>
-<a href="#584" id="584">584</a>
-<a href="#585" id="585">585</a>
-<a href="#586" id="586">586</a>
-<a href="#587" id="587">587</a>
-<a href="#588" id="588">588</a>
-<a href="#589" id="589">589</a>
-<a href="#590" id="590">590</a>
-<a href="#591" id="591">591</a>
-<a href="#592" id="592">592</a>
-<a href="#593" id="593">593</a>
-<a href="#594" id="594">594</a>
-<a href="#595" id="595">595</a>
-<a href="#596" id="596">596</a>
-<a href="#597" id="597">597</a>
-<a href="#598" id="598">598</a>
-<a href="#599" id="599">599</a>
-<a href="#600" id="600">600</a>
 </pre></div><pre class="rust"><code><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>temporary_bans;
 <span class="kw">mod </span>transport;
 
@@ -637,8 +608,6 @@
 <span class="kw">use </span>prometheus_client::registry::Registry;
 <span class="kw">use </span>std::borrow::Cow;
 <span class="kw">use </span>std::iter::Empty;
-<span class="kw">use </span>std::num::NonZeroUsize;
-<span class="kw">use </span>std::string::ToString;
 <span class="kw">use </span>std::sync::Arc;
 <span class="kw">use </span>std::time::{Duration, Instant};
 <span class="kw">use </span>std::{fmt, io, iter};
@@ -669,7 +638,7 @@
 //  use-case for gossipsub protocol.
 </span><span class="kw">const </span>ENABLE_GOSSIP_PROTOCOL: bool = <span class="bool-val">false</span>;
 
-<span class="kw">const </span>TEMPORARY_BANS_CACHE_SIZE: NonZeroUsize = NonZeroUsize::new(<span class="number">10_000</span>).expect(<span class="string">"Not zero; qed"</span>);
+<span class="kw">const </span>TEMPORARY_BANS_CACHE_SIZE: u32 = <span class="number">10_000</span>;
 <span class="kw">const </span>TEMPORARY_BANS_DEFAULT_BACKOFF_INITIAL_INTERVAL: Duration = Duration::from_secs(<span class="number">5</span>);
 <span class="kw">const </span>TEMPORARY_BANS_DEFAULT_BACKOFF_RANDOMIZATION_FACTOR: f64 = <span class="number">0.1</span>;
 <span class="kw">const </span>TEMPORARY_BANS_DEFAULT_BACKOFF_MULTIPLIER: f64 = <span class="number">1.5</span>;
@@ -685,10 +654,6 @@
 /// Defines a replication factor for Kademlia on get_record operation.
 /// "Good citizen" supports the network health.
 </span><span class="kw">const </span>YAMUX_MAX_STREAMS: usize = <span class="number">256</span>;
-<span class="doccomment">/// 1MB of piece + original value (256 KB)
-</span><span class="kw">const </span>YAMUX_RECEIVING_WINDOW: usize = Piece::SIZE + <span class="number">256 </span>* <span class="number">1024</span>;
-<span class="doccomment">/// 1MB of piece + original value (1 MB)
-</span><span class="kw">const </span>YAMUX_BUFFER_SIZE: usize = Piece::SIZE + <span class="number">1024 </span>* <span class="number">1024</span>;
 
 <span class="doccomment">/// Max confidence for autonat protocol. Could affect Kademlia mode change.
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>AUTONAT_MAX_CONFIDENCE: usize = <span class="number">3</span>;
@@ -746,7 +711,7 @@
     </span>LocalRecordProvider: <span class="self">self</span>::LocalRecordProvider,
 {
     <span class="kw">type </span>RecordsIter&lt;<span class="lifetime">'a</span>&gt; = Empty&lt;Cow&lt;<span class="lifetime">'a</span>, Record&gt;&gt; <span class="kw">where </span><span class="self">Self</span>: <span class="lifetime">'a</span>;
-    <span class="kw">type </span>ProvidedIter&lt;<span class="lifetime">'a</span>&gt; =  Empty&lt;Cow&lt;<span class="lifetime">'a</span>, ProviderRecord&gt;&gt; <span class="kw">where </span><span class="self">Self</span>: <span class="lifetime">'a</span>;
+    <span class="kw">type </span>ProvidedIter&lt;<span class="lifetime">'a</span>&gt; = Empty&lt;Cow&lt;<span class="lifetime">'a</span>, ProviderRecord&gt;&gt; <span class="kw">where </span><span class="self">Self</span>: <span class="lifetime">'a</span>;
 
     <span class="kw">fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, _key: <span class="kw-2">&amp;</span>RecordKey) -&gt; <span class="prelude-ty">Option</span>&lt;Cow&lt;<span class="lifetime">'_</span>, Record&gt;&gt; {
         <span class="comment">// Not supported
@@ -815,7 +780,7 @@
     <span class="doccomment">/// How frequently should random queries be done using Kademlia DHT to populate routing table.
     </span><span class="kw">pub </span>initial_random_query_interval: Duration,
     <span class="doccomment">/// A reference to the `NetworkingParametersRegistry` implementation.
-    </span><span class="kw">pub </span>networking_parameters_registry: Box&lt;<span class="kw">dyn </span>KnownPeersRegistry&gt;,
+    </span><span class="kw">pub </span>known_peers_registry: Box&lt;<span class="kw">dyn </span>KnownPeersRegistry&gt;,
     <span class="doccomment">/// The configuration for the `RequestResponsesBehaviour` protocol.
     </span><span class="kw">pub </span>request_response_protocols: Vec&lt;Box&lt;<span class="kw">dyn </span>RequestHandler&gt;&gt;,
     <span class="doccomment">/// Defines set of peers with a permanent connection (and reconnection if necessary).
@@ -829,7 +794,7 @@
     <span class="doccomment">/// Pending outgoing swarm connection limit.
     </span><span class="kw">pub </span>max_pending_outgoing_connections: u32,
     <span class="doccomment">/// How many temporarily banned unreachable peers to keep in memory.
-    </span><span class="kw">pub </span>temporary_bans_cache_size: NonZeroUsize,
+    </span><span class="kw">pub </span>temporary_bans_cache_size: u32,
     <span class="doccomment">/// Backoff policy for temporary banning of unreachable peers.
     </span><span class="kw">pub </span>temporary_ban_backoff: ExponentialBackoff,
     <span class="doccomment">/// Optional libp2p prometheus metrics. None will disable metrics gathering.
@@ -847,12 +812,11 @@
     <span class="doccomment">/// Known external addresses to the local peer. The addresses will be added on the swarm start
     /// and enable peer to notify others about its reachable address.
     </span><span class="kw">pub </span>external_addresses: Vec&lt;Multiaddr&gt;,
-    <span class="doccomment">/// Defines whether we should run blocking Kademlia bootstrap() operation before other requests.
-    </span><span class="kw">pub </span>disable_bootstrap_on_start: bool,
 }
 
 <span class="kw">impl</span>&lt;LocalRecordProvider&gt; fmt::Debug <span class="kw">for </span>Config&lt;LocalRecordProvider&gt; {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
         f.debug_struct(<span class="string">"Config"</span>).finish()
     }
 }
@@ -910,10 +874,7 @@
             .set_replication_interval(<span class="prelude-val">None</span>);
 
         <span class="kw">let </span><span class="kw-2">mut </span>yamux_config = YamuxConfig::default();
-        yamux_config
-            .set_max_num_streams(YAMUX_MAX_STREAMS)
-            .set_receive_window_size(YAMUX_RECEIVING_WINDOW <span class="kw">as </span>u32)
-            .set_max_buffer_size(YAMUX_BUFFER_SIZE);
+        yamux_config.set_max_num_streams(YAMUX_MAX_STREAMS);
 
         <span class="kw">let </span>gossipsub = ENABLE_GOSSIP_PROTOCOL.then(|| {
             GossipsubConfigBuilder::default()
@@ -954,7 +915,7 @@
             local_records_provider,
             allow_non_global_addresses_in_dht: <span class="bool-val">false</span>,
             initial_random_query_interval: Duration::from_secs(<span class="number">1</span>),
-            networking_parameters_registry: StubNetworkingParametersManager.boxed(),
+            known_peers_registry: StubNetworkingParametersManager.boxed(),
             request_response_protocols: Vec::new(),
             yamux_config,
             reserved_peers: Vec::new(),
@@ -970,7 +931,6 @@
             bootstrap_addresses: Vec::new(),
             kademlia_mode: KademliaMode::Static(Mode::Client),
             external_addresses: Vec::new(),
-            disable_bootstrap_on_start: <span class="bool-val">false</span>,
         }
     }
 }
@@ -1019,7 +979,7 @@
         yamux_config,
         allow_non_global_addresses_in_dht,
         initial_random_query_interval,
-        networking_parameters_registry,
+        known_peers_registry,
         request_response_protocols,
         reserved_peers,
         max_established_incoming_connections,
@@ -1034,7 +994,6 @@
         bootstrap_addresses,
         kademlia_mode,
         external_addresses,
-        disable_bootstrap_on_start,
     } = config;
     <span class="kw">let </span>local_peer_id = peer_id(<span class="kw-2">&amp;</span>keypair);
 
@@ -1141,24 +1100,10 @@
 
             <span class="kw">let </span>addr_string = addr.to_string();
             <span class="comment">// Listen on random port if specified is already occupied
-            </span><span class="kw">match </span>addr.pop() {
-                <span class="prelude-val">Some</span>(Protocol::Tcp(_port)) =&gt; {
-                    <span class="macro">info!</span>(
-                        <span class="string">"Failed to listen on {addr_string} ({error}), falling back to random port"
-                    </span>);
-                    addr.push(Protocol::Tcp(<span class="number">0</span>));
-                    swarm.listen_on(addr)<span class="question-mark">?</span>;
-                }
-                <span class="prelude-val">Some</span>(Protocol::Udp(_port)) =&gt; {
-                    <span class="macro">info!</span>(
-                        <span class="string">"Failed to listen on {addr_string} ({error}), falling back to random port"
-                    </span>);
-                    addr.push(Protocol::Udp(<span class="number">0</span>));
-                    swarm.listen_on(addr)<span class="question-mark">?</span>;
-                }
-                <span class="kw">_ </span>=&gt; {
-                    <span class="comment">// Do not care about other protocols
-                </span>}
+            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(Protocol::Tcp(_port)) = addr.pop() {
+                <span class="macro">info!</span>(<span class="string">"Failed to listen on {addr_string} ({error}), falling back to random port"</span>);
+                addr.push(Protocol::Tcp(<span class="number">0</span>));
+                swarm.listen_on(addr)<span class="question-mark">?</span>;
             }
         }
     }
@@ -1188,14 +1133,13 @@
         swarm,
         shared_weak,
         next_random_query_interval: initial_random_query_interval,
-        networking_parameters_registry,
+        known_peers_registry,
         reserved_peers: strip_peer_id(reserved_peers).into_iter().collect(),
         temporary_bans,
         libp2p_metrics,
         metrics,
         protocol_version,
         bootstrap_addresses,
-        disable_bootstrap_on_start,
     });
 
     <span class="prelude-val">Ok</span>((node, node_runner))

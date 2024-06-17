@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sp-domains/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-4e54bb2b497cc83f.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sp_domains" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (25f8d01fd 2024-01-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0b2e2def73e61cbe.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../sp_domains/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sp-domains/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sp_domains" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../sp_domains/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1264,6 +1262,248 @@
 <a href="#1262" id="1262">1262</a>
 <a href="#1263" id="1263">1263</a>
 <a href="#1264" id="1264">1264</a>
+<a href="#1265" id="1265">1265</a>
+<a href="#1266" id="1266">1266</a>
+<a href="#1267" id="1267">1267</a>
+<a href="#1268" id="1268">1268</a>
+<a href="#1269" id="1269">1269</a>
+<a href="#1270" id="1270">1270</a>
+<a href="#1271" id="1271">1271</a>
+<a href="#1272" id="1272">1272</a>
+<a href="#1273" id="1273">1273</a>
+<a href="#1274" id="1274">1274</a>
+<a href="#1275" id="1275">1275</a>
+<a href="#1276" id="1276">1276</a>
+<a href="#1277" id="1277">1277</a>
+<a href="#1278" id="1278">1278</a>
+<a href="#1279" id="1279">1279</a>
+<a href="#1280" id="1280">1280</a>
+<a href="#1281" id="1281">1281</a>
+<a href="#1282" id="1282">1282</a>
+<a href="#1283" id="1283">1283</a>
+<a href="#1284" id="1284">1284</a>
+<a href="#1285" id="1285">1285</a>
+<a href="#1286" id="1286">1286</a>
+<a href="#1287" id="1287">1287</a>
+<a href="#1288" id="1288">1288</a>
+<a href="#1289" id="1289">1289</a>
+<a href="#1290" id="1290">1290</a>
+<a href="#1291" id="1291">1291</a>
+<a href="#1292" id="1292">1292</a>
+<a href="#1293" id="1293">1293</a>
+<a href="#1294" id="1294">1294</a>
+<a href="#1295" id="1295">1295</a>
+<a href="#1296" id="1296">1296</a>
+<a href="#1297" id="1297">1297</a>
+<a href="#1298" id="1298">1298</a>
+<a href="#1299" id="1299">1299</a>
+<a href="#1300" id="1300">1300</a>
+<a href="#1301" id="1301">1301</a>
+<a href="#1302" id="1302">1302</a>
+<a href="#1303" id="1303">1303</a>
+<a href="#1304" id="1304">1304</a>
+<a href="#1305" id="1305">1305</a>
+<a href="#1306" id="1306">1306</a>
+<a href="#1307" id="1307">1307</a>
+<a href="#1308" id="1308">1308</a>
+<a href="#1309" id="1309">1309</a>
+<a href="#1310" id="1310">1310</a>
+<a href="#1311" id="1311">1311</a>
+<a href="#1312" id="1312">1312</a>
+<a href="#1313" id="1313">1313</a>
+<a href="#1314" id="1314">1314</a>
+<a href="#1315" id="1315">1315</a>
+<a href="#1316" id="1316">1316</a>
+<a href="#1317" id="1317">1317</a>
+<a href="#1318" id="1318">1318</a>
+<a href="#1319" id="1319">1319</a>
+<a href="#1320" id="1320">1320</a>
+<a href="#1321" id="1321">1321</a>
+<a href="#1322" id="1322">1322</a>
+<a href="#1323" id="1323">1323</a>
+<a href="#1324" id="1324">1324</a>
+<a href="#1325" id="1325">1325</a>
+<a href="#1326" id="1326">1326</a>
+<a href="#1327" id="1327">1327</a>
+<a href="#1328" id="1328">1328</a>
+<a href="#1329" id="1329">1329</a>
+<a href="#1330" id="1330">1330</a>
+<a href="#1331" id="1331">1331</a>
+<a href="#1332" id="1332">1332</a>
+<a href="#1333" id="1333">1333</a>
+<a href="#1334" id="1334">1334</a>
+<a href="#1335" id="1335">1335</a>
+<a href="#1336" id="1336">1336</a>
+<a href="#1337" id="1337">1337</a>
+<a href="#1338" id="1338">1338</a>
+<a href="#1339" id="1339">1339</a>
+<a href="#1340" id="1340">1340</a>
+<a href="#1341" id="1341">1341</a>
+<a href="#1342" id="1342">1342</a>
+<a href="#1343" id="1343">1343</a>
+<a href="#1344" id="1344">1344</a>
+<a href="#1345" id="1345">1345</a>
+<a href="#1346" id="1346">1346</a>
+<a href="#1347" id="1347">1347</a>
+<a href="#1348" id="1348">1348</a>
+<a href="#1349" id="1349">1349</a>
+<a href="#1350" id="1350">1350</a>
+<a href="#1351" id="1351">1351</a>
+<a href="#1352" id="1352">1352</a>
+<a href="#1353" id="1353">1353</a>
+<a href="#1354" id="1354">1354</a>
+<a href="#1355" id="1355">1355</a>
+<a href="#1356" id="1356">1356</a>
+<a href="#1357" id="1357">1357</a>
+<a href="#1358" id="1358">1358</a>
+<a href="#1359" id="1359">1359</a>
+<a href="#1360" id="1360">1360</a>
+<a href="#1361" id="1361">1361</a>
+<a href="#1362" id="1362">1362</a>
+<a href="#1363" id="1363">1363</a>
+<a href="#1364" id="1364">1364</a>
+<a href="#1365" id="1365">1365</a>
+<a href="#1366" id="1366">1366</a>
+<a href="#1367" id="1367">1367</a>
+<a href="#1368" id="1368">1368</a>
+<a href="#1369" id="1369">1369</a>
+<a href="#1370" id="1370">1370</a>
+<a href="#1371" id="1371">1371</a>
+<a href="#1372" id="1372">1372</a>
+<a href="#1373" id="1373">1373</a>
+<a href="#1374" id="1374">1374</a>
+<a href="#1375" id="1375">1375</a>
+<a href="#1376" id="1376">1376</a>
+<a href="#1377" id="1377">1377</a>
+<a href="#1378" id="1378">1378</a>
+<a href="#1379" id="1379">1379</a>
+<a href="#1380" id="1380">1380</a>
+<a href="#1381" id="1381">1381</a>
+<a href="#1382" id="1382">1382</a>
+<a href="#1383" id="1383">1383</a>
+<a href="#1384" id="1384">1384</a>
+<a href="#1385" id="1385">1385</a>
+<a href="#1386" id="1386">1386</a>
+<a href="#1387" id="1387">1387</a>
+<a href="#1388" id="1388">1388</a>
+<a href="#1389" id="1389">1389</a>
+<a href="#1390" id="1390">1390</a>
+<a href="#1391" id="1391">1391</a>
+<a href="#1392" id="1392">1392</a>
+<a href="#1393" id="1393">1393</a>
+<a href="#1394" id="1394">1394</a>
+<a href="#1395" id="1395">1395</a>
+<a href="#1396" id="1396">1396</a>
+<a href="#1397" id="1397">1397</a>
+<a href="#1398" id="1398">1398</a>
+<a href="#1399" id="1399">1399</a>
+<a href="#1400" id="1400">1400</a>
+<a href="#1401" id="1401">1401</a>
+<a href="#1402" id="1402">1402</a>
+<a href="#1403" id="1403">1403</a>
+<a href="#1404" id="1404">1404</a>
+<a href="#1405" id="1405">1405</a>
+<a href="#1406" id="1406">1406</a>
+<a href="#1407" id="1407">1407</a>
+<a href="#1408" id="1408">1408</a>
+<a href="#1409" id="1409">1409</a>
+<a href="#1410" id="1410">1410</a>
+<a href="#1411" id="1411">1411</a>
+<a href="#1412" id="1412">1412</a>
+<a href="#1413" id="1413">1413</a>
+<a href="#1414" id="1414">1414</a>
+<a href="#1415" id="1415">1415</a>
+<a href="#1416" id="1416">1416</a>
+<a href="#1417" id="1417">1417</a>
+<a href="#1418" id="1418">1418</a>
+<a href="#1419" id="1419">1419</a>
+<a href="#1420" id="1420">1420</a>
+<a href="#1421" id="1421">1421</a>
+<a href="#1422" id="1422">1422</a>
+<a href="#1423" id="1423">1423</a>
+<a href="#1424" id="1424">1424</a>
+<a href="#1425" id="1425">1425</a>
+<a href="#1426" id="1426">1426</a>
+<a href="#1427" id="1427">1427</a>
+<a href="#1428" id="1428">1428</a>
+<a href="#1429" id="1429">1429</a>
+<a href="#1430" id="1430">1430</a>
+<a href="#1431" id="1431">1431</a>
+<a href="#1432" id="1432">1432</a>
+<a href="#1433" id="1433">1433</a>
+<a href="#1434" id="1434">1434</a>
+<a href="#1435" id="1435">1435</a>
+<a href="#1436" id="1436">1436</a>
+<a href="#1437" id="1437">1437</a>
+<a href="#1438" id="1438">1438</a>
+<a href="#1439" id="1439">1439</a>
+<a href="#1440" id="1440">1440</a>
+<a href="#1441" id="1441">1441</a>
+<a href="#1442" id="1442">1442</a>
+<a href="#1443" id="1443">1443</a>
+<a href="#1444" id="1444">1444</a>
+<a href="#1445" id="1445">1445</a>
+<a href="#1446" id="1446">1446</a>
+<a href="#1447" id="1447">1447</a>
+<a href="#1448" id="1448">1448</a>
+<a href="#1449" id="1449">1449</a>
+<a href="#1450" id="1450">1450</a>
+<a href="#1451" id="1451">1451</a>
+<a href="#1452" id="1452">1452</a>
+<a href="#1453" id="1453">1453</a>
+<a href="#1454" id="1454">1454</a>
+<a href="#1455" id="1455">1455</a>
+<a href="#1456" id="1456">1456</a>
+<a href="#1457" id="1457">1457</a>
+<a href="#1458" id="1458">1458</a>
+<a href="#1459" id="1459">1459</a>
+<a href="#1460" id="1460">1460</a>
+<a href="#1461" id="1461">1461</a>
+<a href="#1462" id="1462">1462</a>
+<a href="#1463" id="1463">1463</a>
+<a href="#1464" id="1464">1464</a>
+<a href="#1465" id="1465">1465</a>
+<a href="#1466" id="1466">1466</a>
+<a href="#1467" id="1467">1467</a>
+<a href="#1468" id="1468">1468</a>
+<a href="#1469" id="1469">1469</a>
+<a href="#1470" id="1470">1470</a>
+<a href="#1471" id="1471">1471</a>
+<a href="#1472" id="1472">1472</a>
+<a href="#1473" id="1473">1473</a>
+<a href="#1474" id="1474">1474</a>
+<a href="#1475" id="1475">1475</a>
+<a href="#1476" id="1476">1476</a>
+<a href="#1477" id="1477">1477</a>
+<a href="#1478" id="1478">1478</a>
+<a href="#1479" id="1479">1479</a>
+<a href="#1480" id="1480">1480</a>
+<a href="#1481" id="1481">1481</a>
+<a href="#1482" id="1482">1482</a>
+<a href="#1483" id="1483">1483</a>
+<a href="#1484" id="1484">1484</a>
+<a href="#1485" id="1485">1485</a>
+<a href="#1486" id="1486">1486</a>
+<a href="#1487" id="1487">1487</a>
+<a href="#1488" id="1488">1488</a>
+<a href="#1489" id="1489">1489</a>
+<a href="#1490" id="1490">1490</a>
+<a href="#1491" id="1491">1491</a>
+<a href="#1492" id="1492">1492</a>
+<a href="#1493" id="1493">1493</a>
+<a href="#1494" id="1494">1494</a>
+<a href="#1495" id="1495">1495</a>
+<a href="#1496" id="1496">1496</a>
+<a href="#1497" id="1497">1497</a>
+<a href="#1498" id="1498">1498</a>
+<a href="#1499" id="1499">1499</a>
+<a href="#1500" id="1500">1500</a>
+<a href="#1501" id="1501">1501</a>
+<a href="#1502" id="1502">1502</a>
+<a href="#1503" id="1503">1503</a>
+<a href="#1504" id="1504">1504</a>
+<a href="#1505" id="1505">1505</a>
+<a href="#1506" id="1506">1506</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
@@ -1293,22 +1533,27 @@
 </span><span class="kw">mod </span>tests;
 <span class="kw">pub mod </span>valued_trie;
 
-<span class="kw">extern crate </span>alloc;
+<span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+</span><span class="kw">extern crate </span>alloc;
 
 <span class="kw">use </span><span class="kw">crate</span>::storage::{RawGenesis, StorageKey};
-<span class="kw">use </span>alloc::string::String;
+<span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+</span><span class="kw">use </span>alloc::collections::BTreeSet;
+<span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+</span><span class="kw">use </span>alloc::string::String;
+<span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+</span><span class="kw">use </span>alloc::vec::Vec;
 <span class="kw">use </span>bundle_producer_election::{BundleProducerElectionParams, ProofOfElectionError};
 <span class="kw">use </span>core::num::ParseIntError;
 <span class="kw">use </span>core::ops::{Add, Sub};
 <span class="kw">use </span>core::str::FromStr;
-<span class="kw">use </span>domain_runtime_primitives::MultiAccountId;
+<span class="kw">use </span>domain_runtime_primitives::{calculate_max_bundle_weight, MultiAccountId};
 <span class="kw">use </span>frame_support::storage::storage_prefix;
 <span class="kw">use </span>frame_support::{Blake2_128Concat, StorageHasher};
 <span class="kw">use </span>hexlit::hex;
 <span class="kw">use </span>parity_scale_codec::{Codec, Decode, Encode, MaxEncodedLen};
 <span class="kw">use </span>scale_info::TypeInfo;
 <span class="kw">use </span>serde::{Deserialize, Serialize};
-<span class="kw">use </span>sp_application_crypto::sr25519;
 <span class="kw">use </span>sp_core::crypto::KeyTypeId;
 <span class="kw">use </span>sp_core::sr25519::vrf::VrfSignature;
 <span class="attr">#[cfg(any(feature = <span class="string">"std"</span>, feature = <span class="string">"runtime-benchmarks"</span>))]
@@ -1322,12 +1567,12 @@
 <span class="kw">use </span>sp_runtime_interface::pass_by;
 <span class="kw">use </span>sp_runtime_interface::pass_by::PassBy;
 <span class="kw">use </span>sp_std::collections::btree_map::BTreeMap;
-<span class="kw">use </span>sp_std::collections::btree_set::BTreeSet;
 <span class="kw">use </span>sp_std::fmt::{Display, Formatter};
-<span class="kw">use </span>sp_std::vec::Vec;
 <span class="kw">use </span>sp_trie::TrieLayout;
 <span class="kw">use </span>sp_version::RuntimeVersion;
 <span class="kw">use </span>sp_weights::Weight;
+<span class="attr">#[cfg(feature = <span class="string">"std"</span>)]
+</span><span class="kw">use </span>std::collections::BTreeSet;
 <span class="kw">use </span>subspace_core_primitives::crypto::blake3_hash;
 <span class="kw">use </span>subspace_core_primitives::{bidirectional_distance, Blake3Hash, PotOutput, Randomness, U256};
 <span class="kw">use </span>subspace_runtime_primitives::{Balance, Moment};
@@ -1344,6 +1589,14 @@
 
     <span class="macro">app_crypto!</span>(sr25519, KEY_TYPE);
 }
+
+<span class="comment">// TODO: this runtime constant is not support to update, see https://github.com/subspace/subspace/issues/2712
+// for more detail about the problem and what we need to do to support it.
+//
+// The domain storage fee multiplier used to charge a higher storage fee to the domain
+// transaction to even out the duplicated/illegal domain transaction storage cost, which
+// can not be eliminated right now.
+</span><span class="kw">pub const </span>DOMAIN_STORAGE_FEE_MULTIPLIER: Balance = <span class="number">3</span>;
 
 <span class="doccomment">/// An operator authority signature.
 </span><span class="kw">pub type </span>OperatorSignature = app::Signature;
@@ -1532,6 +1785,10 @@
     </span><span class="kw">pub </span>domain_execution_fee: Balance,
     <span class="doccomment">/// Burned balances on domain chain
     </span><span class="kw">pub </span>burned_balance: Balance,
+    <span class="doccomment">/// Rewards for the chain.
+    </span><span class="comment">// TODO: remove this before mainnet. Skipping to maintain compatibility with Gemini
+    </span><span class="attr">#[codec(skip)]
+    </span><span class="kw">pub </span>chain_rewards: BTreeMap&lt;ChainId, Balance&gt;,
 }
 
 <span class="kw">impl</span>&lt;Balance&gt; BlockFees&lt;Balance&gt;
@@ -1542,11 +1799,13 @@
         domain_execution_fee: Balance,
         consensus_storage_fee: Balance,
         burned_balance: Balance,
+        chain_rewards: BTreeMap&lt;ChainId, Balance&gt;,
     ) -&gt; <span class="self">Self </span>{
         BlockFees {
             consensus_storage_fee,
             domain_execution_fee,
             burned_balance,
+            chain_rewards,
         }
     }
 
@@ -1579,6 +1838,12 @@
             &amp;&amp; !<span class="self">self</span>.rejected_transfers_claimed.contains_key(<span class="kw-2">&amp;</span>chain_id)
     }
 }
+
+<span class="comment">// TODO: this runtime constant is not support to update, see https://github.com/subspace/subspace/issues/2712
+// for more detail about the problem and what we need to do to support it.
+//
+</span><span class="doccomment">/// Initial tx range = U256::MAX / INITIAL_DOMAIN_TX_RANGE.
+</span><span class="kw">pub const </span>INITIAL_DOMAIN_TX_RANGE: u64 = <span class="number">3</span>;
 
 <span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
 </span><span class="kw">pub struct </span>BundleHeader&lt;Number, Hash, DomainHeader: HeaderT, Balance&gt; {
@@ -1703,12 +1968,25 @@
         <span class="self">self</span>.sealed_header.header.receipt
     }
 
-    <span class="doccomment">/// Return the bundle body size in bytes
+    <span class="doccomment">/// Return the bundle size (include header and body) in bytes
     </span><span class="kw">pub fn </span>size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
+        <span class="self">self</span>.encoded_size() <span class="kw">as </span>u32
+    }
+
+    <span class="doccomment">/// Return the bundle body size in bytes
+    </span><span class="kw">pub fn </span>body_size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
         <span class="self">self</span>.extrinsics
             .iter()
             .map(|tx| tx.encoded_size() <span class="kw">as </span>u32)
             .sum::&lt;u32&gt;()
+    }
+
+    <span class="kw">pub fn </span>estimated_weight(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Weight {
+        <span class="self">self</span>.sealed_header.header.estimated_bundle_weight
+    }
+
+    <span class="kw">pub fn </span>slot_number(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="self">self</span>.sealed_header.header.proof_of_election.slot_number
     }
 }
 
@@ -1951,7 +2229,11 @@
     </span><span class="kw">pub </span>vrf_signature: VrfSignature,
     <span class="doccomment">/// Operator index in the OperatorRegistry.
     </span><span class="kw">pub </span>operator_id: OperatorId,
-    <span class="doccomment">/// Consensus block hash at which proof of election was derived.
+    <span class="doccomment">/// TODO: this field is only used in the bundle equivocation FP which is removed,
+    /// also this field is problematic see https://github.com/subspace/subspace/issues/2737
+    /// so remove this field before next network
+    ///
+    /// Consensus block hash at which proof of election was derived.
     </span><span class="kw">pub </span>consensus_block_hash: CHash,
 }
 
@@ -2035,6 +2317,22 @@
     }
 }
 
+<span class="doccomment">/// Permissioned actions allowed by either specific accounts or anyone.
+</span><span class="attr">#[derive(TypeInfo, Encode, Decode, Debug, PartialEq, Clone, Serialize, Deserialize)]
+</span><span class="kw">pub enum </span>PermissionedActionAllowedBy&lt;AccountId: Codec + Clone&gt; {
+    Accounts(Vec&lt;AccountId&gt;),
+    Anyone,
+}
+
+<span class="kw">impl</span>&lt;AccountId: Codec + PartialEq + Clone&gt; PermissionedActionAllowedBy&lt;AccountId&gt; {
+    <span class="kw">pub fn </span>is_allowed(<span class="kw-2">&amp;</span><span class="self">self</span>, who: <span class="kw-2">&amp;</span>AccountId) -&gt; bool {
+        <span class="kw">match </span><span class="self">self </span>{
+            PermissionedActionAllowedBy::Accounts(accounts) =&gt; accounts.contains(who),
+            PermissionedActionAllowedBy::Anyone =&gt; <span class="bool-val">true</span>,
+        }
+    }
+}
+
 <span class="attr">#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq, Serialize, Deserialize)]
 </span><span class="kw">pub struct </span>GenesisDomain&lt;AccountId: Ord, Balance&gt; {
     <span class="comment">// Domain runtime items
@@ -2068,6 +2366,7 @@
 </span><span class="kw">pub enum </span>RuntimeType {
     <span class="attr">#[default]
     </span>Evm,
+    AutoId,
 }
 
 <span class="doccomment">/// Type representing the runtime ID.
@@ -2086,6 +2385,18 @@
 </span><span class="kw">pub enum </span>StakingHoldIdentifier {
     <span class="doccomment">/// Holds all the currently staked funds to an Operator.
     </span>Staked(OperatorId),
+}
+
+<span class="doccomment">/// Channel identity.
+</span><span class="kw">pub type </span>ChannelId = sp_core::U256;
+
+<span class="doccomment">/// Messenger specific hold identifier
+</span><span class="attr">#[derive(
+    PartialEq, Eq, Clone, Encode, Decode, TypeInfo, MaxEncodedLen, Ord, PartialOrd, Copy, Debug,
+)]
+</span><span class="kw">pub enum </span>MessengerHoldIdentifier {
+    <span class="doccomment">/// Holds the current reserved balance for channel opening
+    </span>Channel((ChainId, ChannelId)),
 }
 
 <span class="doccomment">/// Domains specific Identifier for Balances holds.
@@ -2225,6 +2536,36 @@
     </span><span class="kw">pub </span>max_block_weight: Weight,
 }
 
+<span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, Clone)]
+</span><span class="kw">pub struct </span>DomainBundleLimit {
+    <span class="doccomment">/// The max bundle size for the domain.
+    </span><span class="kw">pub </span>max_bundle_size: u32,
+    <span class="doccomment">/// The max bundle weight for the domain.
+    </span><span class="kw">pub </span>max_bundle_weight: Weight,
+}
+
+<span class="doccomment">/// Calculates the max bundle weight and size
+</span><span class="comment">// See https://forum.subspace.network/t/on-bundle-weight-limits-sum/2277 for more details
+// about the formula
+</span><span class="kw">pub fn </span>calculate_max_bundle_weight_and_size(
+    max_domain_block_size: u32,
+    max_domain_block_weight: Weight,
+    consensus_slot_probability: (u64, u64),
+    bundle_slot_probability: (u64, u64),
+) -&gt; <span class="prelude-ty">Option</span>&lt;DomainBundleLimit&gt; {
+    <span class="kw">let </span>(expected_bundles_per_block, max_bundle_weight) = calculate_max_bundle_weight(
+        max_domain_block_weight,
+        consensus_slot_probability,
+        bundle_slot_probability,
+    )<span class="question-mark">?</span>;
+    <span class="kw">let </span>max_bundle_size = (max_domain_block_size <span class="kw">as </span>u64).checked_div(expected_bundles_per_block)<span class="question-mark">?</span>;
+
+    <span class="prelude-val">Some</span>(DomainBundleLimit {
+        max_bundle_size: max_bundle_size <span class="kw">as </span>u32,
+        max_bundle_weight,
+    })
+}
+
 <span class="doccomment">/// Checks if the signer Id hash is within the tx range
 </span><span class="kw">pub fn </span>signer_in_tx_range(bundle_vrf_hash: <span class="kw-2">&amp;</span>U256, signer_id_hash: <span class="kw-2">&amp;</span>U256, tx_range: <span class="kw-2">&amp;</span>U256) -&gt; bool {
     <span class="kw">let </span>distance_from_vrf_hash = bidirectional_distance(bundle_vrf_hash, signer_id_hash);
@@ -2247,41 +2588,76 @@
 <span class="doccomment">/// Bundle invalidity type
 ///
 /// Each type contains the index of the first invalid extrinsic within the bundle
+</span><span class="comment">// TODO: `#[codec(index = 3)]` is reserved for the reomved `InvalidBundleType::InvalidXDM`
+// we can only reuse index 3 in the next network
 </span><span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, Clone, PartialEq, Eq)]
 </span><span class="kw">pub enum </span>InvalidBundleType {
     <span class="doccomment">/// Failed to decode the opaque extrinsic.
+    </span><span class="attr">#[codec(index = <span class="number">0</span>)]
     </span>UndecodableTx(u32),
     <span class="doccomment">/// Transaction is out of the tx range.
+    </span><span class="attr">#[codec(index = <span class="number">1</span>)]
     </span>OutOfRangeTx(u32),
     <span class="doccomment">/// Transaction is illegal (unable to pay the fee, etc).
+    </span><span class="attr">#[codec(index = <span class="number">2</span>)]
     </span>IllegalTx(u32),
-    <span class="doccomment">/// Transaction is an invalid XDM
-    </span>InvalidXDM(u32),
     <span class="doccomment">/// Transaction is an inherent extrinsic.
+    </span><span class="attr">#[codec(index = <span class="number">4</span>)]
     </span>InherentExtrinsic(u32),
+    <span class="doccomment">/// The `estimated_bundle_weight` in the bundle header is invalid
+    </span><span class="attr">#[codec(index = <span class="number">5</span>)]
+    </span>InvalidBundleWeight,
 }
 
 <span class="kw">impl </span>InvalidBundleType {
     <span class="comment">// Return the checking order of the invalid type
-    </span><span class="kw">pub fn </span>checking_order(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u8 {
-        <span class="comment">// Use explicit number as the order instead of the enum discriminant
-        // to avoid changing the order accidentally
-        </span><span class="kw">match </span><span class="self">self </span>{
-            <span class="self">Self</span>::UndecodableTx(<span class="kw">_</span>) =&gt; <span class="number">1</span>,
-            <span class="self">Self</span>::OutOfRangeTx(<span class="kw">_</span>) =&gt; <span class="number">2</span>,
-            <span class="self">Self</span>::InherentExtrinsic(<span class="kw">_</span>) =&gt; <span class="number">3</span>,
-            <span class="self">Self</span>::IllegalTx(<span class="kw">_</span>) =&gt; <span class="number">4</span>,
-            <span class="self">Self</span>::InvalidXDM(<span class="kw">_</span>) =&gt; <span class="number">5</span>,
-        }
-    }
-
-    <span class="kw">pub fn </span>extrinsic_index(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
-        <span class="kw">match </span><span class="self">self </span>{
+    </span><span class="kw">pub fn </span>checking_order(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u64 {
+        <span class="comment">// A bundle can contains multiple invalid extrinsics thus consider the first invalid extrinsic
+        // as the invalid type
+        </span><span class="kw">let </span>extrinsic_order = <span class="kw">match </span><span class="self">self </span>{
             <span class="self">Self</span>::UndecodableTx(i) =&gt; <span class="kw-2">*</span>i,
             <span class="self">Self</span>::OutOfRangeTx(i) =&gt; <span class="kw-2">*</span>i,
             <span class="self">Self</span>::IllegalTx(i) =&gt; <span class="kw-2">*</span>i,
-            <span class="self">Self</span>::InvalidXDM(i) =&gt; <span class="kw-2">*</span>i,
             <span class="self">Self</span>::InherentExtrinsic(i) =&gt; <span class="kw-2">*</span>i,
+            <span class="comment">// NOTE: the `InvalidBundleWeight` is targetting the whole bundle not a specific
+            // single extrinsic, as `extrinsic_index` is used as the order to check the extrinsic
+            // in the bundle returning `u32::MAX` indicate `InvalidBundleWeight` is checked after
+            // all the extrinsic in the bundle is checked.
+            </span><span class="self">Self</span>::InvalidBundleWeight =&gt; u32::MAX,
+        };
+
+        <span class="comment">// The extrinsic can be considered as invalid due to multiple `invalid_type` (i.e. an extrinsic
+        // can be `OutOfRangeTx` and `IllegalTx` at the same time) thus use the following checking order
+        // and consider the first check as the invalid type
+        //
+        // NOTE: Use explicit number as the order instead of the enum discriminant
+        // to avoid changing the order accidentally
+        </span><span class="kw">let </span>rule_order = <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::UndecodableTx(<span class="kw">_</span>) =&gt; <span class="number">1</span>,
+            <span class="self">Self</span>::OutOfRangeTx(<span class="kw">_</span>) =&gt; <span class="number">2</span>,
+            <span class="self">Self</span>::InherentExtrinsic(<span class="kw">_</span>) =&gt; <span class="number">3</span>,
+            <span class="self">Self</span>::IllegalTx(<span class="kw">_</span>) =&gt; <span class="number">5</span>,
+            <span class="self">Self</span>::InvalidBundleWeight =&gt; <span class="number">6</span>,
+        };
+
+        <span class="comment">// The checking order is a combination of the `extrinsic_order` and `rule_order`
+        // it presents as an `u64` where the first 32 bits is the `extrinsic_order` and
+        // last 32 bits is the `rule_order` meaning the `extrinsic_order` is checked first
+        // then the `rule_order`.
+        </span>((extrinsic_order <span class="kw">as </span>u64) &lt;&lt; <span class="number">32</span>) | (rule_order <span class="kw">as </span>u64)
+    }
+
+    <span class="comment">// Return the index of the extrinsic that the invalid type points to
+    //
+    // NOTE: `InvalidBundleWeight` will return `None` since it is targetting the whole bundle not a
+    // specific single extrinsic
+    </span><span class="kw">pub fn </span>extrinsic_index(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;u32&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            <span class="self">Self</span>::UndecodableTx(i) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span>i),
+            <span class="self">Self</span>::OutOfRangeTx(i) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span>i),
+            <span class="self">Self</span>::IllegalTx(i) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span>i),
+            <span class="self">Self</span>::InherentExtrinsic(i) =&gt; <span class="prelude-val">Some</span>(<span class="kw-2">*</span>i),
+            <span class="self">Self</span>::InvalidBundleWeight =&gt; <span class="prelude-val">None</span>,
         }
     }
 }
@@ -2324,6 +2700,13 @@
         <span class="macro">matches!</span>(<span class="self">self</span>.bundle, BundleValidity::Invalid(<span class="kw">_</span>))
     }
 
+    <span class="kw">pub fn </span>invalid_extrinsic_index(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;u32&gt; {
+        <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.bundle {
+            BundleValidity::Invalid(invalid_bundle_type) =&gt; invalid_bundle_type.extrinsic_index(),
+            BundleValidity::Valid(<span class="kw">_</span>) =&gt; <span class="prelude-val">None</span>,
+        }
+    }
+
     <span class="attr">#[cfg(any(feature = <span class="string">"std"</span>, feature = <span class="string">"runtime-benchmarks"</span>))]
     </span><span class="kw">pub fn </span>dummy(extrinsics_root: Hash) -&gt; <span class="self">Self
     </span><span class="kw">where
@@ -2340,11 +2723,6 @@
 </span><span class="kw">pub const </span>EMPTY_EXTRINSIC_ROOT: ExtrinsicsRoot = ExtrinsicsRoot {
     <span class="number">0</span>: <span class="macro">hex!</span>(<span class="string">"03170a2e7597b7b7e3d84c05391d139a62b157e78786d8c082f29dcf4c111314"</span>),
 };
-
-<span class="doccomment">/// Zero operator signing key.
-</span><span class="kw">pub const </span>ZERO_OPERATOR_SIGNING_KEY: sr25519::Public = sr25519::Public(<span class="macro">hex!</span>(
-    <span class="string">"0000000000000000000000000000000000000000000000000000000000000000"
-</span>));
 
 <span class="kw">pub fn </span>derive_domain_block_hash&lt;DomainHeader: HeaderT&gt;(
     domain_block_number: DomainHeader::Number,
@@ -2431,6 +2809,38 @@
     </span><span class="kw">fn </span>reduce_domain_balance(domain_id: DomainId, amount: Balance) -&gt; <span class="prelude-ty">Result</span>&lt;(), <span class="self">Self</span>::Error&gt;;
 }
 
+<span class="doccomment">/// Trait to check domain owner.
+</span><span class="kw">pub trait </span>DomainOwner&lt;AccountId&gt; {
+    <span class="doccomment">/// Returns true if the account is the domain owner.
+    </span><span class="kw">fn </span>is_domain_owner(domain_id: DomainId, acc: AccountId) -&gt; bool;
+}
+
+<span class="kw">impl</span>&lt;AccountId&gt; DomainOwner&lt;AccountId&gt; <span class="kw">for </span>() {
+    <span class="kw">fn </span>is_domain_owner(_domain_id: DomainId, _acc: AccountId) -&gt; bool {
+        <span class="bool-val">false
+    </span>}
+}
+
+<span class="doccomment">/// Post hook to know if the domain had bundle submitted in the previous block.
+</span><span class="kw">pub trait </span>DomainBundleSubmitted {
+    <span class="doccomment">/// Called in the next block initialisation if there was a domain bundle in the previous block.
+    /// This hook if called for domain represents that there is a new domain block for parent consensus block.
+    </span><span class="kw">fn </span>domain_bundle_submitted(domain_id: DomainId);
+}
+
+<span class="kw">impl </span>DomainBundleSubmitted <span class="kw">for </span>() {
+    <span class="kw">fn </span>domain_bundle_submitted(_domain_id: DomainId) {}
+}
+
+<span class="doccomment">/// A hook to call after a domain is instantiated
+</span><span class="kw">pub trait </span>OnDomainInstantiated {
+    <span class="kw">fn </span>on_domain_instantiated(domain_id: DomainId);
+}
+
+<span class="kw">impl </span>OnDomainInstantiated <span class="kw">for </span>() {
+    <span class="kw">fn </span>on_domain_instantiated(_domain_id: DomainId) {}
+}
+
 <span class="kw">pub type </span>ExecutionReceiptFor&lt;DomainHeader, CBlock, Balance&gt; = ExecutionReceipt&lt;
     NumberFor&lt;CBlock&gt;,
     &lt;CBlock <span class="kw">as </span>BlockT&gt;::Hash,
@@ -2439,8 +2849,74 @@
     Balance,
 &gt;;
 
-<span class="macro">sp_api::decl_runtime_apis! </span>{
+<span class="doccomment">/// Domain chains allowlist updates.
+</span><span class="attr">#[derive(Default, Debug, Encode, Decode, PartialEq, Eq, Clone, TypeInfo)]
+</span><span class="kw">pub struct </span>DomainAllowlistUpdates {
+    <span class="doccomment">/// Chains that are allowed to open channel with this chain.
+    </span><span class="kw">pub </span>allow_chains: BTreeSet&lt;ChainId&gt;,
+    <span class="doccomment">/// Chains that are not allowed to open channel with this chain.
+    </span><span class="kw">pub </span>remove_chains: BTreeSet&lt;ChainId&gt;,
+}
+
+<span class="kw">impl </span>DomainAllowlistUpdates {
+    <span class="kw">pub fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+        <span class="self">self</span>.allow_chains.is_empty() &amp;&amp; <span class="self">self</span>.remove_chains.is_empty()
+    }
+
+    <span class="kw">pub fn </span>clear(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="self">self</span>.allow_chains.clear();
+        <span class="self">self</span>.remove_chains.clear();
+    }
+}
+
+<span class="attr">#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>RuntimeObject&lt;Number, Hash&gt; {
+    <span class="kw">pub </span>runtime_name: String,
+    <span class="kw">pub </span>runtime_type: RuntimeType,
+    <span class="kw">pub </span>runtime_upgrades: u32,
+    <span class="kw">pub </span>hash: Hash,
+    <span class="comment">// The raw gensis storage that contains the runtime code.
+    // NOTE: don't use this field directly but `into_complete_raw_genesis` instead
+    </span><span class="kw">pub </span>raw_genesis: RawGenesis,
+    <span class="kw">pub </span>version: RuntimeVersion,
+    <span class="kw">pub </span>created_at: Number,
+    <span class="kw">pub </span>updated_at: Number,
+}
+
+<span class="doccomment">/// Digest storage key in frame_system.
+/// Unfortunately, the digest storage is private and not possible to derive the key from it directly.
+</span><span class="kw">pub fn </span>system_digest_final_key() -&gt; Vec&lt;u8&gt; {
+    frame_support::storage::storage_prefix(<span class="string">"System"</span>.as_ref(), <span class="string">"Digest"</span>.as_ref()).to_vec()
+}
+
+<span class="comment">// TODO: This is used to keep compatible with gemini-3h, remove before next network
+</span><span class="doccomment">/// This is a representation of actual Block Fees storage in pallet-block-fees.
+/// Any change in key or value there should be changed here accordingly.
+</span><span class="kw">pub fn </span>operator_block_fees_final_key() -&gt; Vec&lt;u8&gt; {
+    frame_support::storage::storage_prefix(<span class="string">"BlockFees"</span>.as_ref(), <span class="string">"CollectedBlockFees"</span>.as_ref())
+        .to_vec()
+}
+
+<span class="doccomment">/// Preimage to verify the proof of ownership of Operator Signing key.
+/// Operator owner is used to ensure the signature is used by anyone except
+/// the owner of the Signing key pair.
+</span><span class="attr">#[derive(Debug, Encode)]
+</span><span class="kw">pub struct </span>OperatorSigningKeyProofOfOwnershipData&lt;AccountId&gt; {
+    <span class="kw">pub </span>operator_owner: AccountId,
+}
+
+<span class="doccomment">/// Hook to handle chain rewards.
+</span><span class="kw">pub trait </span>OnChainRewards&lt;Balance&gt; {
+    <span class="kw">fn </span>on_chain_rewards(chain_id: ChainId, reward: Balance);
+}
+
+<span class="kw">impl</span>&lt;Balance&gt; OnChainRewards&lt;Balance&gt; <span class="kw">for </span>() {
+    <span class="kw">fn </span>on_chain_rewards(_chain_id: ChainId, _reward: Balance) {}
+}
+
+<span class="macro">sp_api::decl_runtime_apis!</span> {
     <span class="doccomment">/// API necessary for domains pallet.
+    </span><span class="attr">#[api_version(<span class="number">4</span>)]
     </span><span class="kw">pub trait </span>DomainsApi&lt;DomainHeader: HeaderT&gt; {
         <span class="doccomment">/// Submits the transaction bundle via an unsigned extrinsic.
         </span><span class="kw">fn </span>submit_bundle_unsigned(opaque_bundle: OpaqueBundle&lt;NumberFor&lt;Block&gt;, Block::Hash, DomainHeader, Balance&gt;);
@@ -2490,17 +2966,14 @@
         <span class="doccomment">/// Returns the domain block limit of the given domain.
         </span><span class="kw">fn </span>domain_block_limit(domain_id: DomainId) -&gt; <span class="prelude-ty">Option</span>&lt;DomainBlockLimit&gt;;
 
+        <span class="doccomment">/// Returns the domain bundle limit of the given domain.
+        </span><span class="kw">fn </span>domain_bundle_limit(domain_id: DomainId) -&gt; <span class="prelude-ty">Option</span>&lt;DomainBundleLimit&gt;;
+
         <span class="doccomment">/// Returns true if there are any ERs in the challenge period with non empty extrinsics.
         </span><span class="kw">fn </span>non_empty_er_exists(domain_id: DomainId) -&gt; bool;
 
         <span class="doccomment">/// Returns the current best number of the domain.
         </span><span class="kw">fn </span>domain_best_number(domain_id: DomainId) -&gt; <span class="prelude-ty">Option</span>&lt;HeaderNumberFor&lt;DomainHeader&gt;&gt;;
-
-        <span class="doccomment">/// Returns the chain state root at the given block.
-        </span><span class="kw">fn </span>domain_state_root(
-            domain_id: DomainId,
-            number: HeaderNumberFor&lt;DomainHeader&gt;,
-            hash: HeaderHashFor&lt;DomainHeader&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;HeaderHashFor&lt;DomainHeader&gt;&gt;;
 
         <span class="doccomment">/// Returns the execution receipt
         </span><span class="kw">fn </span>execution_receipt(receipt_hash: HeaderHashFor&lt;DomainHeader&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;ExecutionReceiptFor&lt;DomainHeader, Block, Balance&gt;&gt;;
@@ -2511,15 +2984,24 @@
         <span class="doccomment">/// Get operator id by signing key
         </span><span class="kw">fn </span>operator_id_by_signing_key(signing_key: OperatorPublicKey) -&gt; <span class="prelude-ty">Option</span>&lt;OperatorId&gt;;
 
-        <span class="doccomment">/// Get the consensus chain sudo account id, currently only used in the intentional malicious operator
-        </span><span class="kw">fn </span>sudo_account_id() -&gt; subspace_runtime_primitives::AccountId;
-
         <span class="doccomment">/// Returns the execution receipt hash of the given domain and domain block number
         </span><span class="kw">fn </span>receipt_hash(domain_id: DomainId, domain_number: HeaderNumberFor&lt;DomainHeader&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;HeaderHashFor&lt;DomainHeader&gt;&gt;;
 
-        <span class="doccomment">/// Reture the consensus chain byte fee that will used to charge the domain transaction for consensus
+        <span class="doccomment">/// Return the consensus chain byte fee that will used to charge the domain transaction for consensus
         /// chain storage fee
         </span><span class="kw">fn </span>consensus_chain_byte_fee() -&gt; Balance;
+
+        <span class="doccomment">/// Returns the latest confirmed domain block number and hash
+        </span><span class="kw">fn </span>latest_confirmed_domain_block(domain_id: DomainId) -&gt; <span class="prelude-ty">Option</span>&lt;(HeaderNumberFor&lt;DomainHeader&gt;, HeaderHashFor&lt;DomainHeader&gt;)&gt;;
+
+        <span class="doccomment">/// Return if the receipt is exist and pending to prune
+        </span><span class="kw">fn </span>is_bad_er_pending_to_prune(domain_id: DomainId, receipt_hash: HeaderHashFor&lt;DomainHeader&gt;) -&gt; bool;
+
+        <span class="doccomment">/// Return the balance of the storage fund account
+        </span><span class="kw">fn </span>storage_fund_account_balance(operator_id: OperatorId) -&gt; Balance;
+
+        <span class="doccomment">/// Return if the domain runtime code is upgraded since `at`
+        </span><span class="kw">fn </span>is_domain_runtime_updraded_since(domain_id: DomainId, at: NumberFor&lt;Block&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt;;
     }
 
     <span class="kw">pub trait </span>BundleProducerElectionApi&lt;Balance: Encode + Decode&gt; {

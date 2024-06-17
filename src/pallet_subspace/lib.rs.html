@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/pallet-subspace/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-4e54bb2b497cc83f.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pallet_subspace" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (25f8d01fd 2024-01-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0b2e2def73e61cbe.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../pallet_subspace/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/pallet-subspace/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pallet_subspace" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../pallet_subspace/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1798,6 +1796,44 @@
 <a href="#1796" id="1796">1796</a>
 <a href="#1797" id="1797">1797</a>
 <a href="#1798" id="1798">1798</a>
+<a href="#1799" id="1799">1799</a>
+<a href="#1800" id="1800">1800</a>
+<a href="#1801" id="1801">1801</a>
+<a href="#1802" id="1802">1802</a>
+<a href="#1803" id="1803">1803</a>
+<a href="#1804" id="1804">1804</a>
+<a href="#1805" id="1805">1805</a>
+<a href="#1806" id="1806">1806</a>
+<a href="#1807" id="1807">1807</a>
+<a href="#1808" id="1808">1808</a>
+<a href="#1809" id="1809">1809</a>
+<a href="#1810" id="1810">1810</a>
+<a href="#1811" id="1811">1811</a>
+<a href="#1812" id="1812">1812</a>
+<a href="#1813" id="1813">1813</a>
+<a href="#1814" id="1814">1814</a>
+<a href="#1815" id="1815">1815</a>
+<a href="#1816" id="1816">1816</a>
+<a href="#1817" id="1817">1817</a>
+<a href="#1818" id="1818">1818</a>
+<a href="#1819" id="1819">1819</a>
+<a href="#1820" id="1820">1820</a>
+<a href="#1821" id="1821">1821</a>
+<a href="#1822" id="1822">1822</a>
+<a href="#1823" id="1823">1823</a>
+<a href="#1824" id="1824">1824</a>
+<a href="#1825" id="1825">1825</a>
+<a href="#1826" id="1826">1826</a>
+<a href="#1827" id="1827">1827</a>
+<a href="#1828" id="1828">1828</a>
+<a href="#1829" id="1829">1829</a>
+<a href="#1830" id="1830">1830</a>
+<a href="#1831" id="1831">1831</a>
+<a href="#1832" id="1832">1832</a>
+<a href="#1833" id="1833">1833</a>
+<a href="#1834" id="1834">1834</a>
+<a href="#1835" id="1835">1835</a>
+<a href="#1836" id="1836">1836</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2019-2021 Parity Technologies (UK) Ltd.
 // Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
@@ -1816,8 +1852,9 @@
 </span><span class="attr">#![doc = <span class="macro">include_str!</span>(<span class="string">"../README.md"</span>)]
 #![cfg_attr(not(feature = <span class="string">"std"</span>), no_std)]
 #![feature(array_chunks, assert_matches, const_option, let_chains, portable_simd)]
-#![warn(unused_must_use, unsafe_code, unused_variables, unused_must_use)]
+#![warn(unused_must_use, unsafe_code, unused_variables)]
 
+#[cfg(not(feature = <span class="string">"std"</span>))]
 </span><span class="kw">extern crate </span>alloc;
 
 <span class="kw">pub mod </span>equivocation;
@@ -1832,7 +1869,8 @@
 
 <span class="kw">pub mod </span>weights;
 
-<span class="kw">use </span>alloc::string::String;
+<span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+</span><span class="kw">use </span>alloc::string::String;
 <span class="kw">use </span>codec::{Decode, Encode, MaxEncodedLen};
 <span class="kw">use </span>core::num::NonZeroU64;
 <span class="kw">use </span>equivocation::{HandleEquivocation, SubspaceEquivocationOffence};
@@ -2041,6 +2079,10 @@
 
         <span class="doccomment">/// Weight information for extrinsics in this pallet.
         </span><span class="kw">type </span>WeightInfo: WeightInfo;
+
+        <span class="doccomment">/// Maximum number of block number to block slot mappings to keep (oldest pruned first).
+        </span><span class="attr">#[pallet::constant]
+        </span><span class="kw">type </span>BlockSlotCount: Get&lt;u32&gt;;
     }
 
     <span class="attr">#[derive(Debug, Default, Encode, Decode, TypeInfo)]
@@ -2095,11 +2137,13 @@
         </span>T: Config,
     {
         <span class="attr">#[inline]
-        #[track_caller]
         </span><span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-            <span class="comment">// TODO: Remove once https://github.com/paritytech/polkadot-sdk/pull/1221 is in our
-            //  fork
-            </span><span class="macro">unreachable!</span>(<span class="string">"Config must be initialized explicitly"</span>);
+            <span class="self">Self </span>{
+                enable_rewards_at: EnableRewardsAt::Height(<span class="prelude-val">None</span>),
+                allow_authoring_by: AllowAuthoringBy::Anyone,
+                pot_slot_iterations: NonZeroU32::MIN,
+                phantom: PhantomData,
+            }
         }
     }
 
@@ -2140,7 +2184,7 @@
 
     <span class="doccomment">/// Events type.
     </span><span class="attr">#[pallet::event]
-    #[pallet::generate_deposit(<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>deposit_event)]
+    #[pallet::generate_deposit(<span class="kw">pub </span>(<span class="kw">super</span>) <span class="kw">fn </span>deposit_event)]
     </span><span class="kw">pub enum </span>Event&lt;T: Config&gt; {
         <span class="doccomment">/// Segment header was stored in blockchain history.
         </span>SegmentHeaderStored { segment_header: SegmentHeader },
@@ -2169,10 +2213,17 @@
     #[pallet::getter(<span class="kw">fn </span>genesis_slot)]
     </span><span class="kw">pub type </span>GenesisSlot&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, Slot, ValueQuery&gt;;
 
-    <span class="doccomment">/// Current slot number.
+    <span class="comment">// TODO: Replace `CurrentSlot` with `BlockSlots`
+    </span><span class="doccomment">/// Current slot number.
     </span><span class="attr">#[pallet::storage]
     #[pallet::getter(<span class="kw">fn </span>current_slot)]
     </span><span class="kw">pub type </span>CurrentSlot&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, Slot, ValueQuery&gt;;
+
+    <span class="doccomment">/// Bounded mapping from block number to slot
+    </span><span class="attr">#[pallet::storage]
+    #[pallet::getter(<span class="kw">fn </span>block_slots)]
+    </span><span class="kw">pub type </span>BlockSlots&lt;T: Config&gt; =
+        StorageValue&lt;<span class="kw">_</span>, BoundedBTreeMap&lt;BlockNumberFor&lt;T&gt;, Slot, T::BlockSlotCount&gt;, ValueQuery&gt;;
 
     <span class="comment">// TODO: Clarify when this value is updated (when it is updated, right now it is not)
     </span><span class="doccomment">/// Number of iterations for proof of time per slot
@@ -2241,7 +2292,7 @@
     </span><span class="attr">#[pallet::storage]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>EnableRewardsBelowSolutionRange&lt;T: Config&gt; = StorageValue&lt;<span class="kw">_</span>, u64&gt;;
 
-    <span class="doccomment">/// Temporary value (cleared at block finalization) with block author information.
+    <span class="doccomment">/// Block author information
     </span><span class="attr">#[pallet::storage]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>CurrentBlockAuthorInfo&lt;T: Config&gt; = StorageValue&lt;
         <span class="kw">_</span>,
@@ -2266,7 +2317,7 @@
         ValueQuery,
     &gt;;
 
-    <span class="doccomment">/// Temporary value (cleared at block finalization) with voters in the current block thus far.
+    <span class="doccomment">/// Voters in the current block thus far
     </span><span class="attr">#[pallet::storage]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>CurrentBlockVoters&lt;T: Config&gt; = StorageValue&lt;
         <span class="kw">_</span>,
@@ -2319,7 +2370,7 @@
         /// call it (validated in `ValidateUnsigned`), as such if the block author is defined it
         /// will be defined as the equivocation reporter.
         </span><span class="attr">#[pallet::call_index(<span class="number">0</span>)]
-        #[pallet::weight((&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::report_equivocation(), DispatchClass::Operational))]
+        #[pallet::weight((&lt; T <span class="kw">as </span>Config &gt;::WeightInfo::report_equivocation(), DispatchClass::Operational))]
         </span><span class="comment">// Suppression because the custom syntax will also generate an enum and we need enum to have
         // boxed value.
         </span><span class="attr">#[allow(clippy::boxed_local)]
@@ -2335,7 +2386,7 @@
         <span class="doccomment">/// Submit new segment header to the blockchain. This is an inherent extrinsic and part of
         /// the Subspace consensus logic.
         </span><span class="attr">#[pallet::call_index(<span class="number">1</span>)]
-        #[pallet::weight((&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::store_segment_headers(segment_headers.len() <span class="kw">as </span>u32), DispatchClass::Mandatory, Pays::No))]
+        #[pallet::weight((&lt; T <span class="kw">as </span>Config &gt;::WeightInfo::store_segment_headers(segment_headers.len() <span class="kw">as </span>u32), DispatchClass::Mandatory))]
         </span><span class="kw">pub fn </span>store_segment_headers(
             origin: OriginFor&lt;T&gt;,
             segment_headers: Vec&lt;SegmentHeader&gt;,
@@ -2347,7 +2398,7 @@
         <span class="doccomment">/// Enable solution range adjustment after every era.
         /// Note: No effect on the solution range for the current era
         </span><span class="attr">#[pallet::call_index(<span class="number">2</span>)]
-        #[pallet::weight(&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::enable_solution_range_adjustment())]
+        #[pallet::weight(&lt; T <span class="kw">as </span>Config &gt;::WeightInfo::enable_solution_range_adjustment())]
         </span><span class="kw">pub fn </span>enable_solution_range_adjustment(
             origin: OriginFor&lt;T&gt;,
             solution_range_override: <span class="prelude-ty">Option</span>&lt;u64&gt;,
@@ -2369,7 +2420,7 @@
 
         <span class="doccomment">/// Farmer vote, currently only used for extra rewards to farmers.
         </span><span class="attr">#[pallet::call_index(<span class="number">3</span>)]
-        #[pallet::weight((&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::vote(), DispatchClass::Operational, Pays::No))]
+        #[pallet::weight((&lt; T <span class="kw">as </span>Config &gt;::WeightInfo::vote(), DispatchClass::Operational))]
         </span><span class="comment">// Suppression because the custom syntax will also generate an enum and we need enum to have
         // boxed value.
         </span><span class="attr">#[allow(clippy::boxed_local)]
@@ -2384,7 +2435,7 @@
 
         <span class="doccomment">/// Enable rewards for blocks and votes at specified block height.
         </span><span class="attr">#[pallet::call_index(<span class="number">4</span>)]
-        #[pallet::weight(&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::enable_rewards())]
+        #[pallet::weight(&lt; T <span class="kw">as </span>Config &gt;::WeightInfo::enable_rewards())]
         </span><span class="kw">pub fn </span>enable_rewards_at(
             origin: OriginFor&lt;T&gt;,
             enable_rewards_at: EnableRewardsAt&lt;BlockNumberFor&lt;T&gt;&gt;,
@@ -2396,7 +2447,7 @@
 
         <span class="doccomment">/// Enable storage access for all users.
         </span><span class="attr">#[pallet::call_index(<span class="number">5</span>)]
-        #[pallet::weight(&lt;T <span class="kw">as </span>Config&gt;::WeightInfo::enable_authoring_by_anyone())]
+        #[pallet::weight(&lt; T <span class="kw">as </span>Config &gt;::WeightInfo::enable_authoring_by_anyone())]
         </span><span class="kw">pub fn </span>enable_authoring_by_anyone(origin: OriginFor&lt;T&gt;) -&gt; DispatchResult {
             ensure_root(origin)<span class="question-mark">?</span>;
 
@@ -2580,7 +2631,18 @@
         <span class="comment">// The slot number of the current block being initialized.
         </span>CurrentSlot::&lt;T&gt;::put(pre_digest.slot());
 
+        BlockSlots::&lt;T&gt;::mutate(|block_slots| {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(to_remove) = block_number.checked_sub(<span class="kw-2">&amp;</span>T::BlockSlotCount::get().into()) {
+                block_slots.remove(<span class="kw-2">&amp;</span>to_remove);
+            }
+            block_slots
+                .try_insert(block_number, pre_digest.slot())
+                .expect(<span class="string">"one entry just removed before inserting; qed"</span>);
+        });
+
         {
+            <span class="comment">// Remove old value
+            </span>CurrentBlockAuthorInfo::&lt;T&gt;::take();
             <span class="kw">let </span>farmer_public_key = pre_digest.solution().public_key.clone();
 
             <span class="comment">// Optional restriction for block authoring to the root user
@@ -2772,14 +2834,16 @@
         }
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>((public_key, sector_index, piece_offset, scalar, slot, _reward_address)) =
-            CurrentBlockAuthorInfo::&lt;T&gt;::take()
+            CurrentBlockAuthorInfo::&lt;T&gt;::get()
         {
             ParentBlockAuthorInfo::&lt;T&gt;::put((public_key, sector_index, piece_offset, scalar, slot));
+        } <span class="kw">else </span>{
+            ParentBlockAuthorInfo::&lt;T&gt;::take();
         }
 
         ParentVoteVerificationData::&lt;T&gt;::put(current_vote_verification_data::&lt;T&gt;(<span class="bool-val">true</span>));
 
-        ParentBlockVoters::&lt;T&gt;::put(CurrentBlockVoters::&lt;T&gt;::take().unwrap_or_default());
+        ParentBlockVoters::&lt;T&gt;::put(CurrentBlockVoters::&lt;T&gt;::get().unwrap_or_default());
 
         DidProcessSegmentHeaders::&lt;T&gt;::take();
     }
@@ -3520,6 +3584,16 @@
     }
 
     <span class="prelude-val">Ok</span>(())
+}
+
+<span class="kw">impl</span>&lt;T: Config&gt; subspace_runtime_primitives::RewardsEnabled <span class="kw">for </span>Pallet&lt;T&gt; {
+    <span class="kw">fn </span>rewards_enabled() -&gt; bool {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(height) = EnableRewards::&lt;T&gt;::get() {
+            frame_system::Pallet::&lt;T&gt;::current_block_number() &gt;= height
+        } <span class="kw">else </span>{
+            <span class="bool-val">false
+        </span>}
+    }
 }
 
 <span class="kw">impl</span>&lt;T: Config&gt; subspace_runtime_primitives::FindBlockRewardAddress&lt;T::AccountId&gt; <span class="kw">for </span>Pallet&lt;T&gt; {

@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-farmer-components/src/sector.rs`."><title>sector.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-4e54bb2b497cc83f.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_farmer_components" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (25f8d01fd 2024-01-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0b2e2def73e61cbe.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../subspace_farmer_components/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-farmer-components/src/sector.rs`."><title>sector.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="subspace_farmer_components" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../subspace_farmer_components/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -597,6 +595,7 @@
 </pre></div><pre class="rust"><code><span class="kw">use </span>bitvec::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>parity_scale_codec::{Decode, Encode};
 <span class="kw">use </span>rayon::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span>std::mem::ManuallyDrop;
 <span class="kw">use </span>std::ops::{Deref, DerefMut};
 <span class="kw">use </span>std::{mem, slice};
 <span class="kw">use </span>subspace_core_primitives::checksum::Blake3Checksummed;
@@ -655,24 +654,24 @@
 <span class="kw">impl </span>SectorMetadata {
     <span class="doccomment">/// Returns offsets of each s-bucket relatively to the beginning of the sector (in chunks)
     </span><span class="kw">pub fn </span>s_bucket_offsets(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Box&lt;[u32; Record::NUM_S_BUCKETS]&gt; {
-        <span class="comment">// TODO: Should have been just `::new()`, but https://github.com/rust-lang/rust/issues/53827
-        // SAFETY: Data structure filled with zeroes is a valid invariant
-        </span><span class="kw">let </span><span class="kw-2">mut </span>s_bucket_offsets =
-            <span class="kw">unsafe </span>{ Box::&lt;[u32; Record::NUM_S_BUCKETS]&gt;::new_zeroed().assume_init() };
-
-        <span class="self">self</span>.s_bucket_sizes
+        <span class="kw">let </span>s_bucket_offsets = <span class="self">self
+            </span>.s_bucket_sizes
             .iter()
-            .zip(s_bucket_offsets.iter_mut())
-            .for_each({
+            .map({
                 <span class="kw">let </span><span class="kw-2">mut </span>base_offset = <span class="number">0</span>;
 
-                <span class="kw">move </span>|(s_bucket_size, s_bucket_offset)| {
-                    <span class="kw-2">*</span>s_bucket_offset = base_offset;
+                <span class="kw">move </span>|s_bucket_size| {
+                    <span class="kw">let </span>offset = base_offset;
                     base_offset += u32::from(<span class="kw-2">*</span>s_bucket_size);
+                    offset
                 }
-            });
+            })
+            .collect::&lt;Box&lt;<span class="kw">_</span>&gt;&gt;();
 
-        s_bucket_offsets
+        <span class="macro">assert_eq!</span>(s_bucket_offsets.len(), Record::NUM_S_BUCKETS);
+        <span class="kw">let </span><span class="kw-2">mut </span>s_bucket_offsets = ManuallyDrop::new(s_bucket_offsets);
+        <span class="comment">// SAFETY: Original memory is not dropped, number of elements checked above
+        </span><span class="kw">unsafe </span>{ Box::from_raw(s_bucket_offsets.as_mut_ptr() <span class="kw">as </span><span class="kw-2">*mut </span>[u32; Record::NUM_S_BUCKETS]) }
     }
 }
 
@@ -760,6 +759,7 @@
 
 <span class="comment">// Bit array containing space for bits equal to the number of s-buckets in a record
 </span><span class="kw">type </span>SingleRecordBitArray = BitArray&lt;[u8; Record::NUM_S_BUCKETS / u8::BITS <span class="kw">as </span>usize]&gt;;
+
 <span class="kw">const </span>SINGLE_RECORD_BIT_ARRAY_SIZE: usize = mem::size_of::&lt;SingleRecordBitArray&gt;();
 
 <span class="comment">// TODO: I really tried to avoid `count_ones()`, but wasn't able to with safe Rust due to lifetimes
@@ -996,23 +996,21 @@
 
     <span class="doccomment">/// Returns sizes of each s-bucket
     </span><span class="kw">pub fn </span>s_bucket_sizes(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Box&lt;[u16; Record::NUM_S_BUCKETS]&gt; {
-        <span class="comment">// TODO: Should have been just `::new()`, but https://github.com/rust-lang/rust/issues/53827
-        // SAFETY: Data structure filled with zeroes is a valid invariant
-        </span><span class="kw">let </span><span class="kw-2">mut </span>s_bucket_sizes =
-            <span class="kw">unsafe </span>{ Box::&lt;[u16; Record::NUM_S_BUCKETS]&gt;::new_zeroed().assume_init() };
         <span class="comment">// Rayon doesn't support iteration over custom types yet
-        </span>(u16::from(SBucket::ZERO)..=u16::from(SBucket::MAX))
+        </span><span class="kw">let </span>s_bucket_sizes = (u16::from(SBucket::ZERO)..=u16::from(SBucket::MAX))
             .into_par_iter()
             .map(SBucket::from)
-            .zip(s_bucket_sizes.par_iter_mut())
-            .for_each(|(s_bucket, s_bucket_size)| {
-                <span class="kw-2">*</span>s_bucket_size = <span class="self">self
-                    </span>.iter_s_bucket_records(s_bucket)
+            .map(|s_bucket| {
+                <span class="self">self</span>.iter_s_bucket_records(s_bucket)
                     .expect(<span class="string">"S-bucket guaranteed to be in range; qed"</span>)
-                    .count() <span class="kw">as </span>u16;
-            });
+                    .count() <span class="kw">as </span>u16
+            })
+            .collect::&lt;Box&lt;<span class="kw">_</span>&gt;&gt;();
 
-        s_bucket_sizes
+        <span class="macro">assert_eq!</span>(s_bucket_sizes.len(), Record::NUM_S_BUCKETS);
+        <span class="kw">let </span><span class="kw-2">mut </span>s_bucket_sizes = ManuallyDrop::new(s_bucket_sizes);
+        <span class="comment">// SAFETY: Original memory is not dropped, number of elements checked above
+        </span><span class="kw">unsafe </span>{ Box::from_raw(s_bucket_sizes.as_mut_ptr() <span class="kw">as </span><span class="kw-2">*mut </span>[u16; Record::NUM_S_BUCKETS]) }
     }
 
     <span class="doccomment">/// Creates an iterator of `(s_bucket, encoded_chunk_used, chunk_location)`, where `s_bucket` is

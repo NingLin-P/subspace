@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-farmer/src/single_disk_farm/farming.rs`."><title>farming.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-4e54bb2b497cc83f.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="subspace_farmer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (25f8d01fd 2024-01-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-0b2e2def73e61cbe.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../subspace_farmer/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-farmer/src/single_disk_farm/farming.rs`."><title>farming.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="subspace_farmer" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../subspace_farmer/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -391,285 +389,35 @@
 <a href="#389" id="389">389</a>
 <a href="#390" id="390">390</a>
 <a href="#391" id="391">391</a>
-<a href="#392" id="392">392</a>
-<a href="#393" id="393">393</a>
-<a href="#394" id="394">394</a>
-<a href="#395" id="395">395</a>
-<a href="#396" id="396">396</a>
-<a href="#397" id="397">397</a>
-<a href="#398" id="398">398</a>
-<a href="#399" id="399">399</a>
-<a href="#400" id="400">400</a>
-<a href="#401" id="401">401</a>
-<a href="#402" id="402">402</a>
-<a href="#403" id="403">403</a>
-<a href="#404" id="404">404</a>
-<a href="#405" id="405">405</a>
-<a href="#406" id="406">406</a>
-<a href="#407" id="407">407</a>
-<a href="#408" id="408">408</a>
-<a href="#409" id="409">409</a>
-<a href="#410" id="410">410</a>
-<a href="#411" id="411">411</a>
-<a href="#412" id="412">412</a>
-<a href="#413" id="413">413</a>
-<a href="#414" id="414">414</a>
-<a href="#415" id="415">415</a>
-<a href="#416" id="416">416</a>
-<a href="#417" id="417">417</a>
-<a href="#418" id="418">418</a>
-<a href="#419" id="419">419</a>
-<a href="#420" id="420">420</a>
-<a href="#421" id="421">421</a>
-<a href="#422" id="422">422</a>
-<a href="#423" id="423">423</a>
-<a href="#424" id="424">424</a>
-<a href="#425" id="425">425</a>
-<a href="#426" id="426">426</a>
-<a href="#427" id="427">427</a>
-<a href="#428" id="428">428</a>
-<a href="#429" id="429">429</a>
-<a href="#430" id="430">430</a>
-<a href="#431" id="431">431</a>
-<a href="#432" id="432">432</a>
-<a href="#433" id="433">433</a>
-<a href="#434" id="434">434</a>
-<a href="#435" id="435">435</a>
-<a href="#436" id="436">436</a>
-<a href="#437" id="437">437</a>
-<a href="#438" id="438">438</a>
-<a href="#439" id="439">439</a>
-<a href="#440" id="440">440</a>
-<a href="#441" id="441">441</a>
-<a href="#442" id="442">442</a>
-<a href="#443" id="443">443</a>
-<a href="#444" id="444">444</a>
-<a href="#445" id="445">445</a>
-<a href="#446" id="446">446</a>
-<a href="#447" id="447">447</a>
-<a href="#448" id="448">448</a>
-<a href="#449" id="449">449</a>
-<a href="#450" id="450">450</a>
-<a href="#451" id="451">451</a>
-<a href="#452" id="452">452</a>
-<a href="#453" id="453">453</a>
-<a href="#454" id="454">454</a>
-<a href="#455" id="455">455</a>
-<a href="#456" id="456">456</a>
-<a href="#457" id="457">457</a>
-<a href="#458" id="458">458</a>
-<a href="#459" id="459">459</a>
-<a href="#460" id="460">460</a>
-<a href="#461" id="461">461</a>
-<a href="#462" id="462">462</a>
-<a href="#463" id="463">463</a>
-<a href="#464" id="464">464</a>
-<a href="#465" id="465">465</a>
-<a href="#466" id="466">466</a>
-<a href="#467" id="467">467</a>
-<a href="#468" id="468">468</a>
-<a href="#469" id="469">469</a>
-<a href="#470" id="470">470</a>
-<a href="#471" id="471">471</a>
-<a href="#472" id="472">472</a>
-<a href="#473" id="473">473</a>
-<a href="#474" id="474">474</a>
-<a href="#475" id="475">475</a>
-<a href="#476" id="476">476</a>
-<a href="#477" id="477">477</a>
-<a href="#478" id="478">478</a>
-<a href="#479" id="479">479</a>
-<a href="#480" id="480">480</a>
-<a href="#481" id="481">481</a>
-<a href="#482" id="482">482</a>
-<a href="#483" id="483">483</a>
-<a href="#484" id="484">484</a>
-<a href="#485" id="485">485</a>
-<a href="#486" id="486">486</a>
-<a href="#487" id="487">487</a>
-<a href="#488" id="488">488</a>
-<a href="#489" id="489">489</a>
-<a href="#490" id="490">490</a>
-<a href="#491" id="491">491</a>
-<a href="#492" id="492">492</a>
-<a href="#493" id="493">493</a>
-<a href="#494" id="494">494</a>
-<a href="#495" id="495">495</a>
-<a href="#496" id="496">496</a>
-<a href="#497" id="497">497</a>
 </pre></div><pre class="rust"><code><span class="kw">pub mod </span>rayon_files;
 
-<span class="kw">use </span><span class="kw">crate</span>::node_client;
+<span class="kw">use </span><span class="kw">crate</span>::farm::{
+    AuditingDetails, FarmingError, FarmingNotification, ProvingDetails, ProvingResult,
+};
 <span class="kw">use </span><span class="kw">crate</span>::node_client::NodeClient;
 <span class="kw">use </span><span class="kw">crate</span>::single_disk_farm::Handlers;
-<span class="kw">use </span>async_lock::RwLock;
+<span class="kw">use </span>async_lock::{Mutex <span class="kw">as </span>AsyncMutex, RwLock <span class="kw">as </span>AsyncRwLock};
 <span class="kw">use </span>futures::channel::mpsc;
 <span class="kw">use </span>futures::StreamExt;
-<span class="kw">use </span>parity_scale_codec::{Decode, Encode, Error, Input, Output};
 <span class="kw">use </span>parking_lot::Mutex;
-<span class="kw">use </span>rayon::ThreadPoolBuildError;
+<span class="kw">use </span>rayon::ThreadPool;
+<span class="kw">use </span>std::collections::HashSet;
 <span class="kw">use </span>std::sync::Arc;
-<span class="kw">use </span>std::time::{Duration, Instant};
-<span class="kw">use </span>std::{fmt, io};
+<span class="kw">use </span>std::time::Instant;
 <span class="kw">use </span>subspace_core_primitives::crypto::kzg::Kzg;
 <span class="kw">use </span>subspace_core_primitives::{PosSeed, PublicKey, SectorIndex, Solution, SolutionRange};
 <span class="kw">use </span>subspace_erasure_coding::ErasureCoding;
 <span class="kw">use </span>subspace_farmer_components::auditing::{audit_plot_sync, AuditingError};
 <span class="kw">use </span>subspace_farmer_components::proving::{ProvableSolutions, ProvingError};
+<span class="kw">use </span>subspace_farmer_components::reading::ReadSectorRecordChunksMode;
 <span class="kw">use </span>subspace_farmer_components::sector::SectorMetadataChecksummed;
 <span class="kw">use </span>subspace_farmer_components::ReadAtSync;
 <span class="kw">use </span>subspace_proof_of_space::{Table, TableGenerator};
 <span class="kw">use </span>subspace_rpc_primitives::{SlotInfo, SolutionResponse};
-<span class="kw">use </span>thiserror::Error;
-<span class="kw">use </span>tracing::{debug, error, info, trace, warn};
+<span class="kw">use </span>tracing::{debug, error, info, trace, warn, Span};
 
-<span class="doccomment">/// Auditing details
-</span><span class="attr">#[derive(Debug, Copy, Clone, Encode, Decode)]
-</span><span class="kw">pub struct </span>AuditingDetails {
-    <span class="doccomment">/// Number of sectors that were audited
-    </span><span class="kw">pub </span>sectors_count: SectorIndex,
-    <span class="doccomment">/// Audit duration
-    </span><span class="kw">pub </span>time: Duration,
-}
-
-<span class="doccomment">/// Result of the proving
-</span><span class="attr">#[derive(Debug, Copy, Clone, Encode, Decode)]
-</span><span class="kw">pub enum </span>ProvingResult {
-    <span class="doccomment">/// Proved successfully and accepted by the node
-    </span>Success,
-    <span class="doccomment">/// Proving took too long
-    </span>Timeout,
-    <span class="doccomment">/// Managed to prove within time limit, but node rejected solution, likely due to timeout on its
-    /// end
-    </span>Rejected,
-}
-
-<span class="kw">impl </span>fmt::Display <span class="kw">for </span>ProvingResult {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
-        f.write_str(<span class="kw">match </span><span class="self">self </span>{
-            ProvingResult::Success =&gt; <span class="string">"Success"</span>,
-            ProvingResult::Timeout =&gt; <span class="string">"Timeout"</span>,
-            ProvingResult::Rejected =&gt; <span class="string">"Rejected"</span>,
-        })
-    }
-}
-
-<span class="doccomment">/// Proving details
-</span><span class="attr">#[derive(Debug, Copy, Clone, Encode, Decode)]
-</span><span class="kw">pub struct </span>ProvingDetails {
-    <span class="doccomment">/// Whether proving ended up being successful
-    </span><span class="kw">pub </span>result: ProvingResult,
-    <span class="doccomment">/// Audit duration
-    </span><span class="kw">pub </span>time: Duration,
-}
-
-<span class="doccomment">/// Various farming notifications
-</span><span class="attr">#[derive(Debug, Clone, Encode, Decode)]
-</span><span class="kw">pub enum </span>FarmingNotification {
-    <span class="doccomment">/// Auditing
-    </span>Auditing(AuditingDetails),
-    <span class="doccomment">/// Proving
-    </span>Proving(ProvingDetails),
-    <span class="doccomment">/// Non-fatal farming error
-    </span>NonFatalError(Arc&lt;FarmingError&gt;),
-}
-
-<span class="doccomment">/// Special decoded farming error
-</span><span class="attr">#[derive(Debug, Encode, Decode)]
-</span><span class="kw">pub struct </span>DecodedFarmingError {
-    <span class="doccomment">/// String representation of an error
-    </span>error: String,
-    <span class="doccomment">/// Whether error is fatal
-    </span>is_fatal: bool,
-}
-
-<span class="kw">impl </span>fmt::Display <span class="kw">for </span>DecodedFarmingError {
-    <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; fmt::Result {
-        <span class="self">self</span>.error.fmt(f)
-    }
-}
-
-<span class="doccomment">/// Errors that happen during farming
-</span><span class="attr">#[derive(Debug, Error)]
-</span><span class="kw">pub enum </span>FarmingError {
-    <span class="doccomment">/// Failed to subscribe to slot info notifications
-    </span><span class="attr">#[error(<span class="string">"Failed to subscribe to slot info notifications: {error}"</span>)]
-    </span>FailedToSubscribeSlotInfo {
-        <span class="doccomment">/// Lower-level error
-        </span>error: node_client::Error,
-    },
-    <span class="doccomment">/// Failed to retrieve farmer info
-    </span><span class="attr">#[error(<span class="string">"Failed to retrieve farmer info: {error}"</span>)]
-    </span>FailedToGetFarmerInfo {
-        <span class="doccomment">/// Lower-level error
-        </span>error: node_client::Error,
-    },
-    <span class="doccomment">/// Slot info notification stream ended
-    </span><span class="attr">#[error(<span class="string">"Slot info notification stream ended"</span>)]
-    </span>SlotNotificationStreamEnded,
-    <span class="doccomment">/// Low-level auditing error
-    </span><span class="attr">#[error(<span class="string">"Low-level auditing error: {0}"</span>)]
-    </span>LowLevelAuditing(<span class="attr">#[from] </span>AuditingError),
-    <span class="doccomment">/// Low-level proving error
-    </span><span class="attr">#[error(<span class="string">"Low-level proving error: {0}"</span>)]
-    </span>LowLevelProving(<span class="attr">#[from] </span>ProvingError),
-    <span class="doccomment">/// I/O error occurred
-    </span><span class="attr">#[error(<span class="string">"I/O error: {0}"</span>)]
-    </span>Io(<span class="attr">#[from] </span>io::Error),
-    <span class="doccomment">/// Failed to create thread pool
-    </span><span class="attr">#[error(<span class="string">"Failed to create thread pool: {0}"</span>)]
-    </span>FailedToCreateThreadPool(<span class="attr">#[from] </span>ThreadPoolBuildError),
-    <span class="doccomment">/// Decoded farming error
-    </span><span class="attr">#[error(<span class="string">"Decoded farming error {0}"</span>)]
-    </span>Decoded(DecodedFarmingError),
-}
-
-<span class="kw">impl </span>Encode <span class="kw">for </span>FarmingError {
-    <span class="kw">fn </span>encode_to&lt;O: Output + <span class="question-mark">?</span>Sized&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, dest: <span class="kw-2">&amp;mut </span>O) {
-        <span class="kw">let </span>error = DecodedFarmingError {
-            error: <span class="self">self</span>.to_string(),
-            is_fatal: <span class="self">self</span>.is_fatal(),
-        };
-
-        error.encode_to(dest)
-    }
-}
-
-<span class="kw">impl </span>Decode <span class="kw">for </span>FarmingError {
-    <span class="kw">fn </span>decode&lt;I: Input&gt;(input: <span class="kw-2">&amp;mut </span>I) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, Error&gt; {
-        DecodedFarmingError::decode(input).map(FarmingError::Decoded)
-    }
-}
-
-<span class="kw">impl </span>FarmingError {
-    <span class="doccomment">/// String variant of the error, primarily for monitoring purposes
-    </span><span class="kw">pub fn </span>str_variant(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>str {
-        <span class="kw">match </span><span class="self">self </span>{
-            FarmingError::FailedToSubscribeSlotInfo { .. } =&gt; <span class="string">"FailedToSubscribeSlotInfo"</span>,
-            FarmingError::FailedToGetFarmerInfo { .. } =&gt; <span class="string">"FailedToGetFarmerInfo"</span>,
-            FarmingError::LowLevelAuditing(<span class="kw">_</span>) =&gt; <span class="string">"LowLevelAuditing"</span>,
-            FarmingError::LowLevelProving(<span class="kw">_</span>) =&gt; <span class="string">"LowLevelProving"</span>,
-            FarmingError::Io(<span class="kw">_</span>) =&gt; <span class="string">"Io"</span>,
-            FarmingError::FailedToCreateThreadPool(<span class="kw">_</span>) =&gt; <span class="string">"FailedToCreateThreadPool"</span>,
-            FarmingError::Decoded(<span class="kw">_</span>) =&gt; <span class="string">"Decoded"</span>,
-            FarmingError::SlotNotificationStreamEnded =&gt; <span class="string">"SlotNotificationStreamEnded"</span>,
-        }
-    }
-
-    <span class="doccomment">/// Whether this error is fatal and makes farm unusable
-    </span><span class="kw">pub fn </span>is_fatal(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-        <span class="kw">match </span><span class="self">self </span>{
-            FarmingError::FailedToSubscribeSlotInfo { .. } =&gt; <span class="bool-val">true</span>,
-            FarmingError::FailedToGetFarmerInfo { .. } =&gt; <span class="bool-val">true</span>,
-            FarmingError::LowLevelAuditing(<span class="kw">_</span>) =&gt; <span class="bool-val">true</span>,
-            FarmingError::LowLevelProving(error) =&gt; error.is_fatal(),
-            FarmingError::Io(<span class="kw">_</span>) =&gt; <span class="bool-val">true</span>,
-            FarmingError::FailedToCreateThreadPool(<span class="kw">_</span>) =&gt; <span class="bool-val">true</span>,
-            FarmingError::Decoded(error) =&gt; error.is_fatal,
-            FarmingError::SlotNotificationStreamEnded =&gt; <span class="bool-val">true</span>,
-        }
-    }
-}
+<span class="doccomment">/// How many non-fatal errors should happen in a row before farm is considered non-operational
+</span><span class="kw">const </span>NON_FATAL_ERROR_LIMIT: usize = <span class="number">10</span>;
 
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">async fn </span>slot_notification_forwarder&lt;NC&gt;(
     node_client: <span class="kw-2">&amp;</span>NC,
@@ -702,7 +450,7 @@
 
 <span class="doccomment">/// Plot audit options
 </span><span class="attr">#[derive(Debug)]
-</span><span class="kw">pub struct </span>PlotAuditOptions&lt;<span class="lifetime">'a</span>, PosTable&gt;
+</span><span class="kw">pub struct </span>PlotAuditOptions&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, PosTable&gt;
 <span class="kw">where
     </span>PosTable: Table,
 {
@@ -720,21 +468,24 @@
     </span><span class="kw">pub </span>erasure_coding: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ErasureCoding,
     <span class="doccomment">/// Optional sector that is currently being modified (for example replotted) and should not be
     /// audited
-    </span><span class="kw">pub </span>maybe_sector_being_modified: <span class="prelude-ty">Option</span>&lt;SectorIndex&gt;,
+    </span><span class="kw">pub </span>sectors_being_modified: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>HashSet&lt;SectorIndex&gt;,
+    <span class="doccomment">/// Mode of reading chunks during proving
+    </span><span class="kw">pub </span>read_sector_record_chunks_mode: ReadSectorRecordChunksMode,
     <span class="doccomment">/// Proof of space table generator
     </span><span class="kw">pub </span>table_generator: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Mutex&lt;PosTable::Generator&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, PosTable&gt; Clone <span class="kw">for </span>PlotAuditOptions&lt;<span class="lifetime">'a</span>, PosTable&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, PosTable&gt; Clone <span class="kw">for </span>PlotAuditOptions&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, PosTable&gt;
 <span class="kw">where
     </span>PosTable: Table,
 {
-    <span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+    <span class="attr">#[inline]
+    </span><span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
         <span class="kw-2">*</span><span class="self">self
     </span>}
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, PosTable&gt; Copy <span class="kw">for </span>PlotAuditOptions&lt;<span class="lifetime">'a</span>, PosTable&gt; <span class="kw">where </span>PosTable: Table {}
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, PosTable&gt; Copy <span class="kw">for </span>PlotAuditOptions&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, PosTable&gt; <span class="kw">where </span>PosTable: Table {}
 
 <span class="doccomment">/// Plot auditing implementation
 </span><span class="kw">pub struct </span>PlotAudit&lt;Plot&gt;(Plot)
@@ -750,9 +501,9 @@
         <span class="self">Self</span>(plot)
     }
 
-    <span class="kw">pub fn </span>audit&lt;PosTable&gt;(
+    <span class="kw">pub fn </span>audit&lt;<span class="lifetime">'b</span>, PosTable&gt;(
         <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>,
-        options: PlotAuditOptions&lt;<span class="lifetime">'a</span>, PosTable&gt;,
+        options: PlotAuditOptions&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, PosTable&gt;,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;
         Vec&lt;(
             SectorIndex,
@@ -770,7 +521,8 @@
             sectors_metadata,
             kzg,
             erasure_coding,
-            maybe_sector_being_modified,
+            sectors_being_modified,
+            read_sector_record_chunks_mode: mode,
             table_generator,
         } = options;
 
@@ -780,7 +532,7 @@
             slot_info.voting_solution_range,
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>,
             sectors_metadata,
-            maybe_sector_being_modified,
+            sectors_being_modified,
         )<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(audit_results
@@ -792,6 +544,7 @@
                     reward_address,
                     kzg,
                     erasure_coding,
+                    mode,
                     |seed: <span class="kw-2">&amp;</span>PosSeed| table_generator.lock().generate_parallel(seed),
                 );
 
@@ -823,12 +576,15 @@
     <span class="kw">pub</span>(<span class="kw">super</span>) reward_address: PublicKey,
     <span class="kw">pub</span>(<span class="kw">super</span>) node_client: NC,
     <span class="kw">pub</span>(<span class="kw">super</span>) plot_audit: PlotAudit,
-    <span class="kw">pub</span>(<span class="kw">super</span>) sectors_metadata: Arc&lt;RwLock&lt;Vec&lt;SectorMetadataChecksummed&gt;&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">super</span>) sectors_metadata: Arc&lt;AsyncRwLock&lt;Vec&lt;SectorMetadataChecksummed&gt;&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">super</span>) kzg: Kzg,
     <span class="kw">pub</span>(<span class="kw">super</span>) erasure_coding: ErasureCoding,
     <span class="kw">pub</span>(<span class="kw">super</span>) handlers: Arc&lt;Handlers&gt;,
-    <span class="kw">pub</span>(<span class="kw">super</span>) modifying_sector_index: Arc&lt;RwLock&lt;<span class="prelude-ty">Option</span>&lt;SectorIndex&gt;&gt;&gt;,
+    <span class="kw">pub</span>(<span class="kw">super</span>) sectors_being_modified: Arc&lt;AsyncRwLock&lt;HashSet&lt;SectorIndex&gt;&gt;&gt;,
     <span class="kw">pub</span>(<span class="kw">super</span>) slot_info_notifications: mpsc::Receiver&lt;SlotInfo&gt;,
+    <span class="kw">pub</span>(<span class="kw">super</span>) thread_pool: ThreadPool,
+    <span class="kw">pub</span>(<span class="kw">super</span>) read_sector_record_chunks_mode: ReadSectorRecordChunksMode,
+    <span class="kw">pub</span>(<span class="kw">super</span>) global_mutex: Arc&lt;AsyncMutex&lt;()&gt;&gt;,
 }
 
 <span class="doccomment">/// Starts farming process.
@@ -852,8 +608,11 @@
         kzg,
         erasure_coding,
         handlers,
-        modifying_sector_index,
+        sectors_being_modified,
         <span class="kw-2">mut </span>slot_info_notifications,
+        thread_pool,
+        read_sector_record_chunks_mode,
+        global_mutex,
     } = farming_options;
 
     <span class="kw">let </span>farmer_app_info = node_client
@@ -865,28 +624,39 @@
     </span><span class="kw">let </span>farming_timeout = farmer_app_info.farming_timeout;
 
     <span class="kw">let </span>table_generator = Arc::new(Mutex::new(PosTable::generator()));
+    <span class="kw">let </span>span = Span::current();
+
+    <span class="kw">let </span><span class="kw-2">mut </span>non_fatal_errors = <span class="number">0</span>;
 
     <span class="kw">while let </span><span class="prelude-val">Some</span>(slot_info) = slot_info_notifications.next().<span class="kw">await </span>{
+        <span class="kw">let </span>slot = slot_info.slot_number;
+
+        <span class="comment">// Take mutex briefly to make sure farming is allowed right now
+        </span>global_mutex.lock().<span class="kw">await</span>;
+
         <span class="kw">let </span>result: <span class="prelude-ty">Result</span>&lt;(), FarmingError&gt; = <span class="kw">try </span>{
             <span class="kw">let </span>start = Instant::now();
-            <span class="kw">let </span>slot = slot_info.slot_number;
             <span class="kw">let </span>sectors_metadata = sectors_metadata.read().<span class="kw">await</span>;
 
             <span class="macro">debug!</span>(%slot, sector_count = %sectors_metadata.len(), <span class="string">"Reading sectors"</span>);
 
             <span class="kw">let </span><span class="kw-2">mut </span>sectors_solutions = {
-                <span class="kw">let </span>modifying_sector_guard = modifying_sector_index.read().<span class="kw">await</span>;
-                <span class="kw">let </span>maybe_sector_being_modified = modifying_sector_guard.as_ref().copied();
+                <span class="kw">let </span>sectors_being_modified = <span class="kw-2">&amp;*</span>sectors_being_modified.read().<span class="kw">await</span>;
 
-                plot_audit.audit(PlotAuditOptions::&lt;PosTable&gt; {
-                    public_key: <span class="kw-2">&amp;</span>public_key,
-                    reward_address: <span class="kw-2">&amp;</span>reward_address,
-                    slot_info,
-                    sectors_metadata: <span class="kw-2">&amp;</span>sectors_metadata,
-                    kzg: <span class="kw-2">&amp;</span>kzg,
-                    erasure_coding: <span class="kw-2">&amp;</span>erasure_coding,
-                    maybe_sector_being_modified,
-                    table_generator: <span class="kw-2">&amp;</span>table_generator,
+                thread_pool.install(|| {
+                    <span class="kw">let </span>_span_guard = span.enter();
+
+                    plot_audit.audit(PlotAuditOptions::&lt;PosTable&gt; {
+                        public_key: <span class="kw-2">&amp;</span>public_key,
+                        reward_address: <span class="kw-2">&amp;</span>reward_address,
+                        slot_info,
+                        sectors_metadata: <span class="kw-2">&amp;</span>sectors_metadata,
+                        kzg: <span class="kw-2">&amp;</span>kzg,
+                        erasure_coding: <span class="kw-2">&amp;</span>erasure_coding,
+                        sectors_being_modified,
+                        read_sector_record_chunks_mode,
+                        table_generator: <span class="kw-2">&amp;</span>table_generator,
+                    })
                 })<span class="question-mark">?
             </span>};
 
@@ -906,12 +676,20 @@
                     time: start.elapsed(),
                 }));
 
-            <span class="lifetime">'solutions_processing</span>: <span class="kw">for </span>(sector_index, sector_solutions) <span class="kw">in </span>sectors_solutions {
+            <span class="comment">// Take mutex and hold until proving end to make sure nothing else major happens at the
+            // same time
+            </span><span class="kw">let </span>_proving_guard = global_mutex.lock().<span class="kw">await</span>;
+
+            <span class="lifetime">'solutions_processing</span>: <span class="kw">for </span>(sector_index, <span class="kw-2">mut </span>sector_solutions) <span class="kw">in </span>sectors_solutions {
                 <span class="kw">if </span>sector_solutions.is_empty() {
                     <span class="kw">continue</span>;
                 }
                 <span class="kw">let </span><span class="kw-2">mut </span>start = Instant::now();
-                <span class="kw">for </span>maybe_solution <span class="kw">in </span>sector_solutions {
+                <span class="kw">while let </span><span class="prelude-val">Some</span>(maybe_solution) = thread_pool.install(|| {
+                    <span class="kw">let </span>_span_guard = span.enter();
+
+                    sector_solutions.next()
+                }) {
                     <span class="kw">let </span>solution = <span class="kw">match </span>maybe_solution {
                         <span class="prelude-val">Ok</span>(solution) =&gt; solution,
                         <span class="prelude-val">Err</span>(error) =&gt; {
@@ -979,16 +757,24 @@
         <span class="kw">if let </span><span class="prelude-val">Err</span>(error) = result {
             <span class="kw">if </span>error.is_fatal() {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(error);
-            } <span class="kw">else </span>{
-                <span class="macro">warn!</span>(
-                    %error,
-                    <span class="string">"Non-fatal farming error"
-                </span>);
-
-                handlers
-                    .farming_notification
-                    .call_simple(<span class="kw-2">&amp;</span>FarmingNotification::NonFatalError(Arc::new(error)));
             }
+
+            non_fatal_errors += <span class="number">1</span>;
+
+            <span class="kw">if </span>non_fatal_errors &gt;= NON_FATAL_ERROR_LIMIT {
+                <span class="kw">return </span><span class="prelude-val">Err</span>(error);
+            }
+
+            <span class="macro">warn!</span>(
+                %error,
+                <span class="string">"Non-fatal farming error"
+            </span>);
+
+            handlers
+                .farming_notification
+                .call_simple(<span class="kw-2">&amp;</span>FarmingNotification::NonFatalError(Arc::new(error)));
+        } <span class="kw">else </span>{
+            non_fatal_errors = <span class="number">0</span>;
         }
     }
 

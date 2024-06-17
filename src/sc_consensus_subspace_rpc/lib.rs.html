@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sc-consensus-subspace-rpc/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-4e54bb2b497cc83f.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sc_consensus_subspace_rpc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (25f8d01fd 2024-01-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0b2e2def73e61cbe.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../sc_consensus_subspace_rpc/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sc-consensus-subspace-rpc/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sc_consensus_subspace_rpc" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../sc_consensus_subspace_rpc/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -785,6 +783,22 @@
 <a href="#783" id="783">783</a>
 <a href="#784" id="784">784</a>
 <a href="#785" id="785">785</a>
+<a href="#786" id="786">786</a>
+<a href="#787" id="787">787</a>
+<a href="#788" id="788">788</a>
+<a href="#789" id="789">789</a>
+<a href="#790" id="790">790</a>
+<a href="#791" id="791">791</a>
+<a href="#792" id="792">792</a>
+<a href="#793" id="793">793</a>
+<a href="#794" id="794">794</a>
+<a href="#795" id="795">795</a>
+<a href="#796" id="796">796</a>
+<a href="#797" id="797">797</a>
+<a href="#798" id="798">798</a>
+<a href="#799" id="799">799</a>
+<a href="#800" id="800">800</a>
+<a href="#801" id="801">801</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2020-2021 Parity Technologies (UK) Ltd.
 // Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
@@ -808,11 +822,10 @@
 
 </span><span class="kw">use </span>futures::channel::mpsc;
 <span class="kw">use </span>futures::{future, FutureExt, StreamExt};
-<span class="kw">use </span>jsonrpsee::core::{async_trait, Error <span class="kw">as </span>JsonRpseeError, RpcResult};
+<span class="kw">use </span>jsonrpsee::core::async_trait;
 <span class="kw">use </span>jsonrpsee::proc_macros::rpc;
-<span class="kw">use </span>jsonrpsee::types::{SubscriptionEmptyError, SubscriptionResult};
-<span class="kw">use </span>jsonrpsee::SubscriptionSink;
-<span class="kw">use </span>lru::LruCache;
+<span class="kw">use </span>jsonrpsee::types::{ErrorObject, ErrorObjectOwned};
+<span class="kw">use </span>jsonrpsee::PendingSubscriptionSink;
 <span class="kw">use </span>parity_scale_codec::{Decode, Encode};
 <span class="kw">use </span>parking_lot::Mutex;
 <span class="kw">use </span>sc_client_api::{AuxStore, BlockBackend};
@@ -823,8 +836,11 @@
 <span class="kw">use </span>sc_consensus_subspace::slot_worker::{
     NewSlotNotification, RewardSigningNotification, SubspaceSyncOracle,
 };
-<span class="kw">use </span>sc_rpc::{DenyUnsafe, SubscriptionTaskExecutor};
+<span class="kw">use </span>sc_rpc::utils::pipe_from_stream;
+<span class="kw">use </span>sc_rpc::SubscriptionTaskExecutor;
+<span class="kw">use </span>sc_rpc_api::{DenyUnsafe, UnsafeRpcError};
 <span class="kw">use </span>sc_utils::mpsc::TracingUnboundedSender;
+<span class="kw">use </span>schnellru::{ByLength, LruMap};
 <span class="kw">use </span>sp_api::{ApiError, ProvideRuntimeApi};
 <span class="kw">use </span>sp_blockchain::HeaderBackend;
 <span class="kw">use </span>sp_consensus::SyncOracle;
@@ -838,14 +854,13 @@
 <span class="kw">use </span>std::collections::hash_map::Entry;
 <span class="kw">use </span>std::collections::HashMap;
 <span class="kw">use </span>std::marker::PhantomData;
-<span class="kw">use </span>std::num::NonZeroUsize;
 <span class="kw">use </span>std::sync::atomic::{AtomicU64, Ordering};
 <span class="kw">use </span>std::sync::{Arc, Weak};
 <span class="kw">use </span>std::time::Duration;
 <span class="kw">use </span>subspace_archiving::archiver::NewArchivedSegment;
 <span class="kw">use </span>subspace_core_primitives::crypto::kzg::Kzg;
 <span class="kw">use </span>subspace_core_primitives::{
-    BlockHash, HistorySize, PieceIndex, PublicKey, SegmentHeader, SegmentIndex, SlotNumber,
+    BlockHash, HistorySize, Piece, PieceIndex, PublicKey, SegmentHeader, SegmentIndex, SlotNumber,
     Solution,
 };
 <span class="kw">use </span>subspace_farmer_components::FarmerProtocolInfo;
@@ -856,20 +871,42 @@
 };
 <span class="kw">use </span>tracing::{debug, error, warn};
 
+<span class="kw">const </span>SUBSPACE_ERROR: i32 = <span class="number">9000</span>;
 <span class="doccomment">/// This is essentially equal to expected number of votes per block, one more is added implicitly by
 /// the fact that channel sender exists
 </span><span class="kw">const </span>SOLUTION_SENDER_CHANNEL_CAPACITY: usize = <span class="number">9</span>;
 <span class="kw">const </span>REWARD_SIGNING_TIMEOUT: Duration = Duration::from_millis(<span class="number">500</span>);
+
+<span class="comment">// TODO: More specific errors instead of `StringError`
+</span><span class="doccomment">/// Top-level error type for the RPC handler.
+</span><span class="attr">#[derive(Debug, thiserror::Error)]
+</span><span class="kw">pub enum </span>Error {
+    <span class="doccomment">/// Errors that can be formatted as a String
+    </span><span class="attr">#[error(<span class="string">"{0}"</span>)]
+    </span>StringError(String),
+    <span class="doccomment">/// Call to an unsafe RPC was denied.
+    </span><span class="attr">#[error(transparent)]
+    </span>UnsafeRpcCalled(<span class="attr">#[from] </span>UnsafeRpcError),
+}
+
+<span class="kw">impl </span>From&lt;Error&gt; <span class="kw">for </span>ErrorObjectOwned {
+    <span class="kw">fn </span>from(error: Error) -&gt; <span class="self">Self </span>{
+        <span class="kw">match </span>error {
+            Error::StringError(e) =&gt; ErrorObject::owned(SUBSPACE_ERROR + <span class="number">1</span>, e, <span class="prelude-val">None</span>::&lt;()&gt;),
+            Error::UnsafeRpcCalled(e) =&gt; e.into(),
+        }
+    }
+}
 
 <span class="doccomment">/// Provides rpc methods for interacting with Subspace.
 </span><span class="attr">#[rpc(client, server)]
 </span><span class="kw">pub trait </span>SubspaceRpcApi {
     <span class="doccomment">/// Get metadata necessary for farmer operation
     </span><span class="attr">#[method(name = <span class="string">"subspace_getFarmerAppInfo"</span>)]
-    </span><span class="kw">fn </span>get_farmer_app_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RpcResult&lt;FarmerAppInfo&gt;;
+    </span><span class="kw">fn </span>get_farmer_app_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;FarmerAppInfo, Error&gt;;
 
     <span class="attr">#[method(name = <span class="string">"subspace_submitSolutionResponse"</span>)]
-    </span><span class="kw">fn </span>submit_solution_response(<span class="kw-2">&amp;</span><span class="self">self</span>, solution_response: SolutionResponse) -&gt; RpcResult&lt;()&gt;;
+    </span><span class="kw">fn </span>submit_solution_response(<span class="kw-2">&amp;</span><span class="self">self</span>, solution_response: SolutionResponse) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt;;
 
     <span class="doccomment">/// Slot info subscription
     </span><span class="attr">#[subscription(
@@ -888,7 +925,10 @@
     </span><span class="kw">fn </span>subscribe_reward_signing(<span class="kw-2">&amp;</span><span class="self">self</span>);
 
     <span class="attr">#[method(name = <span class="string">"subspace_submitRewardSignature"</span>)]
-    </span><span class="kw">fn </span>submit_reward_signature(<span class="kw-2">&amp;</span><span class="self">self</span>, reward_signature: RewardSignatureResponse) -&gt; RpcResult&lt;()&gt;;
+    </span><span class="kw">fn </span>submit_reward_signature(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        reward_signature: RewardSignatureResponse,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt;;
 
     <span class="doccomment">/// Archived segment header subscription
     </span><span class="attr">#[subscription(
@@ -902,19 +942,19 @@
     </span><span class="kw">async fn </span>segment_headers(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         segment_indexes: Vec&lt;SegmentIndex&gt;,
-    ) -&gt; RpcResult&lt;Vec&lt;<span class="prelude-ty">Option</span>&lt;SegmentHeader&gt;&gt;&gt;;
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="prelude-ty">Option</span>&lt;SegmentHeader&gt;&gt;, Error&gt;;
 
     <span class="attr">#[method(name = <span class="string">"subspace_piece"</span>, blocking)]
-    </span><span class="kw">fn </span>piece(<span class="kw-2">&amp;</span><span class="self">self</span>, piece_index: PieceIndex) -&gt; RpcResult&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;&gt;;
+    </span><span class="kw">fn </span>piece(<span class="kw-2">&amp;</span><span class="self">self</span>, piece_index: PieceIndex) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Piece&gt;, Error&gt;;
 
     <span class="attr">#[method(name = <span class="string">"subspace_acknowledgeArchivedSegmentHeader"</span>)]
     </span><span class="kw">async fn </span>acknowledge_archived_segment_header(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         segment_index: SegmentIndex,
-    ) -&gt; RpcResult&lt;()&gt;;
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt;;
 
     <span class="attr">#[method(name = <span class="string">"subspace_lastSegmentHeaders"</span>)]
-    </span><span class="kw">async fn </span>last_segment_headers(<span class="kw-2">&amp;</span><span class="self">self</span>, limit: u64) -&gt; RpcResult&lt;Vec&lt;<span class="prelude-ty">Option</span>&lt;SegmentHeader&gt;&gt;&gt;;
+    </span><span class="kw">async fn </span>last_segment_headers(<span class="kw-2">&amp;</span><span class="self">self</span>, limit: u64) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="prelude-ty">Option</span>&lt;SegmentHeader&gt;&gt;, Error&gt;;
 }
 
 <span class="attr">#[derive(Default)]
@@ -991,7 +1031,7 @@
     archived_segment_notification_stream: SubspaceNotificationStream&lt;ArchivedSegmentNotification&gt;,
     <span class="attr">#[allow(clippy::type_complexity)]
     </span>solution_response_senders:
-        Arc&lt;Mutex&lt;LruCache&lt;SlotNumber, mpsc::Sender&lt;Solution&lt;PublicKey, PublicKey&gt;&gt;&gt;&gt;&gt;,
+        Arc&lt;Mutex&lt;LruMap&lt;SlotNumber, mpsc::Sender&lt;Solution&lt;PublicKey, PublicKey&gt;&gt;&gt;&gt;&gt;,
     reward_signature_senders: Arc&lt;Mutex&lt;BlockSignatureSenders&gt;&gt;,
     dsn_bootstrap_nodes: Vec&lt;Multiaddr&gt;,
     segment_headers_store: SegmentHeadersStore&lt;AS&gt;,
@@ -1038,8 +1078,8 @@
         <span class="kw">let </span>block_authoring_delay = u64::from(chain_constants.block_authoring_delay());
         <span class="kw">let </span>block_authoring_delay = usize::try_from(block_authoring_delay)
             .expect(<span class="string">"Block authoring delay will never exceed usize on any platform; qed"</span>);
-        <span class="kw">let </span>solution_response_senders_capacity =
-            NonZeroUsize::try_from(block_authoring_delay).unwrap_or(NonZeroUsize::MIN);
+        <span class="kw">let </span>solution_response_senders_capacity = u32::try_from(block_authoring_delay)
+            .expect(<span class="string">"Always a tiny constant in the protocol; qed"</span>);
 
         <span class="prelude-val">Ok</span>(<span class="self">Self </span>{
             client: config.client,
@@ -1047,9 +1087,9 @@
             new_slot_notification_stream: config.new_slot_notification_stream,
             reward_signing_notification_stream: config.reward_signing_notification_stream,
             archived_segment_notification_stream: config.archived_segment_notification_stream,
-            solution_response_senders: Arc::new(Mutex::new(LruCache::new(
+            solution_response_senders: Arc::new(Mutex::new(LruMap::new(ByLength::new(
                 solution_response_senders_capacity,
-            ))),
+            )))),
             reward_signature_senders: Arc::default(),
             dsn_bootstrap_nodes: config.dsn_bootstrap_nodes,
             segment_headers_store: config.segment_headers_store,
@@ -1081,7 +1121,7 @@
     SO: SyncOracle + Send + Sync + Clone + <span class="lifetime">'static</span>,
     AS: AuxStore + Send + Sync + <span class="lifetime">'static</span>,
 {
-    <span class="kw">fn </span>get_farmer_app_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RpcResult&lt;FarmerAppInfo&gt; {
+    <span class="kw">fn </span>get_farmer_app_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;FarmerAppInfo, Error&gt; {
         <span class="kw">let </span>last_segment_index = <span class="self">self
             </span>.segment_headers_store
             .max_segment_index()
@@ -1111,11 +1151,11 @@
 
         farmer_app_info.map_err(|error| {
             <span class="macro">error!</span>(<span class="string">"Failed to get data from runtime API: {}"</span>, error);
-            JsonRpseeError::Custom(<span class="string">"Internal error"</span>.to_string())
+            Error::StringError(<span class="string">"Internal error"</span>.to_string())
         })
     }
 
-    <span class="kw">fn </span>submit_solution_response(<span class="kw-2">&amp;</span><span class="self">self</span>, solution_response: SolutionResponse) -&gt; RpcResult&lt;()&gt; {
+    <span class="kw">fn </span>submit_solution_response(<span class="kw-2">&amp;</span><span class="self">self</span>, solution_response: SolutionResponse) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="self">self</span>.deny_unsafe.check_if_safe()<span class="question-mark">?</span>;
 
         <span class="kw">let </span>slot = solution_response.slot_number;
@@ -1132,13 +1172,13 @@
                 <span class="string">"Solution was ignored, likely because farmer was too slow"
             </span>);
 
-            <span class="kw">return </span><span class="prelude-val">Err</span>(JsonRpseeError::Custom(<span class="string">"Solution was ignored"</span>.to_string()));
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::StringError(<span class="string">"Solution was ignored"</span>.to_string()));
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn </span>subscribe_slot_info(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut </span>sink: SubscriptionSink) -&gt; SubscriptionResult {
+    <span class="kw">fn </span>subscribe_slot_info(<span class="kw-2">&amp;</span><span class="self">self</span>, pending: PendingSubscriptionSink) {
         <span class="kw">let </span>executor = <span class="self">self</span>.subscription_executor.clone();
         <span class="kw">let </span>solution_response_senders = <span class="self">self</span>.solution_response_senders.clone();
         <span class="kw">let </span>allow_solutions = <span class="self">self</span>.deny_unsafe.check_if_safe().is_ok();
@@ -1160,7 +1200,7 @@
                     <span class="kw">let </span>(response_sender, <span class="kw-2">mut </span>response_receiver) =
                         mpsc::channel(SOLUTION_SENDER_CHANNEL_CAPACITY);
 
-                    solution_response_senders.push(slot_number, response_sender);
+                    solution_response_senders.insert(slot_number, response_sender);
 
                     <span class="comment">// Wait for solutions and transform proposed proof of space solutions
                     // into data structure `sc-consensus-subspace` expects
@@ -1225,23 +1265,18 @@
             .subscribe()
             .map(handle_slot_notification);
 
-        <span class="kw">let </span>fut = <span class="kw">async move </span>{
-            sink.pipe_from_stream(stream).<span class="kw">await</span>;
-        };
-
         <span class="self">self</span>.subscription_executor.spawn(
             <span class="string">"subspace-slot-info-subscription"</span>,
             <span class="prelude-val">Some</span>(<span class="string">"rpc"</span>),
-            fut.boxed(),
+            pipe_from_stream(pending, stream).boxed(),
         );
-
-        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn </span>subscribe_reward_signing(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut </span>sink: SubscriptionSink) -&gt; SubscriptionResult {
-        <span class="self">self</span>.deny_unsafe
-            .check_if_safe()
-            .map_err(|_error| SubscriptionEmptyError)<span class="question-mark">?</span>;
+    <span class="kw">fn </span>subscribe_reward_signing(<span class="kw-2">&amp;</span><span class="self">self</span>, pending: PendingSubscriptionSink) {
+        <span class="kw">if </span><span class="self">self</span>.deny_unsafe.check_if_safe().is_err() {
+            <span class="macro">debug!</span>(<span class="string">"Unsafe subscribe_reward_signing ignored"</span>);
+            <span class="kw">return</span>;
+        }
 
         <span class="kw">let </span>executor = <span class="self">self</span>.subscription_executor.clone();
         <span class="kw">let </span>reward_signature_senders = <span class="self">self</span>.reward_signature_senders.clone();
@@ -1313,20 +1348,17 @@
             },
         );
 
-        <span class="kw">let </span>fut = <span class="kw">async move </span>{
-            sink.pipe_from_stream(stream).<span class="kw">await</span>;
-        };
-
         <span class="self">self</span>.subscription_executor.spawn(
             <span class="string">"subspace-block-signing-subscription"</span>,
             <span class="prelude-val">Some</span>(<span class="string">"rpc"</span>),
-            fut.boxed(),
+            pipe_from_stream(pending, stream).boxed(),
         );
-
-        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn </span>submit_reward_signature(<span class="kw-2">&amp;</span><span class="self">self</span>, reward_signature: RewardSignatureResponse) -&gt; RpcResult&lt;()&gt; {
+    <span class="kw">fn </span>submit_reward_signature(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        reward_signature: RewardSignatureResponse,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="self">self</span>.deny_unsafe.check_if_safe()<span class="question-mark">?</span>;
 
         <span class="kw">let </span>reward_signature_senders = <span class="self">self</span>.reward_signature_senders.clone();
@@ -1344,7 +1376,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn </span>subscribe_archived_segment_header(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut </span>sink: SubscriptionSink) -&gt; SubscriptionResult {
+    <span class="kw">fn </span>subscribe_archived_segment_header(<span class="kw-2">&amp;</span><span class="self">self</span>, pending: PendingSubscriptionSink) {
         <span class="kw">let </span>archived_segment_acknowledgement_senders =
             <span class="self">self</span>.archived_segment_acknowledgement_senders.clone();
 
@@ -1410,7 +1442,7 @@
         <span class="kw">let </span>archived_segment_acknowledgement_senders =
             <span class="self">self</span>.archived_segment_acknowledgement_senders.clone();
         <span class="kw">let </span>fut = <span class="kw">async move </span>{
-            sink.pipe_from_stream(stream).<span class="kw">await</span>;
+            pipe_from_stream(pending, stream).<span class="kw">await</span>;
 
             <span class="kw">let </span><span class="kw-2">mut </span>archived_segment_acknowledgement_senders =
                 archived_segment_acknowledgement_senders.lock();
@@ -1425,14 +1457,12 @@
             <span class="prelude-val">Some</span>(<span class="string">"rpc"</span>),
             fut.boxed(),
         );
-
-        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">async fn </span>acknowledge_archived_segment_header(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         segment_index: SegmentIndex,
-    ) -&gt; RpcResult&lt;()&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&gt; {
         <span class="self">self</span>.deny_unsafe.check_if_safe()<span class="question-mark">?</span>;
 
         <span class="kw">let </span>archived_segment_acknowledgement_senders =
@@ -1469,7 +1499,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn </span>piece(<span class="kw-2">&amp;</span><span class="self">self</span>, requested_piece_index: PieceIndex) -&gt; RpcResult&lt;<span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;&gt; {
+    <span class="kw">fn </span>piece(<span class="kw-2">&amp;</span><span class="self">self</span>, requested_piece_index: PieceIndex) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;Piece&gt;, Error&gt; {
         <span class="self">self</span>.deny_unsafe.check_if_safe()<span class="question-mark">?</span>;
 
         <span class="kw">let </span>archived_segment = {
@@ -1502,7 +1532,7 @@
                         <span class="prelude-val">Err</span>(error) =&gt; {
                             <span class="macro">error!</span>(%error, <span class="string">"Failed to re-create genesis segment"</span>);
 
-                            <span class="kw">return </span><span class="prelude-val">Err</span>(JsonRpseeError::Custom(
+                            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::StringError(
                                 <span class="string">"Failed to re-create genesis segment"</span>.to_string(),
                             ));
                         }
@@ -1511,12 +1541,12 @@
             }
         };
 
-        <span class="kw">let </span>pieces = <span class="kw-2">&amp;</span>archived_segment.pieces;
         <span class="kw">if </span>requested_piece_index.segment_index() == archived_segment.segment_header.segment_index()
         {
-            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(
-                pieces[requested_piece_index.position() <span class="kw">as </span>usize].to_vec(),
-            ));
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(archived_segment
+                .pieces
+                .pieces()
+                .nth(requested_piece_index.position() <span class="kw">as </span>usize));
         }
 
         <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
@@ -1525,14 +1555,14 @@
     <span class="kw">async fn </span>segment_headers(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         segment_indexes: Vec&lt;SegmentIndex&gt;,
-    ) -&gt; RpcResult&lt;Vec&lt;<span class="prelude-ty">Option</span>&lt;SegmentHeader&gt;&gt;&gt; {
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="prelude-ty">Option</span>&lt;SegmentHeader&gt;&gt;, Error&gt; {
         <span class="kw">if </span>segment_indexes.len() &gt; MAX_SEGMENT_HEADERS_PER_REQUEST {
             <span class="macro">error!</span>(
                 <span class="string">"segment_indexes length exceed the limit: {} "</span>,
                 segment_indexes.len()
             );
 
-            <span class="kw">return </span><span class="prelude-val">Err</span>(JsonRpseeError::Custom(<span class="macro">format!</span>(
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::StringError(<span class="macro">format!</span>(
                 <span class="string">"segment_indexes length exceed the limit {MAX_SEGMENT_HEADERS_PER_REQUEST}"
             </span>)));
         };
@@ -1543,14 +1573,14 @@
             .collect())
     }
 
-    <span class="kw">async fn </span>last_segment_headers(<span class="kw-2">&amp;</span><span class="self">self</span>, limit: u64) -&gt; RpcResult&lt;Vec&lt;<span class="prelude-ty">Option</span>&lt;SegmentHeader&gt;&gt;&gt; {
+    <span class="kw">async fn </span>last_segment_headers(<span class="kw-2">&amp;</span><span class="self">self</span>, limit: u64) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;<span class="prelude-ty">Option</span>&lt;SegmentHeader&gt;&gt;, Error&gt; {
         <span class="kw">if </span>limit <span class="kw">as </span>usize &gt; MAX_SEGMENT_HEADERS_PER_REQUEST {
             <span class="macro">error!</span>(
                 <span class="string">"Request limit ({}) exceed the server limit: {} "</span>,
                 limit, MAX_SEGMENT_HEADERS_PER_REQUEST
             );
 
-            <span class="kw">return </span><span class="prelude-val">Err</span>(JsonRpseeError::Custom(<span class="macro">format!</span>(
+            <span class="kw">return </span><span class="prelude-val">Err</span>(Error::StringError(<span class="macro">format!</span>(
                 <span class="string">"Request limit ({}) exceed the server limit: {} "</span>,
                 limit, MAX_SEGMENT_HEADERS_PER_REQUEST
             )));

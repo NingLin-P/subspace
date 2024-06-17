@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sp-domains-fraud-proof/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-4e54bb2b497cc83f.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sp_domains_fraud_proof" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (25f8d01fd 2024-01-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0b2e2def73e61cbe.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../sp_domains_fraud_proof/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sp-domains-fraud-proof/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sp_domains_fraud_proof" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../sp_domains_fraud_proof/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -320,6 +318,92 @@
 <a href="#318" id="318">318</a>
 <a href="#319" id="319">319</a>
 <a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+<a href="#337" id="337">337</a>
+<a href="#338" id="338">338</a>
+<a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a>
+<a href="#355" id="355">355</a>
+<a href="#356" id="356">356</a>
+<a href="#357" id="357">357</a>
+<a href="#358" id="358">358</a>
+<a href="#359" id="359">359</a>
+<a href="#360" id="360">360</a>
+<a href="#361" id="361">361</a>
+<a href="#362" id="362">362</a>
+<a href="#363" id="363">363</a>
+<a href="#364" id="364">364</a>
+<a href="#365" id="365">365</a>
+<a href="#366" id="366">366</a>
+<a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
+<a href="#401" id="401">401</a>
+<a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2022 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -338,24 +422,28 @@
 
 </span><span class="doccomment">//! Subspace fraud proof primitives for consensus chain.
 </span><span class="attr">#![cfg_attr(not(feature = <span class="string">"std"</span>), no_std)]
+#![feature(associated_type_defaults)]
 
 #[cfg(feature = <span class="string">"std"</span>)]
-</span><span class="kw">pub mod </span>bundle_equivocation;
-<span class="attr">#[cfg(feature = <span class="string">"std"</span>)]
 </span><span class="kw">pub mod </span>execution_prover;
 <span class="kw">pub mod </span>fraud_proof;
 <span class="attr">#[cfg(feature = <span class="string">"std"</span>)]
 </span><span class="kw">mod </span>host_functions;
 <span class="kw">mod </span>runtime_interface;
-<span class="attr">#[cfg(test)]
-</span><span class="kw">mod </span>tests;
-
+<span class="kw">pub mod </span>storage_proof;
 <span class="attr">#[cfg(test)]
 </span><span class="kw">pub mod </span>test_ethereum_tx;
-
+<span class="attr">#[cfg(test)]
+</span><span class="kw">mod </span>tests;
 <span class="kw">pub mod </span>verification;
 
+<span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+</span><span class="kw">extern crate </span>alloc;
+
 <span class="kw">use </span><span class="kw">crate</span>::fraud_proof::FraudProof;
+<span class="kw">use </span><span class="kw">crate</span>::storage_proof::FraudProofStorageKeyRequest;
+<span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+</span><span class="kw">use </span>alloc::vec::Vec;
 <span class="kw">use </span>codec::{Decode, Encode};
 <span class="attr">#[cfg(feature = <span class="string">"std"</span>)]
 </span><span class="kw">pub use </span>host_functions::{
@@ -366,26 +454,24 @@
 </span><span class="kw">pub use </span>runtime_interface::fraud_proof_runtime_interface::HostFunctions;
 <span class="kw">use </span>scale_info::TypeInfo;
 <span class="kw">use </span>sp_core::H256;
-<span class="kw">use </span>sp_domains::{DomainId, OperatorId};
+<span class="kw">use </span>sp_domains::{DomainAllowlistUpdates, DomainId, OperatorId};
 <span class="kw">use </span>sp_runtime::traits::{Header <span class="kw">as </span>HeaderT, NumberFor};
 <span class="kw">use </span>sp_runtime::transaction_validity::{InvalidTransaction, TransactionValidity};
 <span class="kw">use </span>sp_runtime::OpaqueExtrinsic;
 <span class="kw">use </span>sp_runtime_interface::pass_by;
 <span class="kw">use </span>sp_runtime_interface::pass_by::PassBy;
-<span class="kw">use </span>sp_std::vec::Vec;
 <span class="kw">use </span>sp_trie::StorageProof;
-<span class="kw">use </span>subspace_core_primitives::Randomness;
-<span class="kw">use </span>subspace_runtime_primitives::Balance;
+<span class="kw">use </span>subspace_core_primitives::{Randomness, U256};
+<span class="kw">use </span>subspace_runtime_primitives::{Balance, Moment};
 
 <span class="doccomment">/// Custom invalid validity code for the extrinsics in pallet-domains.
 </span><span class="attr">#[repr(u8)]
 </span><span class="kw">pub enum </span>InvalidTransactionCode {
-    BundleEquivocation = <span class="number">101</span>,
-    TransactionProof = <span class="number">102</span>,
-    ExecutionReceipt = <span class="number">103</span>,
-    Bundle = <span class="number">104</span>,
-    FraudProof = <span class="number">105</span>,
-    BundleStorageFeePayment = <span class="number">106</span>,
+    TransactionProof = <span class="number">101</span>,
+    ExecutionReceipt = <span class="number">102</span>,
+    Bundle = <span class="number">103</span>,
+    FraudProof = <span class="number">104</span>,
+    BundleStorageFeePayment = <span class="number">105</span>,
 }
 
 <span class="kw">impl </span>From&lt;InvalidTransactionCode&gt; <span class="kw">for </span>InvalidTransaction {
@@ -419,6 +505,8 @@
     <span class="doccomment">/// Domain `set_consensus_chain_byte_fee` extrinsic using the `consensus_chain_byte_fee` at a given
     /// consensus block hash.
     </span>ConsensusChainByteFeeExtrinsic(DomainId),
+    <span class="doccomment">/// Domains `update_domain_chain_allowlist` extrinsic at a given consensus block hash.
+    </span>DomainChainsAllowlistUpdateExtrinsic(DomainId),
     <span class="doccomment">/// The body of domain bundle included in a given consensus block at a given index
     </span>DomainBundleBody {
         domain_id: DomainId,
@@ -446,6 +534,12 @@
     </span>ExtrinsicDecodableCheck {
         domain_id: DomainId,
         <span class="doccomment">/// Extrinsic for which we need to if it is decodable or not.
+        </span>opaque_extrinsic: OpaqueExtrinsic,
+    },
+    <span class="doccomment">/// Request to check if the XDM is valid
+    </span>XDMValidationCheck {
+        domain_id: DomainId,
+        <span class="doccomment">/// Encoded XDM extrinsic that needs to be validated.
         </span>opaque_extrinsic: OpaqueExtrinsic,
     },
     <span class="doccomment">/// Request to get Domain election params.
@@ -486,6 +580,15 @@
     </span>EncodedExtrinsic(Vec&lt;u8&gt;),
 }
 
+<span class="doccomment">/// Type that maybe holds an encoded update domain chain allowlist extrinsic
+</span><span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+</span><span class="kw">pub enum </span>DomainChainAllowlistUpdateExtrinsic {
+    <span class="doccomment">/// No updates
+    </span><span class="prelude-val">None</span>,
+    <span class="doccomment">/// Holds an encoded extrinsic with updates.
+    </span>EncodedExtrinsic(Vec&lt;u8&gt;),
+}
+
 <span class="doccomment">/// Response holds required verification information for fraud proof from Host function.
 </span><span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
 </span><span class="kw">pub enum </span>FraudProofVerificationInfoResponse {
@@ -502,10 +605,16 @@
     </span>DomainRuntimeCode(Vec&lt;u8&gt;),
     <span class="doccomment">/// Encoded domain set_code extrinsic if there is a runtime upgrade at given consensus block hash.
     </span>DomainSetCodeExtrinsic(SetCodeExtrinsic),
+    <span class="doccomment">/// Encoded domain update_chain_allowlist extrinsic if there are any updates on consensus chain
+    /// for this domain at a specific consensus hash.
+    </span>DomainChainAllowlistUpdateExtrinsic(DomainChainAllowlistUpdateExtrinsic),
     <span class="doccomment">/// If particular extrinsic is in range for (domain, bundle) pair at given domain block
     </span>TxRangeCheck(bool),
     <span class="doccomment">/// If the particular extrinsic provided is either inherent or not.
     </span>InherentExtrinsicCheck(bool),
+    <span class="doccomment">/// If the particular xdm extrinsic is valid or not.
+    /// Returns None if extrinsic is not an XDM
+    </span>XDMValidationCheck(<span class="prelude-ty">Option</span>&lt;bool&gt;),
     <span class="doccomment">/// If the domain extrinsic is decodable or not.
     </span>ExtrinsicDecodableCheck(bool),
     <span class="doccomment">/// Domain's total stake at a given Consensus hash.
@@ -559,6 +668,17 @@
         }
     }
 
+    <span class="kw">pub fn </span>into_domain_chain_allowlist_update_extrinsic(
+        <span class="self">self</span>,
+    ) -&gt; DomainChainAllowlistUpdateExtrinsic {
+        <span class="kw">match </span><span class="self">self </span>{
+            FraudProofVerificationInfoResponse::DomainChainAllowlistUpdateExtrinsic(
+                allowlist_update_extrinsic,
+            ) =&gt; allowlist_update_extrinsic,
+            <span class="kw">_ </span>=&gt; DomainChainAllowlistUpdateExtrinsic::None,
+        }
+    }
+
     <span class="kw">pub fn </span>into_tx_range_check(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
         <span class="kw">match </span><span class="self">self </span>{
             FraudProofVerificationInfoResponse::TxRangeCheck(is_tx_in_range) =&gt; {
@@ -580,6 +700,13 @@
             FraudProofVerificationInfoResponse::InherentExtrinsicCheck(is_inherent) =&gt; {
                 <span class="prelude-val">Some</span>(is_inherent)
             }
+            <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+        }
+    }
+
+    <span class="kw">pub fn </span>into_xdm_validation_check(<span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
+        <span class="kw">match </span><span class="self">self </span>{
+            FraudProofVerificationInfoResponse::XDMValidationCheck(maybe_valid) =&gt; maybe_valid,
             <span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
         }
     }
@@ -627,17 +754,60 @@
     }
 }
 
-<span class="macro">sp_api::decl_runtime_apis! </span>{
+<span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+</span><span class="kw">pub struct </span>DomainInherentExtrinsicData {
+    <span class="kw">pub </span>timestamp: Moment,
+    <span class="kw">pub </span>maybe_domain_runtime_upgrade: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
+    <span class="kw">pub </span>consensus_transaction_byte_fee: Balance,
+    <span class="kw">pub </span>domain_chain_allowlist: DomainAllowlistUpdates,
+}
+
+<span class="kw">impl </span>PassBy <span class="kw">for </span>DomainInherentExtrinsicData {
+    <span class="kw">type </span>PassBy = pass_by::Codec&lt;<span class="self">Self</span>&gt;;
+}
+
+<span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+</span><span class="kw">pub struct </span>DomainInherentExtrinsic {
+    domain_timestamp_extrinsic: Vec&lt;u8&gt;,
+    maybe_domain_chain_allowlist_extrinsic: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
+    consensus_chain_byte_fee_extrinsic: Vec&lt;u8&gt;,
+    maybe_domain_set_code_extrinsic: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
+}
+
+<span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+</span><span class="kw">pub enum </span>DomainStorageKeyRequest {
+    BlockFees,
+    Transfers,
+}
+
+<span class="kw">impl </span>PassBy <span class="kw">for </span>DomainStorageKeyRequest {
+    <span class="kw">type </span>PassBy = pass_by::Codec&lt;<span class="self">Self</span>&gt;;
+}
+
+<span class="attr">#[derive(Debug, Decode, Encode, TypeInfo, PartialEq, Eq, Clone)]
+</span><span class="kw">pub enum </span>StatelessDomainRuntimeCall {
+    IsTxInRange {
+        opaque_extrinsic: OpaqueExtrinsic,
+        domain_tx_range: U256,
+        bundle_vrf_hash: U256,
+    },
+    IsInherentExtrinsic(OpaqueExtrinsic),
+    IsDecodableExtrinsic(OpaqueExtrinsic),
+}
+
+<span class="kw">impl </span>PassBy <span class="kw">for </span>StatelessDomainRuntimeCall {
+    <span class="kw">type </span>PassBy = pass_by::Codec&lt;<span class="self">Self</span>&gt;;
+}
+
+<span class="macro">sp_api::decl_runtime_apis!</span> {
     <span class="doccomment">/// API necessary for fraud proof.
+    </span><span class="attr">#[api_version(<span class="number">2</span>)]
     </span><span class="kw">pub trait </span>FraudProofApi&lt;DomainHeader: HeaderT&gt; {
         <span class="doccomment">/// Submit the fraud proof via an unsigned extrinsic.
-        </span><span class="kw">fn </span>submit_fraud_proof_unsigned(fraud_proof: FraudProof&lt;NumberFor&lt;Block&gt;, Block::Hash, DomainHeader&gt;);
+        </span><span class="kw">fn </span>submit_fraud_proof_unsigned(fraud_proof: FraudProof&lt;NumberFor&lt;Block&gt;, Block::Hash, DomainHeader, H256&gt;);
 
-        <span class="doccomment">/// Extract the fraud proof handled successfully from the given extrinsics.
-        </span><span class="kw">fn </span>extract_fraud_proofs(
-            domain_id: DomainId,
-            extrinsics: Vec&lt;Block::Extrinsic&gt;,
-        ) -&gt; Vec&lt;FraudProof&lt;NumberFor&lt;Block&gt;, Block::Hash, DomainHeader&gt;&gt;;
+        <span class="doccomment">/// Reture the storage key used in fraud proof
+        </span><span class="kw">fn </span>fraud_proof_storage_key(req: FraudProofStorageKeyRequest) -&gt; Vec&lt;u8&gt;;
     }
 }
 </code></pre></div></section></main></body></html>

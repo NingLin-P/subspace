@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/pallet-domains/src/lib.rs`."><title>lib.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-4e54bb2b497cc83f.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pallet_domains" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (25f8d01fd 2024-01-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0b2e2def73e61cbe.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../pallet_domains/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/pallet-domains/src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="pallet_domains" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../pallet_domains/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2109,6 +2107,554 @@
 <a href="#2107" id="2107">2107</a>
 <a href="#2108" id="2108">2108</a>
 <a href="#2109" id="2109">2109</a>
+<a href="#2110" id="2110">2110</a>
+<a href="#2111" id="2111">2111</a>
+<a href="#2112" id="2112">2112</a>
+<a href="#2113" id="2113">2113</a>
+<a href="#2114" id="2114">2114</a>
+<a href="#2115" id="2115">2115</a>
+<a href="#2116" id="2116">2116</a>
+<a href="#2117" id="2117">2117</a>
+<a href="#2118" id="2118">2118</a>
+<a href="#2119" id="2119">2119</a>
+<a href="#2120" id="2120">2120</a>
+<a href="#2121" id="2121">2121</a>
+<a href="#2122" id="2122">2122</a>
+<a href="#2123" id="2123">2123</a>
+<a href="#2124" id="2124">2124</a>
+<a href="#2125" id="2125">2125</a>
+<a href="#2126" id="2126">2126</a>
+<a href="#2127" id="2127">2127</a>
+<a href="#2128" id="2128">2128</a>
+<a href="#2129" id="2129">2129</a>
+<a href="#2130" id="2130">2130</a>
+<a href="#2131" id="2131">2131</a>
+<a href="#2132" id="2132">2132</a>
+<a href="#2133" id="2133">2133</a>
+<a href="#2134" id="2134">2134</a>
+<a href="#2135" id="2135">2135</a>
+<a href="#2136" id="2136">2136</a>
+<a href="#2137" id="2137">2137</a>
+<a href="#2138" id="2138">2138</a>
+<a href="#2139" id="2139">2139</a>
+<a href="#2140" id="2140">2140</a>
+<a href="#2141" id="2141">2141</a>
+<a href="#2142" id="2142">2142</a>
+<a href="#2143" id="2143">2143</a>
+<a href="#2144" id="2144">2144</a>
+<a href="#2145" id="2145">2145</a>
+<a href="#2146" id="2146">2146</a>
+<a href="#2147" id="2147">2147</a>
+<a href="#2148" id="2148">2148</a>
+<a href="#2149" id="2149">2149</a>
+<a href="#2150" id="2150">2150</a>
+<a href="#2151" id="2151">2151</a>
+<a href="#2152" id="2152">2152</a>
+<a href="#2153" id="2153">2153</a>
+<a href="#2154" id="2154">2154</a>
+<a href="#2155" id="2155">2155</a>
+<a href="#2156" id="2156">2156</a>
+<a href="#2157" id="2157">2157</a>
+<a href="#2158" id="2158">2158</a>
+<a href="#2159" id="2159">2159</a>
+<a href="#2160" id="2160">2160</a>
+<a href="#2161" id="2161">2161</a>
+<a href="#2162" id="2162">2162</a>
+<a href="#2163" id="2163">2163</a>
+<a href="#2164" id="2164">2164</a>
+<a href="#2165" id="2165">2165</a>
+<a href="#2166" id="2166">2166</a>
+<a href="#2167" id="2167">2167</a>
+<a href="#2168" id="2168">2168</a>
+<a href="#2169" id="2169">2169</a>
+<a href="#2170" id="2170">2170</a>
+<a href="#2171" id="2171">2171</a>
+<a href="#2172" id="2172">2172</a>
+<a href="#2173" id="2173">2173</a>
+<a href="#2174" id="2174">2174</a>
+<a href="#2175" id="2175">2175</a>
+<a href="#2176" id="2176">2176</a>
+<a href="#2177" id="2177">2177</a>
+<a href="#2178" id="2178">2178</a>
+<a href="#2179" id="2179">2179</a>
+<a href="#2180" id="2180">2180</a>
+<a href="#2181" id="2181">2181</a>
+<a href="#2182" id="2182">2182</a>
+<a href="#2183" id="2183">2183</a>
+<a href="#2184" id="2184">2184</a>
+<a href="#2185" id="2185">2185</a>
+<a href="#2186" id="2186">2186</a>
+<a href="#2187" id="2187">2187</a>
+<a href="#2188" id="2188">2188</a>
+<a href="#2189" id="2189">2189</a>
+<a href="#2190" id="2190">2190</a>
+<a href="#2191" id="2191">2191</a>
+<a href="#2192" id="2192">2192</a>
+<a href="#2193" id="2193">2193</a>
+<a href="#2194" id="2194">2194</a>
+<a href="#2195" id="2195">2195</a>
+<a href="#2196" id="2196">2196</a>
+<a href="#2197" id="2197">2197</a>
+<a href="#2198" id="2198">2198</a>
+<a href="#2199" id="2199">2199</a>
+<a href="#2200" id="2200">2200</a>
+<a href="#2201" id="2201">2201</a>
+<a href="#2202" id="2202">2202</a>
+<a href="#2203" id="2203">2203</a>
+<a href="#2204" id="2204">2204</a>
+<a href="#2205" id="2205">2205</a>
+<a href="#2206" id="2206">2206</a>
+<a href="#2207" id="2207">2207</a>
+<a href="#2208" id="2208">2208</a>
+<a href="#2209" id="2209">2209</a>
+<a href="#2210" id="2210">2210</a>
+<a href="#2211" id="2211">2211</a>
+<a href="#2212" id="2212">2212</a>
+<a href="#2213" id="2213">2213</a>
+<a href="#2214" id="2214">2214</a>
+<a href="#2215" id="2215">2215</a>
+<a href="#2216" id="2216">2216</a>
+<a href="#2217" id="2217">2217</a>
+<a href="#2218" id="2218">2218</a>
+<a href="#2219" id="2219">2219</a>
+<a href="#2220" id="2220">2220</a>
+<a href="#2221" id="2221">2221</a>
+<a href="#2222" id="2222">2222</a>
+<a href="#2223" id="2223">2223</a>
+<a href="#2224" id="2224">2224</a>
+<a href="#2225" id="2225">2225</a>
+<a href="#2226" id="2226">2226</a>
+<a href="#2227" id="2227">2227</a>
+<a href="#2228" id="2228">2228</a>
+<a href="#2229" id="2229">2229</a>
+<a href="#2230" id="2230">2230</a>
+<a href="#2231" id="2231">2231</a>
+<a href="#2232" id="2232">2232</a>
+<a href="#2233" id="2233">2233</a>
+<a href="#2234" id="2234">2234</a>
+<a href="#2235" id="2235">2235</a>
+<a href="#2236" id="2236">2236</a>
+<a href="#2237" id="2237">2237</a>
+<a href="#2238" id="2238">2238</a>
+<a href="#2239" id="2239">2239</a>
+<a href="#2240" id="2240">2240</a>
+<a href="#2241" id="2241">2241</a>
+<a href="#2242" id="2242">2242</a>
+<a href="#2243" id="2243">2243</a>
+<a href="#2244" id="2244">2244</a>
+<a href="#2245" id="2245">2245</a>
+<a href="#2246" id="2246">2246</a>
+<a href="#2247" id="2247">2247</a>
+<a href="#2248" id="2248">2248</a>
+<a href="#2249" id="2249">2249</a>
+<a href="#2250" id="2250">2250</a>
+<a href="#2251" id="2251">2251</a>
+<a href="#2252" id="2252">2252</a>
+<a href="#2253" id="2253">2253</a>
+<a href="#2254" id="2254">2254</a>
+<a href="#2255" id="2255">2255</a>
+<a href="#2256" id="2256">2256</a>
+<a href="#2257" id="2257">2257</a>
+<a href="#2258" id="2258">2258</a>
+<a href="#2259" id="2259">2259</a>
+<a href="#2260" id="2260">2260</a>
+<a href="#2261" id="2261">2261</a>
+<a href="#2262" id="2262">2262</a>
+<a href="#2263" id="2263">2263</a>
+<a href="#2264" id="2264">2264</a>
+<a href="#2265" id="2265">2265</a>
+<a href="#2266" id="2266">2266</a>
+<a href="#2267" id="2267">2267</a>
+<a href="#2268" id="2268">2268</a>
+<a href="#2269" id="2269">2269</a>
+<a href="#2270" id="2270">2270</a>
+<a href="#2271" id="2271">2271</a>
+<a href="#2272" id="2272">2272</a>
+<a href="#2273" id="2273">2273</a>
+<a href="#2274" id="2274">2274</a>
+<a href="#2275" id="2275">2275</a>
+<a href="#2276" id="2276">2276</a>
+<a href="#2277" id="2277">2277</a>
+<a href="#2278" id="2278">2278</a>
+<a href="#2279" id="2279">2279</a>
+<a href="#2280" id="2280">2280</a>
+<a href="#2281" id="2281">2281</a>
+<a href="#2282" id="2282">2282</a>
+<a href="#2283" id="2283">2283</a>
+<a href="#2284" id="2284">2284</a>
+<a href="#2285" id="2285">2285</a>
+<a href="#2286" id="2286">2286</a>
+<a href="#2287" id="2287">2287</a>
+<a href="#2288" id="2288">2288</a>
+<a href="#2289" id="2289">2289</a>
+<a href="#2290" id="2290">2290</a>
+<a href="#2291" id="2291">2291</a>
+<a href="#2292" id="2292">2292</a>
+<a href="#2293" id="2293">2293</a>
+<a href="#2294" id="2294">2294</a>
+<a href="#2295" id="2295">2295</a>
+<a href="#2296" id="2296">2296</a>
+<a href="#2297" id="2297">2297</a>
+<a href="#2298" id="2298">2298</a>
+<a href="#2299" id="2299">2299</a>
+<a href="#2300" id="2300">2300</a>
+<a href="#2301" id="2301">2301</a>
+<a href="#2302" id="2302">2302</a>
+<a href="#2303" id="2303">2303</a>
+<a href="#2304" id="2304">2304</a>
+<a href="#2305" id="2305">2305</a>
+<a href="#2306" id="2306">2306</a>
+<a href="#2307" id="2307">2307</a>
+<a href="#2308" id="2308">2308</a>
+<a href="#2309" id="2309">2309</a>
+<a href="#2310" id="2310">2310</a>
+<a href="#2311" id="2311">2311</a>
+<a href="#2312" id="2312">2312</a>
+<a href="#2313" id="2313">2313</a>
+<a href="#2314" id="2314">2314</a>
+<a href="#2315" id="2315">2315</a>
+<a href="#2316" id="2316">2316</a>
+<a href="#2317" id="2317">2317</a>
+<a href="#2318" id="2318">2318</a>
+<a href="#2319" id="2319">2319</a>
+<a href="#2320" id="2320">2320</a>
+<a href="#2321" id="2321">2321</a>
+<a href="#2322" id="2322">2322</a>
+<a href="#2323" id="2323">2323</a>
+<a href="#2324" id="2324">2324</a>
+<a href="#2325" id="2325">2325</a>
+<a href="#2326" id="2326">2326</a>
+<a href="#2327" id="2327">2327</a>
+<a href="#2328" id="2328">2328</a>
+<a href="#2329" id="2329">2329</a>
+<a href="#2330" id="2330">2330</a>
+<a href="#2331" id="2331">2331</a>
+<a href="#2332" id="2332">2332</a>
+<a href="#2333" id="2333">2333</a>
+<a href="#2334" id="2334">2334</a>
+<a href="#2335" id="2335">2335</a>
+<a href="#2336" id="2336">2336</a>
+<a href="#2337" id="2337">2337</a>
+<a href="#2338" id="2338">2338</a>
+<a href="#2339" id="2339">2339</a>
+<a href="#2340" id="2340">2340</a>
+<a href="#2341" id="2341">2341</a>
+<a href="#2342" id="2342">2342</a>
+<a href="#2343" id="2343">2343</a>
+<a href="#2344" id="2344">2344</a>
+<a href="#2345" id="2345">2345</a>
+<a href="#2346" id="2346">2346</a>
+<a href="#2347" id="2347">2347</a>
+<a href="#2348" id="2348">2348</a>
+<a href="#2349" id="2349">2349</a>
+<a href="#2350" id="2350">2350</a>
+<a href="#2351" id="2351">2351</a>
+<a href="#2352" id="2352">2352</a>
+<a href="#2353" id="2353">2353</a>
+<a href="#2354" id="2354">2354</a>
+<a href="#2355" id="2355">2355</a>
+<a href="#2356" id="2356">2356</a>
+<a href="#2357" id="2357">2357</a>
+<a href="#2358" id="2358">2358</a>
+<a href="#2359" id="2359">2359</a>
+<a href="#2360" id="2360">2360</a>
+<a href="#2361" id="2361">2361</a>
+<a href="#2362" id="2362">2362</a>
+<a href="#2363" id="2363">2363</a>
+<a href="#2364" id="2364">2364</a>
+<a href="#2365" id="2365">2365</a>
+<a href="#2366" id="2366">2366</a>
+<a href="#2367" id="2367">2367</a>
+<a href="#2368" id="2368">2368</a>
+<a href="#2369" id="2369">2369</a>
+<a href="#2370" id="2370">2370</a>
+<a href="#2371" id="2371">2371</a>
+<a href="#2372" id="2372">2372</a>
+<a href="#2373" id="2373">2373</a>
+<a href="#2374" id="2374">2374</a>
+<a href="#2375" id="2375">2375</a>
+<a href="#2376" id="2376">2376</a>
+<a href="#2377" id="2377">2377</a>
+<a href="#2378" id="2378">2378</a>
+<a href="#2379" id="2379">2379</a>
+<a href="#2380" id="2380">2380</a>
+<a href="#2381" id="2381">2381</a>
+<a href="#2382" id="2382">2382</a>
+<a href="#2383" id="2383">2383</a>
+<a href="#2384" id="2384">2384</a>
+<a href="#2385" id="2385">2385</a>
+<a href="#2386" id="2386">2386</a>
+<a href="#2387" id="2387">2387</a>
+<a href="#2388" id="2388">2388</a>
+<a href="#2389" id="2389">2389</a>
+<a href="#2390" id="2390">2390</a>
+<a href="#2391" id="2391">2391</a>
+<a href="#2392" id="2392">2392</a>
+<a href="#2393" id="2393">2393</a>
+<a href="#2394" id="2394">2394</a>
+<a href="#2395" id="2395">2395</a>
+<a href="#2396" id="2396">2396</a>
+<a href="#2397" id="2397">2397</a>
+<a href="#2398" id="2398">2398</a>
+<a href="#2399" id="2399">2399</a>
+<a href="#2400" id="2400">2400</a>
+<a href="#2401" id="2401">2401</a>
+<a href="#2402" id="2402">2402</a>
+<a href="#2403" id="2403">2403</a>
+<a href="#2404" id="2404">2404</a>
+<a href="#2405" id="2405">2405</a>
+<a href="#2406" id="2406">2406</a>
+<a href="#2407" id="2407">2407</a>
+<a href="#2408" id="2408">2408</a>
+<a href="#2409" id="2409">2409</a>
+<a href="#2410" id="2410">2410</a>
+<a href="#2411" id="2411">2411</a>
+<a href="#2412" id="2412">2412</a>
+<a href="#2413" id="2413">2413</a>
+<a href="#2414" id="2414">2414</a>
+<a href="#2415" id="2415">2415</a>
+<a href="#2416" id="2416">2416</a>
+<a href="#2417" id="2417">2417</a>
+<a href="#2418" id="2418">2418</a>
+<a href="#2419" id="2419">2419</a>
+<a href="#2420" id="2420">2420</a>
+<a href="#2421" id="2421">2421</a>
+<a href="#2422" id="2422">2422</a>
+<a href="#2423" id="2423">2423</a>
+<a href="#2424" id="2424">2424</a>
+<a href="#2425" id="2425">2425</a>
+<a href="#2426" id="2426">2426</a>
+<a href="#2427" id="2427">2427</a>
+<a href="#2428" id="2428">2428</a>
+<a href="#2429" id="2429">2429</a>
+<a href="#2430" id="2430">2430</a>
+<a href="#2431" id="2431">2431</a>
+<a href="#2432" id="2432">2432</a>
+<a href="#2433" id="2433">2433</a>
+<a href="#2434" id="2434">2434</a>
+<a href="#2435" id="2435">2435</a>
+<a href="#2436" id="2436">2436</a>
+<a href="#2437" id="2437">2437</a>
+<a href="#2438" id="2438">2438</a>
+<a href="#2439" id="2439">2439</a>
+<a href="#2440" id="2440">2440</a>
+<a href="#2441" id="2441">2441</a>
+<a href="#2442" id="2442">2442</a>
+<a href="#2443" id="2443">2443</a>
+<a href="#2444" id="2444">2444</a>
+<a href="#2445" id="2445">2445</a>
+<a href="#2446" id="2446">2446</a>
+<a href="#2447" id="2447">2447</a>
+<a href="#2448" id="2448">2448</a>
+<a href="#2449" id="2449">2449</a>
+<a href="#2450" id="2450">2450</a>
+<a href="#2451" id="2451">2451</a>
+<a href="#2452" id="2452">2452</a>
+<a href="#2453" id="2453">2453</a>
+<a href="#2454" id="2454">2454</a>
+<a href="#2455" id="2455">2455</a>
+<a href="#2456" id="2456">2456</a>
+<a href="#2457" id="2457">2457</a>
+<a href="#2458" id="2458">2458</a>
+<a href="#2459" id="2459">2459</a>
+<a href="#2460" id="2460">2460</a>
+<a href="#2461" id="2461">2461</a>
+<a href="#2462" id="2462">2462</a>
+<a href="#2463" id="2463">2463</a>
+<a href="#2464" id="2464">2464</a>
+<a href="#2465" id="2465">2465</a>
+<a href="#2466" id="2466">2466</a>
+<a href="#2467" id="2467">2467</a>
+<a href="#2468" id="2468">2468</a>
+<a href="#2469" id="2469">2469</a>
+<a href="#2470" id="2470">2470</a>
+<a href="#2471" id="2471">2471</a>
+<a href="#2472" id="2472">2472</a>
+<a href="#2473" id="2473">2473</a>
+<a href="#2474" id="2474">2474</a>
+<a href="#2475" id="2475">2475</a>
+<a href="#2476" id="2476">2476</a>
+<a href="#2477" id="2477">2477</a>
+<a href="#2478" id="2478">2478</a>
+<a href="#2479" id="2479">2479</a>
+<a href="#2480" id="2480">2480</a>
+<a href="#2481" id="2481">2481</a>
+<a href="#2482" id="2482">2482</a>
+<a href="#2483" id="2483">2483</a>
+<a href="#2484" id="2484">2484</a>
+<a href="#2485" id="2485">2485</a>
+<a href="#2486" id="2486">2486</a>
+<a href="#2487" id="2487">2487</a>
+<a href="#2488" id="2488">2488</a>
+<a href="#2489" id="2489">2489</a>
+<a href="#2490" id="2490">2490</a>
+<a href="#2491" id="2491">2491</a>
+<a href="#2492" id="2492">2492</a>
+<a href="#2493" id="2493">2493</a>
+<a href="#2494" id="2494">2494</a>
+<a href="#2495" id="2495">2495</a>
+<a href="#2496" id="2496">2496</a>
+<a href="#2497" id="2497">2497</a>
+<a href="#2498" id="2498">2498</a>
+<a href="#2499" id="2499">2499</a>
+<a href="#2500" id="2500">2500</a>
+<a href="#2501" id="2501">2501</a>
+<a href="#2502" id="2502">2502</a>
+<a href="#2503" id="2503">2503</a>
+<a href="#2504" id="2504">2504</a>
+<a href="#2505" id="2505">2505</a>
+<a href="#2506" id="2506">2506</a>
+<a href="#2507" id="2507">2507</a>
+<a href="#2508" id="2508">2508</a>
+<a href="#2509" id="2509">2509</a>
+<a href="#2510" id="2510">2510</a>
+<a href="#2511" id="2511">2511</a>
+<a href="#2512" id="2512">2512</a>
+<a href="#2513" id="2513">2513</a>
+<a href="#2514" id="2514">2514</a>
+<a href="#2515" id="2515">2515</a>
+<a href="#2516" id="2516">2516</a>
+<a href="#2517" id="2517">2517</a>
+<a href="#2518" id="2518">2518</a>
+<a href="#2519" id="2519">2519</a>
+<a href="#2520" id="2520">2520</a>
+<a href="#2521" id="2521">2521</a>
+<a href="#2522" id="2522">2522</a>
+<a href="#2523" id="2523">2523</a>
+<a href="#2524" id="2524">2524</a>
+<a href="#2525" id="2525">2525</a>
+<a href="#2526" id="2526">2526</a>
+<a href="#2527" id="2527">2527</a>
+<a href="#2528" id="2528">2528</a>
+<a href="#2529" id="2529">2529</a>
+<a href="#2530" id="2530">2530</a>
+<a href="#2531" id="2531">2531</a>
+<a href="#2532" id="2532">2532</a>
+<a href="#2533" id="2533">2533</a>
+<a href="#2534" id="2534">2534</a>
+<a href="#2535" id="2535">2535</a>
+<a href="#2536" id="2536">2536</a>
+<a href="#2537" id="2537">2537</a>
+<a href="#2538" id="2538">2538</a>
+<a href="#2539" id="2539">2539</a>
+<a href="#2540" id="2540">2540</a>
+<a href="#2541" id="2541">2541</a>
+<a href="#2542" id="2542">2542</a>
+<a href="#2543" id="2543">2543</a>
+<a href="#2544" id="2544">2544</a>
+<a href="#2545" id="2545">2545</a>
+<a href="#2546" id="2546">2546</a>
+<a href="#2547" id="2547">2547</a>
+<a href="#2548" id="2548">2548</a>
+<a href="#2549" id="2549">2549</a>
+<a href="#2550" id="2550">2550</a>
+<a href="#2551" id="2551">2551</a>
+<a href="#2552" id="2552">2552</a>
+<a href="#2553" id="2553">2553</a>
+<a href="#2554" id="2554">2554</a>
+<a href="#2555" id="2555">2555</a>
+<a href="#2556" id="2556">2556</a>
+<a href="#2557" id="2557">2557</a>
+<a href="#2558" id="2558">2558</a>
+<a href="#2559" id="2559">2559</a>
+<a href="#2560" id="2560">2560</a>
+<a href="#2561" id="2561">2561</a>
+<a href="#2562" id="2562">2562</a>
+<a href="#2563" id="2563">2563</a>
+<a href="#2564" id="2564">2564</a>
+<a href="#2565" id="2565">2565</a>
+<a href="#2566" id="2566">2566</a>
+<a href="#2567" id="2567">2567</a>
+<a href="#2568" id="2568">2568</a>
+<a href="#2569" id="2569">2569</a>
+<a href="#2570" id="2570">2570</a>
+<a href="#2571" id="2571">2571</a>
+<a href="#2572" id="2572">2572</a>
+<a href="#2573" id="2573">2573</a>
+<a href="#2574" id="2574">2574</a>
+<a href="#2575" id="2575">2575</a>
+<a href="#2576" id="2576">2576</a>
+<a href="#2577" id="2577">2577</a>
+<a href="#2578" id="2578">2578</a>
+<a href="#2579" id="2579">2579</a>
+<a href="#2580" id="2580">2580</a>
+<a href="#2581" id="2581">2581</a>
+<a href="#2582" id="2582">2582</a>
+<a href="#2583" id="2583">2583</a>
+<a href="#2584" id="2584">2584</a>
+<a href="#2585" id="2585">2585</a>
+<a href="#2586" id="2586">2586</a>
+<a href="#2587" id="2587">2587</a>
+<a href="#2588" id="2588">2588</a>
+<a href="#2589" id="2589">2589</a>
+<a href="#2590" id="2590">2590</a>
+<a href="#2591" id="2591">2591</a>
+<a href="#2592" id="2592">2592</a>
+<a href="#2593" id="2593">2593</a>
+<a href="#2594" id="2594">2594</a>
+<a href="#2595" id="2595">2595</a>
+<a href="#2596" id="2596">2596</a>
+<a href="#2597" id="2597">2597</a>
+<a href="#2598" id="2598">2598</a>
+<a href="#2599" id="2599">2599</a>
+<a href="#2600" id="2600">2600</a>
+<a href="#2601" id="2601">2601</a>
+<a href="#2602" id="2602">2602</a>
+<a href="#2603" id="2603">2603</a>
+<a href="#2604" id="2604">2604</a>
+<a href="#2605" id="2605">2605</a>
+<a href="#2606" id="2606">2606</a>
+<a href="#2607" id="2607">2607</a>
+<a href="#2608" id="2608">2608</a>
+<a href="#2609" id="2609">2609</a>
+<a href="#2610" id="2610">2610</a>
+<a href="#2611" id="2611">2611</a>
+<a href="#2612" id="2612">2612</a>
+<a href="#2613" id="2613">2613</a>
+<a href="#2614" id="2614">2614</a>
+<a href="#2615" id="2615">2615</a>
+<a href="#2616" id="2616">2616</a>
+<a href="#2617" id="2617">2617</a>
+<a href="#2618" id="2618">2618</a>
+<a href="#2619" id="2619">2619</a>
+<a href="#2620" id="2620">2620</a>
+<a href="#2621" id="2621">2621</a>
+<a href="#2622" id="2622">2622</a>
+<a href="#2623" id="2623">2623</a>
+<a href="#2624" id="2624">2624</a>
+<a href="#2625" id="2625">2625</a>
+<a href="#2626" id="2626">2626</a>
+<a href="#2627" id="2627">2627</a>
+<a href="#2628" id="2628">2628</a>
+<a href="#2629" id="2629">2629</a>
+<a href="#2630" id="2630">2630</a>
+<a href="#2631" id="2631">2631</a>
+<a href="#2632" id="2632">2632</a>
+<a href="#2633" id="2633">2633</a>
+<a href="#2634" id="2634">2634</a>
+<a href="#2635" id="2635">2635</a>
+<a href="#2636" id="2636">2636</a>
+<a href="#2637" id="2637">2637</a>
+<a href="#2638" id="2638">2638</a>
+<a href="#2639" id="2639">2639</a>
+<a href="#2640" id="2640">2640</a>
+<a href="#2641" id="2641">2641</a>
+<a href="#2642" id="2642">2642</a>
+<a href="#2643" id="2643">2643</a>
+<a href="#2644" id="2644">2644</a>
+<a href="#2645" id="2645">2645</a>
+<a href="#2646" id="2646">2646</a>
+<a href="#2647" id="2647">2647</a>
+<a href="#2648" id="2648">2648</a>
+<a href="#2649" id="2649">2649</a>
+<a href="#2650" id="2650">2650</a>
+<a href="#2651" id="2651">2651</a>
+<a href="#2652" id="2652">2652</a>
+<a href="#2653" id="2653">2653</a>
+<a href="#2654" id="2654">2654</a>
+<a href="#2655" id="2655">2655</a>
+<a href="#2656" id="2656">2656</a>
+<a href="#2657" id="2657">2657</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
@@ -2127,7 +2673,7 @@
 </span><span class="doccomment">//! Pallet Domains
 
 </span><span class="attr">#![cfg_attr(not(feature = <span class="string">"std"</span>), no_std)]
-#![feature(array_windows, associated_type_bounds, let_chains, variant_count)]
+#![feature(array_windows, let_chains, variant_count)]
 
 #[cfg(feature = <span class="string">"runtime-benchmarks"</span>)]
 </span><span class="kw">mod </span>benchmarking;
@@ -2145,13 +2691,27 @@
 
 <span class="kw">extern crate </span>alloc;
 
-<span class="kw">use </span><span class="kw">crate</span>::block_tree::verify_execution_receipt;
-<span class="kw">use </span><span class="kw">crate</span>::staking::OperatorStatus;
+<span class="kw">use </span><span class="kw">crate</span>::block_tree::{verify_execution_receipt, Error <span class="kw">as </span>BlockTreeError};
+<span class="kw">use </span><span class="kw">crate</span>::bundle_storage_fund::storage_fund_account;
+<span class="kw">use </span><span class="kw">crate</span>::domain_registry::Error <span class="kw">as </span>DomainRegistryError;
+<span class="kw">use </span><span class="kw">crate</span>::runtime_registry::into_complete_raw_genesis;
+<span class="attr">#[cfg(feature = <span class="string">"runtime-benchmarks"</span>)]
+</span><span class="kw">pub use </span><span class="kw">crate</span>::staking::do_register_operator;
+<span class="kw">use </span><span class="kw">crate</span>::staking::{do_reward_operators, OperatorStatus};
+<span class="kw">use </span><span class="kw">crate</span>::staking_epoch::EpochTransitionResult;
+<span class="kw">use </span><span class="kw">crate</span>::weights::WeightInfo;
+<span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+</span><span class="kw">use </span>alloc::boxed::Box;
+<span class="kw">use </span>alloc::collections::btree_map::BTreeMap;
+<span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+</span><span class="kw">use </span>alloc::vec::Vec;
 <span class="kw">use </span>codec::{Decode, Encode};
 <span class="kw">use </span>frame_support::ensure;
 <span class="kw">use </span>frame_support::pallet_prelude::StorageVersion;
 <span class="kw">use </span>frame_support::traits::fungible::{Inspect, InspectHold};
+<span class="kw">use </span>frame_support::traits::tokens::{Fortitude, Preservation};
 <span class="kw">use </span>frame_support::traits::{Get, Randomness <span class="kw">as </span>RandomnessT};
+<span class="kw">use </span>frame_support::weights::Weight;
 <span class="kw">use </span>frame_system::offchain::SubmitTransaction;
 <span class="kw">use </span>frame_system::pallet_prelude::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>pallet::<span class="kw-2">*</span>;
@@ -2161,29 +2721,32 @@
 <span class="kw">use </span>sp_core::H256;
 <span class="kw">use </span>sp_domains::bundle_producer_election::BundleProducerElectionParams;
 <span class="kw">use </span>sp_domains::{
-    DomainBlockLimit, DomainId, DomainInstanceData, ExecutionReceipt, OpaqueBundle, OperatorId,
-    OperatorPublicKey, RuntimeId, DOMAIN_EXTRINSICS_SHUFFLING_SEED_SUBJECT, EMPTY_EXTRINSIC_ROOT,
+    DomainBlockLimit, DomainBundleLimit, DomainId, DomainInstanceData, ExecutionReceipt,
+    OpaqueBundle, OperatorId, OperatorPublicKey, RuntimeId,
+    DOMAIN_EXTRINSICS_SHUFFLING_SEED_SUBJECT, EMPTY_EXTRINSIC_ROOT,
 };
 <span class="kw">use </span>sp_domains_fraud_proof::fraud_proof::{
-    FraudProof, InvalidBlockFeesProof, InvalidDomainBlockHashProof,
+    DomainRuntimeCodeAt, FraudProof, FraudProofVariant, InvalidBlockFeesProof,
+    InvalidDomainBlockHashProof, InvalidTransfersProof,
 };
+<span class="kw">use </span>sp_domains_fraud_proof::storage_proof::{<span class="self">self</span>, BasicStorageProof, DomainRuntimeCodeProof};
 <span class="kw">use </span>sp_domains_fraud_proof::verification::{
-    verify_bundle_equivocation_fraud_proof, verify_invalid_block_fees_fraud_proof,
-    verify_invalid_bundles_fraud_proof, verify_invalid_domain_block_hash_fraud_proof,
+    verify_invalid_block_fees_fraud_proof, verify_invalid_bundles_fraud_proof,
+    verify_invalid_domain_block_hash_fraud_proof,
     verify_invalid_domain_extrinsics_root_fraud_proof, verify_invalid_state_transition_fraud_proof,
     verify_invalid_transfers_fraud_proof, verify_valid_bundle_fraud_proof,
 };
-<span class="kw">use </span>sp_runtime::traits::{Hash, Header, One, Zero};
+<span class="kw">use </span>sp_runtime::traits::{BlockNumberProvider, CheckedSub, Hash, Header, One, Zero};
+<span class="kw">use </span>sp_runtime::transaction_validity::TransactionPriority;
 <span class="kw">use </span>sp_runtime::{RuntimeAppPublic, SaturatedConversion, Saturating};
-<span class="kw">use </span>sp_std::boxed::Box;
-<span class="kw">use </span>sp_std::collections::btree_map::BTreeMap;
-<span class="kw">use </span>sp_std::vec::Vec;
+<span class="kw">use </span>sp_subspace_mmr::{ConsensusChainMmrLeafProof, MmrProofVerifier};
 <span class="kw">pub use </span>staking::OperatorConfig;
-<span class="kw">use </span>subspace_core_primitives::{BlockHash, SlotNumber, U256};
-<span class="kw">use </span>subspace_runtime_primitives::Balance;
+<span class="kw">use </span>subspace_core_primitives::{BlockHash, PotOutput, SlotNumber, U256};
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>BalanceOf&lt;T&gt; =
-    &lt;&lt;T <span class="kw">as </span>Config&gt;::Currency <span class="kw">as </span>Inspect&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId&gt;&gt;::Balance;
+<span class="doccomment">/// Maximum number of nominators to slash within a give operator at a time.
+</span><span class="kw">pub const </span>MAX_NOMINATORS_TO_SLASH: u32 = <span class="number">10</span>;
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>BalanceOf&lt;T&gt; = &lt;T <span class="kw">as </span>Config&gt;::Balance;
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>FungibleHoldId&lt;T&gt; =
     &lt;&lt;T <span class="kw">as </span>Config&gt;::Currency <span class="kw">as </span>InspectHold&lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::AccountId&gt;&gt;::Reason;
@@ -2196,9 +2759,12 @@
     <span class="kw">fn </span>storage_fund_withdrawal(operator_id: OperatorId) -&gt; FungibleHoldId&lt;T&gt;;
 }
 
-<span class="kw">pub trait </span>BlockSlot {
-    <span class="kw">fn </span>current_slot() -&gt; sp_consensus_slots::Slot;
-    <span class="kw">fn </span>future_slot() -&gt; sp_consensus_slots::Slot;
+<span class="kw">pub trait </span>BlockSlot&lt;T: frame_system::Config&gt; {
+    <span class="comment">// Return the future slot of the given `block_number`
+    </span><span class="kw">fn </span>future_slot(block_number: BlockNumberFor&lt;T&gt;) -&gt; <span class="prelude-ty">Option</span>&lt;sp_consensus_slots::Slot&gt;;
+
+    <span class="comment">// Return the latest block number whose slot is less than the given `to_check` slot
+    </span><span class="kw">fn </span>slot_produced_after(to_check: sp_consensus_slots::Slot) -&gt; <span class="prelude-ty">Option</span>&lt;BlockNumberFor&lt;T&gt;&gt;;
 }
 
 <span class="kw">pub type </span>ExecutionReceiptOf&lt;T&gt; = ExecutionReceipt&lt;
@@ -2216,6 +2782,13 @@
     BalanceOf&lt;T&gt;,
 &gt;;
 
+<span class="kw">pub type </span>FraudProofFor&lt;T&gt; = FraudProof&lt;
+    BlockNumberFor&lt;T&gt;,
+    &lt;T <span class="kw">as </span>frame_system::Config&gt;::Hash,
+    &lt;T <span class="kw">as </span>Config&gt;::DomainHeader,
+    &lt;T <span class="kw">as </span>Config&gt;::MmrHash,
+&gt;;
+
 <span class="doccomment">/// Parameters used to verify proof of election.
 </span><span class="attr">#[derive(TypeInfo, Debug, Encode, Decode, Clone, PartialEq, Eq)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>ElectionVerificationParams&lt;Balance&gt; {
@@ -2227,17 +2800,34 @@
 <span class="kw">pub type </span>DomainHashingFor&lt;T&gt; = &lt;&lt;T <span class="kw">as </span>Config&gt;::DomainHeader <span class="kw">as </span>Header&gt;::Hashing;
 <span class="kw">pub type </span>ReceiptHashFor&lt;T&gt; = &lt;&lt;T <span class="kw">as </span>Config&gt;::DomainHeader <span class="kw">as </span>Header&gt;::Hash;
 
+<span class="kw">pub type </span>BlockTreeNodeFor&lt;T&gt; = <span class="kw">crate</span>::block_tree::BlockTreeNode&lt;
+    BlockNumberFor&lt;T&gt;,
+    &lt;T <span class="kw">as </span>frame_system::Config&gt;::Hash,
+    DomainBlockNumberFor&lt;T&gt;,
+    &lt;T <span class="kw">as </span>Config&gt;::DomainHash,
+    BalanceOf&lt;T&gt;,
+&gt;;
+
 <span class="doccomment">/// The current storage version.
 </span><span class="kw">const </span>STORAGE_VERSION: StorageVersion = StorageVersion::new(<span class="number">0</span>);
+
+<span class="doccomment">/// The number of bundle of a particular domain to be included in the block is probabilistic
+/// and based on the consensus chain slot probability and domain bundle slot probability, usually
+/// the value is 6 on average, smaller/bigger value with less probability, we hypocritically use
+/// 100 as the maximum number of bundle per block for benchmarking.
+</span><span class="kw">const </span>MAX_BUNLDE_PER_BLOCK: u32 = <span class="number">100</span>;
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">type </span>StateRootOf&lt;T&gt; = &lt;&lt;T <span class="kw">as </span>frame_system::Config&gt;::Hashing <span class="kw">as </span>Hash&gt;::Output;
 
 <span class="attr">#[frame_support::pallet]
 </span><span class="kw">mod </span>pallet {
     <span class="attr">#![allow(clippy::large_enum_variant)]
 
     </span><span class="kw">use </span><span class="kw">crate</span>::block_tree::{
-        execution_receipt_type, process_execution_receipt, BlockTreeNode, Error <span class="kw">as </span>BlockTreeError,
-        ReceiptType,
+        execution_receipt_type, process_execution_receipt, Error <span class="kw">as </span>BlockTreeError, ReceiptType,
     };
+    <span class="attr">#[cfg(not(feature = <span class="string">"runtime-benchmarks"</span>))]
+    </span><span class="kw">use </span><span class="kw">crate</span>::block_tree::{prune_receipt, AcceptedReceiptType};
     <span class="attr">#[cfg(not(feature = <span class="string">"runtime-benchmarks"</span>))]
     </span><span class="kw">use </span><span class="kw">crate</span>::bundle_storage_fund::refund_storage_fee;
     <span class="kw">use </span><span class="kw">crate</span>::bundle_storage_fund::{charge_bundle_storage_fee, Error <span class="kw">as </span>BundleStorageFundError};
@@ -2247,40 +2837,54 @@
     };
     <span class="kw">use </span><span class="kw">crate</span>::runtime_registry::{
         do_register_runtime, do_schedule_runtime_upgrade, do_upgrade_runtimes,
-        register_runtime_at_genesis, Error <span class="kw">as </span>RuntimeRegistryError, RuntimeObject,
+        register_runtime_at_genesis, DomainRuntimeUpgradeEntry, Error <span class="kw">as </span>RuntimeRegistryError,
         ScheduledRuntimeUpgrade,
     };
     <span class="attr">#[cfg(not(feature = <span class="string">"runtime-benchmarks"</span>))]
+    </span><span class="kw">use </span><span class="kw">crate</span>::staking::do_mark_operators_as_slashed;
+    <span class="attr">#[cfg(not(feature = <span class="string">"runtime-benchmarks"</span>))]
     </span><span class="kw">use </span><span class="kw">crate</span>::staking::do_reward_operators;
     <span class="kw">use </span><span class="kw">crate</span>::staking::{
-        do_deregister_operator, do_nominate_operator, do_register_operator, do_slash_operators,
-        do_switch_operator_domain, do_unlock_funds, do_unlock_operator, do_withdraw_stake, Deposit,
-        DomainEpoch, Error <span class="kw">as </span>StakingError, Operator, OperatorConfig, SharePrice, StakingSummary,
-        Withdrawal,
+        do_deregister_operator, do_nominate_operator, do_register_operator, do_unlock_funds,
+        do_unlock_nominator, do_withdraw_stake, Deposit, DomainEpoch, Error <span class="kw">as </span>StakingError,
+        Operator, OperatorConfig, SharePrice, StakingSummary, Withdrawal,
     };
+    <span class="attr">#[cfg(not(feature = <span class="string">"runtime-benchmarks"</span>))]
+    </span><span class="kw">use </span><span class="kw">crate</span>::staking_epoch::do_slash_operator;
     <span class="kw">use </span><span class="kw">crate</span>::staking_epoch::{do_finalize_domain_current_epoch, Error <span class="kw">as </span>StakingEpochError};
     <span class="kw">use </span><span class="kw">crate</span>::weights::WeightInfo;
+    <span class="attr">#[cfg(not(feature = <span class="string">"runtime-benchmarks"</span>))]
+    </span><span class="kw">use </span><span class="kw">crate</span>::DomainHashingFor;
+    <span class="attr">#[cfg(not(feature = <span class="string">"runtime-benchmarks"</span>))]
+    </span><span class="kw">use </span><span class="kw">crate</span>::MAX_NOMINATORS_TO_SLASH;
     <span class="kw">use crate</span>::{
-        BalanceOf, BlockSlot, DomainBlockNumberFor, ElectionVerificationParams, HoldIdentifier,
-        NominatorId, OpaqueBundleOf, ReceiptHashFor, STORAGE_VERSION,
+        BalanceOf, BlockSlot, BlockTreeNodeFor, DomainBlockNumberFor, ElectionVerificationParams,
+        FraudProofFor, HoldIdentifier, NominatorId, OpaqueBundleOf, ReceiptHashFor, StateRootOf,
+        MAX_BUNLDE_PER_BLOCK, STORAGE_VERSION,
     };
-    <span class="kw">use </span>alloc::string::String;
+    <span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+    </span><span class="kw">use </span>alloc::string::String;
+    <span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+    </span><span class="kw">use </span>alloc::vec;
+    <span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+    </span><span class="kw">use </span>alloc::vec::Vec;
     <span class="kw">use </span>codec::FullCodec;
     <span class="kw">use </span>domain_runtime_primitives::EVMChainId;
     <span class="kw">use </span>frame_support::pallet_prelude::<span class="kw-2">*</span>;
-    <span class="kw">use </span>frame_support::traits::fungible::{InspectHold, Mutate, MutateHold};
+    <span class="kw">use </span>frame_support::traits::fungible::{Inspect, InspectHold, Mutate, MutateHold};
     <span class="kw">use </span>frame_support::traits::Randomness <span class="kw">as </span>RandomnessT;
     <span class="kw">use </span>frame_support::weights::Weight;
     <span class="kw">use </span>frame_support::{Identity, PalletError};
     <span class="kw">use </span>frame_system::pallet_prelude::<span class="kw-2">*</span>;
-    <span class="kw">use </span>sp_consensus_slots::Slot;
     <span class="kw">use </span>sp_core::H256;
     <span class="kw">use </span>sp_domains::bundle_producer_election::ProofOfElectionError;
     <span class="kw">use </span>sp_domains::{
-        BundleDigest, ConfirmedDomainBlock, DomainId, DomainsTransfersTracker, EpochIndex,
-        GenesisDomain, OperatorAllowList, OperatorId, OperatorPublicKey, RuntimeId, RuntimeType,
+        BundleDigest, ConfirmedDomainBlock, DomainBundleSubmitted, DomainId,
+        DomainsTransfersTracker, EpochIndex, GenesisDomain, OnChainRewards, OnDomainInstantiated,
+        OperatorAllowList, OperatorId, OperatorPublicKey, OperatorSignature, RuntimeId,
+        RuntimeObject, RuntimeType,
     };
-    <span class="kw">use </span>sp_domains_fraud_proof::fraud_proof::FraudProof;
+    <span class="kw">use </span>sp_domains_fraud_proof::storage_proof::{<span class="self">self</span>, FraudProofStorageKeyProvider};
     <span class="kw">use </span>sp_domains_fraud_proof::InvalidTransactionCode;
     <span class="kw">use </span>sp_runtime::traits::{
         AtLeast32BitUnsigned, BlockNumberProvider, CheckEqual, CheckedAdd, Header <span class="kw">as </span>HeaderT,
@@ -2291,8 +2895,7 @@
     <span class="kw">use </span>sp_std::collections::btree_map::BTreeMap;
     <span class="kw">use </span>sp_std::collections::btree_set::BTreeSet;
     <span class="kw">use </span>sp_std::fmt::Debug;
-    <span class="kw">use </span>sp_std::vec;
-    <span class="kw">use </span>sp_std::vec::Vec;
+    <span class="kw">use </span>sp_subspace_mmr::MmrProofVerifier;
     <span class="kw">use </span>subspace_core_primitives::U256;
     <span class="kw">use </span>subspace_runtime_primitives::StorageFee;
 
@@ -2321,6 +2924,19 @@
             + Into&lt;H256&gt;
             + From&lt;H256&gt;;
 
+        <span class="comment">// We need this explicit type since Currency::Balance does not provide From&lt;u64&gt;
+        </span><span class="kw">type </span>Balance: Parameter
+            + Member
+            + MaybeSerializeDeserialize
+            + AtLeast32BitUnsigned
+            + FullCodec
+            + Debug
+            + MaybeDisplay
+            + Default
+            + Copy
+            + MaxEncodedLen
+            + From&lt;u64&gt;;
+
         <span class="doccomment">/// The domain header type.
         </span><span class="kw">type </span>DomainHeader: HeaderT&lt;Hash = <span class="self">Self</span>::DomainHash&gt;;
 
@@ -2333,7 +2949,8 @@
         </span><span class="kw">type </span>DomainRuntimeUpgradeDelay: Get&lt;BlockNumberFor&lt;<span class="self">Self</span>&gt;&gt;;
 
         <span class="doccomment">/// Currency type used by the domains for staking and other currency related stuff.
-        </span><span class="kw">type </span>Currency: Mutate&lt;<span class="self">Self</span>::AccountId&gt;
+        </span><span class="kw">type </span>Currency: Inspect&lt;<span class="self">Self</span>::AccountId, Balance = <span class="self">Self</span>::Balance&gt;
+            + Mutate&lt;<span class="self">Self</span>::AccountId&gt;
             + InspectHold&lt;<span class="self">Self</span>::AccountId&gt;
             + MutateHold&lt;<span class="self">Self</span>::AccountId&gt;;
 
@@ -2356,6 +2973,10 @@
         <span class="doccomment">/// The block tree pruning depth.
         </span><span class="attr">#[pallet::constant]
         </span><span class="kw">type </span>BlockTreePruningDepth: Get&lt;DomainBlockNumberFor&lt;<span class="self">Self</span>&gt;&gt;;
+
+        <span class="doccomment">/// Consensus chain slot probability.
+        </span><span class="attr">#[pallet::constant]
+        </span><span class="kw">type </span>ConsensusSlotProbability: Get&lt;(u64, u64)&gt;;
 
         <span class="doccomment">/// The maximum block size limit for all domain.
         </span><span class="attr">#[pallet::constant]
@@ -2412,16 +3033,8 @@
         </span><span class="attr">#[pallet::constant]
         </span><span class="kw">type </span>MaxPendingStakingOperation: Get&lt;u32&gt;;
 
-        <span class="doccomment">/// The maximum number of nominators for given operator.
-        </span><span class="attr">#[pallet::constant]
-        </span><span class="kw">type </span>MaxNominators: Get&lt;u32&gt;;
-
         <span class="doccomment">/// Randomness source.
         </span><span class="kw">type </span>Randomness: RandomnessT&lt;<span class="self">Self</span>::Hash, BlockNumberFor&lt;<span class="self">Self</span>&gt;&gt;;
-
-        <span class="doccomment">/// The sudo account id
-        </span><span class="attr">#[pallet::constant]
-        </span><span class="kw">type </span>SudoId: Get&lt;<span class="self">Self</span>::AccountId&gt;;
 
         <span class="doccomment">/// The pallet-domains's pallet id.
         </span><span class="attr">#[pallet::constant]
@@ -2431,7 +3044,7 @@
         </span><span class="kw">type </span>StorageFee: StorageFee&lt;BalanceOf&lt;<span class="self">Self</span>&gt;&gt;;
 
         <span class="doccomment">/// The block slot
-        </span><span class="kw">type </span>BlockSlot: BlockSlot;
+        </span><span class="kw">type </span>BlockSlot: BlockSlot&lt;<span class="self">Self</span>&gt;;
 
         <span class="doccomment">/// Transfers tracker.
         </span><span class="kw">type </span>DomainsTransfersTracker: DomainsTransfersTracker&lt;BalanceOf&lt;<span class="self">Self</span>&gt;&gt;;
@@ -2441,6 +3054,32 @@
 
         <span class="doccomment">/// Minimum balance for each initial domain account
         </span><span class="kw">type </span>MinInitialDomainAccountBalance: Get&lt;BalanceOf&lt;<span class="self">Self</span>&gt;&gt;;
+
+        <span class="doccomment">/// How many block a bundle should still consider as valid after produced
+        </span><span class="attr">#[pallet::constant]
+        </span><span class="kw">type </span>BundleLongevity: Get&lt;u32&gt;;
+
+        <span class="doccomment">/// Post hook to notify accepted domain bundles in previous block.
+        </span><span class="kw">type </span>DomainBundleSubmitted: DomainBundleSubmitted;
+
+        <span class="doccomment">/// A hook to call after a domain is instantiated
+        </span><span class="kw">type </span>OnDomainInstantiated: OnDomainInstantiated;
+
+        <span class="doccomment">/// Hash type of MMR
+        </span><span class="kw">type </span>MmrHash: Parameter + Member + Default + Clone;
+
+        <span class="doccomment">/// MMR proof verifier
+        </span><span class="kw">type </span>MmrProofVerifier: MmrProofVerifier&lt;
+            <span class="self">Self</span>::MmrHash,
+            BlockNumberFor&lt;<span class="self">Self</span>&gt;,
+            StateRootOf&lt;<span class="self">Self</span>&gt;,
+        &gt;;
+
+        <span class="doccomment">/// Fraud proof storage key provider
+        </span><span class="kw">type </span>FraudProofStorageKeyProvider: FraudProofStorageKeyProvider;
+
+        <span class="doccomment">/// Hook to handle chain rewards.
+        </span><span class="kw">type </span>OnChainRewards: OnChainRewards&lt;BalanceOf&lt;<span class="self">Self</span>&gt;&gt;;
     }
 
     <span class="attr">#[pallet::pallet]
@@ -2450,12 +3089,7 @@
 
     <span class="doccomment">/// Bundles submitted successfully in current block.
     </span><span class="attr">#[pallet::storage]
-    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>SuccessfulBundles&lt;T&gt; = StorageMap&lt;<span class="kw">_</span>, Identity, DomainId, Vec&lt;H256&gt;, ValueQuery&gt;;
-
-    <span class="doccomment">/// Fraud proofs submitted successfully in current block.
-    </span><span class="attr">#[pallet::storage]
-    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>SuccessfulFraudProofs&lt;T: Config&gt; =
-        StorageMap&lt;<span class="kw">_</span>, Identity, DomainId, Vec&lt;T::DomainHash&gt;, ValueQuery&gt;;
+    </span><span class="kw">pub type </span>SuccessfulBundles&lt;T&gt; = StorageMap&lt;<span class="kw">_</span>, Identity, DomainId, Vec&lt;H256&gt;, ValueQuery&gt;;
 
     <span class="doccomment">/// Stores the next runtime id.
     </span><span class="attr">#[pallet::storage]
@@ -2477,7 +3111,7 @@
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>NextEVMChainId&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, EVMChainId, ValueQuery, StartingEVMChainId&gt;;
 
     <span class="attr">#[pallet::storage]
-    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>RuntimeRegistry&lt;T: Config&gt; =
+    </span><span class="kw">pub type </span>RuntimeRegistry&lt;T: Config&gt; =
         StorageMap&lt;<span class="kw">_</span>, Identity, RuntimeId, RuntimeObject&lt;BlockNumberFor&lt;T&gt;, T::Hash&gt;, OptionQuery&gt;;
 
     <span class="attr">#[pallet::storage]
@@ -2519,11 +3153,16 @@
         OptionQuery,
     &gt;;
 
-    <span class="doccomment">/// Temporary hold of all the operators who decided to switch to another domain.
-    /// Once epoch is complete, these operators are added to new domains under next_operators.
+    <span class="doccomment">/// The highest slot of the bundle submitted by an operator
     </span><span class="attr">#[pallet::storage]
-    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>PendingOperatorSwitches&lt;T: Config&gt; =
-        StorageMap&lt;<span class="kw">_</span>, Identity, DomainId, BTreeSet&lt;OperatorId&gt;, OptionQuery&gt;;
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>OperatorHighestSlot&lt;T: Config&gt; =
+        StorageMap&lt;<span class="kw">_</span>, Identity, OperatorId, u64, ValueQuery&gt;;
+
+    <span class="doccomment">/// The set of slot of the bundle submitted by an operator in the current block, cleared at the
+    /// next block initialization
+    </span><span class="attr">#[pallet::storage]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>OperatorBundleSlot&lt;T: Config&gt; =
+        StorageMap&lt;<span class="kw">_</span>, Identity, OperatorId, BTreeSet&lt;u64&gt;, ValueQuery&gt;;
 
     <span class="doccomment">/// Share price for the operator pool at the end of Domain epoch.
     </span><span class="comment">// TODO: currently unbounded storage.
@@ -2580,6 +3219,7 @@
 
     <span class="doccomment">/// Stores the next domain id.
     </span><span class="attr">#[pallet::storage]
+    #[pallet::getter(<span class="kw">fn </span>next_domain_id)]
     </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>NextDomainId&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, DomainId, ValueQuery&gt;;
 
     <span class="doccomment">/// The domain registry
@@ -2607,19 +3247,8 @@
 
     <span class="doccomment">/// Mapping of block tree node hash to the node, each node represent a domain block
     </span><span class="attr">#[pallet::storage]
-    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>BlockTreeNodes&lt;T: Config&gt; = StorageMap&lt;
-        <span class="kw">_</span>,
-        Identity,
-        ReceiptHashFor&lt;T&gt;,
-        BlockTreeNode&lt;
-            BlockNumberFor&lt;T&gt;,
-            T::Hash,
-            DomainBlockNumberFor&lt;T&gt;,
-            T::DomainHash,
-            BalanceOf&lt;T&gt;,
-        &gt;,
-        OptionQuery,
-    &gt;;
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>BlockTreeNodes&lt;T: Config&gt; =
+        StorageMap&lt;<span class="kw">_</span>, Identity, ReceiptHashFor&lt;T&gt;, BlockTreeNodeFor&lt;T&gt;, OptionQuery&gt;;
 
     <span class="doccomment">/// The head receipt number of each domain
     </span><span class="attr">#[pallet::storage]
@@ -2696,6 +3325,42 @@
         OptionQuery,
     &gt;;
 
+    <span class="doccomment">/// The latest ER submitted by the operator for a given domain. It is used to determine if the operator
+    /// has submitted bad ER and is pending to slash.
+    ///
+    /// The storage item of a given `(domain_id, operator_id)` will be pruned after either:
+    /// - All the ERs submitted by the operator for this domain are confirmed and pruned
+    /// - All the bad ERs submitted by the operator for this domain are pruned and the operator is slashed
+    </span><span class="attr">#[pallet::storage]
+    #[pallet::getter(<span class="kw">fn </span>latest_submitted_er)]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>LatestSubmittedER&lt;T: Config&gt; =
+        StorageMap&lt;<span class="kw">_</span>, Identity, (DomainId, OperatorId), DomainBlockNumberFor&lt;T&gt;, ValueQuery&gt;;
+
+    <span class="doccomment">/// Storage for PermissionedActions for domain instantiation and other permissioned calls.
+    </span><span class="attr">#[pallet::storage]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>PermissionedActionAllowedBy&lt;T: Config&gt; =
+        StorageValue&lt;<span class="kw">_</span>, sp_domains::PermissionedActionAllowedBy&lt;T::AccountId&gt;, OptionQuery&gt;;
+
+    <span class="doccomment">/// Accumulate treasury funds temporarily until the funds are above Existential despoit.
+    /// We do this to ensure minting small amounts into treasury would not fail.
+    </span><span class="attr">#[pallet::storage]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>AccumulatedTreasuryFunds&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, BalanceOf&lt;T&gt;, ValueQuery&gt;;
+
+    <span class="doccomment">/// Storage used to keep track of which consensus block the domain runtime upgrade happen.
+    </span><span class="attr">#[pallet::storage]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">type </span>DomainRuntimeUpgradeRecords&lt;T: Config&gt; = StorageMap&lt;
+        <span class="kw">_</span>,
+        Identity,
+        RuntimeId,
+        BTreeMap&lt;BlockNumberFor&lt;T&gt;, DomainRuntimeUpgradeEntry&lt;T::Hash&gt;&gt;,
+        ValueQuery,
+    &gt;;
+
+    <span class="doccomment">/// Temporary storage keep track of domain runtime upgrade happen in the current block, cleared
+    /// in the next block initialization.
+    </span><span class="attr">#[pallet::storage]
+    </span><span class="kw">pub type </span>DomainRuntimeUpgrades&lt;T&gt; = StorageValue&lt;<span class="kw">_</span>, Vec&lt;RuntimeId&gt;, ValueQuery&gt;;
+
     <span class="attr">#[derive(TypeInfo, Encode, Decode, PalletError, Debug, PartialEq)]
     </span><span class="kw">pub enum </span>BundleError {
         <span class="doccomment">/// Can not find the operator for given operator id.
@@ -2720,12 +3385,21 @@
         </span>InvalidExtrinsicRoot,
         <span class="doccomment">/// This bundle duplicated with an already submitted bundle
         </span>DuplicatedBundle,
-        <span class="doccomment">/// Invalid proof of time in the proof of election  
+        <span class="doccomment">/// Invalid proof of time in the proof of election
         </span>InvalidProofOfTime,
         <span class="doccomment">/// The bundle is built on a slot in the future
         </span>SlotInTheFuture,
         <span class="doccomment">/// The bundle is built on a slot in the past
         </span>SlotInThePast,
+        <span class="doccomment">/// Unable to calculate bundle limit
+        </span>UnableToCalculateBundleLimit,
+        <span class="doccomment">/// Bundle weight exceeds the max bundle weight limit
+        </span>BundleTooHeavy,
+        <span class="doccomment">/// The bundle slot is smaller then the highest slot from previous slot
+        /// thus potential equivocated bundle
+        </span>SlotSmallerThanPreviousBlockBundle,
+        <span class="doccomment">/// Equivocated bundle in current block
+        </span>EquivocatedBundle,
     }
 
     <span class="attr">#[derive(TypeInfo, Encode, Decode, PalletError, Debug, PartialEq)]
@@ -2757,8 +3431,28 @@
         </span>MissingOperator,
         <span class="doccomment">/// Unexpected fraud proof.
         </span>UnexpectedFraudProof,
-        <span class="doccomment">/// Bad/Invalid bundle equivocation fraud proof.
-        </span>BadBundleEquivocationFraudProof,
+        <span class="doccomment">/// The bad receipt already reported by a previous fraud proof
+        </span>BadReceiptAlreadyReported,
+        <span class="doccomment">/// Bad MMR proof, it may due to the proof is expired or it is generated against a different fork.
+        </span>BadMmrProof,
+        <span class="doccomment">/// Unexpected MMR proof
+        </span>UnexpectedMmrProof,
+        <span class="doccomment">/// Missing MMR proof
+        </span>MissingMmrProof,
+        <span class="doccomment">/// Domain runtime not found
+        </span>RuntimeNotFound,
+        <span class="doccomment">/// The domain runtime code proof is not provided
+        </span>DomainRuntimeCodeProofNotFound,
+        <span class="doccomment">/// The domain runtime code proof is unexpected
+        </span>UnexpectedDomainRuntimeCodeProof,
+        <span class="doccomment">/// The storage proof is invalid
+        </span>StorageProof(storage_proof::VerificationError),
+    }
+
+    <span class="kw">impl </span>From&lt;storage_proof::VerificationError&gt; <span class="kw">for </span>FraudProofError {
+        <span class="kw">fn </span>from(err: storage_proof::VerificationError) -&gt; <span class="self">Self </span>{
+            FraudProofError::StorageProof(err)
+        }
     }
 
     <span class="kw">impl</span>&lt;T&gt; From&lt;FraudProofError&gt; <span class="kw">for </span>Error&lt;T&gt; {
@@ -2828,6 +3522,8 @@
         </span>BlockTree(BlockTreeError),
         <span class="doccomment">/// Bundle storage fund specific errors
         </span>BundleStorageFund(BundleStorageFundError),
+        <span class="doccomment">/// Permissioned action is not allowed by the caller.
+        </span>PermissionedActionNotAllowed,
     }
 
     <span class="doccomment">/// Reason for slashing an operator
@@ -2837,8 +3533,6 @@
         </span>InvalidBundle(DomainBlock),
         <span class="doccomment">/// Operator submitted bad Execution receipt.
         </span>BadExecutionReceipt(ReceiptHash),
-        <span class="doccomment">/// Operator caused Bundle equivocation
-        </span>BundleEquivocation(Slot),
     }
 
     <span class="attr">#[pallet::event]
@@ -2956,7 +3650,7 @@
     <span class="attr">#[pallet::call]
     </span><span class="kw">impl</span>&lt;T: Config&gt; Pallet&lt;T&gt; {
         <span class="attr">#[pallet::call_index(<span class="number">0</span>)]
-        #[pallet::weight(T::WeightInfo::submit_bundle().saturating_add(T::WeightInfo::pending_staking_operation()))]
+        #[pallet::weight(Pallet::&lt;T&gt;::max_submit_bundle_weight())]
         </span><span class="kw">pub fn </span>submit_bundle(
             origin: OriginFor&lt;T&gt;,
             opaque_bundle: OpaqueBundleOf&lt;T&gt;,
@@ -2971,12 +3665,15 @@
             <span class="kw">let </span>extrinsics_root = opaque_bundle.extrinsics_root();
             <span class="kw">let </span>operator_id = opaque_bundle.operator_id();
             <span class="kw">let </span>bundle_size = opaque_bundle.size();
+            <span class="kw">let </span>slot_number = opaque_bundle.slot_number();
             <span class="kw">let </span>receipt = opaque_bundle.into_receipt();
+            <span class="attr">#[cfg_attr(feature = <span class="string">"runtime-benchmarks"</span>, allow(unused_variables))]
+            </span><span class="kw">let </span>receipt_block_number = receipt.domain_block_number;
 
             <span class="attr">#[cfg(not(feature = <span class="string">"runtime-benchmarks"</span>))]
-            </span><span class="kw">let </span><span class="kw-2">mut </span>epoch_transitted = <span class="bool-val">false</span>;
+            </span><span class="kw">let </span><span class="kw-2">mut </span>actual_weight = T::WeightInfo::submit_bundle();
             <span class="attr">#[cfg(feature = <span class="string">"runtime-benchmarks"</span>)]
-            </span><span class="kw">let </span>epoch_transitted = <span class="bool-val">false</span>;
+            </span><span class="kw">let </span>actual_weight = T::WeightInfo::submit_bundle();
 
             <span class="kw">match </span>execution_receipt_type::&lt;T&gt;(domain_id, <span class="kw-2">&amp;</span>receipt) {
                 ReceiptType::Rejected(rejected_receipt_type) =&gt; {
@@ -2984,6 +3681,33 @@
                 }
                 <span class="comment">// Add the exeuctione receipt to the block tree
                 </span>ReceiptType::Accepted(accepted_receipt_type) =&gt; {
+                    <span class="comment">// Before adding the new head receipt to the block tree, try to prune any previous
+                    // bad ER at the same domain block and slash the submitter.
+                    //
+                    // NOTE: Skip the following staking related operations when benchmarking the
+                    // `submit_bundle` call, these operations will be benchmarked separately.
+                    </span><span class="attr">#[cfg(not(feature = <span class="string">"runtime-benchmarks"</span>))]
+                    </span><span class="kw">if </span>accepted_receipt_type == AcceptedReceiptType::NewHead {
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(block_tree_node) =
+                            prune_receipt::&lt;T&gt;(domain_id, receipt_block_number)
+                                .map_err(Error::&lt;T&gt;::from)<span class="question-mark">?
+                        </span>{
+                            actual_weight =
+                                actual_weight.saturating_add(T::WeightInfo::handle_bad_receipt(
+                                    block_tree_node.operator_ids.len() <span class="kw">as </span>u32,
+                                ));
+
+                            <span class="kw">let </span>bad_receipt_hash = block_tree_node
+                                .execution_receipt
+                                .hash::&lt;DomainHashingFor&lt;T&gt;&gt;();
+                            do_mark_operators_as_slashed::&lt;T&gt;(
+                                block_tree_node.operator_ids.into_iter(),
+                                SlashedReason::BadExecutionReceipt(bad_receipt_hash),
+                            )
+                            .map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
+                        }
+                    }
+
                     <span class="attr">#[cfg_attr(feature = <span class="string">"runtime-benchmarks"</span>, allow(unused_variables))]
                     </span><span class="kw">let </span>maybe_confirmed_domain_block_info = process_execution_receipt::&lt;T&gt;(
                         domain_id,
@@ -2998,11 +3722,14 @@
                     //
                     // NOTE: Skip the following staking related operations when benchmarking the
                     // `submit_bundle` call, these operations will be benchmarked separately.
-                    // TODO: in order to get a more accurate actual weight, separately benchmark:
-                    // - `do_reward_operators`,`do_slash_operators`,`do_unlock_pending_withdrawals`
-                    // - `do_finalize_domain_current_epoch`
                     </span><span class="attr">#[cfg(not(feature = <span class="string">"runtime-benchmarks"</span>))]
                     </span><span class="kw">if let </span><span class="prelude-val">Some</span>(confirmed_block_info) = maybe_confirmed_domain_block_info {
+                        actual_weight =
+                            actual_weight.saturating_add(T::WeightInfo::confirm_domain_block(
+                                confirmed_block_info.operator_ids.len() <span class="kw">as </span>u32,
+                                confirmed_block_info.invalid_bundle_authors.len() <span class="kw">as </span>u32,
+                            ));
+
                         refund_storage_fee::&lt;T&gt;(
                             confirmed_block_info.total_storage_fee,
                             confirmed_block_info.paid_bundle_storage_fees,
@@ -3016,32 +3743,27 @@
                         )
                         .map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
 
-                        do_slash_operators::&lt;T, <span class="kw">_</span>&gt;(
-                            confirmed_block_info.invalid_bundle_authors.into_iter().map(
-                                |operator_id| {
-                                    (
-                                        operator_id,
-                                        SlashedReason::InvalidBundle(
-                                            confirmed_block_info.domain_block_number,
-                                        ),
-                                    )
-                                },
-                            ),
+                        do_mark_operators_as_slashed::&lt;T&gt;(
+                            confirmed_block_info.invalid_bundle_authors.into_iter(),
+                            SlashedReason::InvalidBundle(confirmed_block_info.domain_block_number),
                         )
                         .map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
 
                         <span class="kw">if </span>confirmed_block_info.domain_block_number % T::StakeEpochDuration::get()
                             == Zero::zero()
                         {
-                            <span class="kw">let </span>completed_epoch_index =
+                            <span class="kw">let </span>epoch_transition_res =
                                 do_finalize_domain_current_epoch::&lt;T&gt;(domain_id)
                                     .map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
 
                             <span class="self">Self</span>::deposit_event(Event::DomainEpochCompleted {
                                 domain_id,
-                                completed_epoch_index,
+                                completed_epoch_index: epoch_transition_res.completed_epoch_index,
                             });
-                            epoch_transitted = <span class="bool-val">true</span>;
+
+                            actual_weight = actual_weight.saturating_add(
+                                <span class="self">Self</span>::actual_epoch_transition_weight(epoch_transition_res),
+                            );
                         }
                     }
                 }
@@ -3051,8 +3773,19 @@
             // consensus block, which also mean a domain block will be produced thus update `HeadDomainNumber`
             // to this domain block's block number.
             </span><span class="kw">if </span>SuccessfulBundles::&lt;T&gt;::get(domain_id).is_empty() {
+                <span class="comment">// Domain runtime upgrade is forced happened even if there is no bundle submitted for a given domain
+                // it will still derive a domain block for the upgrade, so we need to increase the `HeadDomainNumber`
+                // by the number of runtime upgrade happen since last block to account for these blocks.
+                //
+                // NOTE: if a domain runtime upgrade happened in the current block it won't be accounted into
+                // `missed_upgrade` because `DomainRuntimeUpgradeRecords` is updated in the next block's initialization.
+                </span><span class="kw">let </span>missed_upgrade =
+                    <span class="self">Self</span>::missed_domain_runtime_upgrade(domain_id).map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
+
                 <span class="kw">let </span>next_number = HeadDomainNumber::&lt;T&gt;::get(domain_id)
                     .checked_add(<span class="kw-2">&amp;</span>One::one())
+                    .ok_or::&lt;Error&lt;T&gt;&gt;(BlockTreeError::MaxHeadDomainNumber.into())<span class="question-mark">?
+                    </span>.checked_add(<span class="kw-2">&amp;</span>missed_upgrade.into())
                     .ok_or::&lt;Error&lt;T&gt;&gt;(BlockTreeError::MaxHeadDomainNumber.into())<span class="question-mark">?</span>;
                 HeadDomainNumber::&lt;T&gt;::set(domain_id, next_number);
             }
@@ -3073,105 +3806,96 @@
 
             SuccessfulBundles::&lt;T&gt;::append(domain_id, bundle_hash);
 
+            OperatorBundleSlot::&lt;T&gt;::mutate(operator_id, |slot_set| slot_set.insert(slot_number));
+
+            <span class="comment">// slash operator who are in pending slash
+            </span><span class="attr">#[cfg(not(feature = <span class="string">"runtime-benchmarks"</span>))]
+            </span>{
+                <span class="kw">let </span>slashed_nominator_count =
+                    do_slash_operator::&lt;T&gt;(domain_id, MAX_NOMINATORS_TO_SLASH)
+                        .map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
+                actual_weight = actual_weight
+                    .saturating_add(<span class="self">Self</span>::actual_slash_operator_weight(slashed_nominator_count));
+            }
+
             <span class="self">Self</span>::deposit_event(Event::BundleStored {
                 domain_id,
                 bundle_hash,
                 bundle_author: operator_id,
             });
 
-            <span class="kw">let </span>actual_weight = <span class="kw">if </span>!epoch_transitted {
-                <span class="prelude-val">Some</span>(T::WeightInfo::submit_bundle())
-            } <span class="kw">else </span>{
-                <span class="prelude-val">Some</span>(
-                    T::WeightInfo::submit_bundle()
-                        .saturating_add(T::WeightInfo::pending_staking_operation()),
-                )
-            };
-            <span class="prelude-val">Ok</span>(actual_weight.into())
+            <span class="comment">// Ensure the returned weight not exceed the maximum weight in the `pallet::weight`
+            </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(actual_weight.min(<span class="self">Self</span>::max_submit_bundle_weight())).into())
         }
 
-        <span class="attr">#[pallet::call_index(<span class="number">1</span>)]
-        </span><span class="comment">// TODO: proper weight
-        </span><span class="attr">#[pallet::weight((Weight::from_all(<span class="number">10_000</span>), DispatchClass::Operational, Pays::No))]
+        <span class="attr">#[pallet::call_index(<span class="number">15</span>)]
+        #[pallet::weight((
+            T::WeightInfo::submit_fraud_proof().saturating_add(
+                T::WeightInfo::handle_bad_receipt(MAX_BUNLDE_PER_BLOCK)
+            ),
+            DispatchClass::Operational
+        ))]
         </span><span class="kw">pub fn </span>submit_fraud_proof(
             origin: OriginFor&lt;T&gt;,
-            fraud_proof: Box&lt;FraudProof&lt;BlockNumberFor&lt;T&gt;, T::Hash, T::DomainHeader&gt;&gt;,
-        ) -&gt; DispatchResult {
+            fraud_proof: Box&lt;FraudProofFor&lt;T&gt;&gt;,
+        ) -&gt; DispatchResultWithPostInfo {
             ensure_none(origin)<span class="question-mark">?</span>;
 
             <span class="macro">log::trace!</span>(target: <span class="string">"runtime::domains"</span>, <span class="string">"Processing fraud proof: {fraud_proof:?}"</span>);
+
+            <span class="attr">#[cfg(not(feature = <span class="string">"runtime-benchmarks"</span>))]
+            </span><span class="kw">let </span><span class="kw-2">mut </span>actual_weight = T::WeightInfo::submit_fraud_proof();
+            <span class="attr">#[cfg(feature = <span class="string">"runtime-benchmarks"</span>)]
+            </span><span class="kw">let </span>actual_weight = T::WeightInfo::submit_fraud_proof();
+
             <span class="kw">let </span>domain_id = fraud_proof.domain_id();
+            <span class="kw">let </span>bad_receipt_hash = fraud_proof.targeted_bad_receipt_hash();
+            <span class="kw">let </span>head_receipt_number = HeadReceiptNumber::&lt;T&gt;::get(domain_id);
+            <span class="kw">let </span>bad_receipt_number = BlockTreeNodes::&lt;T&gt;::get(bad_receipt_hash)
+                .ok_or::&lt;Error&lt;T&gt;&gt;(FraudProofError::BadReceiptNotFound.into())<span class="question-mark">?
+                </span>.execution_receipt
+                .domain_block_number;
+            <span class="comment">// The `head_receipt_number` must greater than or equal to any existing receipt, including
+            // the bad receipt, otherwise the fraud proof should be rejected due to `BadReceiptNotFound`,
+            // double check here to make it more robust.
+            </span><span class="macro">ensure!</span>(
+                head_receipt_number &gt;= bad_receipt_number,
+                Error::&lt;T&gt;::from(FraudProofError::BadReceiptNotFound),
+            );
 
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(bad_receipt_hash) = fraud_proof.targeted_bad_receipt_hash() {
-                <span class="kw">let </span><span class="kw-2">mut </span>operators_to_slash = BTreeMap::new();
-                <span class="kw">let </span>head_receipt_number = HeadReceiptNumber::&lt;T&gt;::get(domain_id);
-                <span class="kw">let </span>bad_receipt_number = BlockTreeNodes::&lt;T&gt;::get(bad_receipt_hash)
-                    .ok_or::&lt;Error&lt;T&gt;&gt;(FraudProofError::BadReceiptNotFound.into())<span class="question-mark">?
-                    </span>.execution_receipt
-                    .domain_block_number;
-                <span class="comment">// The `head_receipt_number` must greater than or equal to any existing receipt, including
-                // the bad receipt, otherwise the fraud proof should be rejected due to `BadReceiptNotFound`,
-                // double check here to make it more robust.
-                </span><span class="macro">ensure!</span>(
-                    head_receipt_number &gt;= bad_receipt_number,
-                    Error::&lt;T&gt;::from(FraudProofError::BadReceiptNotFound),
-                );
+            <span class="comment">// Prune the bad ER and slash the submitter, the descendants of the bad ER (i.e. all ERs in
+            // `[bad_receipt_number + 1..head_receipt_number]` ) and the corresponding submitter will be
+            // pruned/slashed lazily as the domain progressed.
+            //
+            // NOTE: Skip the following staking related operations when benchmarking the
+            // `submit_fraud_proof` call, these operations will be benchmarked separately.
+            </span><span class="attr">#[cfg(not(feature = <span class="string">"runtime-benchmarks"</span>))]
+            </span>{
+                <span class="kw">let </span>block_tree_node = prune_receipt::&lt;T&gt;(domain_id, bad_receipt_number)
+                    .map_err(Error::&lt;T&gt;::from)<span class="question-mark">?
+                    </span>.ok_or::&lt;Error&lt;T&gt;&gt;(FraudProofError::BadReceiptNotFound.into())<span class="question-mark">?</span>;
 
-                <span class="comment">// Starting from the head receipt, prune all ER between [bad_receipt_number..head_receipt_number]
-                </span><span class="kw">let </span><span class="kw-2">mut </span>to_prune = head_receipt_number;
+                actual_weight = actual_weight.saturating_add(T::WeightInfo::handle_bad_receipt(
+                    (block_tree_node.operator_ids.len() <span class="kw">as </span>u32).min(MAX_BUNLDE_PER_BLOCK),
+                ));
 
-                <span class="kw">while </span>to_prune &gt;= bad_receipt_number {
-                    <span class="kw">let </span>receipt_hash = BlockTree::&lt;T&gt;::take(domain_id, to_prune)
-                        .ok_or::&lt;Error&lt;T&gt;&gt;(FraudProofError::BadReceiptNotFound.into())<span class="question-mark">?</span>;
-
-                    <span class="kw">let </span>BlockTreeNode { operator_ids, .. } =
-                        BlockTreeNodes::&lt;T&gt;::take(receipt_hash)
-                            .ok_or::&lt;Error&lt;T&gt;&gt;(FraudProofError::BadReceiptNotFound.into())<span class="question-mark">?</span>;
-
-                    <span class="comment">// NOTE: the operator id will be deduplicated since we are using `BTreeMap`
-                    // and slashed reason will hold earliest bad execution receipt hash which this
-                    // operator submitted.
-                    </span>operator_ids.into_iter().for_each(|id| {
-                        operators_to_slash
-                            .insert(id, SlashedReason::BadExecutionReceipt(receipt_hash));
-                    });
-
-                    to_prune -= One::one();
-                }
-
-                <span class="comment">// Update the head receipt number to `bad_receipt_number - 1`
-                </span><span class="kw">let </span>new_head_receipt_number = bad_receipt_number.saturating_sub(One::one());
-                HeadReceiptNumber::&lt;T&gt;::insert(domain_id, new_head_receipt_number);
-
-                <span class="self">Self</span>::deposit_event(Event::FraudProofProcessed {
-                    domain_id,
-                    new_head_receipt_number: <span class="prelude-val">Some</span>(new_head_receipt_number),
-                });
-
-                <span class="comment">// Slash bad operators
-                </span>do_slash_operators::&lt;T, <span class="kw">_</span>&gt;(operators_to_slash.into_iter())
-                    .map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
-            } <span class="kw">else if let </span><span class="prelude-val">Some</span>((targeted_bad_operator, slot)) =
-                fraud_proof.targeted_bad_operator_and_slot_for_bundle_equivocation()
-            {
-                <span class="self">Self</span>::deposit_event(Event::FraudProofProcessed {
-                    domain_id,
-                    new_head_receipt_number: <span class="prelude-val">None</span>,
-                });
-
-                do_slash_operators::&lt;T, <span class="kw">_</span>&gt;(
-                    <span class="macro">vec!</span>[(
-                        targeted_bad_operator,
-                        SlashedReason::BundleEquivocation(slot),
-                    )]
-                    .into_iter(),
+                do_mark_operators_as_slashed::&lt;T&gt;(
+                    block_tree_node.operator_ids.into_iter(),
+                    SlashedReason::BadExecutionReceipt(bad_receipt_hash),
                 )
                 .map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
             }
 
-            SuccessfulFraudProofs::&lt;T&gt;::append(domain_id, fraud_proof.hash());
+            <span class="comment">// Update the head receipt number to `bad_receipt_number - 1`
+            </span><span class="kw">let </span>new_head_receipt_number = bad_receipt_number.saturating_sub(One::one());
+            HeadReceiptNumber::&lt;T&gt;::insert(domain_id, new_head_receipt_number);
 
-            <span class="prelude-val">Ok</span>(())
+            <span class="self">Self</span>::deposit_event(Event::FraudProofProcessed {
+                domain_id,
+                new_head_receipt_number: <span class="prelude-val">Some</span>(new_head_receipt_number),
+            });
+
+            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(actual_weight).into())
         }
 
         <span class="attr">#[pallet::call_index(<span class="number">2</span>)]
@@ -3233,12 +3957,18 @@
             domain_id: DomainId,
             amount: BalanceOf&lt;T&gt;,
             config: OperatorConfig&lt;BalanceOf&lt;T&gt;&gt;,
+            signing_key_proof_of_ownership: OperatorSignature,
         ) -&gt; DispatchResult {
             <span class="kw">let </span>owner = ensure_signed(origin)<span class="question-mark">?</span>;
 
-            <span class="kw">let </span>(operator_id, current_epoch_index) =
-                do_register_operator::&lt;T&gt;(owner, domain_id, amount, config)
-                    .map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
+            <span class="kw">let </span>(operator_id, current_epoch_index) = do_register_operator::&lt;T&gt;(
+                owner,
+                domain_id,
+                amount,
+                config,
+                <span class="prelude-val">Some</span>(signing_key_proof_of_ownership),
+            )
+            .map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
 
             <span class="self">Self</span>::deposit_event(Event::OperatorRegistered {
                 operator_id,
@@ -3280,9 +4010,13 @@
             origin: OriginFor&lt;T&gt;,
             domain_config: DomainConfig&lt;T::AccountId, BalanceOf&lt;T&gt;&gt;,
         ) -&gt; DispatchResult {
-            ensure_root(origin)<span class="question-mark">?</span>;
-
-            <span class="kw">let </span>who = T::SudoId::get();
+            <span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
+            <span class="macro">ensure!</span>(
+                PermissionedActionAllowedBy::&lt;T&gt;::get()
+                    .map(|allowed_by| allowed_by.is_allowed(<span class="kw-2">&amp;</span>who))
+                    .unwrap_or_default(),
+                Error::&lt;T&gt;::PermissionedActionNotAllowed
+            );
 
             <span class="kw">let </span>created_at = frame_system::Pallet::&lt;T&gt;::current_block_number();
 
@@ -3290,26 +4024,6 @@
                 .map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
 
             <span class="self">Self</span>::deposit_event(Event::DomainInstantiated { domain_id });
-
-            <span class="prelude-val">Ok</span>(())
-        }
-
-        <span class="attr">#[pallet::call_index(<span class="number">7</span>)]
-        #[pallet::weight(T::WeightInfo::switch_domain())]
-        </span><span class="kw">pub fn </span>switch_domain(
-            origin: OriginFor&lt;T&gt;,
-            operator_id: OperatorId,
-            new_domain_id: DomainId,
-        ) -&gt; DispatchResult {
-            <span class="kw">let </span>who = ensure_signed(origin)<span class="question-mark">?</span>;
-
-            <span class="kw">let </span>old_domain_id = do_switch_operator_domain::&lt;T&gt;(who, operator_id, new_domain_id)
-                .map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
-
-            <span class="self">Self</span>::deposit_event(Event::OperatorSwitchedDomain {
-                old_domain_id,
-                new_domain_id,
-            });
 
             <span class="prelude-val">Ok</span>(())
         }
@@ -3352,7 +4066,7 @@
         /// Even if rest of the withdrawals are out of unlocking period, nominator
         /// should call this extrinsic to unlock each withdrawal
         </span><span class="attr">#[pallet::call_index(<span class="number">10</span>)]
-        #[pallet::weight(Weight::from_all(<span class="number">10_000</span>))]
+        #[pallet::weight(T::WeightInfo::unlock_funds())]
         </span><span class="kw">pub fn </span>unlock_funds(origin: OriginFor&lt;T&gt;, operator_id: OperatorId) -&gt; DispatchResult {
             <span class="kw">let </span>nominator_id = ensure_signed(origin)<span class="question-mark">?</span>;
             <span class="kw">let </span>unlocked_funds = do_unlock_funds::&lt;T&gt;(operator_id, nominator_id.clone())
@@ -3365,14 +4079,18 @@
             <span class="prelude-val">Ok</span>(())
         }
 
-        <span class="doccomment">/// Unlocks the operator given the unlocking period is complete.
-        /// Anyone can initiate the operator unlock.
+        <span class="doccomment">/// Unlocks the nominator under given operator given the unlocking period is complete.
+        /// A nominator can initiate their unlock given operator is already deregistered.
         </span><span class="attr">#[pallet::call_index(<span class="number">11</span>)]
-        #[pallet::weight(Weight::from_all(<span class="number">10_000</span>))]
-        </span><span class="kw">pub fn </span>unlock_operator(origin: OriginFor&lt;T&gt;, operator_id: OperatorId) -&gt; DispatchResult {
-            ensure_signed(origin)<span class="question-mark">?</span>;
-            do_unlock_operator::&lt;T&gt;(operator_id).map_err(<span class="kw">crate</span>::pallet::Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
+        #[pallet::weight(T::WeightInfo::unlock_nominator())]
+        </span><span class="kw">pub fn </span>unlock_nominator(origin: OriginFor&lt;T&gt;, operator_id: OperatorId) -&gt; DispatchResult {
+            <span class="kw">let </span>nominator = ensure_signed(origin)<span class="question-mark">?</span>;
+
+            do_unlock_nominator::&lt;T&gt;(operator_id, nominator)
+                .map_err(<span class="kw">crate</span>::pallet::Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
+
             <span class="self">Self</span>::deposit_event(Event::OperatorUnlocked { operator_id });
+
             <span class="prelude-val">Ok</span>(())
         }
 
@@ -3384,7 +4102,7 @@
         ///   allow list is set to specific operators, then all the registered not allowed operators
         ///   will continue to operate until they de-register themselves.
         </span><span class="attr">#[pallet::call_index(<span class="number">12</span>)]
-        #[pallet::weight(Weight::from_all(<span class="number">10_000</span>))]
+        #[pallet::weight(T::WeightInfo::update_domain_operator_allow_list())]
         </span><span class="kw">pub fn </span>update_domain_operator_allow_list(
             origin: OriginFor&lt;T&gt;,
             domain_id: DomainId,
@@ -3399,33 +4117,53 @@
 
         <span class="doccomment">/// Force staking epoch transition for a given domain
         </span><span class="attr">#[pallet::call_index(<span class="number">13</span>)]
-        #[pallet::weight(T::WeightInfo::pending_staking_operation())]
+        #[pallet::weight(Pallet::&lt;T&gt;::max_staking_epoch_transition())]
         </span><span class="kw">pub fn </span>force_staking_epoch_transition(
             origin: OriginFor&lt;T&gt;,
             domain_id: DomainId,
-        ) -&gt; DispatchResult {
+        ) -&gt; DispatchResultWithPostInfo {
             ensure_root(origin)<span class="question-mark">?</span>;
 
-            <span class="kw">let </span>completed_epoch_index =
+            <span class="kw">let </span>epoch_transition_res =
                 do_finalize_domain_current_epoch::&lt;T&gt;(domain_id).map_err(Error::&lt;T&gt;::from)<span class="question-mark">?</span>;
 
             <span class="self">Self</span>::deposit_event(Event::ForceDomainEpochTransition {
                 domain_id,
-                completed_epoch_index,
+                completed_epoch_index: epoch_transition_res.completed_epoch_index,
             });
+
+            <span class="comment">// Ensure the returned weight not exceed the maximum weight in the `pallet::weight`
+            </span><span class="kw">let </span>actual_weight = <span class="self">Self</span>::actual_epoch_transition_weight(epoch_transition_res)
+                .min(<span class="self">Self</span>::max_staking_epoch_transition());
+
+            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(actual_weight).into())
+        }
+
+        <span class="doccomment">/// Update permissioned action allowed by storage by Sudo.
+        </span><span class="attr">#[pallet::call_index(<span class="number">14</span>)]
+        #[pallet::weight(&lt;T <span class="kw">as </span>frame_system::Config&gt;::DbWeight::get().reads_writes(<span class="number">0</span>, <span class="number">1</span>))]
+        </span><span class="kw">pub fn </span>set_permissioned_action_allowed_by(
+            origin: OriginFor&lt;T&gt;,
+            permissioned_action_allowed_by: sp_domains::PermissionedActionAllowedBy&lt;T::AccountId&gt;,
+        ) -&gt; DispatchResult {
+            ensure_root(origin)<span class="question-mark">?</span>;
+            PermissionedActionAllowedBy::&lt;T&gt;::put(permissioned_action_allowed_by);
             <span class="prelude-val">Ok</span>(())
         }
     }
 
     <span class="attr">#[pallet::genesis_config]
     </span><span class="kw">pub struct </span>GenesisConfig&lt;T: Config&gt; {
-        <span class="kw">pub </span>genesis_domain: <span class="prelude-ty">Option</span>&lt;GenesisDomain&lt;T::AccountId, BalanceOf&lt;T&gt;&gt;&gt;,
+        <span class="kw">pub </span>permissioned_action_allowed_by:
+            <span class="prelude-ty">Option</span>&lt;sp_domains::PermissionedActionAllowedBy&lt;T::AccountId&gt;&gt;,
+        <span class="kw">pub </span>genesis_domains: Vec&lt;GenesisDomain&lt;T::AccountId, BalanceOf&lt;T&gt;&gt;&gt;,
     }
 
     <span class="kw">impl</span>&lt;T: Config&gt; Default <span class="kw">for </span>GenesisConfig&lt;T&gt; {
         <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
             GenesisConfig {
-                genesis_domain: <span class="prelude-val">None</span>,
+                permissioned_action_allowed_by: <span class="prelude-val">None</span>,
+                genesis_domains: <span class="macro">vec!</span>[],
             }
         }
     }
@@ -3433,46 +4171,65 @@
     <span class="attr">#[pallet::genesis_build]
     </span><span class="kw">impl</span>&lt;T: Config&gt; BuildGenesisConfig <span class="kw">for </span>GenesisConfig&lt;T&gt; {
         <span class="kw">fn </span>build(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(genesis_domain) = <span class="self">self</span>.genesis_domain.as_ref().cloned() {
-                <span class="comment">// Register the genesis domain runtime
-                </span><span class="kw">let </span>runtime_id = register_runtime_at_genesis::&lt;T&gt;(
-                    genesis_domain.runtime_name,
-                    genesis_domain.runtime_type,
-                    genesis_domain.runtime_version,
-                    genesis_domain.raw_genesis_storage,
-                    Zero::zero(),
-                )
-                .expect(<span class="string">"Genesis runtime registration must always succeed"</span>);
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(permissioned_action_allowed_by) =
+                <span class="self">self</span>.permissioned_action_allowed_by.as_ref().cloned()
+            {
+                PermissionedActionAllowedBy::&lt;T&gt;::put(permissioned_action_allowed_by)
+            }
 
-                <span class="comment">// Instantiate the genesis domain
-                </span><span class="kw">let </span>domain_config = DomainConfig {
-                    domain_name: genesis_domain.domain_name,
-                    runtime_id,
-                    max_block_size: genesis_domain.max_block_size,
-                    max_block_weight: genesis_domain.max_block_weight,
-                    bundle_slot_probability: genesis_domain.bundle_slot_probability,
-                    target_bundles_per_block: genesis_domain.target_bundles_per_block,
-                    operator_allow_list: genesis_domain.operator_allow_list,
-                    initial_balances: genesis_domain.initial_balances,
-                };
-                <span class="kw">let </span>domain_owner = genesis_domain.owner_account_id;
-                <span class="kw">let </span>domain_id =
-                    do_instantiate_domain::&lt;T&gt;(domain_config, domain_owner.clone(), Zero::zero())
-                        .expect(<span class="string">"Genesis domain instantiation must always succeed"</span>);
+            <span class="self">self</span>.genesis_domains
+                .clone()
+                .into_iter()
+                .for_each(|genesis_domain| {
+                    <span class="comment">// Register the genesis domain runtime
+                    </span><span class="kw">let </span>runtime_id = register_runtime_at_genesis::&lt;T&gt;(
+                        genesis_domain.runtime_name,
+                        genesis_domain.runtime_type,
+                        genesis_domain.runtime_version,
+                        genesis_domain.raw_genesis_storage,
+                        Zero::zero(),
+                    )
+                    .expect(<span class="string">"Genesis runtime registration must always succeed"</span>);
 
-                <span class="comment">// Register domain_owner as the genesis operator.
-                </span><span class="kw">let </span>operator_config = OperatorConfig {
-                    signing_key: genesis_domain.signing_key.clone(),
-                    minimum_nominator_stake: genesis_domain.minimum_nominator_stake,
-                    nomination_tax: genesis_domain.nomination_tax,
-                };
-                <span class="kw">let </span>operator_stake = T::MinOperatorStake::get();
-                do_register_operator::&lt;T&gt;(domain_owner, domain_id, operator_stake, operator_config)
+                    <span class="comment">// Instantiate the genesis domain
+                    </span><span class="kw">let </span>domain_config = DomainConfig {
+                        domain_name: genesis_domain.domain_name,
+                        runtime_id,
+                        max_block_size: genesis_domain.max_block_size,
+                        max_block_weight: genesis_domain.max_block_weight,
+                        bundle_slot_probability: genesis_domain.bundle_slot_probability,
+                        target_bundles_per_block: genesis_domain.target_bundles_per_block,
+                        operator_allow_list: genesis_domain.operator_allow_list,
+                        initial_balances: genesis_domain.initial_balances,
+                    };
+                    <span class="kw">let </span>domain_owner = genesis_domain.owner_account_id;
+                    <span class="kw">let </span>domain_id = do_instantiate_domain::&lt;T&gt;(
+                        domain_config,
+                        domain_owner.clone(),
+                        Zero::zero(),
+                    )
+                    .expect(<span class="string">"Genesis domain instantiation must always succeed"</span>);
+
+                    <span class="comment">// Register domain_owner as the genesis operator.
+                    </span><span class="kw">let </span>operator_config = OperatorConfig {
+                        signing_key: genesis_domain.signing_key.clone(),
+                        minimum_nominator_stake: genesis_domain.minimum_nominator_stake,
+                        nomination_tax: genesis_domain.nomination_tax,
+                    };
+                    <span class="kw">let </span>operator_stake = T::MinOperatorStake::get();
+                    do_register_operator::&lt;T&gt;(
+                        domain_owner,
+                        domain_id,
+                        operator_stake,
+                        operator_config,
+                        <span class="comment">// safe to not check the signing key ownership during genesis
+                        </span><span class="prelude-val">None</span>,
+                    )
                     .expect(<span class="string">"Genesis operator registration must succeed"</span>);
 
-                do_finalize_domain_current_epoch::&lt;T&gt;(domain_id)
-                    .expect(<span class="string">"Genesis epoch must succeed"</span>);
-            }
+                    do_finalize_domain_current_epoch::&lt;T&gt;(domain_id)
+                        .expect(<span class="string">"Genesis epoch must succeed"</span>);
+                });
         }
     }
 
@@ -3480,18 +4237,40 @@
     </span><span class="comment">// TODO: proper benchmark
     </span><span class="kw">impl</span>&lt;T: Config&gt; Hooks&lt;BlockNumberFor&lt;T&gt;&gt; <span class="kw">for </span>Pallet&lt;T&gt; {
         <span class="kw">fn </span>on_initialize(block_number: BlockNumberFor&lt;T&gt;) -&gt; Weight {
-            <span class="comment">// Do scheduled domain runtime upgrade
-            </span>do_upgrade_runtimes::&lt;T&gt;(block_number);
+            <span class="kw">let </span>parent_number = block_number - One::one();
+            <span class="kw">let </span>parent_hash = frame_system::Pallet::&lt;T&gt;::block_hash(parent_number);
+
+            <span class="comment">// Record any previous domain runtime upgrade in `DomainRuntimeUpgradeRecords` and then do the
+            // domain runtime upgrade scheduled in the current block
+            </span><span class="kw">for </span>runtime_id <span class="kw">in </span>DomainRuntimeUpgrades::&lt;T&gt;::take() {
+                <span class="kw">let </span>reference_count = <span class="self">Self</span>::domain_instance_count(runtime_id);
+                <span class="kw">if </span>!reference_count.is_zero() {
+                    DomainRuntimeUpgradeRecords::&lt;T&gt;::mutate(runtime_id, |upgrade_record| {
+                        upgrade_record.insert(
+                            parent_number,
+                            DomainRuntimeUpgradeEntry {
+                                at_hash: parent_hash,
+                                reference_count,
+                            },
+                        )
+                    });
+                }
+            }
+            do_upgrade_runtimes::&lt;T&gt;(block_number);
 
             <span class="comment">// Store the hash of the parent consensus block for domain that have bundles submitted
             // in that consensus block
-            </span><span class="kw">let </span>parent_number = block_number - One::one();
-            <span class="kw">let </span>parent_hash = frame_system::Pallet::&lt;T&gt;::block_hash(parent_number);
-            <span class="kw">for </span>(domain_id, <span class="kw">_</span>) <span class="kw">in </span>SuccessfulBundles::&lt;T&gt;::drain() {
+            </span><span class="kw">for </span>(domain_id, <span class="kw">_</span>) <span class="kw">in </span>SuccessfulBundles::&lt;T&gt;::drain() {
                 ConsensusBlockHash::&lt;T&gt;::insert(domain_id, parent_number, parent_hash);
+                T::DomainBundleSubmitted::domain_bundle_submitted(domain_id);
             }
 
-            <span class="kw">let _ </span>= SuccessfulFraudProofs::&lt;T&gt;::clear(u32::MAX, <span class="prelude-val">None</span>);
+            <span class="kw">for </span>(operator_id, slot_set) <span class="kw">in </span>OperatorBundleSlot::&lt;T&gt;::drain() {
+                <span class="comment">// NOTE: `OperatorBundleSlot` use `BTreeSet` so `last` will return the maximum value in the set
+                </span><span class="kw">if let </span><span class="prelude-val">Some</span>(highest_slot) = slot_set.last() {
+                    OperatorHighestSlot::&lt;T&gt;::insert(operator_id, highest_slot);
+                }
+            }
 
             Weight::zero()
         }
@@ -3500,17 +4279,6 @@
             <span class="kw">let _ </span>= LastEpochStakingDistribution::&lt;T&gt;::clear(u32::MAX, <span class="prelude-val">None</span>);
             <span class="kw">let _ </span>= HeadReceiptExtended::&lt;T&gt;::clear(u32::MAX, <span class="prelude-val">None</span>);
         }
-    }
-
-    <span class="doccomment">/// Constructs a `TransactionValidity` with pallet-executor specific defaults.
-    </span><span class="kw">fn </span>unsigned_validity(prefix: <span class="kw-2">&amp;</span><span class="lifetime">'static </span>str, tag: <span class="kw">impl </span>Encode) -&gt; TransactionValidity {
-        ValidTransaction::with_tag_prefix(prefix)
-            .priority(TransactionPriority::MAX)
-            .and_provides(tag)
-            .longevity(TransactionLongevity::MAX)
-            <span class="comment">// We need this extrinsic to be propagated to the farmer nodes.
-            </span>.propagate(<span class="bool-val">true</span>)
-            .build()
     }
 
     <span class="attr">#[pallet::validate_unsigned]
@@ -3528,6 +4296,7 @@
                         .map_err(|<span class="kw">_</span>| InvalidTransaction::Call.into())
                     }),
                 Call::submit_fraud_proof { fraud_proof } =&gt; <span class="self">Self</span>::validate_fraud_proof(fraud_proof)
+                    .map(|<span class="kw">_</span>| ())
                     .map_err(|<span class="kw">_</span>| InvalidTransaction::Call.into()),
                 <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(InvalidTransaction::Call.into()),
             }
@@ -3545,8 +4314,10 @@
                             | BundleError::Receipt(BlockTreeError::NewBranchReceipt)
                             | BundleError::Receipt(BlockTreeError::UnavailableConsensusBlockHash)
                             | BundleError::Receipt(BlockTreeError::BuiltOnUnknownConsensusBlock)
+                            | BundleError::DuplicatedBundle
                             | BundleError::SlotInThePast
-                            | BundleError::SlotInTheFuture =&gt; {
+                            | BundleError::SlotInTheFuture
+                            | BundleError::InvalidProofOfTime =&gt; {
                                 <span class="macro">log::debug!</span>(
                                     target: <span class="string">"runtime::domains"</span>,
                                     <span class="string">"Bad bundle {:?}, error: {e:?}"</span>, opaque_bundle.domain_id(),
@@ -3581,26 +4352,37 @@
                         <span class="kw">return </span>InvalidTransactionCode::BundleStorageFeePayment.into();
                     }
 
+                    <span class="kw">let </span>tag = (opaque_bundle.operator_id(), opaque_bundle.slot_number());
                     ValidTransaction::with_tag_prefix(<span class="string">"SubspaceSubmitBundle"</span>)
-                        .priority(TransactionPriority::MAX)
+                        <span class="comment">// Bundle have a bit higher priority than normal extrinsic but must less than
+                        // fraud proof
+                        </span>.priority(<span class="number">1</span>)
                         .longevity(T::ConfirmationDepthK::get().try_into().unwrap_or_else(|<span class="kw">_</span>| {
                             <span class="macro">panic!</span>(<span class="string">"Block number always fits in TransactionLongevity; qed"</span>)
                         }))
-                        .and_provides(opaque_bundle.hash())
+                        .and_provides(tag)
                         .propagate(<span class="bool-val">true</span>)
                         .build()
                 }
                 Call::submit_fraud_proof { fraud_proof } =&gt; {
-                    <span class="kw">if let </span><span class="prelude-val">Err</span>(e) = <span class="self">Self</span>::validate_fraud_proof(fraud_proof) {
-                        <span class="macro">log::warn!</span>(
-                            target: <span class="string">"runtime::domains"</span>,
-                            <span class="string">"Bad fraud proof {:?}, error: {e:?}"</span>, fraud_proof.domain_id(),
-                        );
-                        <span class="kw">return </span>InvalidTransactionCode::FraudProof.into();
-                    }
+                    <span class="kw">let </span>(tag, priority) = <span class="kw">match </span><span class="self">Self</span>::validate_fraud_proof(fraud_proof) {
+                        <span class="prelude-val">Err</span>(e) =&gt; {
+                            <span class="macro">log::warn!</span>(
+                                target: <span class="string">"runtime::domains"</span>,
+                                <span class="string">"Bad fraud proof {fraud_proof:?}, error: {e:?}"</span>,
+                            );
+                            <span class="kw">return </span>InvalidTransactionCode::FraudProof.into();
+                        }
+                        <span class="prelude-val">Ok</span>(tp) =&gt; tp,
+                    };
 
-                    <span class="comment">// TODO: proper tag value.
-                    </span>unsigned_validity(<span class="string">"SubspaceSubmitFraudProof"</span>, fraud_proof)
+                    ValidTransaction::with_tag_prefix(<span class="string">"SubspaceSubmitFraudProof"</span>)
+                        .priority(priority)
+                        .and_provides(tag)
+                        .longevity(TransactionLongevity::MAX)
+                        <span class="comment">// We need this extrinsic to be propagated to the farmer nodes.
+                        </span>.propagate(<span class="bool-val">true</span>)
+                        .build()
                 }
 
                 <span class="kw">_ </span>=&gt; InvalidTransaction::Call.into(),
@@ -3612,10 +4394,6 @@
 <span class="kw">impl</span>&lt;T: Config&gt; Pallet&lt;T&gt; {
     <span class="kw">pub fn </span>successful_bundles(domain_id: DomainId) -&gt; Vec&lt;H256&gt; {
         SuccessfulBundles::&lt;T&gt;::get(domain_id)
-    }
-
-    <span class="kw">pub fn </span>successful_fraud_proofs(domain_id: DomainId) -&gt; Vec&lt;T::DomainHash&gt; {
-        SuccessfulFraudProofs::&lt;T&gt;::get(domain_id)
     }
 
     <span class="kw">pub fn </span>domain_runtime_code(domain_id: DomainId) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt; {
@@ -3639,14 +4417,14 @@
         <span class="kw">let </span>runtime_object = RuntimeRegistry::&lt;T&gt;::get(domain_obj.domain_config.runtime_id)<span class="question-mark">?</span>;
         <span class="kw">let </span>runtime_type = runtime_object.runtime_type.clone();
         <span class="kw">let </span>total_issuance = domain_obj.domain_config.total_issuance()<span class="question-mark">?</span>;
-        <span class="kw">let </span>raw_genesis = runtime_object
-            .into_complete_raw_genesis::&lt;T&gt;(
-                domain_id,
-                domain_obj.domain_runtime_info,
-                total_issuance,
-                domain_obj.domain_config.initial_balances,
-            )
-            .ok()<span class="question-mark">?</span>;
+        <span class="kw">let </span>raw_genesis = into_complete_raw_genesis::&lt;T&gt;(
+            runtime_object,
+            domain_id,
+            domain_obj.domain_runtime_info,
+            total_issuance,
+            domain_obj.domain_config.initial_balances,
+        )
+        .ok()<span class="question-mark">?</span>;
         <span class="prelude-val">Some</span>((
             DomainInstanceData {
                 runtime_type,
@@ -3690,18 +4468,6 @@
             .map(|operator| (operator.signing_key, operator.current_total_stake))
     }
 
-    <span class="kw">fn </span>check_bundle_duplication(opaque_bundle: <span class="kw-2">&amp;</span>OpaqueBundleOf&lt;T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), BundleError&gt; {
-        <span class="comment">// NOTE: it is important to use the hash that not incliude the signature, otherwise
-        // the malicious operator may update its `signing_key` (this may support in the future)
-        // and sign an existing bundle thus creating a duplicated bundle and pass the check.
-        </span><span class="kw">let </span>bundle_header_hash = opaque_bundle.sealed_header.pre_hash();
-        <span class="macro">ensure!</span>(
-            !InboxedBundleAuthor::&lt;T&gt;::contains_key(bundle_header_hash),
-            BundleError::DuplicatedBundle
-        );
-        <span class="prelude-val">Ok</span>(())
-    }
-
     <span class="kw">fn </span>check_extrinsics_root(opaque_bundle: <span class="kw-2">&amp;</span>OpaqueBundleOf&lt;T&gt;) -&gt; <span class="prelude-ty">Result</span>&lt;(), BundleError&gt; {
         <span class="kw">let </span>expected_extrinsics_root = &lt;T::DomainHeader <span class="kw">as </span>Header&gt;::Hashing::ordered_trie_root(
             opaque_bundle
@@ -3718,18 +4484,85 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn </span>validate_bundle(
+    <span class="kw">fn </span>check_slot_and_proof_of_time(
+        slot_number: u64,
+        proof_of_time: PotOutput,
+        pre_dispatch: bool,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), BundleError&gt; {
+        <span class="comment">// NOTE: the `current_block_number` from `frame_system` is initialized during `validate_unsigned` thus
+        // it is the same value in both `validate_unsigned` and `pre_dispatch`
+        </span><span class="kw">let </span>current_block_number = frame_system::Pallet::&lt;T&gt;::current_block_number();
+
+        <span class="comment">// Check if the slot is in future
+        //
+        // NOTE: during `validate_unsigned` this is implicitly checked within `is_proof_of_time_valid` since we
+        // are using quick verification which will return `false` if the `proof-of-time` is not seem by the node
+        // before.
+        </span><span class="kw">if </span>pre_dispatch {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(future_slot) = T::BlockSlot::future_slot(current_block_number) {
+                <span class="macro">ensure!</span>(slot_number &lt;= <span class="kw-2">*</span>future_slot, BundleError::SlotInTheFuture)
+            }
+        }
+
+        <span class="comment">// Check if the bundle is built too long time ago and beyond `T::BundleLongevity` number of consensus blocks.
+        </span><span class="kw">let </span>produced_after_block_number =
+            <span class="kw">match </span>T::BlockSlot::slot_produced_after(slot_number.into()) {
+                <span class="prelude-val">Some</span>(n) =&gt; n,
+                <span class="prelude-val">None </span>=&gt; {
+                    <span class="comment">// There is no slot for the genesis block, if the current block is less than `BundleLongevity`
+                    // than we assume the slot is produced after the genesis block.
+                    </span><span class="kw">if </span>current_block_number &gt; T::BundleLongevity::get().into() {
+                        <span class="kw">return </span><span class="prelude-val">Err</span>(BundleError::SlotInThePast);
+                    } <span class="kw">else </span>{
+                        Zero::zero()
+                    }
+                }
+            };
+        <span class="kw">let </span>produced_after_block_hash = <span class="kw">if </span>produced_after_block_number == current_block_number {
+            <span class="comment">// The hash of the current block is only available in the next block thus use the parent hash here
+            </span>frame_system::Pallet::&lt;T&gt;::parent_hash()
+        } <span class="kw">else </span>{
+            frame_system::Pallet::&lt;T&gt;::block_hash(produced_after_block_number)
+        };
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(last_eligible_block) =
+            current_block_number.checked_sub(<span class="kw-2">&amp;</span>T::BundleLongevity::get().into())
+        {
+            <span class="macro">ensure!</span>(
+                produced_after_block_number &gt;= last_eligible_block,
+                BundleError::SlotInThePast
+            );
+        }
+
+        <span class="kw">if </span>!is_proof_of_time_valid(
+            BlockHash::try_from(produced_after_block_hash.as_ref())
+                .expect(<span class="string">"Must be able to convert to block hash type"</span>),
+            SlotNumber::from(slot_number),
+            WrappedPotOutput::from(proof_of_time),
+            <span class="comment">// Quick verification when entering transaction pool, but not when constructing the block
+            </span>!pre_dispatch,
+        ) {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(BundleError::InvalidProofOfTime);
+        }
+
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="comment">// TODO: as bundle equivocation fraud proof is removed, add check to rejected bundle with the
+    // same `(operator_id, slot)`
+    </span><span class="kw">fn </span>validate_bundle(
         opaque_bundle: <span class="kw-2">&amp;</span>OpaqueBundleOf&lt;T&gt;,
         pre_dispatch: bool,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), BundleError&gt; {
         <span class="kw">let </span>domain_id = opaque_bundle.domain_id();
         <span class="kw">let </span>operator_id = opaque_bundle.operator_id();
         <span class="kw">let </span>sealed_header = <span class="kw-2">&amp;</span>opaque_bundle.sealed_header;
+        <span class="kw">let </span>slot_number = opaque_bundle.slot_number();
 
         <span class="kw">let </span>operator = Operators::&lt;T&gt;::get(operator_id).ok_or(BundleError::InvalidOperatorId)<span class="question-mark">?</span>;
 
         <span class="macro">ensure!</span>(
-            operator.status != OperatorStatus::Slashed,
+            <span class="kw-2">*</span>operator.status::&lt;T&gt;(operator_id) != OperatorStatus::Slashed
+                &amp;&amp; <span class="kw-2">*</span>operator.status::&lt;T&gt;(operator_id) != OperatorStatus::PendingSlash,
             BundleError::BadOperator
         );
 
@@ -3740,52 +4573,50 @@
             <span class="kw">return </span><span class="prelude-val">Err</span>(BundleError::BadBundleSignature);
         }
 
-        <span class="self">Self</span>::check_bundle_duplication(opaque_bundle)<span class="question-mark">?</span>;
+        <span class="comment">// Ensure this is not equivocated bundle that reuse `ProofOfElection` from the previous block
+        </span><span class="macro">ensure!</span>(
+            slot_number
+                &gt; <span class="self">Self</span>::operator_highest_slot_from_previous_block(operator_id, pre_dispatch),
+            BundleError::SlotSmallerThanPreviousBlockBundle,
+        );
+
+        <span class="comment">// Ensure there is not equivocated/duplicated bundle in the same block
+        </span><span class="macro">ensure!</span>(
+            !OperatorBundleSlot::&lt;T&gt;::get(operator_id).contains(<span class="kw-2">&amp;</span>slot_number),
+            BundleError::EquivocatedBundle,
+        );
 
         <span class="kw">let </span>domain_config = DomainRegistry::&lt;T&gt;::get(domain_id)
             .ok_or(BundleError::InvalidDomainId)<span class="question-mark">?
             </span>.domain_config;
 
-        <span class="comment">// TODO: check bundle weight with `domain_config.max_block_weight`
+        <span class="kw">let </span>domain_bundle_limit = domain_config
+            .calculate_bundle_limit::&lt;T&gt;()
+            .map_err(|<span class="kw">_</span>| BundleError::UnableToCalculateBundleLimit)<span class="question-mark">?</span>;
 
-        </span><span class="macro">ensure!</span>(
-            opaque_bundle.size() &lt;= domain_config.max_block_size,
+        <span class="macro">ensure!</span>(
+            opaque_bundle.body_size() &lt;= domain_bundle_limit.max_bundle_size,
             BundleError::BundleTooLarge
+        );
+
+        <span class="macro">ensure!</span>(
+            opaque_bundle
+                .estimated_weight()
+                .all_lte(domain_bundle_limit.max_bundle_weight),
+            BundleError::BundleTooHeavy
         );
 
         <span class="self">Self</span>::check_extrinsics_root(opaque_bundle)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>proof_of_election = <span class="kw-2">&amp;</span>sealed_header.header.proof_of_election;
-        <span class="kw">let </span>slot_number = proof_of_election.slot_number;
         <span class="kw">let </span>(operator_stake, total_domain_stake) =
             <span class="self">Self</span>::fetch_operator_stake_info(domain_id, <span class="kw-2">&amp;</span>operator_id)<span class="question-mark">?</span>;
 
-        <span class="comment">// Check if the bundle is built with slot and valid proof-of-time that produced between the parent block
-        // and the current block
-        //
-        // NOTE: during `validate_unsigned` `current_slot` is query from the parent block and during `pre_dispatch`
-        // the `future_slot` is query from the current block.
-        </span><span class="kw">if </span>pre_dispatch {
-            <span class="macro">ensure!</span>(
-                slot_number &lt;= <span class="kw-2">*</span>T::BlockSlot::future_slot(),
-                BundleError::SlotInTheFuture
-            )
-        } <span class="kw">else </span>{
-            <span class="macro">ensure!</span>(
-                slot_number &gt; <span class="kw-2">*</span>T::BlockSlot::current_slot(),
-                BundleError::SlotInThePast
-            );
-        }
-        <span class="kw">if </span>!is_proof_of_time_valid(
-            BlockHash::try_from(frame_system::Pallet::&lt;T&gt;::parent_hash().as_ref())
-                .expect(<span class="string">"Must be able to convert to block hash type"</span>),
-            SlotNumber::from(slot_number),
-            WrappedPotOutput::from(proof_of_election.proof_of_time),
-            <span class="comment">// Quick verification when entering transaction pool, but not when constructing the block
-            </span>!pre_dispatch,
-        ) {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(BundleError::InvalidProofOfTime);
-        }
+        <span class="self">Self</span>::check_slot_and_proof_of_time(
+            proof_of_election.slot_number,
+            proof_of_election.proof_of_time,
+            pre_dispatch,
+        )<span class="question-mark">?</span>;
 
         sp_domains::bundle_producer_election::check_proof_of_election(
             <span class="kw-2">&amp;</span>operator.signing_key,
@@ -3802,171 +4633,247 @@
     }
 
     <span class="kw">fn </span>validate_fraud_proof(
-        fraud_proof: <span class="kw-2">&amp;</span>FraudProof&lt;BlockNumberFor&lt;T&gt;, T::Hash, T::DomainHeader&gt;,
-    ) -&gt; <span class="prelude-ty">Result</span>&lt;(), FraudProofError&gt; {
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(bad_receipt_hash) = fraud_proof.targeted_bad_receipt_hash() {
-            <span class="kw">let </span>bad_receipt = BlockTreeNodes::&lt;T&gt;::get(bad_receipt_hash)
-                .ok_or(FraudProofError::BadReceiptNotFound)<span class="question-mark">?
-                </span>.execution_receipt;
+        fraud_proof: <span class="kw-2">&amp;</span>FraudProofFor&lt;T&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;(DomainId, TransactionPriority), FraudProofError&gt; {
+        <span class="kw">let </span>domain_id = fraud_proof.domain_id();
+        <span class="kw">let </span>bad_receipt_hash = fraud_proof.targeted_bad_receipt_hash();
+        <span class="kw">let </span>bad_receipt = BlockTreeNodes::&lt;T&gt;::get(bad_receipt_hash)
+            .ok_or(FraudProofError::BadReceiptNotFound)<span class="question-mark">?
+            </span>.execution_receipt;
+        <span class="kw">let </span>bad_receipt_domain_block_number = bad_receipt.domain_block_number;
 
-            <span class="macro">ensure!</span>(
-                !bad_receipt.domain_block_number.is_zero(),
-                FraudProofError::ChallengingGenesisReceipt
-            );
+        <span class="macro">ensure!</span>(
+            !bad_receipt_domain_block_number.is_zero(),
+            FraudProofError::ChallengingGenesisReceipt
+        );
 
-            <span class="kw">match </span>fraud_proof {
-                FraudProof::InvalidBlockFees(InvalidBlockFeesProof { storage_proof, .. }) =&gt; {
-                    verify_invalid_block_fees_fraud_proof::&lt;
-                        T::Block,
-                        DomainBlockNumberFor&lt;T&gt;,
-                        T::DomainHash,
-                        BalanceOf&lt;T&gt;,
-                        DomainHashingFor&lt;T&gt;,
-                    &gt;(bad_receipt, storage_proof)
-                    .map_err(|err| {
-                        <span class="macro">log::error!</span>(
-                            target: <span class="string">"runtime::domains"</span>,
-                            <span class="string">"Block fees proof verification failed: {err:?}"
-                        </span>);
-                        FraudProofError::InvalidBlockFeesFraudProof
-                    })<span class="question-mark">?</span>;
-                }
-                FraudProof::InvalidTransfers(req) =&gt; {
-                    verify_invalid_transfers_fraud_proof::&lt;
-                        T::Block,
-                        DomainBlockNumberFor&lt;T&gt;,
-                        T::DomainHash,
-                        BalanceOf&lt;T&gt;,
-                        DomainHashingFor&lt;T&gt;,
-                    &gt;(bad_receipt, req)
-                    .map_err(|err| {
-                        <span class="macro">log::error!</span>(
-                            target: <span class="string">"runtime::domains"</span>,
-                            <span class="string">"Domain transfers proof verification failed: {err:?}"
-                        </span>);
-                        FraudProofError::InvalidTransfersFraudProof
-                    })<span class="question-mark">?</span>;
-                }
-                FraudProof::InvalidDomainBlockHash(InvalidDomainBlockHashProof {
-                    digest_storage_proof,
-                    ..
-                }) =&gt; {
-                    <span class="kw">let </span>parent_receipt =
-                        BlockTreeNodes::&lt;T&gt;::get(bad_receipt.parent_domain_block_receipt_hash)
-                            .ok_or(FraudProofError::ParentReceiptNotFound)<span class="question-mark">?
-                            </span>.execution_receipt;
-                    verify_invalid_domain_block_hash_fraud_proof::&lt;
-                        T::Block,
-                        BalanceOf&lt;T&gt;,
-                        T::DomainHeader,
-                    &gt;(
-                        bad_receipt,
-                        digest_storage_proof.clone(),
-                        parent_receipt.domain_block_hash,
-                    )
-                    .map_err(|err| {
-                        <span class="macro">log::error!</span>(
-                            target: <span class="string">"runtime::domains"</span>,
-                            <span class="string">"Invalid Domain block hash proof verification failed: {err:?}"
-                        </span>);
-                        FraudProofError::InvalidDomainBlockHashFraudProof
-                    })<span class="question-mark">?</span>;
-                }
-                FraudProof::InvalidExtrinsicsRoot(proof) =&gt; {
-                    verify_invalid_domain_extrinsics_root_fraud_proof::&lt;
-                        T::Block,
-                        BalanceOf&lt;T&gt;,
-                        T::Hashing,
-                        T::DomainHeader,
-                    &gt;(bad_receipt, proof)
-                    .map_err(|err| {
-                        <span class="macro">log::error!</span>(
-                            target: <span class="string">"runtime::domains"</span>,
-                            <span class="string">"Invalid Domain extrinsic root proof verification failed: {err:?}"
-                        </span>);
-                        FraudProofError::InvalidExtrinsicRootFraudProof
-                    })<span class="question-mark">?</span>;
-                }
-                FraudProof::InvalidStateTransition(proof) =&gt; {
-                    <span class="kw">let </span>bad_receipt_parent =
-                        BlockTreeNodes::&lt;T&gt;::get(bad_receipt.parent_domain_block_receipt_hash)
-                            .ok_or(FraudProofError::ParentReceiptNotFound)<span class="question-mark">?
-                            </span>.execution_receipt;
+        <span class="macro">ensure!</span>(
+            !<span class="self">Self</span>::is_bad_er_pending_to_prune(domain_id, bad_receipt_domain_block_number),
+            FraudProofError::BadReceiptAlreadyReported,
+        );
 
-                    verify_invalid_state_transition_fraud_proof::&lt;
-                        T::Block,
-                        T::DomainHeader,
-                        BalanceOf&lt;T&gt;,
-                    &gt;(bad_receipt, bad_receipt_parent, proof)
-                    .map_err(|err| {
-                        <span class="macro">log::error!</span>(
-                            target: <span class="string">"runtime::domains"</span>,
-                            <span class="string">"Invalid State transition proof verification failed: {err:?}"
-                        </span>);
-                        FraudProofError::InvalidStateTransitionFraudProof
-                    })<span class="question-mark">?</span>;
-                }
-                FraudProof::InvalidBundles(invalid_bundles_fraud_proof) =&gt; {
-                    <span class="kw">let </span>bad_receipt_parent =
-                        BlockTreeNodes::&lt;T&gt;::get(bad_receipt.parent_domain_block_receipt_hash)
-                            .ok_or(FraudProofError::ParentReceiptNotFound)<span class="question-mark">?
-                            </span>.execution_receipt;
+        <span class="macro">ensure!</span>(
+            !fraud_proof.is_unexpected_domain_runtime_code_proof(),
+            FraudProofError::UnexpectedDomainRuntimeCodeProof,
+        );
 
-                    verify_invalid_bundles_fraud_proof::&lt;T::Block, T::DomainHeader, BalanceOf&lt;T&gt;&gt;(
-                        bad_receipt,
-                        bad_receipt_parent,
-                        invalid_bundles_fraud_proof,
-                    )
-                    .map_err(|err| {
-                        <span class="macro">log::error!</span>(
-                            target: <span class="string">"runtime::domains"</span>,
-                            <span class="string">"Invalid Bundle proof verification failed: {err:?}"
-                        </span>);
-                        FraudProofError::InvalidBundleFraudProof
-                    })<span class="question-mark">?</span>;
-                }
-                FraudProof::ValidBundle(proof) =&gt; verify_valid_bundle_fraud_proof::&lt;
+        <span class="macro">ensure!</span>(
+            !fraud_proof.is_unexpected_mmr_proof(),
+            FraudProofError::UnexpectedMmrProof,
+        );
+
+        <span class="kw">let </span>maybe_state_root = <span class="kw">match </span><span class="kw-2">&amp;</span>fraud_proof.maybe_mmr_proof {
+            <span class="prelude-val">Some</span>(mmr_proof) =&gt; <span class="prelude-val">Some</span>(<span class="self">Self</span>::verify_mmr_proof_and_extract_state_root(
+                mmr_proof.clone(),
+                bad_receipt.consensus_block_number,
+            )<span class="question-mark">?</span>),
+            <span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
+        };
+
+        <span class="kw">match </span><span class="kw-2">&amp;</span>fraud_proof.proof {
+            FraudProofVariant::InvalidBlockFees(InvalidBlockFeesProof { storage_proof }) =&gt; {
+                <span class="kw">let </span>domain_runtime_code = <span class="self">Self</span>::get_domain_runtime_code_for_receipt(
+                    domain_id,
+                    <span class="kw-2">&amp;</span>bad_receipt,
+                    fraud_proof.maybe_domain_runtime_code_proof.clone(),
+                )<span class="question-mark">?</span>;
+
+                verify_invalid_block_fees_fraud_proof::&lt;
                     T::Block,
                     DomainBlockNumberFor&lt;T&gt;,
                     T::DomainHash,
                     BalanceOf&lt;T&gt;,
-                &gt;(bad_receipt, proof)
+                    DomainHashingFor&lt;T&gt;,
+                &gt;(bad_receipt, storage_proof, domain_runtime_code)
+                .map_err(|err| {
+                    <span class="macro">log::error!</span>(
+                        target: <span class="string">"runtime::domains"</span>,
+                        <span class="string">"Block fees proof verification failed: {err:?}"
+                    </span>);
+                    FraudProofError::InvalidBlockFeesFraudProof
+                })<span class="question-mark">?</span>;
+            }
+            FraudProofVariant::InvalidTransfers(InvalidTransfersProof { storage_proof }) =&gt; {
+                <span class="kw">let </span>domain_runtime_code = <span class="self">Self</span>::get_domain_runtime_code_for_receipt(
+                    domain_id,
+                    <span class="kw-2">&amp;</span>bad_receipt,
+                    fraud_proof.maybe_domain_runtime_code_proof.clone(),
+                )<span class="question-mark">?</span>;
+
+                verify_invalid_transfers_fraud_proof::&lt;
+                    T::Block,
+                    DomainBlockNumberFor&lt;T&gt;,
+                    T::DomainHash,
+                    BalanceOf&lt;T&gt;,
+                    DomainHashingFor&lt;T&gt;,
+                &gt;(bad_receipt, storage_proof, domain_runtime_code)
+                .map_err(|err| {
+                    <span class="macro">log::error!</span>(
+                        target: <span class="string">"runtime::domains"</span>,
+                        <span class="string">"Domain transfers proof verification failed: {err:?}"
+                    </span>);
+                    FraudProofError::InvalidTransfersFraudProof
+                })<span class="question-mark">?</span>;
+            }
+            FraudProofVariant::InvalidDomainBlockHash(InvalidDomainBlockHashProof {
+                digest_storage_proof,
+            }) =&gt; {
+                <span class="kw">let </span>parent_receipt =
+                    BlockTreeNodes::&lt;T&gt;::get(bad_receipt.parent_domain_block_receipt_hash)
+                        .ok_or(FraudProofError::ParentReceiptNotFound)<span class="question-mark">?
+                        </span>.execution_receipt;
+                verify_invalid_domain_block_hash_fraud_proof::&lt;
+                    T::Block,
+                    BalanceOf&lt;T&gt;,
+                    T::DomainHeader,
+                &gt;(
+                    bad_receipt,
+                    digest_storage_proof.clone(),
+                    parent_receipt.domain_block_hash,
+                )
+                .map_err(|err| {
+                    <span class="macro">log::error!</span>(
+                        target: <span class="string">"runtime::domains"</span>,
+                        <span class="string">"Invalid Domain block hash proof verification failed: {err:?}"
+                    </span>);
+                    FraudProofError::InvalidDomainBlockHashFraudProof
+                })<span class="question-mark">?</span>;
+            }
+            FraudProofVariant::InvalidExtrinsicsRoot(proof) =&gt; {
+                <span class="kw">let </span>domain_runtime_code = <span class="self">Self</span>::get_domain_runtime_code_for_receipt(
+                    domain_id,
+                    <span class="kw-2">&amp;</span>bad_receipt,
+                    fraud_proof.maybe_domain_runtime_code_proof.clone(),
+                )<span class="question-mark">?</span>;
+                <span class="kw">let </span>runtime_id =
+                    <span class="self">Self</span>::runtime_id(domain_id).ok_or(FraudProofError::RuntimeNotFound)<span class="question-mark">?</span>;
+                <span class="kw">let </span>state_root = maybe_state_root.ok_or(FraudProofError::MissingMmrProof)<span class="question-mark">?</span>;
+
+                verify_invalid_domain_extrinsics_root_fraud_proof::&lt;
+                    T::Block,
+                    BalanceOf&lt;T&gt;,
+                    T::DomainHeader,
+                    T::Hashing,
+                    T::FraudProofStorageKeyProvider,
+                &gt;(
+                    bad_receipt,
+                    proof,
+                    domain_id,
+                    runtime_id,
+                    state_root,
+                    domain_runtime_code,
+                )
+                .map_err(|err| {
+                    <span class="macro">log::error!</span>(
+                        target: <span class="string">"runtime::domains"</span>,
+                        <span class="string">"Invalid Domain extrinsic root proof verification failed: {err:?}"
+                    </span>);
+                    FraudProofError::InvalidExtrinsicRootFraudProof
+                })<span class="question-mark">?</span>;
+            }
+            FraudProofVariant::InvalidStateTransition(proof) =&gt; {
+                <span class="kw">let </span>domain_runtime_code = <span class="self">Self</span>::get_domain_runtime_code_for_receipt(
+                    domain_id,
+                    <span class="kw-2">&amp;</span>bad_receipt,
+                    fraud_proof.maybe_domain_runtime_code_proof.clone(),
+                )<span class="question-mark">?</span>;
+                <span class="kw">let </span>bad_receipt_parent =
+                    BlockTreeNodes::&lt;T&gt;::get(bad_receipt.parent_domain_block_receipt_hash)
+                        .ok_or(FraudProofError::ParentReceiptNotFound)<span class="question-mark">?
+                        </span>.execution_receipt;
+
+                verify_invalid_state_transition_fraud_proof::&lt;
+                    T::Block,
+                    T::DomainHeader,
+                    BalanceOf&lt;T&gt;,
+                &gt;(bad_receipt, bad_receipt_parent, proof, domain_runtime_code)
+                .map_err(|err| {
+                    <span class="macro">log::error!</span>(
+                        target: <span class="string">"runtime::domains"</span>,
+                        <span class="string">"Invalid State transition proof verification failed: {err:?}"
+                    </span>);
+                    FraudProofError::InvalidStateTransitionFraudProof
+                })<span class="question-mark">?</span>;
+            }
+            FraudProofVariant::InvalidBundles(proof) =&gt; {
+                <span class="kw">let </span>state_root = maybe_state_root.ok_or(FraudProofError::MissingMmrProof)<span class="question-mark">?</span>;
+                <span class="kw">let </span>domain_runtime_code = <span class="self">Self</span>::get_domain_runtime_code_for_receipt(
+                    domain_id,
+                    <span class="kw-2">&amp;</span>bad_receipt,
+                    fraud_proof.maybe_domain_runtime_code_proof.clone(),
+                )<span class="question-mark">?</span>;
+
+                <span class="kw">let </span>bad_receipt_parent =
+                    BlockTreeNodes::&lt;T&gt;::get(bad_receipt.parent_domain_block_receipt_hash)
+                        .ok_or(FraudProofError::ParentReceiptNotFound)<span class="question-mark">?
+                        </span>.execution_receipt;
+
+                verify_invalid_bundles_fraud_proof::&lt;
+                    T::Block,
+                    T::DomainHeader,
+                    BalanceOf&lt;T&gt;,
+                    T::FraudProofStorageKeyProvider,
+                &gt;(
+                    bad_receipt,
+                    bad_receipt_parent,
+                    proof,
+                    domain_id,
+                    state_root,
+                    domain_runtime_code,
+                )
+                .map_err(|err| {
+                    <span class="macro">log::error!</span>(
+                        target: <span class="string">"runtime::domains"</span>,
+                        <span class="string">"Invalid Bundle proof verification failed: {err:?}"
+                    </span>);
+                    FraudProofError::InvalidBundleFraudProof
+                })<span class="question-mark">?</span>;
+            }
+            FraudProofVariant::ValidBundle(proof) =&gt; {
+                <span class="kw">let </span>state_root = maybe_state_root.ok_or(FraudProofError::MissingMmrProof)<span class="question-mark">?</span>;
+                <span class="kw">let </span>domain_runtime_code = <span class="self">Self</span>::get_domain_runtime_code_for_receipt(
+                    domain_id,
+                    <span class="kw-2">&amp;</span>bad_receipt,
+                    fraud_proof.maybe_domain_runtime_code_proof.clone(),
+                )<span class="question-mark">?</span>;
+
+                verify_valid_bundle_fraud_proof::&lt;
+                    T::Block,
+                    T::DomainHeader,
+                    BalanceOf&lt;T&gt;,
+                    T::FraudProofStorageKeyProvider,
+                &gt;(
+                    bad_receipt,
+                    proof,
+                    domain_id,
+                    state_root,
+                    domain_runtime_code,
+                )
                 .map_err(|err| {
                     <span class="macro">log::error!</span>(
                         target: <span class="string">"runtime::domains"</span>,
                         <span class="string">"Valid bundle proof verification failed: {err:?}"
                     </span>);
                     FraudProofError::BadValidBundleFraudProof
-                })<span class="question-mark">?</span>,
-                <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(FraudProofError::UnexpectedFraudProof),
-            }
-        } <span class="kw">else if let </span><span class="prelude-val">Some</span>((bad_operator_id, <span class="kw">_</span>)) =
-            fraud_proof.targeted_bad_operator_and_slot_for_bundle_equivocation()
-        {
-            <span class="kw">let </span>operator =
-                Operators::&lt;T&gt;::get(bad_operator_id).ok_or(FraudProofError::MissingOperator)<span class="question-mark">?</span>;
-            <span class="kw">match </span>fraud_proof {
-                FraudProof::BundleEquivocation(proof) =&gt; {
-                    <span class="kw">let </span>operator_signing_key = operator.signing_key;
-                    verify_bundle_equivocation_fraud_proof::&lt;T::Block, T::DomainHeader, Balance&gt;(
-                        <span class="kw-2">&amp;</span>operator_signing_key,
-                        <span class="kw-2">&amp;</span>proof.first_header,
-                        <span class="kw-2">&amp;</span>proof.second_header,
-                    )
-                    .map_err(|err| {
-                        <span class="macro">log::error!</span>(
-                            target: <span class="string">"runtime::domains"</span>,
-                            <span class="string">"Bundle equivocation proof verification failed: {err:?}"
-                        </span>);
-                        FraudProofError::BadBundleEquivocationFraudProof
-                    })<span class="question-mark">?</span>;
-                }
-
-                <span class="kw">_ </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(FraudProofError::UnexpectedFraudProof),
-            }
+                })<span class="question-mark">?
+            </span>}
+            <span class="attr">#[cfg(any(feature = <span class="string">"std"</span>, feature = <span class="string">"runtime-benchmarks"</span>))]
+            </span>FraudProofVariant::Dummy =&gt; {}
         }
 
-        <span class="prelude-val">Ok</span>(())
+        <span class="comment">// The priority of fraud proof is determined by how many blocks left before the bad ER
+        // is confirmed, the less the more emergency it is, thus give a higher priority.
+        </span><span class="kw">let </span>block_before_bad_er_confirm = bad_receipt_domain_block_number.saturating_sub(
+            <span class="self">Self</span>::latest_confirmed_domain_block_number(fraud_proof.domain_id()),
+        );
+        <span class="kw">let </span>priority =
+            TransactionPriority::MAX - block_before_bad_er_confirm.saturated_into::&lt;u64&gt;();
+
+        <span class="comment">// Use the domain id as tag thus the consensus node only accept one fraud proof for a
+        // specific domain at a time
+        </span><span class="kw">let </span>tag = fraud_proof.domain_id();
+
+        <span class="prelude-val">Ok</span>((tag, priority))
     }
 
     <span class="doccomment">/// Return operators specific election verification params for Proof of Election verification.
@@ -3991,77 +4898,6 @@
         <span class="prelude-val">Ok</span>((<span class="kw-2">*</span>operator_stake, domain_stake_summary.current_total_stake))
     }
 
-    <span class="doccomment">/// Called when a bundle is added to update the bundle state for tx range
-    /// calculation.
-    </span><span class="attr">#[allow(dead_code)]
-    </span><span class="comment">// TODO: use once we support tx-range dynamic adjustment properly
-    </span><span class="kw">fn </span>note_domain_bundle(domain_id: DomainId) {
-        DomainTxRangeState::&lt;T&gt;::mutate(domain_id, |maybe_state| <span class="kw">match </span>maybe_state {
-            <span class="prelude-val">Some</span>(state) =&gt; {
-                state.interval_bundles += <span class="number">1</span>;
-            }
-            <span class="prelude-val">None </span>=&gt; {
-                maybe_state.replace(TxRangeState {
-                    tx_range: <span class="self">Self</span>::initial_tx_range(),
-                    interval_blocks: <span class="number">0</span>,
-                    interval_bundles: <span class="number">1</span>,
-                });
-            }
-        });
-    }
-
-    <span class="doccomment">/// Called when the block is finalized to update the tx range for all the
-    /// domains with bundles in the block.
-    </span><span class="attr">#[allow(dead_code)]
-    </span><span class="comment">// TODO: use once we support tx-range dynamic adjustment properly
-    </span><span class="kw">fn </span>update_domain_tx_range() {
-        <span class="kw">for </span>domain_id <span class="kw">in </span>DomainTxRangeState::&lt;T&gt;::iter_keys() {
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(domain_config) =
-                DomainRegistry::&lt;T&gt;::get(domain_id).map(|obj| obj.domain_config)
-            {
-                DomainTxRangeState::&lt;T&gt;::mutate(domain_id, |maybe_tx_range_state| {
-                    <span class="kw">if let </span><span class="prelude-val">Some</span>(tx_range_state) = maybe_tx_range_state {
-                        <span class="kw">let </span>tx_range_adjustment_interval =
-                            T::DomainTxRangeAdjustmentInterval::get();
-
-                        tx_range_state.interval_blocks += <span class="number">1</span>;
-
-                        <span class="kw">if </span>tx_range_state.interval_blocks &lt; tx_range_adjustment_interval {
-                            <span class="kw">return</span>;
-                        }
-
-                        <span class="comment">// End of interval, calculate the new tx range.
-                        </span><span class="kw">let </span>TxRangeState {
-                            tx_range,
-                            interval_blocks,
-                            interval_bundles,
-                        } = tx_range_state;
-
-                        <span class="kw">let </span>actual_bundle_count = <span class="kw-2">*</span>interval_bundles;
-                        <span class="kw">let </span>expected_bundle_count = tx_range_adjustment_interval
-                            * u64::from(domain_config.target_bundles_per_block);
-
-                        <span class="kw">let </span>new_tx_range = calculate_tx_range(
-                            <span class="kw-2">*</span>tx_range,
-                            actual_bundle_count,
-                            expected_bundle_count,
-                        );
-
-                        <span class="macro">log::trace!</span>(
-                            target: <span class="string">"runtime::domains"</span>,
-                            <span class="string">"tx range update: blocks = {interval_blocks}, bundles = {actual_bundle_count}, prev = {tx_range}, new = {new_tx_range}"
-                        </span>);
-
-                        <span class="comment">// Reset the tx range and start over.
-                        </span>tx_range_state.tx_range = new_tx_range;
-                        tx_range_state.interval_blocks = <span class="number">0</span>;
-                        tx_range_state.interval_bundles = <span class="number">0</span>;
-                    }
-                })
-            }
-        }
-    }
-
     <span class="doccomment">/// Calculates the initial tx range.
     </span><span class="kw">fn </span>initial_tx_range() -&gt; U256 {
         U256::MAX / T::InitialDomainTxRange::get()
@@ -4079,8 +4915,11 @@
     ) -&gt; <span class="prelude-ty">Option</span>&lt;DomainBlockNumberFor&lt;T&gt;&gt; {
         <span class="kw">let </span>oldest_nonconfirmed_er_number =
             <span class="self">Self</span>::latest_confirmed_domain_block_number(domain_id).saturating_add(One::one());
+        <span class="kw">let </span>is_er_exist = BlockTree::&lt;T&gt;::get(domain_id, oldest_nonconfirmed_er_number).is_some();
+        <span class="kw">let </span>is_pending_to_prune =
+            <span class="self">Self</span>::is_bad_er_pending_to_prune(domain_id, oldest_nonconfirmed_er_number);
 
-        <span class="kw">if </span>BlockTree::&lt;T&gt;::get(domain_id, oldest_nonconfirmed_er_number).is_some() {
+        <span class="kw">if </span>is_er_exist &amp;&amp; !is_pending_to_prune {
             <span class="prelude-val">Some</span>(oldest_nonconfirmed_er_number)
         } <span class="kw">else </span>{
             <span class="comment">// The `oldest_nonconfirmed_er_number` ER may not exist if
@@ -4099,12 +4938,33 @@
             .unwrap_or_default()
     }
 
+    <span class="kw">pub fn </span>latest_confirmed_domain_block(
+        domain_id: DomainId,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;(DomainBlockNumberFor&lt;T&gt;, T::DomainHash)&gt; {
+        LatestConfirmedDomainBlock::&lt;T&gt;::get(domain_id)
+            .map(|block| (block.block_number, block.block_hash))
+    }
+
     <span class="doccomment">/// Returns the domain block limit of the given domain.
     </span><span class="kw">pub fn </span>domain_block_limit(domain_id: DomainId) -&gt; <span class="prelude-ty">Option</span>&lt;DomainBlockLimit&gt; {
         DomainRegistry::&lt;T&gt;::get(domain_id).map(|domain_obj| DomainBlockLimit {
             max_block_size: domain_obj.domain_config.max_block_size,
             max_block_weight: domain_obj.domain_config.max_block_weight,
         })
+    }
+
+    <span class="doccomment">/// Returns the domain bundle limit of the given domain
+    </span><span class="kw">pub fn </span>domain_bundle_limit(
+        domain_id: DomainId,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="prelude-ty">Option</span>&lt;DomainBundleLimit&gt;, DomainRegistryError&gt; {
+        <span class="kw">let </span>domain_config = <span class="kw">match </span>DomainRegistry::&lt;T&gt;::get(domain_id) {
+            <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
+            <span class="prelude-val">Some</span>(domain_obj) =&gt; domain_obj.domain_config,
+        };
+
+        <span class="kw">let </span>bundle_limit = domain_config.calculate_bundle_limit::&lt;T&gt;()<span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(bundle_limit))
     }
 
     <span class="doccomment">/// Returns if there are any ERs in the challenge period that have non empty extrinsics.
@@ -4150,6 +5010,242 @@
     ) -&gt; <span class="prelude-ty">Option</span>&lt;ReceiptHashFor&lt;T&gt;&gt; {
         BlockTree::&lt;T&gt;::get(domain_id, domain_number)
     }
+
+    <span class="kw">pub fn </span>confirmed_domain_block_storage_key(domain_id: DomainId) -&gt; Vec&lt;u8&gt; {
+        LatestConfirmedDomainBlock::&lt;T&gt;::hashed_key_for(domain_id)
+    }
+
+    <span class="kw">pub fn </span>is_bad_er_pending_to_prune(
+        domain_id: DomainId,
+        receipt_number: DomainBlockNumberFor&lt;T&gt;,
+    ) -&gt; bool {
+        <span class="comment">// The genesis receipt is always valid
+        </span><span class="kw">if </span>receipt_number.is_zero() {
+            <span class="kw">return </span><span class="bool-val">false</span>;
+        }
+
+        <span class="kw">let </span>head_receipt_number = HeadReceiptNumber::&lt;T&gt;::get(domain_id);
+
+        <span class="comment">// If `receipt_number` is greater than the current `head_receipt_number` meaning it is a
+        // bad ER and the `head_receipt_number` is previously reverted by a fraud proof
+        </span>head_receipt_number &lt; receipt_number
+    }
+
+    <span class="kw">pub fn </span>is_operator_pending_to_slash(domain_id: DomainId, operator_id: OperatorId) -&gt; bool {
+        <span class="kw">let </span>latest_submitted_er = LatestSubmittedER::&lt;T&gt;::get((domain_id, operator_id));
+
+        <span class="comment">// The genesis receipt is always valid
+        </span><span class="kw">if </span>latest_submitted_er.is_zero() {
+            <span class="kw">return </span><span class="bool-val">false</span>;
+        }
+
+        <span class="kw">let </span>head_receipt_number = HeadReceiptNumber::&lt;T&gt;::get(domain_id);
+
+        <span class="comment">// If the operator have submitted an ER greater than the current `head_receipt_number`
+        // meaning the ER is a bad ER and the `head_receipt_number` is previously reverted by
+        // a fraud proof
+        </span>head_receipt_number &lt; latest_submitted_er
+    }
+
+    <span class="kw">pub fn </span>max_submit_bundle_weight() -&gt; Weight {
+        T::WeightInfo::submit_bundle()
+            .saturating_add(
+                <span class="comment">// NOTE: within `submit_bundle`, only one of (or none) `handle_bad_receipt` and
+                // `confirm_domain_block` can happen, thus we use the `max` of them
+
+                // We use `MAX_BUNLDE_PER_BLOCK` number to assume the number of slashed operators.
+                // We do not expect so many operators to be slashed but nontheless, if it did happen
+                // we will limit the weight to 100 operators.
+                </span>T::WeightInfo::handle_bad_receipt(MAX_BUNLDE_PER_BLOCK).max(
+                    T::WeightInfo::confirm_domain_block(MAX_BUNLDE_PER_BLOCK, MAX_BUNLDE_PER_BLOCK),
+                ),
+            )
+            .saturating_add(<span class="self">Self</span>::max_staking_epoch_transition())
+            .saturating_add(T::WeightInfo::slash_operator(MAX_NOMINATORS_TO_SLASH))
+    }
+
+    <span class="kw">pub fn </span>max_staking_epoch_transition() -&gt; Weight {
+        T::WeightInfo::operator_reward_tax_and_restake(MAX_BUNLDE_PER_BLOCK).saturating_add(
+            T::WeightInfo::finalize_domain_epoch_staking(T::MaxPendingStakingOperation::get()),
+        )
+    }
+
+    <span class="kw">fn </span>actual_epoch_transition_weight(epoch_transition_res: EpochTransitionResult) -&gt; Weight {
+        <span class="kw">let </span>EpochTransitionResult {
+            rewarded_operator_count,
+            finalized_operator_count,
+            completed_epoch_index: <span class="kw">_</span>,
+        } = epoch_transition_res;
+
+        T::WeightInfo::operator_reward_tax_and_restake(rewarded_operator_count).saturating_add(
+            T::WeightInfo::finalize_domain_epoch_staking(finalized_operator_count),
+        )
+    }
+
+    <span class="doccomment">/// Reward the active operators of this domain epoch.
+    </span><span class="kw">pub fn </span>reward_domain_operators(domain_id: DomainId, rewards: BalanceOf&lt;T&gt;) {
+        <span class="comment">// If domain is not instantiated, then we don't care at the moment.
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(domain_stake_summary) = DomainStakingSummary::&lt;T&gt;::get(domain_id) {
+            <span class="kw">let </span>operators = domain_stake_summary
+                .current_epoch_rewards
+                .into_keys()
+                .collect::&lt;Vec&lt;OperatorId&gt;&gt;();
+            <span class="kw">let _ </span>= do_reward_operators::&lt;T&gt;(domain_id, operators.into_iter(), rewards);
+        }
+    }
+
+    <span class="attr">#[cfg(not(feature = <span class="string">"runtime-benchmarks"</span>))]
+    </span><span class="kw">fn </span>actual_slash_operator_weight(slashed_nominators: u32) -&gt; Weight {
+        T::WeightInfo::slash_operator(slashed_nominators)
+    }
+
+    <span class="kw">pub fn </span>storage_fund_account_balance(operator_id: OperatorId) -&gt; BalanceOf&lt;T&gt; {
+        <span class="kw">let </span>storage_fund_acc = storage_fund_account::&lt;T&gt;(operator_id);
+        T::Currency::reducible_balance(<span class="kw-2">&amp;</span>storage_fund_acc, Preservation::Preserve, Fortitude::Polite)
+    }
+
+    <span class="comment">// Get the highest slot of the bundle submitted by a given operator from the previous block
+    //
+    // Return 0 if the operator not submit any bundle before
+    </span><span class="kw">pub fn </span>operator_highest_slot_from_previous_block(
+        operator_id: OperatorId,
+        pre_dispatch: bool,
+    ) -&gt; u64 {
+        <span class="kw">if </span>pre_dispatch {
+            OperatorHighestSlot::&lt;T&gt;::get(operator_id)
+        } <span class="kw">else </span>{
+            <span class="comment">// The `OperatorBundleSlot` is lazily move to `OperatorHighestSlot` in the `on_initialize` hook
+            // so when validating tx in the pool we should check `OperatorBundleSlot` first (which is from the
+            // parent block) then `OperatorHighestSlot`
+            //
+            // NOTE: `OperatorBundleSlot` use `BTreeSet` so `last` will return the maximum value in the set
+            </span><span class="kw-2">*</span>OperatorBundleSlot::&lt;T&gt;::get(operator_id)
+                .last()
+                .unwrap_or(<span class="kw-2">&amp;</span>OperatorHighestSlot::&lt;T&gt;::get(operator_id))
+        }
+    }
+
+    <span class="comment">// Get the domain runtime code that used to derive `receipt`, if the runtime code still present in
+    // the state then get it from the state otherwise from the `maybe_domain_runtime_code_at` prood.
+    </span><span class="kw">pub fn </span>get_domain_runtime_code_for_receipt(
+        domain_id: DomainId,
+        receipt: <span class="kw-2">&amp;</span>ExecutionReceiptOf&lt;T&gt;,
+        maybe_domain_runtime_code_at: <span class="prelude-ty">Option</span>&lt;
+            DomainRuntimeCodeAt&lt;BlockNumberFor&lt;T&gt;, T::Hash, T::MmrHash&gt;,
+        &gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;Vec&lt;u8&gt;, FraudProofError&gt; {
+        <span class="kw">let </span>runtime_id = <span class="self">Self</span>::runtime_id(domain_id).ok_or(FraudProofError::RuntimeNotFound)<span class="question-mark">?</span>;
+        <span class="kw">let </span>current_runtime_obj =
+            RuntimeRegistry::&lt;T&gt;::get(runtime_id).ok_or(FraudProofError::RuntimeNotFound)<span class="question-mark">?</span>;
+
+        <span class="comment">// NOTE: domain runtime code is taking affect in the next block, so to get the domain runtime code
+        // that used to derive `receipt` we need to use runtime code at `parent_receipt.consensus_block_number`
+        </span><span class="kw">let </span>at = {
+            <span class="kw">let </span>parent_receipt = BlockTreeNodes::&lt;T&gt;::get(receipt.parent_domain_block_receipt_hash)
+                .ok_or(FraudProofError::ParentReceiptNotFound)<span class="question-mark">?
+                </span>.execution_receipt;
+            parent_receipt.consensus_block_number
+        };
+
+        <span class="kw">let </span>is_domain_runtime_updraded = current_runtime_obj.updated_at &gt;= at;
+
+        <span class="kw">let </span><span class="kw-2">mut </span>runtime_obj = <span class="kw">match </span>(is_domain_runtime_updraded, maybe_domain_runtime_code_at) {
+            <span class="comment">//  The domain runtime is upgraded since `at`, the domain runtime code in `at` is not available
+            // so `domain_runtime_code_proof` must be provided
+            </span>(<span class="bool-val">true</span>, <span class="prelude-val">None</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(FraudProofError::DomainRuntimeCodeProofNotFound),
+            (<span class="bool-val">true</span>, <span class="prelude-val">Some</span>(domain_runtime_code_at)) =&gt; {
+                <span class="kw">let </span>DomainRuntimeCodeAt {
+                    mmr_proof,
+                    domain_runtime_code_proof,
+                } = domain_runtime_code_at;
+
+                <span class="kw">let </span>state_root = <span class="self">Self</span>::verify_mmr_proof_and_extract_state_root(mmr_proof, at)<span class="question-mark">?</span>;
+
+                &lt;DomainRuntimeCodeProof <span class="kw">as </span>BasicStorageProof&lt;T::Block&gt;&gt;::verify::&lt;
+                    T::FraudProofStorageKeyProvider,
+                &gt;(domain_runtime_code_proof, runtime_id, <span class="kw-2">&amp;</span>state_root)<span class="question-mark">?
+            </span>}
+            <span class="comment">// Domain runtime code in `at` is available in the state so `domain_runtime_code_proof`
+            // is unexpected
+            </span>(<span class="bool-val">false</span>, <span class="prelude-val">Some</span>(<span class="kw">_</span>)) =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(FraudProofError::UnexpectedDomainRuntimeCodeProof),
+            (<span class="bool-val">false</span>, <span class="prelude-val">None</span>) =&gt; current_runtime_obj,
+        };
+        <span class="kw">let </span>code = runtime_obj
+            .raw_genesis
+            .take_runtime_code()
+            .ok_or(storage_proof::VerificationError::RuntimeCodeNotFound)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(code)
+    }
+
+    <span class="kw">pub fn </span>is_domain_runtime_updraded_since(
+        domain_id: DomainId,
+        at: BlockNumberFor&lt;T&gt;,
+    ) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
+        <span class="self">Self</span>::runtime_id(domain_id)
+            .and_then(RuntimeRegistry::&lt;T&gt;::get)
+            .map(|runtime_obj| runtime_obj.updated_at &gt;= at)
+    }
+
+    <span class="kw">pub fn </span>verify_mmr_proof_and_extract_state_root(
+        mmr_leaf_proof: ConsensusChainMmrLeafProof&lt;BlockNumberFor&lt;T&gt;, T::Hash, T::MmrHash&gt;,
+        expected_block_number: BlockNumberFor&lt;T&gt;,
+    ) -&gt; <span class="prelude-ty">Result</span>&lt;T::Hash, FraudProofError&gt; {
+        <span class="kw">let </span>leaf_data = T::MmrProofVerifier::verify_proof_and_extract_leaf(mmr_leaf_proof)
+            .ok_or(FraudProofError::BadMmrProof)<span class="question-mark">?</span>;
+
+        <span class="comment">// Ensure it is a proof of the exact block that we expected
+        </span><span class="kw">if </span>expected_block_number != leaf_data.block_number() {
+            <span class="kw">return </span><span class="prelude-val">Err</span>(FraudProofError::UnexpectedMmrProof);
+        }
+
+        <span class="prelude-val">Ok</span>(leaf_data.state_root())
+    }
+
+    <span class="comment">// Return the number of domain runtime upgrade happened since `last_domain_block_number`
+    </span><span class="kw">fn </span>missed_domain_runtime_upgrade(domain_id: DomainId) -&gt; <span class="prelude-ty">Result</span>&lt;u32, BlockTreeError&gt; {
+        <span class="kw">let </span>runtime_id = <span class="self">Self</span>::runtime_id(domain_id).ok_or(BlockTreeError::RuntimeNotFound)<span class="question-mark">?</span>;
+        <span class="kw">let </span>last_domain_block_number = HeadDomainNumber::&lt;T&gt;::get(domain_id);
+
+        <span class="comment">// The consensus block number that derive the last domain block
+        </span><span class="kw">let </span>last_block_at =
+            ExecutionInbox::&lt;T&gt;::iter_key_prefix((domain_id, last_domain_block_number))
+                .next()
+                <span class="comment">// If there is no `ExecutionInbox` exist for the `last_domain_block_number` it means
+                // there is no bundle submitted for the domain since it is instantiated, in this case,
+                // we use the `domain_obj.created_at` (which derive the genesis block).
+                </span>.or(DomainRegistry::&lt;T&gt;::get(domain_id).map(|domain_obj| domain_obj.created_at))
+                .ok_or(BlockTreeError::LastBlockNotFound)<span class="question-mark">?</span>;
+
+        <span class="prelude-val">Ok</span>(DomainRuntimeUpgradeRecords::&lt;T&gt;::get(runtime_id)
+            .into_keys()
+            .rev()
+            .take_while(|upgraded_at| <span class="kw-2">*</span>upgraded_at &gt; last_block_at)
+            .count() <span class="kw">as </span>u32)
+    }
+
+    <span class="comment">// Return the number of domain instance that instantiated with the given runtime
+    </span><span class="kw">fn </span>domain_instance_count(runtime_id: RuntimeId) -&gt; u32 {
+        <span class="comment">// TODO: perhaps add another storage to keep track of this number so we don't need
+        // to iterate all the domain instances
+        </span>DomainRegistry::&lt;T&gt;::iter()
+            .filter(|(<span class="kw">_</span>, domain_obj)| domain_obj.domain_config.runtime_id == runtime_id)
+            .count() <span class="kw">as </span>u32
+    }
+
+    <span class="doccomment">/// Returns true if the Domain is registered.
+    </span><span class="kw">pub fn </span>is_domain_registered(domain_id: DomainId) -&gt; bool {
+        DomainStakingSummary::&lt;T&gt;::contains_key(domain_id)
+    }
+}
+
+<span class="kw">impl</span>&lt;T: Config&gt; sp_domains::DomainOwner&lt;T::AccountId&gt; <span class="kw">for </span>Pallet&lt;T&gt; {
+    <span class="kw">fn </span>is_domain_owner(domain_id: DomainId, acc: T::AccountId) -&gt; bool {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(domain_obj) = DomainRegistry::&lt;T&gt;::get(domain_id) {
+            domain_obj.owner_account_id == acc
+        } <span class="kw">else </span>{
+            <span class="bool-val">false
+        </span>}
+    }
 }
 
 <span class="kw">impl</span>&lt;T&gt; Pallet&lt;T&gt;
@@ -4177,9 +5273,7 @@
     }
 
     <span class="doccomment">/// Submits an unsigned extrinsic [`Call::submit_fraud_proof`].
-    </span><span class="kw">pub fn </span>submit_fraud_proof_unsigned(
-        fraud_proof: FraudProof&lt;BlockNumberFor&lt;T&gt;, T::Hash, T::DomainHeader&gt;,
-    ) {
+    </span><span class="kw">pub fn </span>submit_fraud_proof_unsigned(fraud_proof: FraudProofFor&lt;T&gt;) {
         <span class="kw">let </span>call = Call::submit_fraud_proof {
             fraud_proof: Box::new(fraud_proof),
         };

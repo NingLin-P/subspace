@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `domains/client/domain-operator/src/domain_bundle_proposer.rs`."><title>domain_bundle_proposer.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-4e54bb2b497cc83f.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="domain_client_operator" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (25f8d01fd 2024-01-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0b2e2def73e61cbe.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../domain_client_operator/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `domains/client/domain-operator/src/domain_bundle_proposer.rs`."><title>domain_bundle_proposer.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="domain_client_operator" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../domain_client_operator/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -339,17 +337,105 @@
 <a href="#337" id="337">337</a>
 <a href="#338" id="338">338</a>
 <a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a>
+<a href="#355" id="355">355</a>
+<a href="#356" id="356">356</a>
+<a href="#357" id="357">357</a>
+<a href="#358" id="358">358</a>
+<a href="#359" id="359">359</a>
+<a href="#360" id="360">360</a>
+<a href="#361" id="361">361</a>
+<a href="#362" id="362">362</a>
+<a href="#363" id="363">363</a>
+<a href="#364" id="364">364</a>
+<a href="#365" id="365">365</a>
+<a href="#366" id="366">366</a>
+<a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
+<a href="#401" id="401">401</a>
+<a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
+<a href="#407" id="407">407</a>
+<a href="#408" id="408">408</a>
+<a href="#409" id="409">409</a>
+<a href="#410" id="410">410</a>
+<a href="#411" id="411">411</a>
+<a href="#412" id="412">412</a>
+<a href="#413" id="413">413</a>
+<a href="#414" id="414">414</a>
+<a href="#415" id="415">415</a>
+<a href="#416" id="416">416</a>
+<a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::ExecutionReceiptFor;
 <span class="kw">use </span>codec::Encode;
 <span class="kw">use </span>futures::{select, FutureExt};
 <span class="kw">use </span>sc_client_api::{AuxStore, BlockBackend};
 <span class="kw">use </span>sc_transaction_pool_api::InPoolTransaction;
-<span class="kw">use </span>sp_api::{ApiExt, ProvideRuntimeApi};
+<span class="kw">use </span>sp_api::{ApiError, ApiExt, ProvideRuntimeApi};
 <span class="kw">use </span>sp_block_builder::BlockBuilder;
 <span class="kw">use </span>sp_blockchain::HeaderBackend;
 <span class="kw">use </span>sp_domains::core_api::DomainCoreApi;
 <span class="kw">use </span>sp_domains::{
-    BundleHeader, DomainId, DomainsApi, ExecutionReceipt, HeaderHashingFor, ProofOfElection,
+    BundleHeader, DomainBundleLimit, DomainId, DomainsApi, ExecutionReceipt, HeaderHashingFor,
+    OperatorId, ProofOfElection,
 };
 <span class="kw">use </span>sp_runtime::traits::{Block <span class="kw">as </span>BlockT, Hash <span class="kw">as </span>HashT, Header <span class="kw">as </span>HeaderT, NumberFor, One, Zero};
 <span class="kw">use </span>sp_runtime::Percent;
@@ -369,7 +455,7 @@
 <span class="kw">const </span>BUNDLE_UTILIZATION_THRESHOLD: Percent = Percent::from_percent(<span class="number">95</span>);
 
 <span class="comment">// `PreviousBundledTx` used to keep track of tx that have included in previous bundle and avoid
-// to re-include the these tx in the following bundle to reduce deplicated tx.
+// to re-including these transactions in the next bundle if the consensus hash did not change.
 </span><span class="kw">struct </span>PreviousBundledTx&lt;Block: BlockT, CBlock: BlockT&gt; {
     bundled_at: &lt;CBlock <span class="kw">as </span>BlockT&gt;::Hash,
     tx_hashes: HashSet&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Hash&gt;,
@@ -457,10 +543,81 @@
         }
     }
 
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>fetch_storage_fund_balance_and_fee(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        operator_id: OperatorId,
+    ) -&gt; sp_blockchain::Result&lt;(Balance, Balance)&gt; {
+        <span class="kw">let </span>best_hash = <span class="self">self</span>.consensus_client.info().best_hash;
+        <span class="kw">let </span>consensus_runtime_api = <span class="self">self</span>.consensus_client.runtime_api();
+        <span class="kw">let </span>api_version = consensus_runtime_api
+            .api_version::&lt;<span class="kw">dyn </span>DomainsApi&lt;CBlock, Block::Header&gt;&gt;(best_hash)
+            .map_err(sp_blockchain::Error::RuntimeApiError)<span class="question-mark">?
+            </span>.ok_or_else(|| {
+                sp_blockchain::Error::RuntimeApiError(ApiError::Application(
+                    <span class="macro">format!</span>(<span class="string">"DomainsApi not found at: {:?}"</span>, best_hash).into(),
+                ))
+            })<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>transaction_byte_fee = consensus_runtime_api.consensus_chain_byte_fee(best_hash)<span class="question-mark">?</span>;
+
+        <span class="comment">// TODO: This is used to keep compatible with gemini-3h, remove before next network
+        </span><span class="kw">if </span>api_version &gt;= <span class="number">3 </span>{
+            <span class="kw">let </span>storage_fund_balance =
+                consensus_runtime_api.storage_fund_account_balance(best_hash, operator_id)<span class="question-mark">?</span>;
+
+            <span class="prelude-val">Ok</span>((storage_fund_balance, transaction_byte_fee))
+        } <span class="kw">else </span>{
+            <span class="prelude-val">Ok</span>((Balance::MAX, transaction_byte_fee))
+        }
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>fetch_domain_bundle_limit(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; sp_blockchain::Result&lt;DomainBundleLimit&gt; {
+        <span class="kw">let </span>best_hash = <span class="self">self</span>.consensus_client.info().best_hash;
+        <span class="kw">let </span>consensus_runtime_api = <span class="self">self</span>.consensus_client.runtime_api();
+        <span class="kw">let </span>api_version = consensus_runtime_api
+            .api_version::&lt;<span class="kw">dyn </span>DomainsApi&lt;CBlock, Block::Header&gt;&gt;(best_hash)
+            .map_err(sp_blockchain::Error::RuntimeApiError)<span class="question-mark">?
+            </span>.ok_or_else(|| {
+                sp_blockchain::Error::RuntimeApiError(ApiError::Application(
+                    <span class="macro">format!</span>(<span class="string">"DomainsApi not found at: {:?}"</span>, best_hash).into(),
+                ))
+            })<span class="question-mark">?</span>;
+
+        <span class="comment">// TODO: This is used to keep compatible with gemini-3h, remove before next network
+        </span><span class="kw">if </span>api_version &gt;= <span class="number">2 </span>{
+            <span class="self">self</span>.consensus_client
+                .runtime_api()
+                .domain_bundle_limit(best_hash, <span class="self">self</span>.domain_id)<span class="question-mark">?
+                </span>.ok_or_else(|| {
+                    sp_blockchain::Error::Application(
+                        <span class="macro">format!</span>(<span class="string">"Domain bundle limit for {:?} not found"</span>, <span class="self">self</span>.domain_id).into(),
+                    )
+                })
+        } <span class="kw">else </span>{
+            <span class="comment">// If bundle limit runtime api is not available, we need to revert to old behaviour and
+            // fetch domain block limit.
+            </span><span class="kw">let </span>domain_block_limit = <span class="self">self
+                </span>.consensus_client
+                .runtime_api()
+                .domain_block_limit(best_hash, <span class="self">self</span>.domain_id)<span class="question-mark">?
+                </span>.ok_or_else(|| {
+                    sp_blockchain::Error::Application(
+                        <span class="macro">format!</span>(<span class="string">"Domain block limit for {:?} not found"</span>, <span class="self">self</span>.domain_id).into(),
+                    )
+                })<span class="question-mark">?</span>;
+
+            <span class="prelude-val">Ok</span>(DomainBundleLimit {
+                max_bundle_weight: domain_block_limit.max_block_weight,
+                max_bundle_size: domain_block_limit.max_block_size,
+            })
+        }
+    }
+
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async fn </span>propose_bundle_at(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         proof_of_election: ProofOfElection&lt;CBlock::Hash&gt;,
         tx_range: U256,
+        operator_id: OperatorId,
     ) -&gt; sp_blockchain::Result&lt;ProposeBundleOutput&lt;Block, CBlock&gt;&gt; {
         <span class="kw">let </span>parent_number = <span class="self">self</span>.client.info().best_number;
         <span class="kw">let </span>parent_hash = <span class="self">self</span>.client.info().best_hash;
@@ -469,7 +626,7 @@
         <span class="comment">// TODO: proper timeout
         </span><span class="kw">let </span><span class="kw-2">mut </span>t2 = futures_timer::Delay::new(time::Duration::from_micros(<span class="number">100</span>)).fuse();
 
-        <span class="kw">let </span>pending_iterator = <span class="macro">select! </span>{
+        <span class="kw">let </span>pending_iterator = <span class="macro">select!</span> {
             res = t1 =&gt; res,
             <span class="kw">_ </span>= t2 =&gt; {
                 <span class="macro">tracing::warn!</span>(
@@ -486,22 +643,29 @@
         </span><span class="self">self</span>.previous_bundled_tx
             .maybe_clear(<span class="self">self</span>.consensus_client.info().best_hash);
 
+        <span class="kw">let </span>receipt = <span class="self">self</span>.load_bundle_receipt(parent_number)<span class="question-mark">?</span>;
+
         <span class="kw">let </span>bundle_vrf_hash = U256::from_be_bytes(proof_of_election.vrf_hash());
-        <span class="kw">let </span>domain_block_limit = <span class="self">self
-            </span>.consensus_client
-            .runtime_api()
-            .domain_block_limit(<span class="self">self</span>.consensus_client.info().best_hash, <span class="self">self</span>.domain_id)<span class="question-mark">?
-            </span>.ok_or_else(|| {
-                sp_blockchain::Error::Application(
-                    <span class="macro">format!</span>(<span class="string">"Domain block limit for {:?} not found"</span>, <span class="self">self</span>.domain_id).into(),
-                )
-            })<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>domain_bundle_limit = <span class="self">self</span>.fetch_domain_bundle_limit()<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>(storage_fund_balance, transaction_byte_fee) =
+            <span class="self">self</span>.fetch_storage_fund_balance_and_fee(operator_id)<span class="question-mark">?</span>;
+
+        <span class="kw">let </span>header_size = receipt.encoded_size()
+            + proof_of_election.encoded_size()
+            + domain_bundle_limit.max_bundle_weight.encoded_size()
+            <span class="comment">// Extrinsics root size
+            </span>+ <span class="number">32
+            </span><span class="comment">// Header signature size
+            </span>+ <span class="number">64</span>;
+
         <span class="kw">let </span><span class="kw-2">mut </span>extrinsics = Vec::new();
         <span class="kw">let </span><span class="kw-2">mut </span>estimated_bundle_weight = Weight::default();
         <span class="kw">let </span><span class="kw-2">mut </span>bundle_size = <span class="number">0u32</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>skipped = <span class="number">0</span>;
 
-        <span class="comment">// Seperate code block to make sure that runtime api instance is dropped after validation is done.
+        <span class="comment">// Separate code block to make sure that runtime api instance is dropped after validation is done.
         </span>{
             <span class="comment">// We are using one runtime api instance here to maintain storage changes in the instance's internal buffer
             // between runtime calls done in this loop.
@@ -540,35 +704,45 @@
                     })<span class="question-mark">?</span>;
                 <span class="kw">let </span>next_estimated_bundle_weight =
                     estimated_bundle_weight.saturating_add(tx_weight);
-                <span class="kw">if </span>next_estimated_bundle_weight.any_gt(domain_block_limit.max_block_weight) {
+                <span class="kw">if </span>next_estimated_bundle_weight.any_gt(domain_bundle_limit.max_bundle_weight) {
                     <span class="kw">if </span>skipped &lt; MAX_SKIPPED_TRANSACTIONS
                         &amp;&amp; Percent::from_rational(
                             estimated_bundle_weight.ref_time(),
-                            domain_block_limit.max_block_weight.ref_time(),
+                            domain_bundle_limit.max_bundle_weight.ref_time(),
                         ) &lt; BUNDLE_UTILIZATION_THRESHOLD
                     {
                         skipped += <span class="number">1</span>;
+                        <span class="kw">continue</span>;
                     } <span class="kw">else </span>{
                         <span class="kw">break</span>;
                     }
                 }
 
                 <span class="kw">let </span>next_bundle_size = bundle_size + pending_tx_data.encoded_size() <span class="kw">as </span>u32;
-                <span class="kw">if </span>next_bundle_size &gt; domain_block_limit.max_block_size {
+                <span class="kw">if </span>next_bundle_size &gt; domain_bundle_limit.max_bundle_size {
                     <span class="kw">if </span>skipped &lt; MAX_SKIPPED_TRANSACTIONS
-                        &amp;&amp; Percent::from_rational(bundle_size, domain_block_limit.max_block_size)
+                        &amp;&amp; Percent::from_rational(bundle_size, domain_bundle_limit.max_bundle_size)
                             &lt; BUNDLE_UTILIZATION_THRESHOLD
                     {
                         skipped += <span class="number">1</span>;
+                        <span class="kw">continue</span>;
                     } <span class="kw">else </span>{
                         <span class="kw">break</span>;
                     }
                 }
 
-                <span class="comment">// TODO: stop including more tx once the operator's available storage fund less than
-                // `next_bundle_size * consensus_transaction_byte_fee`
+                <span class="kw">let </span>next_bundle_storage_fee =
+                    (header_size <span class="kw">as </span>u32 + next_bundle_size) <span class="kw">as </span>u128 * transaction_byte_fee;
+                <span class="kw">if </span>next_bundle_storage_fee &gt; storage_fund_balance {
+                    <span class="macro">tracing::warn!</span>(
+                        <span class="question-mark">?</span>next_bundle_storage_fee,
+                        <span class="question-mark">?</span>storage_fund_balance,
+                        <span class="string">"Insufficient storage fund balance to pay for the bundle storage fee"
+                    </span>);
+                    <span class="kw">break</span>;
+                }
 
-                // Double check the transaction validity, because the tx pool are re-validate the transaction
+                <span class="comment">// Double check the transaction validity, because the tx pool are re-validate the transaction
                 // in pool asynchronously so there is race condition that the operator imported a domain block
                 // and start producing bundle immediately before the re-validation based on the latest block
                 // is finished, cause the bundle contains illegal tx accidentally and being considered as invalid
@@ -609,8 +783,6 @@
             extrinsics.iter().map(|xt| xt.encode()).collect(),
             sp_core::storage::StateVersion::V1,
         );
-
-        <span class="kw">let </span>receipt = <span class="self">self</span>.load_bundle_receipt(parent_number)<span class="question-mark">?</span>;
 
         <span class="kw">let </span>header = BundleHeader {
             proof_of_election,

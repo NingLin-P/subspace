@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-proof-of-space/src/chiapos/table.rs`."><title>table.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-4e54bb2b497cc83f.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="subspace_proof_of_space" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (25f8d01fd 2024-01-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-0b2e2def73e61cbe.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../subspace_proof_of_space/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/subspace-proof-of-space/src/chiapos/table.rs`."><title>table.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="subspace_proof_of_space" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../subspace_proof_of_space/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -837,28 +835,70 @@
 <a href="#835" id="835">835</a>
 <a href="#836" id="836">836</a>
 <a href="#837" id="837">837</a>
+<a href="#838" id="838">838</a>
+<a href="#839" id="839">839</a>
+<a href="#840" id="840">840</a>
+<a href="#841" id="841">841</a>
+<a href="#842" id="842">842</a>
+<a href="#843" id="843">843</a>
+<a href="#844" id="844">844</a>
+<a href="#845" id="845">845</a>
+<a href="#846" id="846">846</a>
+<a href="#847" id="847">847</a>
+<a href="#848" id="848">848</a>
+<a href="#849" id="849">849</a>
+<a href="#850" id="850">850</a>
+<a href="#851" id="851">851</a>
+<a href="#852" id="852">852</a>
+<a href="#853" id="853">853</a>
+<a href="#854" id="854">854</a>
+<a href="#855" id="855">855</a>
+<a href="#856" id="856">856</a>
+<a href="#857" id="857">857</a>
+<a href="#858" id="858">858</a>
+<a href="#859" id="859">859</a>
+<a href="#860" id="860">860</a>
+<a href="#861" id="861">861</a>
+<a href="#862" id="862">862</a>
+<a href="#863" id="863">863</a>
+<a href="#864" id="864">864</a>
+<a href="#865" id="865">865</a>
+<a href="#866" id="866">866</a>
+<a href="#867" id="867">867</a>
+<a href="#868" id="868">868</a>
+<a href="#869" id="869">869</a>
+<a href="#870" id="870">870</a>
+<a href="#871" id="871">871</a>
+<a href="#872" id="872">872</a>
+<a href="#873" id="873">873</a>
+<a href="#874" id="874">874</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(test)]
 </span><span class="kw">mod </span>tests;
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">mod </span>types;
 
-<span class="kw">extern crate </span>alloc;
+<span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+</span><span class="kw">extern crate </span>alloc;
 
 <span class="kw">use </span><span class="kw">crate</span>::chiapos::constants::{PARAM_B, PARAM_BC, PARAM_C, PARAM_EXT, PARAM_M};
 <span class="kw">use </span><span class="kw">crate</span>::chiapos::table::types::{Metadata, Position, X, Y};
 <span class="kw">use </span><span class="kw">crate</span>::chiapos::utils::EvaluatableUsize;
 <span class="kw">use </span><span class="kw">crate</span>::chiapos::Seed;
-<span class="kw">use </span>alloc::vec;
-<span class="kw">use </span>alloc::vec::Vec;
+<span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+</span><span class="kw">use </span>alloc::vec;
+<span class="attr">#[cfg(not(feature = <span class="string">"std"</span>))]
+</span><span class="kw">use </span>alloc::vec::Vec;
 <span class="kw">use </span>chacha20::cipher::{KeyIvInit, StreamCipher, StreamCipherSeek};
 <span class="kw">use </span>chacha20::{ChaCha8, Key, Nonce};
 <span class="kw">use </span>core::mem;
 <span class="kw">use </span>core::simd::num::SimdUint;
 <span class="kw">use </span>core::simd::Simd;
-<span class="attr">#[cfg(any(feature = <span class="string">"parallel"</span>, test))]
-</span><span class="kw">use </span>core::sync::atomic::{AtomicUsize, Ordering};
+<span class="attr">#[cfg(all(feature = <span class="string">"std"</span>, any(feature = <span class="string">"parallel"</span>, test)))]
+</span><span class="kw">use </span>parking_lot::Mutex;
 <span class="attr">#[cfg(any(feature = <span class="string">"parallel"</span>, test))]
 </span><span class="kw">use </span>rayon::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>seq_macro::seq;
+<span class="attr">#[cfg(all(not(feature = <span class="string">"std"</span>), any(feature = <span class="string">"parallel"</span>, test)))]
+</span><span class="kw">use </span>spin::Mutex;
 <span class="kw">use </span>subspace_core_primitives::crypto::{blake3_hash, blake3_hash_list};
 
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">const </span>COMPUTE_F1_SIMD_FACTOR: usize = <span class="number">8</span>;
@@ -927,32 +967,35 @@
     (output, skip_bits)
 }
 
-<span class="kw">fn </span>calculate_left_targets() -&gt; Vec&lt;Vec&lt;Vec&lt;Position&gt;&gt;&gt; {
+<span class="attr">#[derive(Debug, Clone)]
+</span><span class="kw">struct </span>LeftTargets {
+    left_targets: Vec&lt;Position&gt;,
+}
+
+<span class="kw">fn </span>calculate_left_targets() -&gt; LeftTargets {
+    <span class="kw">let </span><span class="kw-2">mut </span>left_targets = Vec::with_capacity(<span class="number">2 </span>* usize::from(PARAM_BC) * usize::from(PARAM_M));
+
     <span class="kw">let </span>param_b = u32::from(PARAM_B);
     <span class="kw">let </span>param_c = u32::from(PARAM_C);
 
-    (<span class="number">0</span>..=<span class="number">1u32</span>)
-        .map(|parity| {
-            (<span class="number">0</span>..u32::from(PARAM_BC))
-                .map(|r| {
-                    <span class="kw">let </span>c = r / param_c;
+    <span class="kw">for </span>parity <span class="kw">in </span><span class="number">0</span>..=<span class="number">1u32 </span>{
+        <span class="kw">for </span>r <span class="kw">in </span><span class="number">0</span>..u32::from(PARAM_BC) {
+            <span class="kw">let </span>c = r / param_c;
 
-                    (<span class="number">0</span>..u32::from(PARAM_M))
-                        .map(|m| {
-                            <span class="kw">let </span>target = ((c + m) % param_b) * param_c
-                                + (((<span class="number">2 </span>* m + parity) * (<span class="number">2 </span>* m + parity) + r) % param_c);
-                            Position::from(target)
-                        })
-                        .collect()
-                })
-                .collect()
-        })
-        .collect()
+            <span class="kw">for </span>m <span class="kw">in </span><span class="number">0</span>..u32::from(PARAM_M) {
+                <span class="kw">let </span>target = ((c + m) % param_b) * param_c
+                    + (((<span class="number">2 </span>* m + parity) * (<span class="number">2 </span>* m + parity) + r) % param_c);
+                left_targets.push(Position::from(target));
+            }
+        }
+    }
+
+    LeftTargets { left_targets }
 }
 
-<span class="kw">fn </span>calculate_left_target_on_demand(parity: usize, r: usize, m: usize) -&gt; usize {
-    <span class="kw">let </span>param_b = usize::from(PARAM_B);
-    <span class="kw">let </span>param_c = usize::from(PARAM_C);
+<span class="kw">fn </span>calculate_left_target_on_demand(parity: u32, r: u32, m: u32) -&gt; u32 {
+    <span class="kw">let </span>param_b = u32::from(PARAM_B);
+    <span class="kw">let </span>param_c = u32::from(PARAM_C);
 
     <span class="kw">let </span>c = r / param_c;
 
@@ -964,7 +1007,7 @@
 </span><span class="kw">pub struct </span>TablesCache&lt;<span class="kw">const </span>K: u8&gt; {
     buckets: Vec&lt;Bucket&gt;,
     rmap_scratch: Vec&lt;RmapItem&gt;,
-    left_targets: Vec&lt;Vec&lt;Vec&lt;Position&gt;&gt;&gt;,
+    left_targets: LeftTargets,
 }
 
 <span class="kw">impl</span>&lt;<span class="kw">const </span>K: u8&gt; Default <span class="kw">for </span>TablesCache&lt;K&gt; {
@@ -1074,7 +1117,8 @@
     );
 
     <span class="comment">// SAFETY: `X` is `#[repr(transparent)]` and guaranteed to have the same memory layout as `u32`
-    </span><span class="kw">let </span>xs = <span class="kw">unsafe </span>{ mem::transmute::&lt;<span class="kw">_</span>, [u32; COMPUTE_F1_SIMD_FACTOR]&gt;(xs) };
+    </span><span class="kw">let </span>xs =
+        <span class="kw">unsafe </span>{ mem::transmute::&lt;[X; COMPUTE_F1_SIMD_FACTOR], [u32; COMPUTE_F1_SIMD_FACTOR]&gt;(xs) };
     <span class="comment">// Extract `PARAM_EXT` most significant bits from `xs` and store in the final offset of
     // eventual `ys` with the rest of bits being in undefined state.
     </span><span class="kw">let </span>pre_exts = Simd::from(xs) &gt;&gt; Simd::splat(u32::from(K - PARAM_EXT));
@@ -1094,7 +1138,7 @@
 
 <span class="doccomment">/// `rmap_scratch` is just an optimization to reuse allocations between calls.
 ///
-/// For verification purposes use [`num_matches`] instead.
+/// For verification purposes use [`has_match`] instead.
 ///
 /// Returns `None` if either of buckets is empty.
 </span><span class="kw">fn </span>find_matches&lt;<span class="lifetime">'a</span>&gt;(
@@ -1103,7 +1147,7 @@
     right_bucket_ys: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[Y],
     right_bucket_start_position: Position,
     rmap_scratch: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Vec&lt;RmapItem&gt;,
-    left_targets: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[Vec&lt;Vec&lt;Position&gt;&gt;],
+    left_targets: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>LeftTargets,
 ) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>Iterator&lt;Item = Match&gt; + <span class="lifetime">'a</span>&gt; {
     <span class="comment">// Clear and set to correct size with zero values
     </span>rmap_scratch.clear();
@@ -1134,7 +1178,16 @@
     // `PARAM_BC` away from the previous one in terms of divisor by `PARAM_BC`
     </span><span class="kw">let </span>base = base - usize::from(PARAM_BC);
     <span class="kw">let </span>parity = (usize::from(first_left_bucket_y) / usize::from(PARAM_BC)) % <span class="number">2</span>;
-    <span class="kw">let </span>left_targets = <span class="kw-2">&amp;</span>left_targets[parity];
+    <span class="kw">let </span>left_targets_parity = {
+        <span class="kw">let </span>(a, b) = left_targets
+            .left_targets
+            .split_at(left_targets.left_targets.len() / <span class="number">2</span>);
+        <span class="kw">if </span>parity == <span class="number">0 </span>{
+            a
+        } <span class="kw">else </span>{
+            b
+        }
+    };
 
     <span class="prelude-val">Some</span>(
         left_bucket_ys
@@ -1142,10 +1195,13 @@
             .zip(left_bucket_start_position..)
             .flat_map(<span class="kw">move </span>|(<span class="kw-2">&amp;</span>y, left_position)| {
                 <span class="kw">let </span>r = usize::from(y) - base;
-                <span class="kw">let </span>left_targets = <span class="kw-2">&amp;</span>left_targets[r];
+                <span class="kw">let </span>left_targets_r = left_targets_parity
+                    .chunks_exact(left_targets_parity.len() / usize::from(PARAM_BC))
+                    .nth(r)
+                    .expect(<span class="string">"r is valid"</span>);
 
                 (<span class="number">0</span>..usize::from(PARAM_M)).flat_map(<span class="kw">move </span>|m| {
-                    <span class="kw">let </span>r_target = left_targets[m];
+                    <span class="kw">let </span>r_target = left_targets_r[m];
                     <span class="kw">let </span>rmap_item = rmap[usize::from(r_target)];
 
                     (rmap_item.start_position..rmap_item.start_position + rmap_item.count).map(
@@ -1161,21 +1217,20 @@
 }
 
 <span class="doccomment">/// Simplified version of [`find_matches`] for verification purposes.
-</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>num_matches(left_y: Y, right_y: Y) -&gt; usize {
-    <span class="kw">let </span>right_r = usize::from(right_y) % usize::from(PARAM_BC);
-    <span class="kw">let </span>parity = (usize::from(left_y) / usize::from(PARAM_BC)) % <span class="number">2</span>;
-    <span class="kw">let </span>left_r = usize::from(left_y) % usize::from(PARAM_BC);
+</span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>has_match(left_y: Y, right_y: Y) -&gt; bool {
+    <span class="kw">let </span>right_r = u32::from(right_y) % u32::from(PARAM_BC);
+    <span class="kw">let </span>parity = (u32::from(left_y) / u32::from(PARAM_BC)) % <span class="number">2</span>;
+    <span class="kw">let </span>left_r = u32::from(left_y) % u32::from(PARAM_BC);
 
-    <span class="kw">let </span><span class="kw-2">mut </span>matches = <span class="number">0</span>;
-    <span class="kw">for </span>m <span class="kw">in </span><span class="number">0</span>..usize::from(PARAM_M) {
+    <span class="kw">for </span>m <span class="kw">in </span><span class="number">0</span>..u32::from(PARAM_M) {
         <span class="kw">let </span>r_target = calculate_left_target_on_demand(parity, left_r, m);
         <span class="kw">if </span>r_target == right_r {
-            matches += <span class="number">1</span>;
+            <span class="kw">return </span><span class="bool-val">true</span>;
         }
     }
 
-    matches
-}
+    <span class="bool-val">false
+</span>}
 
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>compute_fn&lt;<span class="kw">const </span>K: u8, <span class="kw">const </span>TABLE_NUMBER: u8, <span class="kw">const </span>PARENT_TABLE_NUMBER: u8&gt;(
     y: Y,
@@ -1291,7 +1346,7 @@
     left_bucket: Bucket,
     right_bucket: Bucket,
     rmap_scratch: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Vec&lt;RmapItem&gt;,
-    left_targets: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[Vec&lt;Vec&lt;Position&gt;&gt;],
+    left_targets: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>LeftTargets,
     results_table: <span class="kw-2">&amp;mut </span>Vec&lt;(Y, [Position; <span class="number">2</span>], Metadata&lt;K, TABLE_NUMBER&gt;)&gt;,
 ) <span class="kw">where
     </span>EvaluatableUsize&lt;{ metadata_size_bytes(K, PARENT_TABLE_NUMBER) }&gt;: Sized,
@@ -1560,60 +1615,72 @@
     </span><span class="kw">where
         </span>EvaluatableUsize&lt;{ metadata_size_bytes(K, PARENT_TABLE_NUMBER) }&gt;: Sized,
     {
-        <span class="kw">let </span>buckets = <span class="kw-2">&amp;mut </span>cache.buckets;
         <span class="kw">let </span>left_targets = <span class="kw-2">&amp;</span>cache.left_targets;
 
-        <span class="kw">let </span><span class="kw-2">mut </span>bucket = Bucket {
-            bucket_index: <span class="number">0</span>,
+        <span class="kw">let </span><span class="kw-2">mut </span>first_bucket = Bucket {
+            bucket_index: u32::from(last_table.ys()[<span class="number">0</span>]) / u32::from(PARAM_BC),
             start_position: Position::ZERO,
             size: Position::ZERO,
         };
+        <span class="kw">for </span><span class="kw-2">&amp;</span>y <span class="kw">in </span>last_table.ys() {
+            <span class="kw">let </span>bucket_index = u32::from(y) / u32::from(PARAM_BC);
 
-        <span class="kw">let </span>last_y = <span class="kw-2">*</span>last_table
-            .ys()
-            .last()
-            .expect(<span class="string">"List of y values is never empty; qed"</span>);
-        buckets.clear();
-        buckets.reserve(<span class="number">1 </span>+ usize::from(last_y) / usize::from(PARAM_BC));
-        last_table
-            .ys()
-            .iter()
-            .zip(Position::ZERO..)
-            .for_each(|(<span class="kw-2">&amp;</span>y, position)| {
-                <span class="kw">let </span>bucket_index = u32::from(y) / u32::from(PARAM_BC);
+            <span class="kw">if </span>bucket_index == first_bucket.bucket_index {
+                first_bucket.size += Position::ONE;
+            } <span class="kw">else </span>{
+                <span class="kw">break</span>;
+            }
+        }
 
-                <span class="kw">if </span>bucket_index == bucket.bucket_index {
-                    bucket.size += Position::ONE;
-                    <span class="kw">return</span>;
-                }
-
-                buckets.push(bucket);
-
-                bucket = Bucket {
-                    bucket_index,
-                    start_position: position,
-                    size: Position::ONE,
-                };
-            });
-        <span class="comment">// Iteration stopped, but we did not store the last bucket yet
-        </span>buckets.push(bucket);
-
-        <span class="kw">let </span>counter = AtomicUsize::new(<span class="number">0</span>);
+        <span class="kw">let </span>previous_bucket = Mutex::new(first_bucket);
 
         <span class="kw">let </span>t_n = rayon::broadcast(|_ctx| {
             <span class="kw">let </span><span class="kw-2">mut </span>entries = Vec::new();
             <span class="kw">let </span><span class="kw-2">mut </span>rmap_scratch = Vec::new();
 
             <span class="kw">loop </span>{
-                <span class="kw">let </span>offset = counter.fetch_add(<span class="number">1</span>, Ordering::Relaxed);
-                <span class="kw">if </span>offset &gt;= buckets.len() - <span class="number">1 </span>{
-                    <span class="kw">break</span>;
+                <span class="kw">let </span>left_bucket;
+                <span class="kw">let </span>right_bucket;
+                {
+                    <span class="kw">let </span><span class="kw-2">mut </span>previous_bucket = previous_bucket.lock();
+
+                    <span class="kw">let </span>right_bucket_start_position =
+                        previous_bucket.start_position + previous_bucket.size;
+                    <span class="kw">let </span>right_bucket_index = <span class="kw">match </span>last_table
+                        .ys()
+                        .get(usize::from(right_bucket_start_position))
+                    {
+                        <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>y) =&gt; u32::from(y) / u32::from(PARAM_BC),
+                        <span class="prelude-val">None </span>=&gt; {
+                            <span class="kw">break</span>;
+                        }
+                    };
+                    <span class="kw">let </span><span class="kw-2">mut </span>right_bucket_size = Position::ZERO;
+
+                    <span class="kw">for </span><span class="kw-2">&amp;</span>y <span class="kw">in </span><span class="kw-2">&amp;</span>last_table.ys()[usize::from(right_bucket_start_position)..] {
+                        <span class="kw">let </span>bucket_index = u32::from(y) / u32::from(PARAM_BC);
+
+                        <span class="kw">if </span>bucket_index == right_bucket_index {
+                            right_bucket_size += Position::ONE;
+                        } <span class="kw">else </span>{
+                            <span class="kw">break</span>;
+                        }
+                    }
+
+                    right_bucket = Bucket {
+                        bucket_index: right_bucket_index,
+                        start_position: right_bucket_start_position,
+                        size: right_bucket_size,
+                    };
+
+                    left_bucket = <span class="kw-2">*</span>previous_bucket;
+                    <span class="kw-2">*</span>previous_bucket = right_bucket;
                 }
 
                 match_and_compute_fn::&lt;K, TABLE_NUMBER, PARENT_TABLE_NUMBER&gt;(
                     last_table,
-                    buckets[offset],
-                    buckets[offset + <span class="number">1</span>],
+                    left_bucket,
+                    right_bucket,
                     <span class="kw-2">&amp;mut </span>rmap_scratch,
                     left_targets,
                     <span class="kw-2">&amp;mut </span>entries,
@@ -1630,7 +1697,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>positions = Vec::with_capacity(t_n.len());
         <span class="kw">let </span><span class="kw-2">mut </span>metadatas = Vec::with_capacity(t_n.len());
 
-        <span class="kw">for </span>(y, [left_position, right_position], metadata) <span class="kw">in </span>t_n {
+        <span class="kw">for </span>(y, [left_position, right_position], metadata) <span class="kw">in </span>t_n.drain(..) {
             ys.push(y);
             positions.push([left_position, right_position]);
             <span class="comment">// Last table doesn't have metadata
@@ -1638,6 +1705,11 @@
                 metadatas.push(metadata);
             }
         }
+
+        <span class="comment">// Drop from a background thread, which typically helps with overall concurrency
+        </span>rayon::spawn(<span class="kw">move </span>|| {
+            drop(t_n);
+        });
 
         <span class="self">Self</span>::Other {
             ys,

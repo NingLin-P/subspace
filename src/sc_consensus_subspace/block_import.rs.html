@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sc-consensus-subspace/src/block_import.rs`."><title>block_import.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-4e54bb2b497cc83f.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sc_consensus_subspace" data-themes="" data-resource-suffix="" data-rustdoc-version="1.77.0-nightly (25f8d01fd 2024-01-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-f2adc0d6ca4d09fb.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0b2e2def73e61cbe.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../sc_consensus_subspace/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/sc-consensus-subspace/src/block_import.rs`."><title>block_import.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="sc_consensus_subspace" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../sc_consensus_subspace/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -719,21 +717,6 @@
 <a href="#717" id="717">717</a>
 <a href="#718" id="718">718</a>
 <a href="#719" id="719">719</a>
-<a href="#720" id="720">720</a>
-<a href="#721" id="721">721</a>
-<a href="#722" id="722">722</a>
-<a href="#723" id="723">723</a>
-<a href="#724" id="724">724</a>
-<a href="#725" id="725">725</a>
-<a href="#726" id="726">726</a>
-<a href="#727" id="727">727</a>
-<a href="#728" id="728">728</a>
-<a href="#729" id="729">729</a>
-<a href="#730" id="730">730</a>
-<a href="#731" id="731">731</a>
-<a href="#732" id="732">732</a>
-<a href="#733" id="733">733</a>
-<a href="#734" id="734">734</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) 2021 Subspace Labs, Inc.
 // SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
@@ -773,6 +756,7 @@
 <span class="kw">use </span>sc_consensus::block_import::{
     BlockCheckParams, BlockImport, BlockImportParams, ForkChoiceStrategy, ImportResult,
 };
+<span class="kw">use </span>sc_consensus::StateAction;
 <span class="kw">use </span>sc_proof_of_time::verifier::PotVerifier;
 <span class="kw">use </span>sp_api::{ApiError, ApiExt, ProvideRuntimeApi};
 <span class="kw">use </span>sp_block_builder::BlockBuilder <span class="kw">as </span>BlockBuilderApi;
@@ -885,9 +869,6 @@
     <span class="doccomment">/// Piece verification failed
     </span><span class="attr">#[error(<span class="string">"Piece verification failed for slot {0}"</span>)]
     </span>InvalidPiece(Slot),
-    <span class="doccomment">/// Parent block has no associated weight
-    </span><span class="attr">#[error(<span class="string">"Parent block of {0} has no associated weight"</span>)]
-    </span>ParentBlockNoAssociatedWeight(Header::Hash),
     <span class="doccomment">/// Block has invalid associated solution range
     </span><span class="attr">#[error(<span class="string">"Invalid solution range for block {0}"</span>)]
     </span>InvalidSolutionRange(Header::Hash),
@@ -909,9 +890,6 @@
     <span class="doccomment">/// Farmer in block list
     </span><span class="attr">#[error(<span class="string">"Farmer {0} is in block list"</span>)]
     </span>FarmerInBlockList(FarmerPublicKey),
-    <span class="doccomment">/// No block weight for parent header
-    </span><span class="attr">#[error(<span class="string">"No block weight for parent header {0}"</span>)]
-    </span>NoBlockWeight(Header::Hash),
     <span class="doccomment">/// Segment commitment not found
     </span><span class="attr">#[error(<span class="string">"Segment commitment for segment index {0} not found"</span>)]
     </span>SegmentCommitmentNotFound(SegmentIndex),
@@ -1052,7 +1030,7 @@
     Block: BlockT,
     Client: ProvideRuntimeApi&lt;Block&gt; + BlockBackend&lt;Block&gt; + HeaderBackend&lt;Block&gt; + AuxStore,
     Client::Api: BlockBuilderApi&lt;Block&gt; + SubspaceApi&lt;Block, FarmerPublicKey&gt; + ApiExt&lt;Block&gt;,
-    CIDP: CreateInherentDataProviders&lt;Block, SubspaceLink&lt;Block&gt;&gt; + Send + Sync + <span class="lifetime">'static</span>,
+    CIDP: CreateInherentDataProviders&lt;Block, ()&gt; + Send + Sync + <span class="lifetime">'static</span>,
     AS: AuxStore + Send + Sync + <span class="lifetime">'static</span>,
     BlockNumber: From&lt;&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Header <span class="kw">as </span>HeaderT&gt;::Number&gt;,
 {
@@ -1076,8 +1054,7 @@
         }
     }
 
-    <span class="attr">#[allow(clippy::too_many_arguments)]
-    </span><span class="kw">async fn </span>block_import_verification(
+    <span class="kw">async fn </span>block_import_verification(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         block_hash: Block::Hash,
         header: Block::Header,
@@ -1089,7 +1066,6 @@
             FarmerSignature,
         &gt;,
         justifications: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;Justifications&gt;,
-        skip_runtime_access: bool,
     ) -&gt; <span class="prelude-ty">Result</span>&lt;(), Error&lt;Block::Header&gt;&gt; {
         <span class="kw">let </span>block_number = <span class="kw-2">*</span>header.number();
         <span class="kw">let </span>parent_hash = <span class="kw-2">*</span>header.parent_hash();
@@ -1106,14 +1082,7 @@
         </span><span class="kw">if </span><span class="self">self
             </span>.client
             .runtime_api()
-            .is_in_block_list(parent_hash, <span class="kw-2">&amp;</span>pre_digest.solution().public_key)
-            .or_else(|error| {
-                <span class="kw">if </span>skip_runtime_access {
-                    <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>)
-                } <span class="kw">else </span>{
-                    <span class="prelude-val">Err</span>(Error::RuntimeApi(error))
-                }
-            })<span class="question-mark">?
+            .is_in_block_list(parent_hash, <span class="kw-2">&amp;</span>pre_digest.solution().public_key)<span class="question-mark">?
         </span>{
             <span class="macro">warn!</span>(
                 public_key = %pre_digest.solution().public_key,
@@ -1231,10 +1200,7 @@
             pre_digest.solution().sector_index,
         );
 
-        <span class="comment">// TODO: Below `skip_runtime_access` has no impact on this, but ideally it
-        //  should (though we don't support fast sync yet, so doesn't matter in
-        //  practice)
-        </span><span class="kw">let </span>max_pieces_in_sector = <span class="self">self
+        <span class="kw">let </span>max_pieces_in_sector = <span class="self">self
             </span>.client
             .runtime_api()
             .max_pieces_in_sector(parent_hash)<span class="question-mark">?</span>;
@@ -1281,10 +1247,7 @@
                     recent_segments: chain_constants.recent_segments(),
                     recent_history_fraction: chain_constants.recent_history_fraction(),
                     min_sector_lifetime: chain_constants.min_sector_lifetime(),
-                    <span class="comment">// TODO: Below `skip_runtime_access` has no impact on this, but ideally it
-                    //  should (though we don't support fast sync yet, so doesn't matter in
-                    //  practice)
-                    </span>current_history_size: <span class="self">self</span>.client.runtime_api().history_size(parent_hash)<span class="question-mark">?</span>,
+                    current_history_size: <span class="self">self</span>.client.runtime_api().history_size(parent_hash)<span class="question-mark">?</span>,
                     sector_expiration_check_segment_commitment,
                 }),
             },
@@ -1292,37 +1255,35 @@
         )
         .map_err(|error| VerificationError::VerificationError(pre_digest.slot(), error))<span class="question-mark">?</span>;
 
-        <span class="kw">if </span>!skip_runtime_access {
-            <span class="comment">// If the body is passed through, we need to use the runtime to check that the
-            // internally-set timestamp in the inherents actually matches the slot set in the seal
-            // and segment headers in the inherents are set correctly.
-            </span><span class="kw">if let </span><span class="prelude-val">Some</span>(extrinsics) = extrinsics {
-                <span class="kw">let </span>create_inherent_data_providers = <span class="self">self
-                    </span>.create_inherent_data_providers
-                    .create_inherent_data_providers(parent_hash, <span class="self">self</span>.subspace_link.clone())
-                    .<span class="kw">await
-                    </span>.map_err(|error| Error::Client(sp_blockchain::Error::from(error)))<span class="question-mark">?</span>;
+        <span class="comment">// If the body is passed through, we need to use the runtime to check that the
+        // internally-set timestamp in the inherents actually matches the slot set in the seal
+        // and segment headers in the inherents are set correctly.
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(extrinsics) = extrinsics {
+            <span class="kw">let </span>create_inherent_data_providers = <span class="self">self
+                </span>.create_inherent_data_providers
+                .create_inherent_data_providers(parent_hash, ())
+                .<span class="kw">await
+                </span>.map_err(|error| Error::Client(sp_blockchain::Error::from(error)))<span class="question-mark">?</span>;
 
-                <span class="kw">let </span>inherent_data = create_inherent_data_providers
-                    .create_inherent_data()
-                    .<span class="kw">await
-                    </span>.map_err(Error::CreateInherents)<span class="question-mark">?</span>;
+            <span class="kw">let </span>inherent_data = create_inherent_data_providers
+                .create_inherent_data()
+                .<span class="kw">await
+                </span>.map_err(Error::CreateInherents)<span class="question-mark">?</span>;
 
-                <span class="kw">let </span>inherent_res = <span class="self">self</span>.client.runtime_api().check_inherents(
-                    parent_hash,
-                    Block::new(header, extrinsics),
-                    inherent_data,
-                )<span class="question-mark">?</span>;
+            <span class="kw">let </span>inherent_res = <span class="self">self</span>.client.runtime_api().check_inherents(
+                parent_hash,
+                Block::new(header, extrinsics),
+                inherent_data,
+            )<span class="question-mark">?</span>;
 
-                <span class="kw">if </span>!inherent_res.ok() {
-                    <span class="kw">for </span>(i, e) <span class="kw">in </span>inherent_res.into_errors() {
-                        <span class="kw">match </span>create_inherent_data_providers
-                            .try_handle_error(<span class="kw-2">&amp;</span>i, <span class="kw-2">&amp;</span>e)
-                            .<span class="kw">await
-                        </span>{
-                            <span class="prelude-val">Some</span>(res) =&gt; res.map_err(Error::CheckInherents)<span class="question-mark">?</span>,
-                            <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(Error::CheckInherentsUnhandled(i)),
-                        }
+            <span class="kw">if </span>!inherent_res.ok() {
+                <span class="kw">for </span>(i, e) <span class="kw">in </span>inherent_res.into_errors() {
+                    <span class="kw">match </span>create_inherent_data_providers
+                        .try_handle_error(<span class="kw-2">&amp;</span>i, <span class="kw-2">&amp;</span>e)
+                        .<span class="kw">await
+                    </span>{
+                        <span class="prelude-val">Some</span>(res) =&gt; res.map_err(Error::CheckInherents)<span class="question-mark">?</span>,
+                        <span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(Error::CheckInherentsUnhandled(i)),
                     }
                 }
             }
@@ -1346,7 +1307,7 @@
         + Send
         + Sync,
     Client::Api: BlockBuilderApi&lt;Block&gt; + SubspaceApi&lt;Block, FarmerPublicKey&gt; + ApiExt&lt;Block&gt;,
-    CIDP: CreateInherentDataProviders&lt;Block, SubspaceLink&lt;Block&gt;&gt; + Send + Sync + <span class="lifetime">'static</span>,
+    CIDP: CreateInherentDataProviders&lt;Block, ()&gt; + Send + Sync + <span class="lifetime">'static</span>,
     AS: AuxStore + Send + Sync + <span class="lifetime">'static</span>,
     BlockNumber: From&lt;&lt;&lt;Block <span class="kw">as </span>BlockT&gt;::Header <span class="kw">as </span>HeaderT&gt;::Number&gt;,
 {
@@ -1373,30 +1334,36 @@
         }
 
         <span class="kw">let </span>subspace_digest_items = extract_subspace_digest_items(<span class="kw-2">&amp;</span>block.header)<span class="question-mark">?</span>;
-        <span class="kw">let </span>skip_execution_checks = block.state_action.skip_execution_checks();
 
-        <span class="kw">let </span>root_plot_public_key = <span class="self">self
-            </span>.client
-            .runtime_api()
-            .root_plot_public_key(<span class="kw-2">*</span>block.header.parent_hash())<span class="question-mark">?</span>;
+        <span class="comment">// Only do import verification if we do not have the state already. If state needs to be
+        // applied this means verification and execution already happened before and doesn't need to
+        // be done again here (often can't because parent block would be missing in special sync
+        // modes).
+        </span><span class="kw">if </span>!<span class="macro">matches!</span>(block.state_action, StateAction::ApplyChanges(<span class="kw">_</span>)) {
+            <span class="kw">let </span>root_plot_public_key = <span class="self">self
+                </span>.client
+                .runtime_api()
+                .root_plot_public_key(<span class="kw-2">*</span>block.header.parent_hash())<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.block_import_verification(
-            block_hash,
-            block.header.clone(),
-            block.body.clone(),
-            <span class="kw-2">&amp;</span>root_plot_public_key,
-            <span class="kw-2">&amp;</span>subspace_digest_items,
-            <span class="kw-2">&amp;</span>block.justifications,
-            skip_execution_checks,
-        )
-        .<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="self">self</span>.block_import_verification(
+                block_hash,
+                block.header.clone(),
+                block.body.clone(),
+                <span class="kw-2">&amp;</span>root_plot_public_key,
+                <span class="kw-2">&amp;</span>subspace_digest_items,
+                <span class="kw-2">&amp;</span>block.justifications,
+            )
+            .<span class="kw">await</span><span class="question-mark">?</span>;
+        }
 
         <span class="kw">let </span>parent_weight = <span class="kw">if </span>block_number.is_one() {
             <span class="number">0
         </span>} <span class="kw">else </span>{
-            aux_schema::load_block_weight(<span class="self">self</span>.client.as_ref(), block.header.parent_hash())<span class="question-mark">?
-                </span>.ok_or_else(|| Error::ParentBlockNoAssociatedWeight(block_hash))<span class="question-mark">?
-        </span>};
+            <span class="comment">// Parent block weight might be missing in special sync modes where block is imported in
+            // the middle of the blockchain history directly
+            </span>aux_schema::load_block_weight(<span class="self">self</span>.client.as_ref(), block.header.parent_hash())<span class="question-mark">?
+                </span>.unwrap_or_default()
+        };
 
         <span class="kw">let </span>added_weight = calculate_block_weight(subspace_digest_items.solution_range);
         <span class="kw">let </span>total_weight = parent_weight + added_weight;
@@ -1434,9 +1401,10 @@
                 // need to cover again here
                 </span>parent_weight
             } <span class="kw">else </span>{
-                aux_schema::load_block_weight(<span class="kw-2">&amp;*</span><span class="self">self</span>.client, info.best_hash)<span class="question-mark">?
-                    </span>.ok_or_else(|| Error::NoBlockWeight(info.best_hash))<span class="question-mark">?
-            </span>};
+                <span class="comment">// Best block weight might be missing in special sync modes where block is imported
+                // in the middle of the blockchain history right after genesis
+                </span>aux_schema::load_block_weight(<span class="kw-2">&amp;*</span><span class="self">self</span>.client, info.best_hash)<span class="question-mark">?</span>.unwrap_or_default()
+            };
 
             ForkChoiceStrategy::Custom(total_weight &gt; last_best_weight)
         };
