@@ -1862,6 +1862,9 @@ mod pallet {
     // TODO: proper benchmark
     impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {
         fn on_initialize(block_number: BlockNumberFor<T>) -> Weight {
+
+            log::info!("pallet-domains on_initialize block_number {block_number:?}");
+
             let parent_number = block_number - One::one();
             let parent_hash = frame_system::Pallet::<T>::block_hash(parent_number);
 
@@ -1907,7 +1910,8 @@ mod pallet {
             Weight::zero()
         }
 
-        fn on_finalize(_: BlockNumberFor<T>) {
+        fn on_finalize(block_number: BlockNumberFor<T>) {
+            log::info!("pallet-domains on_finalize block_number {block_number:?}");
             // If this consensus block will derive any domain block, gather the necessary storage for potential fraud proof usage
             if SuccessfulBundles::<T>::iter_keys().count() > 0
                 || DomainRuntimeUpgrades::<T>::exists()

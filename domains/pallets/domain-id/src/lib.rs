@@ -24,6 +24,7 @@ pub use pallet::*;
 
 #[frame_support::pallet]
 mod pallet {
+    use frame_system::pallet_prelude::BlockNumberFor;
     use frame_support::pallet_prelude::*;
     use sp_domains::DomainId;
 
@@ -54,6 +55,20 @@ mod pallet {
             // be known ahead of time, thus the value in the `RuntimeGenesisConfig` of chain spec can
             // be arbitrary and is ignored, it will be reset to the correct id during domain instantiation.
             SelfDomainId::<T>::set(self.domain_id);
+        }
+    }
+
+    #[pallet::hooks]
+    // TODO: proper benchmark
+    impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {
+        fn on_initialize(block_number: BlockNumberFor<T>) -> Weight {
+            log::info!("pallet-domain-id on_initialize block_number {block_number:?}");
+
+            Weight::zero()
+        }
+
+        fn on_finalize(block_number: BlockNumberFor<T>) {
+            log::info!("pallet-domain-id on_finalize block_number {block_number:?}");
         }
     }
 
