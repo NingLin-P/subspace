@@ -226,6 +226,11 @@ where
             .collect_storage_changes()
             .expect("must always have the storage changes due to execution above");
 
+        let trie_change = storage_changes.storage_changes.transaction.clone().drain();
+        let count = trie_change.len();
+        let size: usize = trie_change.iter().map(|(k, v)| k.len() + v.0.len()).sum();
+        tracing::info!("Domain block builder trie, count: {count:?}, size: {size:?}");
+
         Ok(BuiltBlock {
             block: Block::new(header, self.extrinsics.into()),
             storage_changes,
